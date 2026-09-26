@@ -18,7 +18,10 @@
 | Ved | `run_trials` + `get_trace` working headless | 00:30 |
 
 ## You need
-- From Arnav: the recorder's input log format (per tick, per role drives) by 21:00, and the arena/body code for `run_trials`.
+
+**Current requests to teammates (with deadlines and fallback proposals): [team/README.md#open-requests](../README.md#open-requests-who-is-waiting-on-whom-updated-sat-1700).**
+In short: Arnav (Seer world stimuli, 18:30; is run_trials still mine?), Ved (seer_view format + what SCAN does, 18:30),
+Anshul (which brain signals the HUD shows, 19:00), everyone (movement direct or through the brain? keep the Chronicler? demo laptop).
 
 ## Tasks
 
@@ -80,5 +83,7 @@
 - 17:00 fact cards verified (cheapdate = amnesiac allele, Moore 1998; rutabaga = adenylyl cyclase, Levin 1992; Indy named after Monty Python, lifespan result debated).
 - 17:10 controls-matrix figure: team/neil/figures/controls_matrix_light.png (+ _dark). `python -m brain.figures` redraws it from the probe CSV.
   For the demo's M screen, the Devpost gallery and slides.
-- Next for me: run_trials + bots once the team's 2D mechanics exist (need Arnav's step function); speed check on the demo laptop; Devpost science text.
+- **17:00 redesign (Ved's first-person 2D plan):** players move the fly directly; my job is the **Royal Seer's sensory decoder**
+  (`brain/seer.py`). Deliver `SeerAdapter` (placeholder / True Prince / Changeling) by 18:30; accuracy and delay comparison by 20:00.
+  Waiting on teammates: see "You need" above.
 - Build: 30 s, under 600 MB. graph_true.npz is 22 MB: AirDrop it (plus neurons.parquet and the 3 Changelings) to teammates who need the real brain.

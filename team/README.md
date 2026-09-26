@@ -45,6 +45,52 @@ submission and recruits the strangers. Anshul keeps time at check-ins and makes 
 
 Sleep shifts: **Neil + Ved 05:15-07:00**, **Arnav + Anshul 03:30-05:15**.
 
+## Open requests: who is waiting on whom (updated Sat 17:00)
+
+Neil is building the **Royal Seer's sensory decoder** (`brain/seer.py`, the `seer_adapter` from Ved's playbook). The brain turns what the
+Prince sees and hears into the Seer's cues, for the True Prince and the Changeling. Proposed formats are below, so nobody has to
+wait: **if you don't answer by the time shown, build against the proposal.** Reply by editing this table (or tell Neil).
+
+### Neil is waiting on
+
+| From | What | Needed by | Proposal if no answer |
+|---|---|---|---|
+| **Arnav** | The **world stimuli** the server passes to the Seer every tick (where the Princess and the Giants are relative to the Prince) | 18:30 | `stimuli` format below; the server calls `seer.sense(stimuli)` every tick (50 Hz) |
+| **Arnav** | Is `run_trials` + bots still Neil's job now that players move the fly directly? If yes: the server's movement step function to import headless | 19:00 | Neil pauses `run_trials` until Arnav's step function exists |
+| **Ved** | Does the `seer_view` message to the Seer's phone match the **cues** format below? And what does SCAN do: a one-off reading on press (with a cooldown), or continuous while held? | 18:30 | `cues` format below; SCAN = one reading per press, 1.5 s cooldown; between scans the phone shows the last reading fading |
+| **Anshul** | Which brain signals the HUD's nervous-system bars show (your vision / flight / balance / reaction groups) | 19:00 | `cues["activity"]` below, grouped: vision = `her_L`, `her_R`; reaction = `looming`, `escape`; flight = `steer`; song = `song` |
+| **Everyone** | **Decision:** does movement stay fully direct (brain only powers the Seer), or does some movement go through the brain? It changes what the Changeling toggle shows in the demo | 18:00 check-in | Direct movement; the Changeling scrambles only the Seer's senses; the Royal Decree says so |
+| **Everyone** | **Decision:** keep the Chronicler (`server/chronicler.py`, per-player credit through the brain)? With direct movement it can only credit the Seer | 18:00 check-in | Keep it for the Seer only, or drop it; Neil's call if no answer |
+| **Everyone** | Whose laptop runs the demo (for Neil's speed test with Godot + server + brain running together) | 20:00 | Neil's M2 |
+
+### Others are waiting on Neil
+
+| For | What | When |
+|---|---|---|
+| Arnav, Ved | `brain/seer.py`: `SeerAdapter` with placeholder, True Prince and Changeling modes behind one interface | 18:30 |
+| Everyone | Seer accuracy and delay, True Prince vs Changeling (for the demo and the Devpost) | 20:00 |
+| Anyone running the real brain | `data/graph_*.npz` + `data/neurons.parquet` (AirDrop from Neil; about 90 MB total) | On request |
+
+### Proposed formats
+
+```python
+# Arnav -> Seer, every tick (angles in degrees; bearing: 0 = straight ahead, negative = left, positive = right;
+# elevation: positive = above; distances in cm; approach_cm_s > 0 means getting closer)
+stimuli = {
+    "princess": {"bearing_deg": -35.0, "elevation_deg": 10.0, "distance_cm": 420.0} or None,  # None = not in the scene
+    "giants": [{"bearing_deg": 80.0, "elevation_deg": 30.0, "distance_cm": 150.0, "approach_cm_s": 300.0, "size_cm": 40.0}],
+    "wind": {"bearing_deg": 80.0, "strength": 0.6} or None,                                      # strength 0 to 1
+}
+
+# Seer -> Ved (seer_view) and Anshul (HUD)
+cues = {
+    "princess": {"side": "left" | "ahead" | "right", "bearing_deg": -30.0, "confidence": 0.7, "distance": "near" | "mid" | "far"} or None,
+    "giant": {"warning": 0.0 to 1.0, "side": "left" | "right" | "ahead" | None, "eta_s": 1.2 or None},
+    "activity": {"her_L": z, "her_R": z, "looming": z, "escape": z, "steer": z, "song": z},   # z-scores for the HUD bars
+    "source": "true" | "changeling" | "placeholder",
+}
+```
+
 ## Interfaces (agree on these first)
 
 | From → to | What | By |
