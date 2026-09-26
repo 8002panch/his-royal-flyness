@@ -65,3 +65,6 @@
   Degrades to 0 in the meantime, doesn't block anything.
 - Explored (with my user, not built): reskinning this into a Pokémon-style overworld with NPCs/quests. Not
   reflected in any of the team's actual committed docs/code, so left out of `host/` pending real confirmation.
+- **Pixel-art host direction accepted:** `host/PIXEL_ART_WORLD_CONCEPT.md` is the implementation plan and
+  `host/CLAUDE_PIXEL_ART_PROMPT.md` is the handoff prompt for the world builder. It preserves the live direct-movement
+  and Seer interfaces while replacing the dashboard visual treatment with a versioned royal-court pixel-art world.
