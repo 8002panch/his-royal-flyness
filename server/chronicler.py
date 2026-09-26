@@ -11,7 +11,7 @@ Usage from the server:
     result = chron.finish(events=[{"tick": 812, "kind": "splat", "severity": 3}])        # waits for shadows, returns JSON
     chron.close()
 
-Result JSON (docs/GAME_FLOW.md, "The Chronicle"):
+Result JSON (docs/TECH.md, "The Chronicler"):
     {"chapter": id, "brain": "true"|"changeling", "ticks": n,
      "players": {name: {"roles": [...], "share": {"thrust", "brake", "turn", "altitude", "escape", "song", "overall"},
                         "events": ["..."]}},

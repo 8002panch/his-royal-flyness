@@ -5,7 +5,7 @@
 Weights (Params.weights):
   "fractions" (default)  W[i, j] = sign[j] * count[i, j] / in_total[i]   each input as its share of all input synapses
   "counts"               W[i, j] = w_syn * sign[j] * count[i, j]           raw synapse counts, as in Shiu et al. 2024
-Chosen Sat 26 Sept after probes (team/neil/README.md): "fractions" at gain 4 gives clean, side-specific visual channels
+Chosen Sat 26 Sept after probes (docs/TECH.md, "The brain"): "fractions" at gain 4 gives clean, side-specific visual channels
 that vanish in every Changeling; "counts" rescues foreleg taste -> song only at settings that break right-eye steering. Built from data/graph_<kind>.npz by brain/build_graph.py or
 brain/changeling.py. Outputs are z-scores of each output group's mean rate against its own resting activity.
 """

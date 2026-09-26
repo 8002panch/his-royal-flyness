@@ -11,7 +11,7 @@ Writes:
     data/neurons.parquet   one row per neuron: index, bodyId, type, sides, transmitter, sign, ...
     data/graph_true.npz    edge list sorted by receiving neuron: post, pre, count; plus sign and in_total per neuron
 
-Rules (see docs/TECH_ARCHITECTURE.md, "The brain"):
+Rules (see docs/TECH.md, "The brain"):
     neurons   = bodies with a superclass that doesn't contain "tbc" (the Berg et al. rule) -> 166,606
     sign      = +1 acetylcholine; -1 GABA, glutamate, histamine; 0 (silenced) dopamine, octopamine, serotonin;
                 +1 for "unclear" or missing predictions (flagged)

@@ -21,7 +21,7 @@ from __future__ import annotations
 TICK_S = 0.020  # one game tick; the real model runs two 10 ms steps per tick
 
 # Input groups (v2): one per phone button. Each stimulates a named group of real sensory neurons (like optogenetics).
-# Chosen from a scan of all sensory types (team/neil/README.md); the comment gives the target the wiring drives.
+# Chosen from a scan of all sensory types (docs/TECH.md, "The brain"); the comment gives the target the wiring drives.
 INPUT_GROUPS: tuple[str, ...] = (
     "forward",    # Coachman:  LC9 + LC31a                      -> DNp09 thrust (z 34)
     "back",       # Coachman:  SNta02/SNta09 + LC16 + LoVP26    -> MDN back up (z 4)
@@ -50,7 +50,7 @@ OUTPUT_NAMES: tuple[str, ...] = (
     "DNp01",                       # the Giant Fiber: escape dart
     "pIP10",                       # male-only song command: serenade
     "pC1",                         # male-specific courtship cluster (display only)
-    # Seer readouts: side-selective descending-neuron populations (chosen by a left-vs-right scan, team/neil/README.md)
+    # Seer readouts: side-selective descending-neuron populations (chosen by a left-vs-right scan; docs/TECH.md, "The Royal Seer")
     "seer_her_L", "seer_her_R",    # DNa02, DNg111, DNae002, DNae001, DNg41, DNa10 on each side: where the Princess is
     "seer_loom_L", "seer_loom_R",  # DNp04, DNp02, DNp01, DNg40, DNp11, DNp03 on each side: where the Giant is
     "seer_wind_L", "seer_wind_R",  # DNge016, DNg29, DNge175, DNp18, DNg05_a on each side: where the gust comes from
