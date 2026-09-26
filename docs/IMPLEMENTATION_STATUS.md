@@ -108,6 +108,7 @@ game view, shared world render, shared map, or gameplay HUD. Godot remains the s
 | `python3 relay/relay.py` + `python3 -m http.server 8000 --directory relay/public` | Pass: local relay and static controller page started |
 | Browser smoke test | Pass: join screen → role picker → Helmsman-only controller screen, then reload → saved role restored over local WebSocket relay |
 | Phone-controller boundary | Pass: the app renders no game scene, map, shared HUD, Princess, fly, or Giant outside the Seer’s private warning card |
+| Post-phase live-stack recheck | Pass: fixed `.overlay[hidden]` so the reconnect modal no longer blocks active controllers; live Helmsman input visibly received server-authoritative drift and momentum feedback |
 
 ### Known limitations
 
