@@ -1,0 +1,30 @@
+# secrets (the repo is public)
+.env
+*.pem
+*token*
+
+# python
+.venv/
+__pycache__/
+*.pyc
+
+# data: large public MaleCNS files and built graphs (see data/README.md)
+data/*
+!data/README.md
+*.npz
+*.feather
+*.parquet
+
+# godot
+host/.godot/
+host/export/
+*.import.tmp
+
+# os / editors
+.DS_Store
+.vscode/
+.idea/
+
+# personal scratch (keep experiments local unless you want them shared)
+team/*/scratch/
+*.log
