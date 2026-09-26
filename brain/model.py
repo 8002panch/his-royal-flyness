@@ -25,6 +25,7 @@ from brain.brain import INPUT_GROUPS, OUTPUT_NAMES
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 IO_SETS = Path(__file__).resolve().parent / "io_sets.json"
+PAIRS = (("left", "right"), ("lock_L", "lock_R"))
 
 
 @dataclass
@@ -72,12 +73,13 @@ class RateModel:
         self.inputs = {g: to_index(sets["inputs"][g]) for g in INPUT_GROUPS}
         self.outputs = {o: to_index(sets["outputs"][o]) for o in OUTPUT_NAMES}
         self.input_neurons = np.unique(np.concatenate(list(self.inputs.values())))
-        # side balancing: both sides of a pair deliver the same total drive even if one side has fewer neurons
-        self.input_scale = {}
-        for g, idx in self.inputs.items():
-            base, side = g.rsplit("_", 1)
-            pair = [len(self.inputs[f"{base}_{s}"]) for s in "LR"]
-            self.input_scale[g] = float(np.mean(pair) / len(idx))
+        # side balancing: both groups of a left/right pair deliver the same total drive even if one side has fewer neurons
+        self.input_scale = {g: 1.0 for g in self.inputs}
+        for a, b in PAIRS:
+            if a in self.inputs and b in self.inputs:
+                mean = (len(self.inputs[a]) + len(self.inputs[b])) / 2
+                self.input_scale[a] = mean / len(self.inputs[a])
+                self.input_scale[b] = mean / len(self.inputs[b])
         self.rng = np.random.default_rng(seed)
         self._baselines: dict[tuple[str, int], tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
         self.load(kind, seed)

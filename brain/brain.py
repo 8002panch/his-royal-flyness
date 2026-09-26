@@ -7,7 +7,8 @@ Owner: Neil. The server (Arnav) only uses this file's public API:
     out = brain.step(drives)            # advance one 20 ms game tick
     brain.swap("changeling", seed=1)    # hot-swap the wiring between ticks
 
-`drives` maps input group names (INPUT_GROUPS) to a drive between 0 and 1. Missing groups count as 0.
+`drives` maps input group names (INPUT_GROUPS, one per phone button) to a drive between 0 and 1. Missing groups count as 0.
+A normal press is 0.6; specials (Charge, Launch) use 1.0.
 `step` returns every name in OUTPUT_NAMES mapped to a z-score against that neuron group's resting activity
 (0 = resting, 3 = strongly active).
 
@@ -19,33 +20,32 @@ from __future__ import annotations
 
 TICK_S = 0.020  # one game tick; the real model runs two 10 ms steps per tick
 
-# Input groups: which sensory neurons each phone role drives (sides are the fly's left and right).
+# Input groups (v2): one per phone button. Each stimulates a named group of real sensory neurons (like optogenetics).
+# Chosen from a scan of all sensory types (team/neil/README.md); the comment gives the target the wiring drives.
 INPUT_GROUPS: tuple[str, ...] = (
-    # Royal Lookout (eyes)
-    "LC10a_L", "LC10a_R",          # small moving objects (the Princess, rivals)
-    "LPLC2_L", "LPLC2_R",          # looming
-    "LC4_L", "LC4_R",              # looming
-    # Royal Perfumer (nose): olfactory receptor neurons by antenna
-    "ORN_VA1v_L", "ORN_VA1v_R",    # Or47b, her courtship scent
-    "ORN_DM1_L", "ORN_DM1_R",      # Or42b, the Feast (fermenting fruit)
-    "ORN_DA1_L", "ORN_DA1_R",      # Or67d, a rival male's cVA
-    # Royal Taster (feet): foreleg pheromone-taste neurons
-    "ppk23_L", "ppk23_R",
-    # Royal Spymaster (ears): Johnston's organ
-    "JO_wind_L", "JO_wind_R",      # JO-C / JO-E
-    "JO_sound_L", "JO_sound_R",    # JO-A / JO-B
+    "forward",    # Coachman:  LC9 + LC31a                      -> DNp09 thrust (z 34)
+    "back",       # Coachman:  SNta02/SNta09 + LC16 + LoVP26    -> MDN back up (z 4)
+    "left",       # Helmsman:  LLPC1, left side                 -> DNa02 left, turn left (z 10)
+    "right",      # Helmsman:  LLPC1, right side                -> DNa02 right, turn right (z 13)
+    "up",         # Falconer:  LPLC1 + LLPC2                    -> DNg02 wing power (z 5)
+    "down",       # Falconer:  LPLC4                            -> DNp07 + DNp10 landing (z 44)
+    "duck",       # Spymaster: LC4 + LPLC2                      -> DNp01 Giant Fiber escape (z 99)
+    "serenade",   # Spymaster: LC10a + LC10d, both eyes         -> pIP10 song (z 9)
+    "lock_L",     # Helmsman special: LC10a + LC10d, left eye   -> turn left toward her (z 18)
+    "lock_R",     # Helmsman special: LC10a + LC10d, right eye  -> turn right toward her
 )
 
-# Output names: what moves the body (mapping to movement lives in server/body.py).
+# Output names (v2): what moves the body (mapping to movement lives in server/body.py).
 OUTPUT_NAMES: tuple[str, ...] = (
-    "DNa02_L", "DNa02_R",          # steering
-    "DNa01_L", "DNa01_R",          # steering
-    "DNp09",                       # walk forward (both sides averaged)
-    "DNg100",                      # walk forward
-    "MDN",                         # back up
-    "DNp01",                       # the Giant Fiber: escape jump
-    "pIP10",                       # male-only song command: wing out, serenade
-    "pC1",                         # male-specific courtship cluster (display only: the "Courting" meter)
+    "DNp09",                       # thrust / forward
+    "DNg100",                      # walking (small; kept for the chart)
+    "MDN",                         # back up / brake
+    "DNa02_L", "DNa02_R",          # turning
+    "DNg02",                       # wing power: climb
+    "DNp07_10",                    # landing neurons DNp07 + DNp10: descend
+    "DNp01",                       # the Giant Fiber: escape dart
+    "pIP10",                       # male-only song command: serenade
+    "pC1",                         # male-specific courtship cluster (display only)
 )
 
 KINDS = ("true", "changeling")
@@ -97,21 +97,17 @@ class _StubImpl:
         self._z = {name: 0.0 for name in OUTPUT_NAMES}
 
     def step(self, d: dict[str, float]) -> dict[str, float]:
-        loom_l = max(d["LPLC2_L"], d["LC4_L"])
-        loom_r = max(d["LPLC2_R"], d["LC4_R"])
-        court = d["ORN_VA1v_L"] + d["ORN_VA1v_R"] + 2 * (d["ppk23_L"] + d["ppk23_R"])
-        mood_kill = d["ORN_DA1_L"] + d["ORN_DA1_R"]
         target = {
-            "DNa02_L": 3 * d["LC10a_L"] + 1.5 * d["ORN_VA1v_L"] + d["ORN_DM1_L"],
-            "DNa02_R": 3 * d["LC10a_R"] + 1.5 * d["ORN_VA1v_R"] + d["ORN_DM1_R"],
-            "DNa01_L": 2 * d["LC10a_L"],
-            "DNa01_R": 2 * d["LC10a_R"],
-            "DNp09": 2 * (d["LC10a_L"] + d["LC10a_R"]) + d["ORN_DM1_L"] + d["ORN_DM1_R"],
-            "DNg100": 1.5 * (d["LC10a_L"] + d["LC10a_R"]),
-            "MDN": 2 * mood_kill,
-            "DNp01": 4 * max(loom_l, loom_r) + 3 * max(d["JO_wind_L"], d["JO_wind_R"]),
-            "pIP10": max(0.0, 2 * court - 2 * mood_kill),
-            "pC1": max(0.0, 1.5 * court - 2 * mood_kill),
+            "DNp09": 30 * d["forward"],
+            "DNg100": 2 * d["forward"],
+            "MDN": 4 * d["back"],
+            "DNa02_L": 10 * d["left"] + 18 * d["lock_L"] + 11 * d["serenade"],
+            "DNa02_R": 12 * d["right"] + 18 * d["lock_R"] + 11 * d["serenade"],
+            "DNg02": 5 * d["up"],
+            "DNp07_10": 40 * d["down"],
+            "DNp01": 90 * d["duck"],
+            "pIP10": 9 * d["serenade"] + 3.5 * max(d["lock_L"], d["lock_R"]),
+            "pC1": 1.5 * d["serenade"],
         }
         a = self._ALPHA
         for name in OUTPUT_NAMES:
@@ -120,8 +116,11 @@ class _StubImpl:
 
 
 if __name__ == "__main__":
-    # Smoke test: the stub should turn left, walk and sing when the left eye sees her and the Taster taps.
-    b = Brain(stub=True)
-    for _ in range(50):
-        out = b.step({"LC10a_L": 1.0, "ppk23_L": 1.0, "ppk23_R": 1.0})
-    print({k: round(v, 2) for k, v in out.items()})
+    # Smoke test: FORWARD + LEFT on the real brain (falls back to the stub if data/ isn't built).
+    try:
+        b = Brain("true")
+    except FileNotFoundError:
+        b = Brain(stub=True)
+    for _ in range(40):
+        out = b.step({"forward": 1.0, "left": 1.0})
+    print("stub" if b.stub else "real", {k: round(v, 1) for k, v in out.items()})
