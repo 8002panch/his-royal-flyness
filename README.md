@@ -18,7 +18,7 @@
 - **The Changeling** swaps his brain for one with the same neurons, connection counts and input per neuron, but scrambled partners.
 - AI agents design each trial and certify it only if the real prince can win and the Changeling mostly can't.
 
-Full design: [docs/GAME_DESIGN.md](docs/GAME_DESIGN.md) · System: [docs/TECH_ARCHITECTURE.md](docs/TECH_ARCHITECTURE.md)
+Full design: [docs/GAME_DESIGN.md](docs/GAME_DESIGN.md) · The whole game, state by state: [docs/GAME_FLOW.md](docs/GAME_FLOW.md) · System: [docs/TECH_ARCHITECTURE.md](docs/TECH_ARCHITECTURE.md)
 
 ## Team
 

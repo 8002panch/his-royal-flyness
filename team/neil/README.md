@@ -57,6 +57,6 @@
 - [ ] **30 min:** Q&A drill with the presenter ([DEMO_SCRIPT.md](../../docs/DEMO_SCRIPT.md#qa-drill)).
 
 ## Notes
-- 15:55 first look (gain sweep, one mixed stimulus): tick 11.2 ms; at gain 3 rest is quiet (4.7% of neurons above 0.1, 0.4% saturated);
+- 15:46 first look (gain sweep, one mixed stimulus): tick 11.2 ms; at gain 3 rest is quiet (4.7% of neurons above 0.1, 0.4% saturated);
   left stimulus drives DNa02_L (z 8.5) not DNa02_R (0.2); DNp01 z ~50; pIP10 weak at gain 3 (1.1), better at 5 (2.9). Probes will separate stimuli and add the Changeling.
 - Build: 30 s, under 600 MB. graph_true.npz is 22 MB: AirDrop it (plus neurons.parquet and the 3 Changelings) to teammates who need the real brain.

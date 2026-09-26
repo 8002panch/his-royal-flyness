@@ -59,7 +59,7 @@ Sleep shifts: **Neil + Ved 05:15-07:00**, **Arnav + Anshul 03:30-05:15**.
 | Ved → Anshul | Jester text hand-off (`agents/jester.py`) and the Level Lab log format (`levels/lab_log.jsonl`) | 01:00 |
 | Neil → Ved | `run_trials(trial, brain, n)` and `get_trace(run_id)` working headless | 00:30 |
 
-Message formats: [docs/TECH_ARCHITECTURE.md](../docs/TECH_ARCHITECTURE.md#messages-json).
+Message formats: [docs/TECH_ARCHITECTURE.md](../docs/TECH_ARCHITECTURE.md#messages-json). States, screens, trial layouts and starting numbers: [docs/GAME_FLOW.md](../docs/GAME_FLOW.md).
 
 ## How we use git (the rules depend on it)
 
