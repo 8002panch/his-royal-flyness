@@ -78,5 +78,7 @@
   (thrust 99.5%, turn 67%, altitude 100%, escape + song 100%). Turning is partly shared with FORWARD (a real interaction in the model).
   **For Arnav:** call Chronicler.record() every tick with {player: {input_group: drive}} and finish() at the chapter end.
 - 17:00 fact cards verified (cheapdate = amnesiac allele, Moore 1998; rutabaga = adenylyl cyclase, Levin 1992; Indy named after Monty Python, lifespan result debated).
-- Next for me: controls-matrix figure for the demo/Devpost; run_trials + bots once the team's 2D mechanics exist; speed check on the demo laptop.
+- 17:10 controls-matrix figure: team/neil/figures/controls_matrix_light.png (+ _dark). `python -m brain.figures` redraws it from the probe CSV.
+  For the demo's M screen, the Devpost gallery and slides.
+- Next for me: run_trials + bots once the team's 2D mechanics exist (need Arnav's step function); speed check on the demo laptop; Devpost science text.
 - Build: 30 s, under 600 MB. graph_true.npz is 22 MB: AirDrop it (plus neurons.parquet and the 3 Changelings) to teammates who need the real brain.

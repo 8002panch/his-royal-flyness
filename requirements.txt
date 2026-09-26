@@ -9,3 +9,4 @@ qrcode
 google-genai
 elevenlabs
 python-dotenv
+matplotlib
