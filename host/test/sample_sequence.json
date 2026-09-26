@@ -1,0 +1,8012 @@
+[
+ {
+  "t": "state",
+  "time": 0.0,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 60.0,
+   "y": 200.0,
+   "h": -1.4,
+   "wing": 0.3,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.6,
+   "LC10a_R": 0.0,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.0,
+   "DNa02_R": 1.2,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 1.0
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.03,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 64.4,
+   "y": 201.4,
+   "h": -1.6,
+   "wing": 0.41,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.59,
+   "LC10a_R": 0.01,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.01,
+   "DNa02_R": 1.19,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.99
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.07,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 68.9,
+   "y": 202.8,
+   "h": -1.8,
+   "wing": 0.51,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.59,
+   "LC10a_R": 0.01,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.03,
+   "DNa02_R": 1.17,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.98
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.1,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 73.3,
+   "y": 204.2,
+   "h": -2.0,
+   "wing": 0.61,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.58,
+   "LC10a_R": 0.02,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.04,
+   "DNa02_R": 1.16,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.97
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.13,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 77.8,
+   "y": 205.5,
+   "h": -2.2,
+   "wing": 0.69,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.57,
+   "LC10a_R": 0.03,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.05,
+   "DNa02_R": 1.15,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.96
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.17,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 82.2,
+   "y": 206.8,
+   "h": -2.4,
+   "wing": 0.75,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.57,
+   "LC10a_R": 0.03,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.07,
+   "DNa02_R": 1.13,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.94
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.2,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 86.7,
+   "y": 208.1,
+   "h": -2.6,
+   "wing": 0.79,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.56,
+   "LC10a_R": 0.04,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.08,
+   "DNa02_R": 1.12,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.93
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.23,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 91.1,
+   "y": 209.4,
+   "h": -2.9,
+   "wing": 0.8,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.55,
+   "LC10a_R": 0.05,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.09,
+   "DNa02_R": 1.11,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.92
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.27,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 95.6,
+   "y": 210.6,
+   "h": -3.1,
+   "wing": 0.79,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.55,
+   "LC10a_R": 0.05,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.11,
+   "DNa02_R": 1.09,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.91
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.3,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 100.0,
+   "y": 211.8,
+   "h": -3.3,
+   "wing": 0.75,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.54,
+   "LC10a_R": 0.06,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.12,
+   "DNa02_R": 1.08,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.9
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.33,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 104.4,
+   "y": 212.9,
+   "h": -3.5,
+   "wing": 0.7,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.53,
+   "LC10a_R": 0.07,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.13,
+   "DNa02_R": 1.07,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.89
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.37,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 108.9,
+   "y": 213.9,
+   "h": -3.7,
+   "wing": 0.62,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.53,
+   "LC10a_R": 0.07,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.15,
+   "DNa02_R": 1.05,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.88
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.4,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 113.3,
+   "y": 214.9,
+   "h": -3.9,
+   "wing": 0.53,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.52,
+   "LC10a_R": 0.08,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.16,
+   "DNa02_R": 1.04,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.87
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.43,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 117.8,
+   "y": 215.8,
+   "h": -4.1,
+   "wing": 0.43,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.51,
+   "LC10a_R": 0.09,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.17,
+   "DNa02_R": 1.03,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.86
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.47,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 122.2,
+   "y": 216.6,
+   "h": -4.2,
+   "wing": 0.32,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.51,
+   "LC10a_R": 0.09,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.19,
+   "DNa02_R": 1.01,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.84
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.5,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 126.7,
+   "y": 217.3,
+   "h": -4.4,
+   "wing": 0.4,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.5,
+   "LC10a_R": 0.1,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.2,
+   "DNa02_R": 1.0,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.83
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.53,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 131.1,
+   "y": 218.0,
+   "h": -4.6,
+   "wing": 0.5,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.49,
+   "LC10a_R": 0.11,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.21,
+   "DNa02_R": 0.99,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.82
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.57,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 135.6,
+   "y": 218.5,
+   "h": -4.7,
+   "wing": 0.6,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.49,
+   "LC10a_R": 0.11,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.23,
+   "DNa02_R": 0.97,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.81
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.6,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 140.0,
+   "y": 219.0,
+   "h": -4.9,
+   "wing": 0.68,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.48,
+   "LC10a_R": 0.12,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.24,
+   "DNa02_R": 0.96,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.8
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.63,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 144.4,
+   "y": 219.4,
+   "h": -5.0,
+   "wing": 0.74,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.47,
+   "LC10a_R": 0.13,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.25,
+   "DNa02_R": 0.95,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.79
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.67,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 148.9,
+   "y": 219.7,
+   "h": -5.1,
+   "wing": 0.78,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.47,
+   "LC10a_R": 0.13,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.27,
+   "DNa02_R": 0.93,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.78
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.7,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 153.3,
+   "y": 219.9,
+   "h": -5.2,
+   "wing": 0.8,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.46,
+   "LC10a_R": 0.14,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.28,
+   "DNa02_R": 0.92,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.77
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.73,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 157.8,
+   "y": 220.0,
+   "h": -5.3,
+   "wing": 0.79,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.45,
+   "LC10a_R": 0.15,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.29,
+   "DNa02_R": 0.91,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.76
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.77,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 162.2,
+   "y": 220.0,
+   "h": -5.4,
+   "wing": 0.76,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.45,
+   "LC10a_R": 0.15,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.31,
+   "DNa02_R": 0.89,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.74
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.8,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 166.7,
+   "y": 219.9,
+   "h": -5.4,
+   "wing": 0.71,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.44,
+   "LC10a_R": 0.16,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.32,
+   "DNa02_R": 0.88,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.73
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.83,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 171.1,
+   "y": 219.7,
+   "h": -5.5,
+   "wing": 0.63,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.43,
+   "LC10a_R": 0.17,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.33,
+   "DNa02_R": 0.87,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.72
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.87,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 175.6,
+   "y": 219.4,
+   "h": -5.5,
+   "wing": 0.54,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.43,
+   "LC10a_R": 0.17,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.35,
+   "DNa02_R": 0.85,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.71
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.9,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 180.0,
+   "y": 219.0,
+   "h": -5.5,
+   "wing": 0.44,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.42,
+   "LC10a_R": 0.18,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.36,
+   "DNa02_R": 0.84,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.7
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.93,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 184.4,
+   "y": 218.5,
+   "h": -5.5,
+   "wing": 0.33,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.41,
+   "LC10a_R": 0.19,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.37,
+   "DNa02_R": 0.83,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.69
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 0.97,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 188.9,
+   "y": 218.0,
+   "h": -5.5,
+   "wing": 0.38,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.41,
+   "LC10a_R": 0.19,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.39,
+   "DNa02_R": 0.81,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.68
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.0,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 193.3,
+   "y": 217.3,
+   "h": -5.4,
+   "wing": 0.49,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.4,
+   "LC10a_R": 0.2,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.4,
+   "DNa02_R": 0.8,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.67
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.03,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 197.8,
+   "y": 216.6,
+   "h": -5.4,
+   "wing": 0.58,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.39,
+   "LC10a_R": 0.21,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.41,
+   "DNa02_R": 0.79,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.66
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.07,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 202.2,
+   "y": 215.8,
+   "h": -5.3,
+   "wing": 0.67,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.39,
+   "LC10a_R": 0.21,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.43,
+   "DNa02_R": 0.77,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.64
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.1,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 206.7,
+   "y": 214.9,
+   "h": -5.2,
+   "wing": 0.73,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.38,
+   "LC10a_R": 0.22,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.44,
+   "DNa02_R": 0.76,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.63
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.13,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 211.1,
+   "y": 213.9,
+   "h": -5.1,
+   "wing": 0.78,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.37,
+   "LC10a_R": 0.23,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.45,
+   "DNa02_R": 0.75,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.62
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.17,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 215.6,
+   "y": 212.9,
+   "h": -4.9,
+   "wing": 0.8,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.37,
+   "LC10a_R": 0.23,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.47,
+   "DNa02_R": 0.73,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.61
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.2,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 220.0,
+   "y": 211.8,
+   "h": -4.8,
+   "wing": 0.79,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.36,
+   "LC10a_R": 0.24,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.48,
+   "DNa02_R": 0.72,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.6
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.23,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 224.4,
+   "y": 210.6,
+   "h": -4.6,
+   "wing": 0.77,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.35,
+   "LC10a_R": 0.25,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.49,
+   "DNa02_R": 0.71,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.59
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.27,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 228.9,
+   "y": 209.4,
+   "h": -4.4,
+   "wing": 0.72,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.35,
+   "LC10a_R": 0.25,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.51,
+   "DNa02_R": 0.69,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.58
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.3,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 233.3,
+   "y": 208.1,
+   "h": -4.2,
+   "wing": 0.64,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.34,
+   "LC10a_R": 0.26,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.52,
+   "DNa02_R": 0.68,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.57
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.33,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 237.8,
+   "y": 206.8,
+   "h": -4.0,
+   "wing": 0.56,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.33,
+   "LC10a_R": 0.27,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.53,
+   "DNa02_R": 0.67,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.56
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.37,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 242.2,
+   "y": 205.5,
+   "h": -3.7,
+   "wing": 0.45,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.33,
+   "LC10a_R": 0.27,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.55,
+   "DNa02_R": 0.65,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.54
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.4,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 246.7,
+   "y": 204.2,
+   "h": -3.5,
+   "wing": 0.35,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.32,
+   "LC10a_R": 0.28,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.56,
+   "DNa02_R": 0.64,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.53
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.43,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 251.1,
+   "y": 202.8,
+   "h": -3.2,
+   "wing": 0.37,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.31,
+   "LC10a_R": 0.29,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.57,
+   "DNa02_R": 0.63,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.52
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.47,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 255.6,
+   "y": 201.4,
+   "h": -2.9,
+   "wing": 0.47,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 1,
+    "R": 0
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.31,
+   "LC10a_R": 0.29,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.59,
+   "DNa02_R": 0.61,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.51
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.5,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 260.0,
+   "y": 200.0,
+   "h": -2.6,
+   "wing": 0.57,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.3,
+   "LC10a_R": 0.3,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.6,
+   "DNa02_R": 0.6,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.5
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.53,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 264.4,
+   "y": 198.6,
+   "h": -2.3,
+   "wing": 0.66,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.29,
+   "LC10a_R": 0.31,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.61,
+   "DNa02_R": 0.59,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.49
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.57,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 268.9,
+   "y": 197.2,
+   "h": -2.0,
+   "wing": 0.73,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.29,
+   "LC10a_R": 0.31,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.63,
+   "DNa02_R": 0.57,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.48
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.6,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 273.3,
+   "y": 195.8,
+   "h": -1.6,
+   "wing": 0.77,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.28,
+   "LC10a_R": 0.32,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.64,
+   "DNa02_R": 0.56,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.47
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.63,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 277.8,
+   "y": 194.5,
+   "h": -1.3,
+   "wing": 0.8,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.27,
+   "LC10a_R": 0.33,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.65,
+   "DNa02_R": 0.55,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.46
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.67,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 282.2,
+   "y": 193.2,
+   "h": -0.9,
+   "wing": 0.8,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.03,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.27,
+   "LC10a_R": 0.33,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.67,
+   "DNa02_R": 0.53,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.44
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.7,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 286.7,
+   "y": 191.9,
+   "h": -0.6,
+   "wing": 0.77,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.08,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.26,
+   "LC10a_R": 0.34,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.68,
+   "DNa02_R": 0.52,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.43
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.73,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 291.1,
+   "y": 190.6,
+   "h": -0.2,
+   "wing": 0.72,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.14,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.25,
+   "LC10a_R": 0.35,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.69,
+   "DNa02_R": 0.51,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.42
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.77,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 295.6,
+   "y": 189.4,
+   "h": 0.2,
+   "wing": 0.65,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.19,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.25,
+   "LC10a_R": 0.35,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.71,
+   "DNa02_R": 0.49,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.41
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.8,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 300.0,
+   "y": 188.2,
+   "h": 0.6,
+   "wing": 0.57,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.25,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.24,
+   "LC10a_R": 0.36,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.72,
+   "DNa02_R": 0.48,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.4
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.83,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 304.4,
+   "y": 187.1,
+   "h": 0.9,
+   "wing": 0.47,
+   "jumping": true
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.31,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.23,
+   "LC10a_R": 0.37,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.73,
+   "DNa02_R": 0.47,
+   "DNp09": 1.5,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.39
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.87,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 308.9,
+   "y": 186.1,
+   "h": 1.3,
+   "wing": 0.36,
+   "jumping": true
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.36,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.23,
+   "LC10a_R": 0.37,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.75,
+   "DNa02_R": 0.45,
+   "DNp09": 1.5,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.38
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.9,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 313.3,
+   "y": 185.1,
+   "h": 1.7,
+   "wing": 0.35,
+   "jumping": true
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.42,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.22,
+   "LC10a_R": 0.38,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.76,
+   "DNa02_R": 0.44,
+   "DNp09": 1.5,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.37
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.93,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 317.8,
+   "y": 184.2,
+   "h": 2.0,
+   "wing": 0.46,
+   "jumping": true
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.47,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.21,
+   "LC10a_R": 0.39,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.77,
+   "DNa02_R": 0.43,
+   "DNp09": 1.5,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.36
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 1.97,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 322.2,
+   "y": 183.4,
+   "h": 2.4,
+   "wing": 0.56,
+   "jumping": true
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.53,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.21,
+   "LC10a_R": 0.39,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.79,
+   "DNa02_R": 0.41,
+   "DNp09": 1.5,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.34
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.0,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 326.7,
+   "y": 182.7,
+   "h": 2.7,
+   "wing": 0.65,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.58,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.2,
+   "LC10a_R": 0.4,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.8,
+   "DNa02_R": 0.4,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.33
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.03,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 331.1,
+   "y": 182.0,
+   "h": 3.1,
+   "wing": 0.72,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.64,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.19,
+   "LC10a_R": 0.41,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.81,
+   "DNa02_R": 0.39,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.32
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.07,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 335.6,
+   "y": 181.5,
+   "h": 3.4,
+   "wing": 0.77,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.69,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.19,
+   "LC10a_R": 0.41,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.83,
+   "DNa02_R": 0.37,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.31
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.1,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 340.0,
+   "y": 181.0,
+   "h": 3.7,
+   "wing": 0.8,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.75,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.18,
+   "LC10a_R": 0.42,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.84,
+   "DNa02_R": 0.36,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.3
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.13,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 344.4,
+   "y": 180.6,
+   "h": 4.0,
+   "wing": 0.8,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.81,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.17,
+   "LC10a_R": 0.43,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.85,
+   "DNa02_R": 0.35,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.29
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.17,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 348.9,
+   "y": 180.3,
+   "h": 4.2,
+   "wing": 0.78,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.86,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.17,
+   "LC10a_R": 0.43,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.87,
+   "DNa02_R": 0.33,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.28
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.2,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 353.3,
+   "y": 180.1,
+   "h": 4.5,
+   "wing": 0.73,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.92,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.16,
+   "LC10a_R": 0.44,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.88,
+   "DNa02_R": 0.32,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.27
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.23,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 357.8,
+   "y": 180.0,
+   "h": 4.7,
+   "wing": 0.67,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.97,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 1
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.15,
+   "LC10a_R": 0.45,
+   "LPLC2_L": 0.8,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.7
+  },
+  "outputs": {
+   "DNa02_L": 0.89,
+   "DNa02_R": 0.31,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.26
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.27,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 362.2,
+   "y": 180.0,
+   "h": 4.8,
+   "wing": 0.58,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.15,
+   "LC10a_R": 0.45,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.91,
+   "DNa02_R": 0.29,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.24
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.3,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 366.7,
+   "y": 180.1,
+   "h": 5.0,
+   "wing": 0.48,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.14,
+   "LC10a_R": 0.46,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.92,
+   "DNa02_R": 0.28,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.23
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.33,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 371.1,
+   "y": 180.3,
+   "h": 5.1,
+   "wing": 0.38,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.13,
+   "LC10a_R": 0.47,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.93,
+   "DNa02_R": 0.27,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.22
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.37,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 375.6,
+   "y": 180.6,
+   "h": 5.1,
+   "wing": 0.33,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.13,
+   "LC10a_R": 0.47,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.95,
+   "DNa02_R": 0.25,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.21
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.4,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 380.0,
+   "y": 181.0,
+   "h": 5.2,
+   "wing": 0.44,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.12,
+   "LC10a_R": 0.48,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.96,
+   "DNa02_R": 0.24,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.2
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.43,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 384.4,
+   "y": 181.5,
+   "h": 5.1,
+   "wing": 0.55,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.11,
+   "LC10a_R": 0.49,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.97,
+   "DNa02_R": 0.23,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.19
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.47,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 388.9,
+   "y": 182.0,
+   "h": 5.0,
+   "wing": 0.64,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.11,
+   "LC10a_R": 0.49,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 0.99,
+   "DNa02_R": 0.21,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.18
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.5,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 393.3,
+   "y": 182.7,
+   "h": 4.8,
+   "wing": 0.71,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.1,
+   "LC10a_R": 0.5,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.0,
+   "DNa02_R": 0.2,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.17
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.53,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 397.8,
+   "y": 183.4,
+   "h": 4.6,
+   "wing": 0.76,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": false
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.09,
+   "LC10a_R": 0.51,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.0,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.01,
+   "DNa02_R": 0.19,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 0.1
+  },
+  "meters": {
+   "song": 0.0,
+   "rival_song": 0.05,
+   "candle": 0.16
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.57,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 402.2,
+   "y": 184.2,
+   "h": 4.2,
+   "wing": 0.79,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": true
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.09,
+   "LC10a_R": 0.51,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.9,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.03,
+   "DNa02_R": 0.17,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 1.0
+  },
+  "meters": {
+   "song": 0.4,
+   "rival_song": 0.05,
+   "candle": 0.14
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.6,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 406.7,
+   "y": 185.1,
+   "h": 3.8,
+   "wing": 0.8,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": true
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.08,
+   "LC10a_R": 0.52,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.9,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.04,
+   "DNa02_R": 0.16,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 1.0
+  },
+  "meters": {
+   "song": 0.4,
+   "rival_song": 0.05,
+   "candle": 0.13
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.63,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 411.1,
+   "y": 186.1,
+   "h": 3.2,
+   "wing": 0.78,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": true
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.07,
+   "LC10a_R": 0.53,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.9,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.05,
+   "DNa02_R": 0.15,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 1.0
+  },
+  "meters": {
+   "song": 0.4,
+   "rival_song": 0.05,
+   "candle": 0.12
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.67,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 415.6,
+   "y": 187.1,
+   "h": 2.5,
+   "wing": 0.74,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": true
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.07,
+   "LC10a_R": 0.53,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.9,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.07,
+   "DNa02_R": 0.13,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 1.0
+  },
+  "meters": {
+   "song": 0.4,
+   "rival_song": 0.05,
+   "candle": 0.11
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.7,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 420.0,
+   "y": 188.2,
+   "h": 1.7,
+   "wing": 0.68,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": true
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.06,
+   "LC10a_R": 0.54,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.9,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.08,
+   "DNa02_R": 0.12,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 1.0
+  },
+  "meters": {
+   "song": 0.4,
+   "rival_song": 0.05,
+   "candle": 0.1
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.73,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 424.4,
+   "y": 189.4,
+   "h": 0.6,
+   "wing": 0.59,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": true
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.05,
+   "LC10a_R": 0.55,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.9,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.09,
+   "DNa02_R": 0.11,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 1.0
+  },
+  "meters": {
+   "song": 0.4,
+   "rival_song": 0.05,
+   "candle": 0.09
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.77,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 428.9,
+   "y": 190.6,
+   "h": -0.7,
+   "wing": 0.5,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": true
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.05,
+   "LC10a_R": 0.55,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.9,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.11,
+   "DNa02_R": 0.09,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 1.0
+  },
+  "meters": {
+   "song": 0.4,
+   "rival_song": 0.05,
+   "candle": 0.08
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.8,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 433.3,
+   "y": 191.9,
+   "h": -2.3,
+   "wing": 0.39,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": true
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.04,
+   "LC10a_R": 0.56,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.9,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.12,
+   "DNa02_R": 0.08,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 1.0
+  },
+  "meters": {
+   "song": 0.4,
+   "rival_song": 0.05,
+   "candle": 0.07
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.83,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 437.8,
+   "y": 193.2,
+   "h": -4.3,
+   "wing": 0.32,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": true
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.03,
+   "LC10a_R": 0.57,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.9,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.13,
+   "DNa02_R": 0.07,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 1.0
+  },
+  "meters": {
+   "song": 0.4,
+   "rival_song": 0.05,
+   "candle": 0.06
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.87,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 442.2,
+   "y": 194.5,
+   "h": -6.8,
+   "wing": 0.43,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": true
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.03,
+   "LC10a_R": 0.57,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.9,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.15,
+   "DNa02_R": 0.05,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 1.0
+  },
+  "meters": {
+   "song": 0.4,
+   "rival_song": 0.05,
+   "candle": 0.04
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.9,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 446.7,
+   "y": 195.8,
+   "h": -9.9,
+   "wing": 0.53,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": true
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.02,
+   "LC10a_R": 0.58,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.9,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.16,
+   "DNa02_R": 0.04,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 1.0
+  },
+  "meters": {
+   "song": 0.4,
+   "rival_song": 0.05,
+   "candle": 0.03
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.93,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 451.1,
+   "y": 197.2,
+   "h": -14.0,
+   "wing": 0.62,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": true
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.01,
+   "LC10a_R": 0.59,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.9,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.17,
+   "DNa02_R": 0.03,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 1.0
+  },
+  "meters": {
+   "song": 0.4,
+   "rival_song": 0.05,
+   "candle": 0.02
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ },
+ {
+  "t": "state",
+  "time": 2.97,
+  "brain": "true",
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 455.6,
+   "y": 198.6,
+   "h": -19.4,
+   "wing": 0.7,
+   "jumping": false
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "rivals": [
+   {
+    "name": "Sir Cheapdate",
+    "x": 300,
+    "y": 260,
+    "h": 180,
+    "singing": false
+   }
+  ],
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0,
+   "fake": false
+  },
+  "senses": {
+   "lookout": {
+    "L": 0,
+    "R": 1
+   },
+   "perfumer": {
+    "L": 0,
+    "R": 0
+   },
+   "taster": {
+    "tapping": true
+   },
+   "spymaster": {
+    "listen": 0
+   }
+  },
+  "inputs": {
+   "LC10a_L": 0.01,
+   "LC10a_R": 0.59,
+   "LPLC2_L": 0.05,
+   "ORN_VA1v_L": 0.2,
+   "ppk23": 0.9,
+   "JO_wind": 0.1
+  },
+  "outputs": {
+   "DNa02_L": 1.19,
+   "DNa02_R": 0.01,
+   "DNp09": 0.2,
+   "DNg100": 0.9,
+   "MDN": 0.0,
+   "DNp01": 0.3,
+   "pIP10": 1.0
+  },
+  "meters": {
+   "song": 0.4,
+   "rival_song": 0.05,
+   "candle": 0.01
+  },
+  "players": [
+   {
+    "name": "Ava",
+    "roles": [
+     "lookout"
+    ],
+    "connected": true
+   },
+   {
+    "name": "Sam",
+    "roles": [
+     "taster"
+    ],
+    "connected": true
+   }
+  ]
+ }
+]

@@ -1,0 +1,199 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.952941, 0.913725, 0.823529, 1)
+
+[node name="TrialView" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopBar" type="HBoxContainer" parent="TrialView"]
+layout_mode = 1
+anchor_right = 1.0
+offset_bottom = 60.0
+theme_override_constants/separation = 16
+
+[node name="TrialLabel" type="Label" parent="TrialView/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Trial"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CandleBar" type="ProgressBar" parent="TrialView/TopBar"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+size_flags_vertical = 4
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="HallArea" type="Control" parent="TrialView"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_top = 60.0
+offset_bottom = -60.0
+offset_right = -280.0
+clip_contents = true
+
+[node name="Prince" type="ColorRect" parent="TrialView/HallArea"]
+size = Vector2(28, 28)
+pivot_offset = Vector2(14, 14)
+color = Color(0.788235, 0.635294, 0.152941, 1)
+
+[node name="Princess" type="ColorRect" parent="TrialView/HallArea"]
+size = Vector2(24, 24)
+pivot_offset = Vector2(12, 12)
+color = Color(0.847059, 0.788235, 0.929412, 1)
+
+[node name="Giant" type="ColorRect" parent="TrialView/HallArea"]
+visible = false
+size = Vector2(80, 80)
+pivot_offset = Vector2(40, 40)
+color = Color(0.168627, 0.129412, 0.090196, 0.85)
+
+[node name="Rivals" type="Node2D" parent="TrialView/HallArea"]
+
+[node name="ChartPanel" type="VBoxContainer" parent="TrialView"]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_top = 0.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+offset_left = -280.0
+offset_top = 60.0
+offset_bottom = -60.0
+theme_override_constants/separation = 8
+
+[node name="PanelTitle" type="Label" parent="TrialView/ChartPanel"]
+layout_mode = 2
+text = "Royal Nervous System"
+horizontal_alignment = 1
+
+[node name="InputsHeader" type="Label" parent="TrialView/ChartPanel"]
+layout_mode = 2
+text = "Inputs"
+
+[node name="InputBars" type="VBoxContainer" parent="TrialView/ChartPanel"]
+layout_mode = 2
+
+[node name="OutputsHeader" type="Label" parent="TrialView/ChartPanel"]
+layout_mode = 2
+text = "Outputs"
+
+[node name="OutputBars" type="VBoxContainer" parent="TrialView/ChartPanel"]
+layout_mode = 2
+
+[node name="BottomBar" type="HBoxContainer" parent="TrialView"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+offset_top = -60.0
+theme_override_constants/separation = 16
+
+[node name="CaptionLabel" type="Label" parent="TrialView/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Crests" type="HBoxContainer" parent="TrialView/BottomBar"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Lookout" type="ColorRect" parent="TrialView/BottomBar/Crests"]
+custom_minimum_size = Vector2(32, 32)
+color = Color(0.42, 0.39, 0.33, 1)
+
+[node name="Perfumer" type="ColorRect" parent="TrialView/BottomBar/Crests"]
+custom_minimum_size = Vector2(32, 32)
+color = Color(0.42, 0.39, 0.33, 1)
+
+[node name="Taster" type="ColorRect" parent="TrialView/BottomBar/Crests"]
+custom_minimum_size = Vector2(32, 32)
+color = Color(0.42, 0.39, 0.33, 1)
+
+[node name="Spymaster" type="ColorRect" parent="TrialView/BottomBar/Crests"]
+custom_minimum_size = Vector2(32, 32)
+color = Color(0.42, 0.39, 0.33, 1)
+
+[node name="Badge" type="Label" parent="TrialView"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+grow_horizontal = 0
+offset_left = -280.0
+offset_top = 4.0
+text = "TRUE PRINCE"
+horizontal_alignment = 1
+
+[node name="Lobby" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Center" type="VBoxContainer" parent="Lobby"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="SealLabel" type="Label" parent="Lobby/Center"]
+layout_mode = 2
+text = "Present your seal at royalflyness.club"
+horizontal_alignment = 1
+
+[node name="CodeLabel" type="Label" parent="Lobby/Center"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "----"
+horizontal_alignment = 1
+
+[node name="QRPlaceholder" type="ColorRect" parent="Lobby/Center"]
+layout_mode = 2
+size_flags_horizontal = 4
+custom_minimum_size = Vector2(140, 140)
+color = Color(1, 1, 1, 1)
