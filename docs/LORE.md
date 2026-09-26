@@ -10,18 +10,17 @@ of his 166,606 neurons. He can't see, smell, taste or hear without his **Privy C
 
 ## The cast
 
-The personalities are ours. **Every name is a real fly gene.** A fact marked **check** must be confirmed by Neil before it
-goes on screen or into a voice line.
+The personalities are ours. **Every name is a real fly gene.** All facts below were checked by Neil on Sat 26 Sept (sources in the Status column).
 
 | Character | Role in the game | Real gene fact (fact card) | Status |
 |---|---|---|---|
 | **Prince Hamlet** | The player fly, running the MaleCNS v1.0 nervous system | *hamlet* is a real gene that switches which kind of neuron a cell becomes. Its discoverers named it for "to be or not to be" ("IIB or not IIB", after the cells it affects) | Verified (RSB "IIB or not IIB"; SDB Interactive Fly) |
 | **Princess Miranda** | The one he's courting (scripted) | *miranda* is named after Prospero's daughter in The Tempest. When a neural stem cell divides, the Miranda protein carries the Prospero protein into the daughter cell | Verified (Shen, Jan & Jan 1997, *Cell*) |
 | **Duke Prospero** | Her father; opens the ball | *prospero* is named after The Tempest's magician because it controls the fate of the cells a neural stem cell makes | Verified (SDB Interactive Fly) |
-| **Sir Indy, the Knight Who Is Not Dead Yet** | A rival who keeps coming back (Trial III) | *I'm not dead yet* (*Indy*) is named after the Monty Python and the Holy Grail line. Flies with less of it live longer | Verified (UNBC gene-names page); the Monty Python origin is well known, but check a primary source |
+| **Sir Indy, the Knight Who Is Not Dead Yet** | A rival who keeps coming back | *I'm not dead yet* (*Indy*) is named after the Monty Python and the Holy Grail line. In some experiments, flies with less of it lived much longer (the result is debated) | Verified (Wikipedia *Indy (gene)*, FlyBase FBgn0036816); lifespan claim softened because it's contested |
 | **Lord Tinman** | The heartless rival | *tinman* flies grow no heart; named for the Wizard of Oz | Verified (UNBC gene-names page) |
-| **Sir Cheapdate** | The rival who gets tipsy at the Banquet (Trial II) | *cheapdate* flies get drunk on less alcohol | **Check** |
-| **Count Rutabaga** | The rival who can't remember whom he's courting | *rutabaga* flies are bad at learning and memory | **Check** |
+| **Sir Cheapdate** | The rival who gets tipsy at the Banquet | *cheapdate* flies get drunk on less alcohol; it turned out to be an allele of the memory gene *amnesiac* | Verified (Moore et al. 1998, *Cell*) |
+| **Count Rutabaga** | The rival who can't remember whom he's courting | *rutabaga* flies are bad at learning and memory (the gene makes an enzyme, adenylyl cyclase, that memory needs) | Verified (Levin et al. 1992, *Cell*) |
 | **Clown, the Court Jester** | Voices the Chronicle and roasts the council | *clown* mutants have red-and-white eyes | Verified (UNBC gene-names page) |
 | **The Herald** | The announcer (the Jackbox host voice) | None | None |
 | **The Giant** | The human with the swatter | From a fly's point of view, humans are Giants | None |
@@ -55,11 +54,11 @@ goes on screen or into a voice line.
 5. **The Serenade.** Male flies sing by vibrating one wing. pIP10, a male-only neuron, is the song command.
 6. **The Giant Fiber.** The escape neuron is really called the giant fiber, and it's fed directly by thousands of synapses from looming detectors.
 7. **The Changeling.** Same neurons, same number of connections, same input per neuron. Only the partners are scrambled, and that's enough to ruin everything.
-8. **Sir Indy.** *I'm not dead yet* is a real fly gene. Flies with less of it live longer.
+8. **Sir Indy.** *I'm not dead yet* is a real fly gene, named after Monty Python. In some experiments, flies with less of it lived much longer (scientists still argue about it).
 9. **Lord Tinman.** *tinman* flies grow no heart.
 10. **Clown.** *clown* flies have red-and-white eyes.
-11. **Sir Cheapdate** (check). *cheapdate* flies get drunk on less alcohol.
-12. **Count Rutabaga** (check). *rutabaga* flies are bad at learning.
+11. **Sir Cheapdate.** *cheapdate* flies get drunk on less alcohol.
+12. **Count Rutabaga.** *rutabaga* flies are bad at learning and memory.
 
 ## Voice line bank
 

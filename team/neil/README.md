@@ -39,7 +39,7 @@
 - [x] **30 min:** gate decision with the team; if probe C fails, add the hybrid-steering flag with Arnav. *(v2: all 10 button channels pass at full drive; no hybrid needed)*
 - [x] **60 min:** `brain/replay.py`: open-loop replay of a recorded trial with one role's drives set to zero.
 - [x] **90 min:** `server/chronicler.py`: 4 shadow processes, credit shares (turn, walk, jump, song) and event credit → Chronicle JSON. **Post the format by 21:00.**
-- [ ] **30 min:** verify the fact cards (*cheapdate*, *rutabaga* on FlyBase; the *Indy* name origin) and update `docs/LORE.md`.
+- [x] **30 min:** verify the fact cards (*cheapdate*, *rutabaga* on FlyBase; the *Indy* name origin) and update `docs/LORE.md`. *(All verified; Indy lifespan claim softened: it's debated.)*
 
 ### B4 · 23:30-03:30 (4 h)
 - [ ] **120 min:** `agents/run_trials.py`: headless arena + body + brain + bots, multiprocessing pool; returns win rate + one failure reason per run; `get_trace(run_id)`. **Done by 00:30** for Ved.
@@ -77,5 +77,6 @@
   running, so it keeps up with the 20 ms game tick. Self-test (python -m server.chronicler): each player owns their axis
   (thrust 99.5%, turn 67%, altitude 100%, escape + song 100%). Turning is partly shared with FORWARD (a real interaction in the model).
   **For Arnav:** call Chronicler.record() every tick with {player: {input_group: drive}} and finish() at the chapter end.
-- Next for me: fact-check the lore cards; run_trials + bots once the team's 2D mechanics exist; speed check on the demo laptop.
+- 17:00 fact cards verified (cheapdate = amnesiac allele, Moore 1998; rutabaga = adenylyl cyclase, Levin 1992; Indy named after Monty Python, lifespan result debated).
+- Next for me: controls-matrix figure for the demo/Devpost; run_trials + bots once the team's 2D mechanics exist; speed check on the demo laptop.
 - Build: 30 s, under 600 MB. graph_true.npz is 22 MB: AirDrop it (plus neurons.parquet and the 3 Changelings) to teammates who need the real brain.
