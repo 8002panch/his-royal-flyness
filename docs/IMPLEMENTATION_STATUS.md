@@ -12,6 +12,8 @@
   `agents/`, `audio/`, `data/`, `levels/`, `docs/`, and `team/`.
 - `relay/`, `server/`, and `host/` currently contain owner README files only; no runnable relay, phone UI, game server, or Godot
   project has been added.
+- The phone web app is controller-only: it will provide room/role flow, touch inputs, connection status, and constrained
+  role feedback, while the laptop's Godot application remains the only full-game screen.
 - The existing copied game-design and architecture docs describe the prior top-down/four-senses concept. The new controller-platform
   boundary is recorded in [WEBAPP_ARCHITECTURE.md](WEBAPP_ARCHITECTURE.md) so existing history is preserved while implementation
   follows the first-person four-role redesign.
@@ -44,10 +46,42 @@
   Ved-owned `relay/` unless Arnav creates a shared test location.
 - No DigitalOcean, Caddy, DNS, API, or local runtime setup was attempted.
 
+## Phase 1 — rooms, roles, and safe relay
+
+**Status:** complete
+**Branch:** `ved/phase-1-relay-rooms`
+**Scope:** controller-only WebSocket relay, room/role safety, protocol reference, and automated relay tests.
+
+### Delivered
+
+- `relay/relay.py`: runnable relay state and WebSocket server. It creates isolated four-letter rooms, permits one game-server
+  host per room, caps a room at four phones, assigns each of the four roles uniquely, restores an unoccupied saved role after
+  reconnect, validates monotonic message sequence numbers, and clears stale held input after 1.2 seconds.
+- `relay/PROTOCOL.md`: exact JSON messages, safety/error behaviors, and the explicit phone-controller-only display boundary.
+- `relay/tests/test_relay.py`: focused state tests for room isolation, unique roles, the four-phone cap, reconnect, stale input,
+  role-owned axes, stale sequences, and Seer-only feedback routing.
+- `relay/tests/test_network.py`: starts the relay and connects two real WebSocket test clients to join one room and select
+  different roles.
+- `docs/WEBAPP_ARCHITECTURE.md`: now explicitly forbids a phone from rendering any full-game scene or shared map/HUD; Godot on
+  the laptop is the single full-game display.
+
+### Verification performed
+
+| Check | Result |
+|---|---|
+| `python3 -m unittest discover -s relay/tests -v` | Pass: state and two-client network relay coverage |
+| Room isolation and four-phone limit | Pass |
+| Role uniqueness and reconnect restoration | Pass |
+| Stale-input clear and role/axis validation | Pass |
+| Seer-only feedback routing | Pass |
+| Controller-only product boundary documented | Pass |
+
+### Handoff
+
+Phase 2 can implement the small controller pages in `relay/public/`. It must use this relay protocol and must not add a phone
+game view, shared world render, shared map, or gameplay HUD. Godot remains the sole game display.
+
 ## Next phase
 
-Run **Phase 1 — rooms, roles, and safe relay** from the private planning repository's
+Run **Phase 2 — phone controller shell** from the private planning repository's
 `docs/WEBAPP_BUILD_PLAYBOOK.md`.
-
-Required deliverables: `relay/relay.py`, `relay/PROTOCOL.md`, tests for room isolation, role uniqueness, reconnect,
-stale-input clearing, and Seer-only routing; then update this file with commands and results.
