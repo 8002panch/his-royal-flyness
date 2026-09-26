@@ -95,4 +95,10 @@ Anshul (which brain signals the HUD shows, 19:00), everyone (movement direct or 
   calibrated lookup, error 0.39 → 0.12 s; (4) sustained-load timing: default is now one 20 ms step per tick (median ~6 ms, p99 ~6-8 ms);
   (5) replay() stepped the brain 16x per tick (wrong and slow): fixed + regression test; (6) Chronicler crashed on an empty chapter:
   fixed + test. Also: wiring/baseline caching (second Brain 0.01 s), shared-brain mode for buttons + senses in one step.
+- **18:20 server integration:** Ved's `server/main.py` GameSession takes `SeerAdapter("true")` directly (tested). The server calls
+  sense() only while scanning at 10 Hz, so the adapter now advances the brain by wall-clock time between calls (capped at 200 ms).
+  Brain + server + relay tests: 80 pass. Asked Ved/Arnav (team/README.md) to call sense() every tick to avoid catch-up bursts.
+- **18:25 Royal Decree** rewritten for the first-person design (README + docs/LORE.md). Finer Princess direction is not feasible:
+  LC10a/LC10d and LC4/LPLC2 have no eye-position (column) data in MaleCNS; only small columnar neurons (L1-L5, Mi1, Tm1...) do.
+- Next for me: run_trials + bots (waiting on Arnav's answer), Devpost science (on hold per Neil).
 - Build: 30 s, under 600 MB. graph_true.npz is 22 MB: AirDrop it (plus neurons.parquet and the 3 Changelings) to teammates who need the real brain.

@@ -55,11 +55,8 @@ To be written by Arnav once it runs (target Sun 09:00). Planned: `./run.sh` star
 - **All code in this repository was written during hackUMBC 2026**, inside the hacking window. The plans in `docs/` were written
   before and at the start of the event and contain no code. This project isn't submitted to any other hackathon.
   Details: [docs/RULES_COMPLIANCE.md](docs/RULES_COMPLIANCE.md).
-- **The Royal Decree:** Prince Hamlet runs on the MaleCNS v1.0 wiring diagram of a real male fruit fly. The connection counts are
-  real. Everything else is our assumption: how strong each connection is (derived from synapse counts under one tuned gain),
-  whether it excites or inhibits (predicted from neurotransmitters), and leaving out neuromodulators and connections under
-  5 synapses. Real neurons have dynamics, modulation and learning that this model doesn't. How his output neurons become walking
-  is our code. The Princess, the rivals and the Giant are scripted. The names are real fly genes; the personalities are ours.
+- **The Royal Decree** (updated Sat 18:25 for the first-person design; if the team routes movement through the brain, Neil rewrites it):
+  Three players steer Prince Hamlet directly: left and right, up and down, forward and back. The fourth, the Royal Seer, senses the world through his real nervous system: the MaleCNS v1.0 wiring diagram of a real male fruit fly (Berg et al., *Cell*, 2026; CC-BY 4.0) runs live as a simple rate model, and the Seer's cues (where the Princess is, where a Giant's hand is coming from, and how soon) are read from his descending neurons. The connection counts are real. Everything else is our assumption: how strong each connection is (derived from synapse counts under one tuned gain), whether it excites or inhibits (predicted from neurotransmitters), leaving out neuromodulators and connections under 5 synapses, and how positions in the game become activity in his eyes and antennae. Real neurons have dynamics, modulation and learning that this model doesn't. Swap in the Changeling (same neurons and connection counts, scrambled partners) and the Seer goes blind. If the hybrid fallback is used, the Seer's directions come from the game and only the confidence and warnings from the brain. The Princess, the Giants and the course are scripted. The names are real fly genes; the personalities are ours.
 
 ## AI tools used
 

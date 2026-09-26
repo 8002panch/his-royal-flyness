@@ -142,8 +142,6 @@ The Matchmaker writes new titles and flavor lines in the same voice for generate
 
 ## The Royal Decree (honesty panel text)
 
-> **By royal decree.** Prince Hamlet runs on the MaleCNS v1.0 wiring diagram of a real male fruit fly (Berg et al., *Cell*, 2026; CC-BY 4.0).
-> The connection counts are real. Everything else is our assumption: how strong each connection is, whether it excites or inhibits
-> (predicted from neurotransmitters), and leaving out neuromodulators and connections under 5 synapses. Real neurons have dynamics,
-> modulation and learning that this model doesn't. How his output neurons become walking is our code. The Princess, the rivals and
-> the Giant are scripted. The names are real fly genes; the personalities are ours.
+Updated Sat 26 Sept 18:25 for the first-person design (three players steer directly; the brain powers the Seer).
+
+> **By royal decree.** Three players steer Prince Hamlet directly: left and right, up and down, forward and back. The fourth, the Royal Seer, senses the world through his real nervous system: the MaleCNS v1.0 wiring diagram of a real male fruit fly (Berg et al., *Cell*, 2026; CC-BY 4.0) runs live as a simple rate model, and the Seer's cues (where the Princess is, where a Giant's hand is coming from, and how soon) are read from his descending neurons. The connection counts are real. Everything else is our assumption: how strong each connection is (derived from synapse counts under one tuned gain), whether it excites or inhibits (predicted from neurotransmitters), leaving out neuromodulators and connections under 5 synapses, and how positions in the game become activity in his eyes and antennae. Real neurons have dynamics, modulation and learning that this model doesn't. Swap in the Changeling (same neurons and connection counts, scrambled partners) and the Seer goes blind. If the hybrid fallback is used, the Seer's directions come from the game and only the confidence and warnings from the brain. The Princess, the Giants and the course are scripted. The names are real fly genes; the personalities are ours.
