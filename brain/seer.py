@@ -223,6 +223,8 @@ class SeerAdapter:
         self.realtime = realtime
         self.last_outputs: dict[str, float] | None = None
         self._last_call: float | None = None
+        self._time_debt = 0.0
+        self._last_cues: dict | None = None
         if brain is not None:
             source, seed = brain.kind, brain.seed
         self.swap(source, seed)
@@ -245,17 +247,31 @@ class SeerAdapter:
     def reset(self) -> None:
         self._state: dict = {}
         self._last_call = None
+        self._time_debt = 0.0
+        self._last_cues = None
         if self._brain is not None:
             self._brain.reset()
 
     def _steps_for(self, dt: float | None) -> int:
+        """How many 20 ms brain steps this call should take. Time is accumulated, so calling sense() several times within one
+        tick (e.g. once for Godot, once for the phones) never runs the brain faster than real time: extra calls take 0 steps
+        and return the latest cues."""
         now = time.perf_counter()
-        if dt is None and self.realtime and self._last_call is not None:
-            dt = now - self._last_call
-        self._last_call = now
-        if dt is None:
+        if dt is None and not self.realtime:
+            self._last_call = now
             return 1
-        return int(min(self.MAX_CATCHUP_STEPS, max(1, round(dt / self.TICK_S))))
+        if dt is None:
+            dt = self.TICK_S if self._last_call is None else now - self._last_call
+        self._last_call = now
+        self._time_debt += max(0.0, dt)
+        steps = int(self._time_debt / self.TICK_S + 1e-9)
+        if steps > self.MAX_CATCHUP_STEPS:  # after a long gap, settle on the current scene and drop the rest of the debt
+            steps, self._time_debt = self.MAX_CATCHUP_STEPS, 0.0
+        else:
+            self._time_debt -= steps * self.TICK_S
+        if self._last_cues is None:  # the very first call always senses
+            steps = max(steps, 1)
+        return steps
 
     def to_phone_view(self, cues: dict) -> dict:
         """The relay's `seer_view` message (same method name as server/seer_adapter.PlaceholderSeerAdapter)."""
@@ -267,7 +283,11 @@ class SeerAdapter:
         steps = self._steps_for(dt)
         if self._brain is None:
             self.last_outputs = None
-            return {**placeholder(stimuli, self.princess_full_cm), "source": "placeholder", "mode": "placeholder"}
+            cues = {**placeholder(stimuli, self.princess_full_cm), "source": "placeholder", "mode": "placeholder"}
+            self._last_cues = cues
+            return cues
+        if steps == 0 and self._last_cues is not None:
+            return self._last_cues
         try:
             drives = encode(stimuli, self.princess_full_cm)
             for g, v in (extra_drives or {}).items():
@@ -286,7 +306,9 @@ class SeerAdapter:
                 cues["princess"]["bearing_deg"] = truth["princess"]["bearing_deg"]
             if cues["giant"]["warning"] > 0.05:
                 cues["giant"]["side"] = truth["giant"]["side"]
-        return {**cues, "source": self.source, "mode": self.mode}
+        cues = {**cues, "source": self.source, "mode": self.mode}
+        self._last_cues = cues
+        return cues
 
 
 # --- calibration and evaluation ------------------------------------------------------------------------------------------------

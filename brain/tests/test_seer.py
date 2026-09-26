@@ -257,7 +257,34 @@ def test_realtime_catch_up_steps():
     assert calls["n"] == SeerAdapter.MAX_CATCHUP_STEPS, "long gaps are capped"
     calls["n"] = 0
     seer.sense(SCENES[2], dt=0.001)
-    assert calls["n"] == 1, "at least one step per call"
+    assert calls["n"] == 0, "a call within the same tick takes no step (it returns the latest cues)"
+    for _ in range(20):
+        seer.sense(SCENES[2], dt=0.001)
+    assert calls["n"] == 1, "twenty 1 ms calls add up to one 20 ms step"
+
+
+@needs_data
+def test_calling_twice_per_tick_does_not_speed_up_the_brain():
+    """Godot's update and the phone update may both call sense() in the same tick."""
+    import time as _time
+
+    seer = SeerAdapter("true")
+    calls = {"n": 0}
+    real = seer._brain.step
+
+    def counting(drives):
+        calls["n"] += 1
+        return real(drives)
+
+    seer._brain.step = counting
+    t0 = _time.perf_counter()
+    while _time.perf_counter() - t0 < 0.5:  # half a second, three calls per 20 ms tick
+        for _ in range(3):
+            cues = seer.sense(SCENES[2])
+        _time.sleep(0.02)
+    elapsed = _time.perf_counter() - t0
+    assert abs(calls["n"] - elapsed / 0.02) <= 3, f"{calls['n']} steps in {elapsed:.2f} s"
+    assert cues["princess"]["side"] == "right"
 
 
 @needs_data
