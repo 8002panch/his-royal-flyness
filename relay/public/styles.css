@@ -56,6 +56,7 @@ input:focus-visible, button:focus-visible { outline: 4px solid #ffdc75; outline-
 .warning-card { grid-column: span 2; border-color: #ff9b82; background: #4a2730; }
 meter { width: 100%; accent-color: #fbcf64; }
 .overlay { position: fixed; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgb(12 8 18 / .86); z-index: 3; }
+.overlay[hidden] { display: none; }
 .overlay-card { width: min(100%, 28rem); padding: 1.5rem; border: 2px solid #fbcf64; border-radius: 1rem; background: #271b35; }
 @media (max-width: 380px) { .hold-button { min-height: 9rem; } .control-pair { min-height: 38dvh; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
