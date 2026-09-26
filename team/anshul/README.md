@@ -32,15 +32,17 @@
       screen exists; code/QR still placeholder — no owner has defined a room-code field in any real message yet.)*
 
 ### B2 · 17:55-20:00 (2 h)
-- [ ] **30 min:** fonts (UnifrakturMaguntia, IM Fell English), palette, parchment + manuscript margins ([GAME_DESIGN.md](../../docs/GAME_DESIGN.md#art-direction-no-dedicated-artist-needed)).
-- [ ] **60 min:** sprites: Hamlet (crown), Miranda (tiara), rivals (tabards), the Giant's shadow, the Feast. Scents are never drawn (only the Perfumer sees them).
-- [ ] **30 min:** wing buzz, jump arc + dust puff, SPLAT ink blot, hearts.
+- [x] **30 min:** fonts (UnifrakturMaguntia, IM Fell English), palette, parchment + manuscript margins ([GAME_DESIGN.md](../../docs/GAME_DESIGN.md#art-direction-no-dedicated-artist-needed)).
+      *(Done as the pixel-art court: pixel fonts Jacquarda Bastarda 9 / Silkscreen / Pixelify Sans, the 5-colour palette, parchment panels.)*
+- [x] **60 min:** sprites: Hamlet (crown), Miranda (tiara), rivals (tabards), the Giant's shadow, the Feast. Scents are never drawn (only the Perfumer sees them).
+      *(Placeholder pixel art drawn in code; the Giant is a hand + shadow; rivals are Sir Cheapdate and Sir Indy.)*
+- [x] **30 min:** wing buzz, jump arc + dust puff, SPLAT ink blot, hearts. *(No jump arc yet: there is no jump in the direct-movement game.)*
 
 ### B3 · 20:00-23:30 (3½ h)
 - [ ] **75 min:** the Royal Nervous System chart: live bars for inputs and outputs, real neuron names in small type.
 - [ ] **45 min:** trial intro cards with Royal Facts (from `docs/LORE.md`).
-- [ ] **60 min:** Chronicle screen: credit banners per crest, Knight of the Realm, the blunder of the round (from Neil's Chronicle JSON).
-- [ ] **30 min:** captions bar for every voice line.
+- [x] **60 min:** Chronicle screen: credit banners per crest, Knight of the Realm, the blunder of the round (from Neil's Chronicle JSON).
+- [x] **30 min:** captions bar for every voice line.
 
 ### B4 · 23:30-03:30 (4 h)
 - [ ] **90 min:** `audio/gen_audio.py` + `lines.csv` / `sfx.csv` / `music.csv` from [LORE.md](../../docs/LORE.md#voice-line-bank); pick 3 library voices (no voice cloning); generate about 80 lines (v3 model), sound effects and music.
@@ -79,3 +81,16 @@
 - **Pixel-art host direction accepted:** `host/PIXEL_ART_WORLD_CONCEPT.md` is the implementation plan and
   `host/CLAUDE_PIXEL_ART_PROMPT.md` is the handoff prompt for the world builder. It preserves the live direct-movement
   and Seer interfaces while replacing the dashboard visual treatment with a versioned royal-court pixel-art world.
+- **Pixel-art court built (Sat 26 Sept, evening), per `host/PIXEL_ART_WORLD_CONCEPT.md`:** `host/scenes/Court.tscn`
+  is now the main scene (640x360, 2x nearest-neighbour). The dashboard (`scenes/Main.tscn`) is untouched and one key
+  away (`F2`, or `-- --dashboard`). It reads the real Phase 3 feed from `server/main.py` (`fly`, `render`, `roles`) plus the
+  provisional fields above, and changes nothing in `GameState`, the relay or any message. Details: `host/README.md`.
+- **Deliberate differences from the concept doc:** (1) the Seer's cues stay off the shared screen. The concept keeps
+  `cues.princess`/`cues.giant` on the compass and warning, but only the Seer's phone may see them
+  (`docs/WEBAPP_ARCHITECTURE.md`), so the compass only sweeps while scanning and the Giant lamp lights only when the hand
+  is visible anyway. (2) The four role cards sit along the bottom instead of a left column, to give the hall more width.
+  (3) Neural activity is four icon/bar rows (vision/flight/reaction/song, magnitudes of `brainActivity`) as the concept
+  asks; the one-bar-per-key view lives in the `F1` debug overlay, which plots any key set.
+- **Known GameState issue (not changed, out of scope for the reskin):** on Windows with no server running, the first
+  WebSocket attempt stays "connecting" for about 30 s before the sample sequence starts (measured 35.7 s), and each 3 s
+  retry probe restarts the sample at frame 0. Worth a small fix before the demo if it runs offline.

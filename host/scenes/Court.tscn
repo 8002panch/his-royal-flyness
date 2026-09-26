@@ -1,0 +1,67 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/court/court_main.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/court/court_world.gd" id="2_world"]
+[ext_resource type="Script" path="res://scripts/court/shadows.gd" id="3_shadows"]
+[ext_resource type="Script" path="res://scripts/court/hamlet.gd" id="4_hamlet"]
+[ext_resource type="Script" path="res://scripts/court/miranda.gd" id="5_miranda"]
+[ext_resource type="Script" path="res://scripts/court/rival.gd" id="6_rival"]
+[ext_resource type="Script" path="res://scripts/court/giant_hand.gd" id="7_giant"]
+[ext_resource type="Script" path="res://scripts/court/fx_layer.gd" id="8_fx"]
+[ext_resource type="Script" path="res://scripts/court/name_tags.gd" id="9_tags"]
+[ext_resource type="Script" path="res://scripts/court/hud/court_hud.gd" id="10_hud"]
+
+[node name="Court" type="Node"]
+script = ExtResource("1_main")
+
+[node name="World" type="Node2D" parent="."]
+script = ExtResource("2_world")
+
+[node name="FarBackground" type="Sprite2D" parent="World"]
+centered = false
+
+[node name="FloorCarpet" type="Sprite2D" parent="World"]
+centered = false
+
+[node name="ColumnsBanners" type="Node2D" parent="World"]
+
+[node name="Columns" type="Sprite2D" parent="World/ColumnsBanners"]
+centered = false
+
+[node name="Feast" type="Node2D" parent="World"]
+
+[node name="Tables" type="Sprite2D" parent="World/Feast"]
+centered = false
+
+[node name="Shadows" type="Node2D" parent="World"]
+script = ExtResource("3_shadows")
+
+[node name="Actors" type="Node2D" parent="World"]
+
+[node name="Hamlet" type="Node2D" parent="World/Actors"]
+script = ExtResource("4_hamlet")
+
+[node name="Miranda" type="Node2D" parent="World/Actors"]
+script = ExtResource("5_miranda")
+
+[node name="SirCheapdate" type="Node2D" parent="World/Actors"]
+script = ExtResource("6_rival")
+style_name = "cheapdate"
+hall_pos = Vector3(-1.56, -0.88, -0.55)
+
+[node name="SirIndy" type="Node2D" parent="World/Actors"]
+script = ExtResource("6_rival")
+style_name = "indy"
+hall_pos = Vector3(1.56, -0.88, 0.3)
+
+[node name="Giant" type="Node2D" parent="World/Actors"]
+script = ExtResource("7_giant")
+
+[node name="FX" type="Node2D" parent="World"]
+script = ExtResource("8_fx")
+
+[node name="Labels" type="Node2D" parent="World"]
+script = ExtResource("9_tags")
+
+[node name="Hud" type="CanvasLayer" parent="."]
+script = ExtResource("10_hud")
