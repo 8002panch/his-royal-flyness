@@ -23,12 +23,12 @@
 ## Tasks
 
 ### B1 · 15:45-17:45 (2 h)
-- [ ] **15 min:** venv; copy the three MaleCNS Feather files into `data/` (and a USB stick).
-- [ ] **45 min:** `brain/build_graph.py` (neurons with a superclass not containing "tbc"; signs from `consensus_nt`; modulators silenced; edges with 5+ synapses; input-fraction weights) → `data/graph_true.npz`, `data/neurons.parquet`. **Done when** it prints 166,606 neurons and about 6.24M edges.
-- [ ] **15 min:** `brain/brain.py` stub with the agreed API (returns zeros). **Push by 16:15.**
-- [ ] **20 min:** `brain/io_sets.py` → `brain/io_sets.json` (commit it). **Done when** counts match [DATA_CHECK.md](../../docs/DATA_CHECK.md#input-and-output-groups-counts-and-sides).
-- [ ] **15 min:** `brain/sim.py` step. **Done when** one step is 6 ms or less.
-- [ ] **10 min:** `brain/changeling.py` with 3 seeds. **Done when** every row's input sum matches the True Prince exactly.
+- [x] **15 min:** venv; copy the three MaleCNS Feather files into `data/` (and a USB stick).
+- [x] **45 min:** `brain/build_graph.py` (neurons with a superclass not containing "tbc"; signs from `consensus_nt`; modulators silenced; edges with 5+ synapses; input-fraction weights) → `data/graph_true.npz`, `data/neurons.parquet`. **Done when** it prints 166,606 neurons and about 6.24M edges.
+- [x] **15 min:** `brain/brain.py` stub with the agreed API (returns zeros). **Push by 16:15.**
+- [x] **20 min:** `brain/io_sets.py` → `brain/io_sets.json` (commit it). **Done when** counts match [DATA_CHECK.md](../../docs/DATA_CHECK.md#input-and-output-groups-counts-and-sides).
+- [x] **15 min:** rate model step (in `brain/model.py`). **Done when** one step is 6 ms or less. *(5.6 ms per step, 11.2 ms per tick.)*
+- [x] **10 min:** `brain/changeling.py` with 3 seeds. **Done when** every row's input sum matches the True Prince exactly.
 
 ### B2 · 17:55-20:00 (2 h)
 - [ ] **60 min:** `brain/probes.py`: probes A to D ([TECH_ARCHITECTURE.md](../../docs/TECH_ARCHITECTURE.md#probes-brainprobespy-the-tests-behind-the-2000-gate)) on the True Prince and 3 Changelings, 10 runs each. Print a table (read the first results at the 17:45 sync).
@@ -57,4 +57,6 @@
 - [ ] **30 min:** Q&A drill with the presenter ([DEMO_SCRIPT.md](../../docs/DEMO_SCRIPT.md#qa-drill)).
 
 ## Notes
-(your notes here)
+- 15:55 first look (gain sweep, one mixed stimulus): tick 11.2 ms; at gain 3 rest is quiet (4.7% of neurons above 0.1, 0.4% saturated);
+  left stimulus drives DNa02_L (z 8.5) not DNa02_R (0.2); DNp01 z ~50; pIP10 weak at gain 3 (1.1), better at 5 (2.9). Probes will separate stimuli and add the Changeling.
+- Build: 30 s, under 600 MB. graph_true.npz is 22 MB: AirDrop it (plus neurons.parquet and the 3 Changelings) to teammates who need the real brain.
