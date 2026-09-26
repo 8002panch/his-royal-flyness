@@ -90,4 +90,9 @@ Anshul (which brain signals the HUD shows, 19:00), everyone (movement direct or 
   descending neurons: looming → DNp04/DNp02/DNp01 on the threat's side (same side 81-85 vs other side ~1; Changelings ~0-5).
   Evaluation (60 scenes): True Prince gets the Princess's side 55/60, the Giant's side 60/60, warns 55/60; Changelings warn 0/60.
   Bearing is coarse (left/ahead/right) because each eye's detectors are driven as a group. Results: team/neil/seer_eval.csv.
+- **18:10 backbone audit + test suite (61 tests pass, ~2 min):** fixed (1) "ahead" misses: added a binocular strip to the eye model
+  (Princess sides 55 → 59/60); (2) Giant warnings came only 0.23 s before impact: log looming encoding → 1.2 s lead; (3) time-to-impact:
+  calibrated lookup, error 0.39 → 0.12 s; (4) sustained-load timing: default is now one 20 ms step per tick (median ~6 ms, p99 ~6-8 ms);
+  (5) replay() stepped the brain 16x per tick (wrong and slow): fixed + regression test; (6) Chronicler crashed on an empty chapter:
+  fixed + test. Also: wiring/baseline caching (second Brain 0.01 s), shared-brain mode for buttons + senses in one step.
 - Build: 30 s, under 600 MB. graph_true.npz is 22 MB: AirDrop it (plus neurons.parquet and the 3 Changelings) to teammates who need the real brain.

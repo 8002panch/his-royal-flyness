@@ -1,6 +1,6 @@
-brain,princess side correct,princess detected,median bearing error (deg),princess cue delay (ms),giant side correct,giant warned (warning >= 0.3),giant warning delay (ms),ms per tick
-true,55/60,60/60,38.7,20.0,60/60,55/60,400.0,12.6
-changeling 0,10/60,15/60,39.0,30.0,19/60,0/60,,13.3
-changeling 1,1/60,16/60,102.6,240.0,0/60,0/60,,12.0
-changeling 2,0/60,12/60,91.2,,19/60,0/60,,12.1
-placeholder,60/60,60/60,0.0,0.0,60/60,60/60,0.0,0.0
+brain,princess detected,princess side correct,princess cue delay (ms),giant warned before impact,warning lead time (s),giant side correct,time-to-impact error (s),ms per tick
+true,60/60,59/60,20.0,60/60,1.2,60/60,0.12,5.9
+changeling 0,15/60,10/60,40.0,0/60,,25/60,,5.9
+changeling 1,17/60,1/60,90.0,0/60,,0/60,,6.1
+changeling 2,11/60,1/60,120.0,0/60,,25/60,,5.9
+placeholder,60/60,60/60,0.0,60/60,1.18,60/60,0.15,0.0

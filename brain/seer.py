@@ -32,7 +32,7 @@ The readout is fixed, not trained: left-vs-right population balance for the side
 The Changeling is read out the same way, so its cues degrade. Bearing is **coarse on purpose**: each eye's Princess detectors are
 driven as one group, so beyond the narrow zone straight ahead the wiring only says "left" or "right" (the balance is all-or-nothing;
 measured Sat 17:15). `bearing_deg` is therefore the sector center: -60 (left), 0 (ahead), +60 (right).
-Evaluate True vs Changeling: python -m brain.seer --evaluate.
+Calibrate the time-to-impact table: python -m brain.seer --calibrate. Evaluate True vs Changeling: python -m brain.seer --evaluate.
 """
 
 from __future__ import annotations
@@ -47,17 +47,41 @@ from typing import Any
 import numpy as np
 
 
+CALIBRATION = Path(__file__).resolve().parent / "seer_calibration.json"
+
+
+def _load_eta_table() -> dict | None:
+    """Warning level -> seconds to impact, measured on the True Prince (python -m brain.seer --calibrate)."""
+    if CALIBRATION.exists():
+        return json.loads(CALIBRATION.read_text())
+    return None
+
+
 # --- encoding: world -> sensory drives (all our assumptions; documented on the Royal Decree) ----------------------------------
 PRINCESS_FULL_CM = 150.0    # the Princess fully drives the Princess detectors at this distance or closer (tune to the course
                             # scale: she's detected out to roughly 7x this distance). SeerAdapter(princess_full_cm=...) overrides it.
-EYE_OVERLAP_DEG = 12.0      # width of the soft left/right handover straight ahead (both eyes see her there)
+BINOCULAR_DEG = 10.0        # each eye sees its own side plus this far across the midline: both eyes see anything within +/-10 degrees
+EYE_EDGE_DEG = 2.0          # softness of each eye's field edge (degrees)
 BLIND_BEHIND_DEG = 165.0    # nothing is seen within 15 degrees of straight behind
-LOOM_FULL_DEG_S = 300.0     # a looming object growing this fast (degrees per second) fully drives the looming detectors
+LOOM_REF_DEG_S = 2.0        # looming drive is logarithmic in expansion speed: log(1 + v/ref) / log(1 + full/ref)
+LOOM_FULL_DEG_S = 300.0     # expansion speed (degrees per second) that fully drives the looming detectors
 
 
-def side_weights(bearing_deg: float, width: float = EYE_OVERLAP_DEG) -> tuple[float, float]:
-    """(left, right) weights for something at this bearing: 1/0 far left, 0/1 far right, about 0.5/0.5 straight ahead."""
-    right = 1.0 / (1.0 + math.exp(-bearing_deg / (width / 4.0)))
+def _step(x: float) -> float:
+    return 1.0 / (1.0 + math.exp(-x))
+
+
+def eye_weights(bearing_deg: float) -> tuple[float, float]:
+    """(left eye, right eye) visibility of a point at this bearing. Each eye sees its own side plus a binocular strip across the
+    midline, so something within +/-BINOCULAR_DEG is seen fully by both eyes (1, 1); far left is (1, 0), far right (0, 1)."""
+    left = _step((BINOCULAR_DEG - bearing_deg) / EYE_EDGE_DEG)
+    right = _step((bearing_deg + BINOCULAR_DEG) / EYE_EDGE_DEG)
+    return left, right
+
+
+def side_weights(bearing_deg: float, width: float = 40.0) -> tuple[float, float]:
+    """Smooth (left, right) split for the antennae's wind sense: 1/0 far left, 0/1 far right, 0.5/0.5 straight ahead."""
+    right = _step(bearing_deg / (width / 4.0))
     return 1.0 - right, right
 
 
@@ -77,14 +101,14 @@ def encode(stimuli: dict[str, Any], princess_full_cm: float = PRINCESS_FULL_CM) 
     p = stimuli.get("princess")
     if p and abs(p["bearing_deg"]) < BLIND_BEHIND_DEG:
         strength = min(1.0, princess_full_cm / max(p["distance_cm"], 1.0))
-        wl, wr = side_weights(p["bearing_deg"])
+        wl, wr = eye_weights(p["bearing_deg"])
         drives["her_L"], drives["her_R"] = strength * wl, strength * wr
     for g in stimuli.get("giants") or []:
         if abs(g["bearing_deg"]) >= BLIND_BEHIND_DEG:
             continue
         rate = looming_rate_deg_s(g.get("size_cm", 40.0), g["distance_cm"], g.get("approach_cm_s", 0.0))
-        strength = min(1.0, rate / LOOM_FULL_DEG_S)
-        wl, wr = side_weights(g["bearing_deg"], width=30.0)
+        strength = min(1.0, math.log1p(rate / LOOM_REF_DEG_S) / math.log1p(LOOM_FULL_DEG_S / LOOM_REF_DEG_S))
+        wl, wr = eye_weights(g["bearing_deg"])
         drives["loom_L"] = max(drives["loom_L"], strength * wl)
         drives["loom_R"] = max(drives["loom_R"], strength * wr)
     w = stimuli.get("wind")
@@ -104,7 +128,7 @@ WIND_FULL_Z = 15.0
 SECTOR_DEG = {"left": -60.0, "ahead": 0.0, "right": 60.0}
 
 
-def decode(out: dict[str, float], state: dict) -> dict:
+def decode(out: dict[str, float], state: dict, eta_table: dict | None = None) -> dict:
     hl, hr = max(out["seer_her_L"], 0.0), max(out["seer_her_R"], 0.0)
     ll, lr = max(out["seer_loom_L"], 0.0), max(out["seer_loom_R"], 0.0)
     wl, wr = max(out["seer_wind_L"], 0.0), max(out["seer_wind_R"], 0.0)
@@ -120,15 +144,16 @@ def decode(out: dict[str, float], state: dict) -> dict:
         princess = {"side": side, "bearing_deg": round(bearing, 1), "confidence": round(confidence, 2), "distance": distance}
 
     loom = max(ll, lr)
-    warning = max(min(1.0, max(0.0, loom - LOOM_WARN_Z) / (LOOM_FULL_Z - LOOM_WARN_Z)), 0.5 * min(1.0, max(wl, wr) / WIND_FULL_Z))
+    loom_warning = min(1.0, max(0.0, loom - LOOM_WARN_Z) / (LOOM_FULL_Z - LOOM_WARN_Z))
+    warning = max(loom_warning, 0.5 * min(1.0, max(wl, wr) / WIND_FULL_Z))
     gside = None
     if warning > 0.05:
         a, b = (ll, lr) if loom >= LOOM_WARN_Z else (wl, wr)
         gside = "ahead" if abs(b - a) < 0.25 * max(a + b, 1e-6) else ("right" if b > a else "left")
-    # time to impact from how fast the warning is rising (the brain's own estimate; None if it isn't rising)
-    rise = (warning - state.get("last_warning", 0.0)) / 0.02
-    state["last_warning"] = warning
-    eta = round(max(0.0, (1.0 - warning) / rise), 2) if rise > 0.05 and warning > 0.05 else None
+    # seconds to impact: looked up from the looming warning level (table measured on the True Prince; wind alone gives no estimate)
+    eta = None
+    if eta_table is not None and loom_warning >= eta_table["warning"][0]:
+        eta = round(float(np.interp(loom_warning, eta_table["warning"], eta_table["seconds"])), 2)
     return {
         "princess": princess,
         "giant": {"warning": round(warning, 2), "side": gside, "eta_s": eta},
@@ -179,12 +204,19 @@ def to_seer_view(cues: dict) -> dict:
 class SeerAdapter:
     """One interface for the placeholder, the True Prince and the Changeling."""
 
-    def __init__(self, source: str = "true", seed: int = 0, mode: str = "neural", princess_full_cm: float = PRINCESS_FULL_CM) -> None:
+    def __init__(self, source: str = "true", seed: int = 0, mode: str = "neural", princess_full_cm: float = PRINCESS_FULL_CM,
+                 brain: Any = None) -> None:
+        """`brain`: pass an existing brain.brain.Brain to share it with button-driven movement (one brain step per tick for both).
+        Its kind/seed win over `source`/`seed`."""
         if mode not in ("neural", "hybrid"):
             raise ValueError("mode must be 'neural' or 'hybrid'")
         self.mode = mode
         self.princess_full_cm = princess_full_cm
-        self._brain = None
+        self._eta_table = _load_eta_table()
+        self._brain = brain
+        self.last_outputs: dict[str, float] | None = None
+        if brain is not None:
+            source, seed = brain.kind, brain.seed
         self.swap(source, seed)
 
     def swap(self, source: str, seed: int = 0) -> None:
@@ -207,12 +239,18 @@ class SeerAdapter:
         if self._brain is not None:
             self._brain.reset()
 
-    def sense(self, stimuli: dict[str, Any]) -> dict:
+    def sense(self, stimuli: dict[str, Any], extra_drives: dict[str, float] | None = None) -> dict:
+        """One tick. `extra_drives` (e.g. button drives) go into the same brain step; the full outputs land in `self.last_outputs`."""
         if self._brain is None:
+            self.last_outputs = None
             return {**placeholder(stimuli, self.princess_full_cm), "source": "placeholder", "mode": "placeholder"}
         try:
-            out = self._brain.step(encode(stimuli, self.princess_full_cm))
-            cues = decode(out, self._state)
+            drives = encode(stimuli, self.princess_full_cm)
+            for g, v in (extra_drives or {}).items():
+                drives[g] = min(1.0, drives.get(g, 0.0) + float(v))
+            out = self._brain.step(drives)
+            self.last_outputs = out
+            cues = decode(out, self._state, self._eta_table)
         except Exception:  # never let the brain break the game: fall back to the placeholder for this tick
             return {**placeholder(stimuli, self.princess_full_cm), "source": "placeholder", "mode": "placeholder", "error": True}
         if self.mode == "hybrid":
@@ -234,25 +272,68 @@ def _settle(adapter: SeerAdapter, stimuli: dict, ticks: int = 25) -> dict:
     return cues
 
 
+def _approach(adapter: SeerAdapter, bearing: float, d0: float, v: float, size: float):
+    """Fly one Giant straight at the Prince until impact; yields (cues, true seconds left) every tick."""
+    adapter.reset()
+    t_imp = (d0 - size) / v
+    for t in range(int(t_imp / 0.02)):
+        d = d0 - v * 0.02 * t
+        cues = adapter.sense({"giants": [{"bearing_deg": bearing, "elevation_deg": 20.0, "distance_cm": d,
+                                          "approach_cm_s": v, "size_cm": size}]})
+        yield cues, t_imp - t * 0.02
+
+
+def _random_giants(rng, n):
+    return [(float(rng.choice([-1, 1]) * rng.uniform(20, 150)), float(rng.uniform(150, 700)), float(rng.uniform(150, 500)),
+             float(rng.uniform(25, 60))) for _ in range(n)]
+
+
+def calibrate(n: int = 80, seed: int = 11) -> None:
+    """Measure warning level vs true seconds to impact on the True Prince; save a monotonic lookup table."""
+    seer = SeerAdapter("true")
+    seer._eta_table = None
+    pairs = []
+    for case in _random_giants(np.random.default_rng(seed), n):
+        for cues, left in _approach(seer, *case):
+            a = cues["activity"]["looming"]
+            w = min(1.0, max(0.0, a - LOOM_WARN_Z) / (LOOM_FULL_Z - LOOM_WARN_Z))
+            if 0.02 <= w and left <= 3.0:
+                pairs.append((w, left))
+    w, left = np.array(pairs).T
+    edges = np.linspace(0.02, 1.0, 26)
+    idx = np.clip(np.digitize(w, edges) - 1, 0, len(edges) - 2)
+    centers, secs = [], []
+    for i in range(len(edges) - 1):
+        m = idx == i
+        if m.sum() >= 20:
+            centers.append(float(w[m].mean()))
+            secs.append(float(np.median(left[m])))
+    secs = np.minimum.accumulate(np.array(secs))  # more warning never means more time left
+    table = {"warning": [round(c, 4) for c in centers], "seconds": [round(float(x), 3) for x in secs],
+             "note": f"Looming warning level vs median seconds to impact, True Prince, {n} random approaches (python -m brain.seer --calibrate)"}
+    CALIBRATION.write_text(json.dumps(table, indent=1))
+    print(f"wrote {CALIBRATION.name}: {len(centers)} points from {len(pairs)} samples; warning {centers[0]:.2f}-{centers[-1]:.2f} -> {secs[0]:.2f}-{secs[-1]:.2f} s")
+
+
 def evaluate(n: int = 60, seed: int = 7, out_csv: str | None = None) -> None:
-    """True Prince vs Changelings: how often the Seer gets the side right, bearing error, and how fast cues appear."""
+    """True Prince vs Changelings on fresh random scenes (not the calibration scenes)."""
     import pandas as pd
 
     rng = np.random.default_rng(seed)
     princess_cases = [(float(rng.uniform(-150, 150)), float(rng.uniform(40, 800))) for _ in range(n)]
-    giant_cases = [(float(rng.choice([-1, 1]) * rng.uniform(20, 150)), float(rng.uniform(150, 400)), float(rng.uniform(200, 500))) for _ in range(n)]
+    giant_cases = _random_giants(rng, n)
     rows = []
     for source, s in (("true", 0), ("changeling", 0), ("changeling", 1), ("changeling", 2), ("placeholder", 0)):
         adapter = SeerAdapter(source, s)
-        t0 = time.time()
+        t0, ticks = time.time(), 0
         side_ok, err, detect, lat = 0, [], 0, []
         for bearing, dist in princess_cases:
-            truth = "ahead" if abs(bearing) < 10 else ("right" if bearing > 0 else "left")
+            truth = "ahead" if abs(bearing) < BINOCULAR_DEG else ("right" if bearing > 0 else "left")
             adapter.reset()
-            first = None
-            cues = None
+            first, cues = None, None
             for t in range(40):
                 cues = adapter.sense({"princess": {"bearing_deg": bearing, "elevation_deg": 0.0, "distance_cm": dist}})
+                ticks += 1
                 pc = cues["princess"]
                 if first is None and pc is not None and pc["side"] == truth:
                     first = t
@@ -263,35 +344,33 @@ def evaluate(n: int = 60, seed: int = 7, out_csv: str | None = None) -> None:
                 err.append(abs(pc["bearing_deg"] - bearing))
             if first is not None:
                 lat.append(first * 20)
-        g_ok, g_lat, g_warn = 0, [], []
-        for bearing, dist, speed in giant_cases:
-            adapter.reset()
-            first = None
-            cues = None
-            for t in range(40):
-                d = max(5.0, dist - speed * 0.02 * t)
-                cues = adapter.sense({"giants": [{"bearing_deg": bearing, "elevation_deg": 20.0, "distance_cm": d,
-                                                  "approach_cm_s": speed, "size_cm": 40.0}]})
-                if first is None and cues["giant"]["warning"] >= 0.3:
-                    first = t
-            truth = "right" if bearing > 0 else "left"
-            g_ok += cues["giant"]["side"] == truth
-            g_warn.append(cues["giant"]["warning"])
-            if first is not None:
-                g_lat.append(first * 20)
+        g_side, leads, eta_err, warned = 0, [], [], 0
+        for case in giant_cases:
+            t_warn, last = None, None
+            for cues, left in _approach(adapter, *case):
+                ticks += 1
+                last = cues
+                if t_warn is None and cues["giant"]["warning"] >= 0.3:
+                    t_warn = left
+                if cues["giant"]["eta_s"] is not None and 0.3 <= left <= 2.0:
+                    eta_err.append(abs(cues["giant"]["eta_s"] - left))
+            if t_warn is not None:
+                warned += 1
+                leads.append(t_warn)
+            g_side += last is not None and last["giant"]["side"] == ("right" if case[0] > 0 else "left")
         rows.append({
             "brain": source if source != "changeling" else f"changeling {s}",
-            "princess side correct": f"{side_ok}/{n}",
             "princess detected": f"{detect}/{n}",
-            "median bearing error (deg)": round(float(np.median(err)), 1) if err else None,
+            "princess side correct": f"{side_ok}/{n}",
             "princess cue delay (ms)": round(float(np.median(lat)), 0) if lat else None,
-            "giant side correct": f"{g_ok}/{n}",
-            "giant warned (warning >= 0.3)": f"{len(g_lat)}/{n}",
-            "giant warning delay (ms)": round(float(np.median(g_lat)), 0) if g_lat else None,
-            "ms per tick": round((time.time() - t0) / (n * 80) * 1000, 1),
+            "giant warned before impact": f"{warned}/{n}",
+            "warning lead time (s)": round(float(np.median(leads)), 2) if leads else None,
+            "giant side correct": f"{g_side}/{n}",
+            "time-to-impact error (s)": round(float(np.median(eta_err)), 2) if eta_err else None,
+            "ms per tick": round((time.time() - t0) / max(ticks, 1) * 1000, 1),
         })
     df = pd.DataFrame(rows)
-    pd.set_option("display.width", 220)
+    pd.set_option("display.width", 240)
     print(df.to_string(index=False))
     if out_csv:
         df.to_csv(out_csv, index=False)
@@ -300,13 +379,16 @@ def evaluate(n: int = 60, seed: int = 7, out_csv: str | None = None) -> None:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
+    ap.add_argument("--calibrate", action="store_true")
     ap.add_argument("--evaluate", action="store_true")
     ap.add_argument("--n", type=int, default=60)
     ap.add_argument("--csv", default="")
     args = ap.parse_args()
+    if args.calibrate:
+        calibrate()
     if args.evaluate:
         evaluate(args.n, out_csv=args.csv or None)
-    if not args.evaluate:
+    if not (args.calibrate or args.evaluate):
         s = SeerAdapter("true")
         for _ in range(25):
             c = s.sense({"princess": {"bearing_deg": -40, "elevation_deg": 0, "distance_cm": 120},

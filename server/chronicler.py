@@ -48,8 +48,8 @@ def _shadow(without: str, kind: str, seed: int, inbox: mp.Queue, outbox: mp.Queu
         elif cmd == "tick":
             out = model.step(combine(payload, None if without == FULL else without))
             rows.append([out[o] for o in OUTPUT_NAMES])
-        elif cmd == "finish":
-            outbox.put(("result", without, np.array(rows, dtype=np.float32)))
+        elif cmd == "finish":  # always 2-D, even for an empty chapter
+            outbox.put(("result", without, np.array(rows, dtype=np.float32).reshape(-1, len(OUTPUT_NAMES))))
         elif cmd == "swap":
             model.load(*payload)
         elif cmd == "stop":

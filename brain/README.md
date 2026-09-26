@@ -41,7 +41,9 @@ each side separately), steps the brain, and reads **side-selective descending ne
 ```python
 from brain.seer import SeerAdapter
 seer = SeerAdapter(source="true")        # "true" | "changeling" | "placeholder"; mode="neural" (default) or "hybrid"
-cues = seer.sense(stimuli)               # every tick; ~12 ms with the real brain, ~0 for the placeholder
+cues = seer.sense(stimuli)               # every tick; ~6 ms with the real brain, ~0 for the placeholder
+# Sharing one brain with button-driven movement: SeerAdapter(brain=my_brain); seer.sense(stimuli, extra_drives=buttons);
+# the movement outputs are then in seer.last_outputs (one brain step per tick for both).
 seer.swap("changeling", seed=0)          # the Changeling toggle
 ```
 
@@ -54,23 +56,53 @@ If the brain ever throws, `sense()` returns placeholder cues with `"error": true
 | `seer_loom_L/R` (where the Giant is) | DNp04, DNp02, DNp01 (Giant Fiber), DNg40, DNp11, DNp03 | 85 / 1.0 and 81 / 0.6 |
 | `seer_wind_L/R` (the gust) | DNge016, DNg29, DNge175, DNp18, DNg05_a | 16 / 1.1 and 19 / 0.2 |
 
-**Evaluation** (`python -m brain.seer --evaluate`, 60 random scenes each; `team/neil/seer_eval.csv`):
+**Evaluation** (`python -m brain.seer --evaluate`, 60 fresh random scenes per brain; `team/neil/seer_eval.csv`):
 
-| Brain | Princess detected | Princess side correct | Giant side correct | Giant warned in time | Delay |
+| Brain | Princess side correct | Giant warned before impact | Warning lead time | Giant side correct | Time-to-impact error |
 |---|---|---|---|---|---|
-| True Prince | 60/60 | **55/60** | **60/60** | **55/60** | Princess 20 ms, Giant 400 ms |
-| Changelings (3 seeds) | 12 to 16 of 60 | 0 to 10 of 60 | 0 to 19 of 60 | **0/60** | never |
-| Placeholder (true geometry) | 60/60 | 60/60 | 60/60 | 60/60 | 0 |
+| **True Prince** | **59/60** (in 20 ms) | **60/60** | **1.20 s** | **60/60** | **0.12 s** |
+| Changelings (3 seeds) | 1 to 10 of 60 | **0/60** | none | 0 to 25 of 60 | none |
+| Placeholder (true geometry) | 60/60 | 60/60 | 1.18 s | 60/60 | 0.15 s |
+
+How the senses are encoded (our assumptions, stated on the Royal Decree): each eye sees its own side plus a **binocular strip** of
++/-10 degrees (both eyes see the Princess there, which reads as "ahead"); looming drive is **logarithmic** in how fast the Giant grows
+(like real looming detectors), which gives about a second of warning; seconds-to-impact come from a lookup of the looming warning level
+measured on the True Prince (`seer_calibration.json`, rebuilt by `python -m brain.seer --calibrate`).
 
 Bearing is **coarse on purpose**: left / ahead / right (reported as -60 / 0 / +60 degrees). Each eye's Princess detectors are driven as
 one group, so beyond the narrow zone straight ahead the wiring only says "left" or "right". The Princess's detection range is a
 setting (`princess_full_cm`, default 150 cm; she's detected out to about 7x that): tune it to the course scale.
-Tests: `python -m brain.test_seer` (5 tests: same interface for every source, fallback on failure, swaps, sides, unseen Princess).
+Known interactions in the real wiring (not bugs): seeing the Princess pulls steering toward her and damps forward drive; brain
+activity carries over ~100 ms after a button is released.
+
+## Speed
+
+One brain tick is **one 20 ms step** (`Params.dt = 0.02`). Sustained 2.5-minute test on the M2: median 5.7-6.3 ms per tick, p99 mostly
+6.4-8 ms, rare spikes to ~38 ms. (Two 10 ms steps per tick ran at median ~12 ms with p99 up to 20.7 ms: too close to the 20 ms budget
+once Godot and the server share the laptop.) Loaded wiring and resting baselines are cached per process, so a second `Brain` costs ~0.01 s.
+**For the server loop:** use a fixed 20 ms timestep that catches up after a rare slow tick instead of drifting.
+
+## Tests
+
+`python -m pytest brain/tests -q` runs **61 tests in about 2 minutes** (`-m "not slow"` skips the slowest). They cover:
+- **the wiring:** 166,606 neurons, 6,240,402 connections, signs follow the transmitter rule, modulators silent, every group on its side;
+- **the Changelings:** every neuron keeps its exact input, out-degree and sender signs; >99% of partners changed; three distinct seeds;
+- **the simulation:** 30 s of random play stays finite and bounded, rest is quiet, same inputs give identical outputs, reset and
+  True/Changeling swaps are exact, bad inputs are rejected or clamped, a tick fits the 20 ms budget;
+- **the neural mechanics:** every input (10 buttons + 6 senses) drives its own target far above all three Changelings, side-specific
+  inputs favor their own side at least 5:1, the serenade needs both eyes, every input responds within 80 ms;
+- **the Seer:** one interface for placeholder / True Prince / Changeling, safe fallback when the brain fails, swaps, Ved's `seer_view`
+  format, shared-brain mode, correct sides, no flicker, no Princess/Giant cross-talk, wind warnings, hybrid mode, and accuracy on fresh
+  scenes (True Prince at least 18/20 sides, warns every Giant at least 0.6 s ahead with time-to-impact error at most 0.25 s;
+  every Changeling warns 0 times);
+- **replay and the Chronicler:** exactly one brain step per tick, deterministic replays, correct credit, silent players get nothing,
+  empty chapters don't crash, the multi-process Chronicler end to end.
 
 ## Files
 
 `brain.py` (API), `model.py` (rate model: input-fraction weights, gain 4), `build_graph.py`, `io_sets.py` + `io_sets.json`,
-`changeling.py`, `probes.py` (the controls matrix), `replay.py` (for the Chronicler), `seer.py` + `test_seer.py` (the Seer), `figures.py`.
+`changeling.py`, `probes.py` (the controls matrix), `replay.py` (for the Chronicler), `seer.py` (the Seer) + `seer_calibration.json`,
+`figures.py`, `tests/` (the suite above).
 
 ## Setup (about 1 minute)
 
