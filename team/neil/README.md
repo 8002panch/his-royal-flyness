@@ -31,14 +31,14 @@
 - [x] **10 min:** `brain/changeling.py` with 3 seeds. **Done when** every row's input sum matches the True Prince exactly.
 
 ### B2 · 17:55-20:00 (2 h)
-- [ ] **60 min:** `brain/probes.py`: probes A to D ([TECH_ARCHITECTURE.md](../../docs/TECH_ARCHITECTURE.md#probes-brainprobespy-the-tests-behind-the-2000-gate)) on the True Prince and 3 Changelings, 10 runs each. Print a table (read the first results at the 17:45 sync).
-- [ ] **45 min:** tune g, tau, I_max, theta, noise; baseline z-scoring inside `Brain`.
-- [ ] **15 min:** replace the stub with the real `Brain`; hand it to Arnav for the 20:00 first playable.
+- [x] **60 min:** `brain/probes.py`: probes A to D ([TECH_ARCHITECTURE.md](../../docs/TECH_ARCHITECTURE.md#probes-brainprobespy-the-tests-behind-the-2000-gate)) on the True Prince and 3 Changelings, 10 runs each. Print a table (read the first results at the 17:45 sync).
+- [x] **45 min:** tune g, tau, I_max, theta, noise; baseline z-scoring inside `Brain`. *(input fractions, gain 4)*
+- [x] **15 min:** replace the stub with the real `Brain`; hand it to Arnav for the 20:00 first playable. *(v2 button API on main 16:43)*
 
 ### B3 · 20:00-23:30 (3½ h)
-- [ ] **30 min:** gate decision with the team; if probe C fails, add the hybrid-steering flag with Arnav.
-- [ ] **60 min:** `brain/replay.py`: open-loop replay of a recorded trial with one role's drives set to zero.
-- [ ] **90 min:** `server/chronicler.py`: 4 shadow processes, credit shares (turn, walk, jump, song) and event credit → Chronicle JSON. **Post the format by 21:00.**
+- [x] **30 min:** gate decision with the team; if probe C fails, add the hybrid-steering flag with Arnav. *(v2: all 10 button channels pass at full drive; no hybrid needed)*
+- [x] **60 min:** `brain/replay.py`: open-loop replay of a recorded trial with one role's drives set to zero.
+- [x] **90 min:** `server/chronicler.py`: 4 shadow processes, credit shares (turn, walk, jump, song) and event credit → Chronicle JSON. **Post the format by 21:00.**
 - [ ] **30 min:** verify the fact cards (*cheapdate*, *rutabaga* on FlyBase; the *Indy* name origin) and update `docs/LORE.md`.
 
 ### B4 · 23:30-03:30 (4 h)
@@ -69,4 +69,13 @@
   - Scan of all 330 sensory types (≥10 neurons): vision drives nearly everything. Walk: LC9+LC31a (21-34). Motion: LPC1+LLPC1
     (turn to that side 9-12, walk 4-5). Ears: JO sound → DNp01 3.8. Nose and feet ≤1.4 on any output.
   - Proposed: roles built on these channels (see chat / DECISIONS). Needs team sign-off.
+- **16:40 v2 (team pivot to three pilots + Spymaster):** new brain API, one input group per button (see brain/README.md).
+  Scan of 1,443 stimulus groups x 501 descending-neuron readouts picked the channels. All 10 buttons pass the gate at full drive
+  (forward 36.7, back 3.9, left 9.4, right 12.0, up 5.0, down 43.3, duck 99.2, serenade 8.7, lock 18.2/17.3; Changelings ≤4.1).
+  Grids: team/neil/probes_v2_level06.csv, probes_v2_level10.csv. Works for the team's 2D plan (use any subset of buttons).
+- **17:00 Chronicler done:** 4 player shadows + 1 full shadow, deterministic one-step brains (6 ms/tick), ~8 ms/tick each with 5
+  running, so it keeps up with the 20 ms game tick. Self-test (python -m server.chronicler): each player owns their axis
+  (thrust 99.5%, turn 67%, altitude 100%, escape + song 100%). Turning is partly shared with FORWARD (a real interaction in the model).
+  **For Arnav:** call Chronicler.record() every tick with {player: {input_group: drive}} and finish() at the chapter end.
+- Next for me: fact-check the lore cards; run_trials + bots once the team's 2D mechanics exist; speed check on the demo laptop.
 - Build: 30 s, under 600 MB. graph_true.npz is 22 MB: AirDrop it (plus neurons.parquet and the 3 Changelings) to teammates who need the real brain.
