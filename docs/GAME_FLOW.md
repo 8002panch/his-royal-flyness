@@ -1,166 +1,174 @@
-# Game flow: the whole game, start to finish
+# Game flow v2: the whole game, start to finish
 
-The build spec for one full session of *His Royal Flyness*. It turns [GAME_DESIGN.md](GAME_DESIGN.md) into exact states,
-durations, screens, numbers and trial layouts. Every number here is a **starting value**: tune it, then update this file.
-Owners follow [team/README.md](../team/README.md).
+The build spec for one run of *His Royal Flyness* v2 (three pilots and a Spymaster, third-person, low-poly). It turns
+[GAME_DESIGN.md](GAME_DESIGN.md) into exact states, durations, controls, numbers and course layouts. Every number is a **starting
+value**: tune it, then update this file. Owners follow [team/README.md](../team/README.md).
 
-## 1. The session at a glance
+## 1. One run at a glance
 
 ```
-LOBBY ──start──> ROLE REVEAL ──> PRINCE INTRO (first game only)
+LOBBY ──start──> ROLE REVEAL ──> PRINCE INTRO (first run only)
    ^                                  │
    │                                  v
-   │          ┌──> TRIAL INTRO ──> PLAY ──> OUTCOME ──> CHRONICLE ──┐
-   │          └──────────────────── next trial (I, II, III) <───────┘
-   │                                  │ after Trial III
+   │        ┌──> CHAPTER INTRO ──> FLY ──> CHAPTER CLEAR ──> CHRONICLE ──┐
+   │        └───────────── next chapter (1 Pantry, 2 Great Hall, 3 Kitchen, 4 Banquet) <──┘
+   │                                  │ after chapter 4
+   │                                  v
+   │                     FINALE: the Royal Fruit Bowl (serenade)
    │                                  v
    └──── ROYAL DECREE <── FINAL CHRONICLE <── WEDDING
 ```
 
-One session is about 8 minutes: 3 trials of up to 90 s, plus about 25 s of intro, outcome and Chronicle around each.
+About 6 to 8 minutes: 5 flying segments of 45 to 90 s, plus about 20 s of intro and Chronicle around each.
 
 ## 2. States
 
-| State | Lasts | Main screen (Anshul) | Phones (Ved) | Server does (Arnav) | Voice / sound (Anshul) |
+| State | Lasts | Main screen (Anshul) | Phones (Ved) | Server (Arnav) | Voice / sound (Anshul) |
 |---|---|---|---|---|---|
-| **LOBBY** | Until the host presses Start (needs at least 1 player) | Wax seal code, QR, domain, 4 crests (lit when taken), player names | Join → name → crest pick | Relay room open; assigns roles; merges roles for 2 or 3 players | `H_TITLE` on load; `H_JOIN` every 30 s; court_dance_loop |
-| **ROLE REVEAL** | 8 s | Each crest grows in turn with the player's name | Role card: crest, one line, the controls | Locks roles; starts the brain (True Prince unless toggled) | `H_ROLE_*` for each taken role |
-| **PRINCE INTRO** | 10 s (first game only) | Hamlet on parchment; the Royal Nervous System chart fades in | "Get ready" | Brain `reset()` | `H_PRINCE` |
-| **TRIAL INTRO** | 6 s | Title card, flavor line, one Royal Fact card | Role card again | Loads the trial; resets actors, brain and recorder | `H_TRIAL_n`; fanfare_short |
-| **PLAY** | Up to 90 s (the candle) | Hall, sprites, chart, crests lit while senses are open, captions | Live controls + private view | 50 Hz loop: senses → brain → body; actors; win/lose checks; recording | Hints (Trial I only), warnings, wing buzz, whooshes; the trial's music loop |
-| **OUTCOME** | 4 s | Win: hearts + banner. SPLAT: ink blot. Rival: rival bows. Timeout: candle out | Flash (win gold / lose red) | Freezes; hands the recording to the Chronicler | `H_WIN` / `H_SPLAT` / `H_RIVAL_WINS` / `H_TIMEOUT` |
-| **CHRONICLE** | About 20 s (host can skip with Next) | "The Chronicler consults the scrolls..." (3 to 5 s), then credit banners per crest, Knight of the Realm, the blunder | Personal honors | Chronicler JSON (Neil) → Jester script (Ved) | Jester lines (live, or pre-generated after about 4 s) |
-| **WEDDING** | 15 s | Crowns, bells, both flies bowing | "Long live the council!" | Totals the stars | `H_WEDDING`, `P_WEDDING`, wedding_theme |
-| **FINAL CHRONICLE** | 20 s | Stars per trial, overall credit per crest, overall Knight | Personal totals | Sums the three Chronicles | One Jester line |
-| **ROYAL DECREE** | Until dismissed | The honesty panel ([LORE.md](LORE.md#the-royal-decree-honesty-panel-text)) + MaleCNS credit | "Play again?" | Keeps the players and roles | `H_DECREE` |
+| **LOBBY** | Until the host presses Start (1+ players) | Wax-seal room code, QR, domain, 4 crests (lit when taken), names; the Prince idling on a jar lid | Join → name → crest | Relay room open; roles assigned/merged | `H_TITLE`; `H_JOIN` every 30 s; lobby music |
+| **ROLE REVEAL** | 8 s | Each crest pops with its player's name and a one-line job | Role card with the controls | Locks roles | `H_ROLE_*` |
+| **PRINCE INTRO** | 10 s (first run only) | Camera swoops around the Prince; the Royal Nervous System strip appears | "Get ready" | Brain `reset()` | `H_PRINCE` |
+| **CHAPTER INTRO** | 5 s | Chapter title + flavor line + one Royal Fact | Role card | Loads the course; resets actors, brain, recorder | `H_CH_n`; fanfare |
+| **FLY** | Up to the chapter's time limit | Chase camera, low-poly stage, HUD (crests, candle, jewels, strip) | Live controls (+ radar and tells for the Spymaster) | 50 Hz loop: buttons → brain → body; obstacles; rings; checkpoints; mini task | Warnings, wing buzz, whooshes; chapter music |
+| **CHAPTER CLEAR** | 3 s | Crowns earned (1 to 3), time, jewels | Gold flash | Freezes; hands the recording to the Chronicler | Fanfare + Herald quip |
+| **CHRONICLE** | About 15 s (host can skip) | Credit banners per crest, Knight of the Realm, the blunder | Personal numbers | Chronicler JSON (Neil) → Jester script (Ved) | Jester lines |
+| **FINALE** | Up to 60 s | The Fruit Bowl; the Princess on a grape; one last Giant | Same controls; SERENADE pulses on the Spymaster's phone | Serenade meter | Princess reactions |
+| **WEDDING** | 15 s | Crowns, confetti, both flies bowing | "Long live the crew!" | Totals | `H_WEDDING`, wedding theme |
+| **FINAL CHRONICLE** | 20 s | Crowns per chapter, overall credit, overall Knight | Personal totals | Sums the Chronicles | One Jester line |
+| **ROYAL DECREE** | Until dismissed | Honesty panel + MaleCNS credit ([LORE.md](LORE.md#the-royal-decree-honesty-panel-text)) | "Play again?" | Keeps players and roles | `H_DECREE` |
 
-The game still moves on if a trial is lost; nobody gets stuck.
+A run always moves on: each chapter has a time limit, and if it runs out, the Herald skips ahead with a joke.
 
-## 3. Host controls (keyboard on the laptop)
+## 3. Host controls (laptop keyboard)
 
 | Key | Does |
 |---|---|
-| Space | Start / next (skip a screen) |
-| **C** | Toggle TRUE PRINCE / CHANGELING (badge flips, `H_CHANGELING` or `H_TRUE_PRINCE`) |
-| **R** | Replay the current trial with the same actor timings (use after C for the demo) |
-| L | Level Lab screen (the Matchmaker / Master of Trials log) |
-| D | Royal Decree screen |
-| K | Keyboard mode on/off (Q/W eyes, O/P antennae, Space tap, L listen) |
-| 1 / 2 / 3 | Jump to Trial I / II / III |
+| Space | Start / next / skip a screen |
+| **C** | Toggle TRUE PRINCE / CHANGELING (badge flips; `H_CHANGELING` / `H_TRUE_PRINCE`) |
+| **R** | Restart the current chapter (use right after C for the demo) |
+| **M** | **Controls matrix** screen: the button x movement grid for the True Prince next to the Changeling (from `team/neil/probes_v2_*.csv`) |
+| L | Level Lab (Matchmaker / Master of Trials log) |
+| D | Royal Decree |
+| K | Keyboard/gamepad mode on/off |
+| 1 to 5 | Jump to chapter 1 to 4 or the finale |
 | Esc | Pause |
 
-## 4. The three hand-made trials
+## 4. Controls: what each button does
 
-Coordinates in mm; the hall is 60 x 40 with (0, 0) at the bottom left. Headings in degrees: 0 = east (+x), 90 = north (+y).
-**The Princess always carries her own scent** (kind `her`, sigma 6 mm), so `scents` only lists fixed sources.
-Arnav turns these into `levels/certified/trial_*.json` using `agents/schema.py`.
+Each button stimulates one named group of real neurons ([brain/brain.py](../brain/brain.py) `INPUT_GROUPS`) at a **drive** between 0 and 1.
+Press drives: FORWARD 0.6, BACK 1.0, LEFT/RIGHT 0.7, UP 0.8, DOWN 0.7, DUCK 1.0, SERENADE 1.0, Lock on 1.0. Specials (Charge, Launch)
+send **1.0 for 1.5 s** (5 s cooldown). BACK and UP always send 1.0 because they're the weakest channels (they pass the gate at 1.0).
 
-### Trial I: the Garden Audience (tutorial)
-```json
-{"id": "trial_I_garden", "act": "I", "title": "The Garden Audience",
- "flavor": "Her Highness takes the evening air among the grapes.", "herald_intro": "The First Trial: the Garden Audience. Her Highness awaits.",
- "arena": {"w_mm": 60, "h_mm": 40, "theme": "garden"},
- "prince_start": {"x": 10, "y": 20, "heading_deg": 0},
- "princess": {"start": {"x": 34, "y": 26}, "speed_mm_s": 3.0, "patience_s": 60,
-              "waypoints": [{"x": 34, "y": 26, "pause_s": 3}, {"x": 40, "y": 21, "pause_s": 3}, {"x": 34, "y": 15, "pause_s": 3}]},
- "scents": [], "rival": null, "giant": [], "time_limit_s": 90, "focus_roles": ["lookout", "taster"]}
-```
-Hints (Trial I only): Lookout left/right when she's more than 30 degrees off his heading for 3 s; `H_HINT_TAP` on first contact.
+| Role | Button | Brain input | Neurons stimulated | Target output (True Prince z at 1.0) |
+|---|---|---|---|---|
+| Coachman | FORWARD | `forward` 0.6 | LC9 + LC31a | DNp09 thrust (37) |
+| | BACK | `back` 1.0 | SNta02/09 + LC16 + LoVP26 | MDN back up / brake (3.9) |
+| | **Charge!** | `forward` 1.0 for 1.5 s | same | a thrust burst |
+| Helmsman | LEFT / RIGHT | `left` / `right` 0.7 | LLPC1 on that side | DNa02 on that side: turn (9.4 / 12.0) |
+| | **Lock on** | `lock_L` or `lock_R` 1.0 (the side the Princess is on) | LC10a + LC10d, one eye | turn toward her (18) |
+| Falconer | UP / DOWN | `up` 0.8 / `down` 0.7 | LPLC1 + LLPC2 / LPLC4 | DNg02 wing power (5.0) / DNp07 + DNp10 landing (43) |
+| | **Launch** | `up` 1.0 for 1.5 s | same | a climb burst |
+| Spymaster | DUCK | `duck` 1.0 (tap) | LC4 + LPLC2 | DNp01 Giant Fiber escape (99) |
+| | SERENADE | `serenade` 1.0 (hold) | LC10a + LC10d, both eyes | pIP10 song (8.7) |
 
-### Trial II: the Banquet
-```json
-{"id": "trial_II_banquet", "act": "II", "title": "The Banquet",
- "flavor": "The feast is fragrant. So, alas, is Sir Cheapdate.", "herald_intro": "The Second Trial: the Banquet. The feast is fragrant. So, alas, is Sir Cheapdate.",
- "arena": {"w_mm": 60, "h_mm": 40, "theme": "banquet"},
- "prince_start": {"x": 8, "y": 8, "heading_deg": 45},
- "princess": {"start": {"x": 30, "y": 14}, "speed_mm_s": 3.0, "patience_s": 50,
-              "waypoints": [{"x": 25, "y": 12, "pause_s": 2}, {"x": 32, "y": 19, "pause_s": 2}, {"x": 27, "y": 25, "pause_s": 2}]},
- "scents": [{"kind": "feast", "x": 48, "y": 32, "strength": 1.0, "sigma_mm": 10}],
- "rival": {"name": "Sir Cheapdate", "start": {"x": 46, "y": 10}, "speed_mm_s": 3.5, "sings_at_s": 55, "cva_trail": true,
-           "waypoints": [{"x": 36, "y": 12}, {"x": 30, "y": 20}, {"x": 24, "y": 16}]},
- "giant": [], "time_limit_s": 90, "focus_roles": ["perfumer"]}
-```
+Full grids (every button x every output, True Prince and 3 Changelings): `team/neil/probes_v2_level06.csv` and `team/neil/probes_v2_level10.csv`.
 
-### Trial III: the Giant's Shadow
-```json
-{"id": "trial_III_shadow", "act": "III", "title": "The Giant's Shadow",
- "flavor": "The Giants stir. The hall grows dark.", "herald_intro": "The Third Trial: the Giant's Shadow. Only the Giant Fiber is faster than the Giant's hand.",
- "arena": {"w_mm": 60, "h_mm": 40, "theme": "great_hall"},
- "prince_start": {"x": 10, "y": 30, "heading_deg": -30},
- "princess": {"start": {"x": 40, "y": 20}, "speed_mm_s": 4.0, "patience_s": 45,
-              "waypoints": [{"x": 46, "y": 28, "pause_s": 2}, {"x": 38, "y": 12, "pause_s": 2}, {"x": 30, "y": 22, "pause_s": 2}]},
- "scents": [],
- "rival": {"name": "Sir Indy", "start": {"x": 52, "y": 34}, "speed_mm_s": 4.0, "sings_at_s": 65, "cva_trail": true,
-           "waypoints": [{"x": 44, "y": 26}, {"x": 36, "y": 18}, {"x": 44, "y": 14}]},
- "giant": [{"t_s": 15, "target": "near", "from_deg": 90, "fake": true, "warning_whoosh_s": 0.6},
-           {"t_s": 28, "target": "prince", "from_deg": 180, "fake": false, "warning_whoosh_s": 1.0},
-           {"t_s": 45, "target": "near", "from_deg": 0, "fake": true, "warning_whoosh_s": 0.6},
-           {"t_s": 58, "target": "prince", "from_deg": 270, "fake": false, "warning_whoosh_s": 1.0},
-           {"t_s": 75, "target": "prince", "from_deg": 90, "fake": false, "warning_whoosh_s": 0.8}],
- "time_limit_s": 90, "focus_roles": ["lookout", "spymaster"]}
-```
+## 5. Flight numbers (put them all in `server/config.py`)
 
-## 5. Numbers to start from (put them all in `server/config.py`)
+World units: **centimeters**. The kitchen is built big (a chapter course is 15 to 30 m long); the Prince is drawn about 3 cm long.
 
 ### Loop rates
 | Thing | Value |
 |---|---|
-| Game tick (brain + body) | 50 Hz (brain: two 10 ms steps per tick, 11.2 ms measured) |
-| State to Godot | 30 Hz |
-| Private views to phones | 10 Hz |
+| Game tick (brain + body) | 50 Hz (brain 11.2 ms per tick, measured) |
+| State to Godot | 30 Hz (Godot interpolates to 60 fps) |
+| Private views to phones | 10 Hz (Spymaster radar and tells) |
 | Phone input | On change + 1 s heartbeat |
 
-### Senses in (server/senses.py → `Brain.step` drives, all 0 to 1)
-| Group | Rule |
+### Body out (server/body.py): brain z-scores → flight
+| Motion | Rule (start values; smooth every output over ~100 ms) |
 |---|---|
-| `LC10a_L/R` | For each small mover (Princess, rival) in that eye's field (each eye covers 170 degrees on its side, 10 degrees overlap ahead): angular size in degrees / 30, times 1.0 if moving or 0.5 if still; sum, cap at 1 |
-| `LPLC2_L/R`, `LC4_L/R` | Growth rate of the biggest looming object on that side (degrees per second) / 200, cap at 1. The Giant's shadow grows from 5 to 120 degrees in 0.5 s |
-| `ORN_VA1v_L/R`, `ORN_DM1_L/R`, `ORN_DA1_L/R` | Concentration of her scent / the Feast / rival cVA at each antenna, sampled 2 mm to each side of the head (exaggerated for play). `c = strength * exp(-d^2 / (2 sigma^2))`, cap at 1 |
-| `ppk23_L/R` | Each Taster tap while his forelegs touch her: drive 1.0 for 100 ms on both sides |
-| `JO_wind_L/R` | The Giant's wind: ramps 0 to 1 over the last 300 ms before a real impact (0.4 peak for a fake), stronger on the side it comes from |
-| `JO_sound_L/R` | Rival song loudness: 1.0 within 10 mm, falling to 0 at 30 mm |
+| Forward speed | target `v = 120 * clamp((z(DNp09) - 2) / 25, 0, 1)` cm/s; accelerate at 150 cm/s², drag back to 0 at 80 cm/s² when released |
+| Back / brake | if `z(MDN) > 1.5`: target speed `-30` cm/s (brakes first, then drifts back) |
+| Turning | `yaw_rate = 90 * clamp((z(DNa02_R) - z(DNa02_L)) / 10, -1.5, 1.5)` deg/s; the camera banks up to 12 degrees |
+| Climb | if `z(DNg02) > 1`: climb at `40 * clamp(z(DNg02) / 5, 0, 1.5)` cm/s |
+| Descend | if `z(DNp07_10) > 5`: descend at `60 * clamp(z(DNp07_10) / 40, 0, 1)` cm/s |
+| Gravity | with no climb, sink at 8 cm/s (a gentle glide) |
+| Duck (escape dart) | if `z(DNp01) > 10`: dart 40 cm away from the nearest threat over 0.25 s; 0.4 s safe window; 1.5 s refractory |
+| Serenade | if `z(pIP10) > 4`: wings out, buzz; the song meter fills while he's within 8 cm of her and facing her (±45°) |
+| Wings | flap animation speed = 1 + z(DNp09)/20 + z(DNg02)/5 |
 
-A role's drives are only sent while that sense is open (held). Closed senses send 0.
-
-### Body out (server/body.py, from `Brain.step` z-scores)
-| Output | Rule |
-|---|---|
-| Turning | `turn_deg_s = 120 * (z(DNa02_R) - z(DNa02_L)) / 5`, capped at +/- 240 deg/s (sign checked by probe C; flip if needed) |
-| Walking | `speed = 15 * sigmoid(mean(z(DNp09), z(DNg100)) - 1.0)` mm/s |
-| Backing up | if z(MDN) > 2.0: 5 mm/s backward |
-| Jump | if z(DNp01) > 3.0: move 15 mm away from the loom source over 0.2 s; 1 s refractory |
-| Serenade | if z(pIP10) > 2.0: wing out, buzz loop; song meter counts while within 5 mm and facing her within +/- 45 degrees |
-| Courting meter | mean z of pC1 → the "Courting" bar (display only) |
-
-These thresholds are placeholders until Neil's probes (by 20:00) give the real z ranges; Neil posts final values in `team/neil/README.md`.
-
-### Rules of the hall
+### Rules of the kitchen
 | Rule | Value |
 |---|---|
-| Contact (forelegs touching) | Centers within 3 mm and she's within +/- 60 degrees of his heading |
-| Win | 5.0 s of serenade in total (near + facing) |
-| Rival win | The rival's scripted song meter reaches 5.0 s first (it starts at `sings_at_s` and only fills while he's within 5 mm of her) |
-| SPLAT | A real swing lands within 4 mm of him, unless he jumped in the last 0.3 s |
-| Princess patience | If no serenade for `patience_s`, she walks to the far edge; if still none after 15 s more, timeout |
-| Stars | Win = 1; win with more than 30 s left = +1; no jumps from fake swings = +1 |
+| Rings | Fly through a ring (inside its radius) = +1 jewel bonus and the route arrow advances |
+| Jewels | Touch within 4 cm = collected |
+| Collision | Floor, walls and boxes: bounce back 10 cm, lose all speed, 0.5 s stun |
+| SPLAT | The Giant's hand lands within 12 cm of him and he didn't dart in the last 0.4 s: back to the checkpoint, +5 s |
+| Spray cloud | Inside the cloud: speed halved and a cough; 3 s in the cloud = back to the checkpoint |
+| Chapter time limit | 90 s (finale 60 s); on timeout the Herald skips ahead (0 crowns) |
+| Crowns per chapter | Finish = 1; under the par time = +1; mini task done first try and no SPLAT = +1 |
+| Win the run | Finale: 3.0 s of serenade (near + facing + pIP10 above threshold) |
 
-## 6. The Chronicle (what gets credited)
+## 6. Human obstacles (the Spymaster hears them first)
 
-For each trial, Neil's Chronicler replays the recorded drives with one role's senses set to 0 and compares with the real run:
+Each obstacle plays its **tell** on the Spymaster's phone `tell_s` seconds before it shows on the main screen, panned left/right by direction.
 
-| Category | Measure |
-|---|---|
-| Steering | Change in `z(DNa02_R) - z(DNa02_L)` over the trial |
-| Walking | Change in the walking output |
-| Escapes | Which jumps disappear without that role |
-| Serenade | How much song time disappears without that role |
+| Kind | What happens | Tell (Spymaster's phone) | Counter |
+|---|---|---|---|
+| `door_swing` | A cupboard door swings through the route | Creak | Falconer/Helmsman fly around; mini task in ch. 1 |
+| `breath_gust` | A Giant exhales: a sideways push of 60 cm/s for 1.5 s | Deep inhale | Helmsman counter-steers |
+| `giant_hand` | A shadow grows over him for 0.8 s, then the hand slams | Whoosh, rising pitch | Spymaster: DUCK in time |
+| `spray_can` | A hissing cloud (particles) fills a volume for 4 s | Hiss | Fly around or over |
+| `fork_stab` | A fork comes down on the table in a line | Clink-clink | Coachman: speed up or brake |
+| `rival_racer` | Sir Cheapdate races to the bowl on a fixed path | His buzzing wings | Coachman: Charge! |
 
-- **Share** per role = its total change / the sum over roles (per category and overall).
-- **Knight of the Realm** = highest overall share.
-- **Blunder of the round** = the single event that hurt most. For example: a jump from a fake swing with that role's sense open, a cVA sniff that dropped the Courting meter, or a missed swing (SPLAT) while the Lookout and Spymaster were both closed.
-- Output JSON (Neil defines it by 21:00): `{"trial": id, "brain": "true"|"changeling", "roles": {role: {"share": {...}, "events": [...]}}, "knight": role, "blunder": {...}}`.
+## 7. The chapters (course JSON, owned by Arnav; variants by Ved's Matchmaker)
 
-## 7. The demo path (what the judges see)
+Course format (`agents/schema.py`, v2):
+```text
+Course: id, chapter (1-5), title, flavor, herald_intro, time_limit_s, par_s,
+        start {x, y, z, heading_deg}, checkpoint {x, y, z},
+        boxes [{x, y, z, w, d, h, color}]            # shelves, jars, tables, walls (low-poly boxes)
+        rings [{x, y, z, r}]                          # the route, in order
+        jewels [{x, y, z}]
+        obstacles [{kind, t_s | trigger_ring, x, y, z, params{}, tell_s}]
+        mini_task {role, kind: launch|lock_on|duck|charge|serenade, trigger_ring, window_s}
+        princess {x, y, z} | null                     # finale, and the ch. 2 glimpse
+        goal {x, y, z, r}                             # chapter exit
+```
 
-Lobby with judges' phones → Trial I (they learn it) → Trial III (the chaos) → Chronicle → **C + R** (the Changeling replays Trial III)
-→ Level Lab (**L**) → Royal Decree (**D**). Script and timings: [DEMO_SCRIPT.md](DEMO_SCRIPT.md).
+Chapter 1 as a worked example (ground at z = 0; the Prince starts on a jar lid 40 cm up):
+```json
+{"id": "ch1_pantry", "chapter": 1, "title": "The Pantry", "flavor": "Every prince starts somewhere. Ours starts on a jam jar.",
+ "herald_intro": "Chapter the First: the Pantry. Mind the doors.", "time_limit_s": 90, "par_s": 45,
+ "start": {"x": 0, "y": 0, "z": 40, "heading_deg": 0}, "checkpoint": {"x": 0, "y": 0, "z": 40},
+ "boxes": [{"x": 0, "y": 0, "z": 0, "w": 30, "d": 30, "h": 38, "color": "#E63946"},
+           {"x": 250, "y": 60, "z": 0, "w": 400, "d": 40, "h": 80, "color": "#F4B41A"},
+           {"x": 500, "y": -80, "z": 0, "w": 60, "d": 200, "h": 150, "color": "#2F5BEA"}],
+ "rings": [{"x": 150, "y": 0, "z": 60, "r": 30}, {"x": 320, "y": -40, "z": 110, "r": 30}, {"x": 600, "y": 0, "z": 180, "r": 35}],
+ "jewels": [{"x": 200, "y": 10, "z": 70}, {"x": 400, "y": -30, "z": 130}, {"x": 560, "y": 0, "z": 170}],
+ "obstacles": [{"kind": "door_swing", "trigger_ring": 1, "x": 450, "y": 0, "z": 0, "params": {"width": 120, "height": 220, "swing_s": 2.0}, "tell_s": 1.5}],
+ "mini_task": {"role": "falconer", "kind": "launch", "trigger_ring": 1, "window_s": 2.0},
+ "princess": null, "goal": {"x": 700, "y": 0, "z": 190, "r": 50}}
+```
+
+| Chapter | Layout idea | Obstacles | Mini task |
+|---|---|---|---|
+| 2. The Great Hall | Long hall of candles (tall thin cylinders) and banners; an arch at the end shows the Princess for 3 s | `breath_gust` x2 | Helmsman **Lock on** while she's visible through the arch |
+| 3. The Kitchen | Stove, sink, fruit; tighter turns | `giant_hand` x3 (one fake shadow), `spray_can` x1 | Spymaster **Duck!** on the second hand |
+| 4. The Banquet | The feast table as a runway; plates and goblets as boxes | `fork_stab` x2, `rival_racer` | Coachman **Charge!** to beat Sir Cheapdate to the bowl |
+| 5. Finale: the Royal Fruit Bowl | A big bowl of fruit; the Princess on a grape | one `giant_hand` | Spymaster **Serenade** 3 s while the pilots hold him close and facing her |
+
+## 8. The Chronicle (per player)
+
+Neil's Chronicler replays each chapter's recorded button drives with **one player's buttons removed** and compares with the real run:
+thrust, turning, altitude change, escapes, song time. Share per player = their change / the sum over players. **Knight of the Realm** =
+highest overall share. **Blunder of the round** = the single worst moment (e.g. flew into the door, missed DUCK, charged into a fork).
+JSON: `{"chapter": id, "brain": "true"|"changeling", "players": {name: {"roles": [...], "share": {...}, "events": [...]}}, "knight": name, "blunder": {...}}`.
+
+## 9. The demo path
+
+Lobby with the judges' phones → chapter 1 (they learn to fly) → chapter 3 (the Giant's hand) → Chronicle → **C + R** (the Changeling:
+same buttons, scrambled flight) → **M** (the controls matrix: a clean diagonal vs noise) → L (Level Lab) → D (Royal Decree).
+Script: [DEMO_SCRIPT.md](DEMO_SCRIPT.md).

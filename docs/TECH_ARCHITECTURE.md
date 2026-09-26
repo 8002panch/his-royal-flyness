@@ -15,7 +15,7 @@ is a starting value to tune.
         ^  the laptop connects OUT as the host (works on venue Wi-Fi that blocks device-to-device traffic)
         |
 [game server: Python on the demo laptop]
-   - tick loop, 50 Hz: arena + 2D body + scripted Princess / rivals / Giant
+   - tick loop, 50 Hz: phone buttons -> brain -> 3D flight body; scripted Princess, rivals, human obstacles; course
    - brain: whole MaleCNS rate model; TRUE PRINCE or CHANGELING matrix, hot-swappable
    - recorder: every sense's input stream + every output reading, per trial
    - Chronicler: 4 shadow brains in separate processes (one sense switched off each)
@@ -23,7 +23,7 @@ is a starting value to tune.
    - voice: pre-generated ElevenLabs audio; live Chronicle lines (Gemini text -> ElevenLabs speech)
         |  local WebSocket, 30 Hz state + events
         v
-[Godot 4 host: the main screen. Draws, plays audio, shows the seal code + QR, Royal Nervous System chart, Level Lab, Decree]
+[Godot 4 host: the main screen. Low-poly 3D stage + chase camera, interpolated to 60 fps; lobby with seal code + QR; HUD; screens; audio]
 ```
 
 **Why Python owns the game state:** the Master of Trials and the Chronicler must replay trials headless, many times, without Godot.
@@ -69,72 +69,64 @@ Inputs: the three MaleCNS v1.0 Feather files (see [KICKOFF_CHECKLIST.md](KICKOFF
    The Decree wording covers both ("strength derived from synapse counts under one tuned gain").
 5. Save `data/graph_true.npz` (CSR, float32, rows = receiving neuron) and `data/neurons.parquet` (index, bodyId, type, sides, sign).
 
-### The rate model (`brain/sim.py`)
+### The rate model (`brain/model.py`)
 
 ```
-r  <- r + (dt / tau) * ( -r + clip( g * W @ r + I_sense + I_noise - theta, 0, 1 ) )
+r  <- r + (dt / tau) * ( -r + clip( g * W @ r + I_button + I_noise - theta, 0, 1 ) )
 ```
 
-| Parameter | Start | Notes |
+| Parameter | Value | Notes |
 |---|---|---|
-| dt | 10 ms | two steps per 20 ms game tick |
-| tau | 20 ms | try 10 to 50 |
-| g | tune | largest value where resting activity stays low and doesn't sustain itself, and sensory pulses give bounded, readable outputs |
-| theta | 0.0 to 0.1 | threshold |
-| I_noise | small uniform noise on sensory neurons only | spontaneous activity, so outputs have a measurable baseline |
-| r range | 0 to 1 | rates are unitless |
+| Weights | **input fractions**: `W[i,j] = sign[j] * count[i,j] / in_total[i]` | Chosen over raw counts after the probes (raw counts kept as `Params(weights="counts")`) |
+| dt / tau | 10 ms / 20 ms | two steps per 20 ms game tick |
+| g (gain) | **4.0** | rest: ~5-7% of neurons active, <1% saturated; Changelings are silent at rest |
+| theta | 0.0 | |
+| I_noise | sd 0.05 on the button neurons | spontaneous activity, so outputs have a baseline |
+| Baseline | 2 s settle + 3 s measured at load, cached per brain | `reset()` returns to the settled state instantly |
 
-*Measured on Neil's M2 (single-threaded SciPy, float32):* one `W @ r` = **5.3 ms** at 5 or more synapses (6.24M edges),
-9.0 ms at 3 or more (10.5M), 24.5 ms with every edge (25.6M, too slow for live play). Two steps per tick = about 11 ms of a 20 ms budget.
+*Measured on Neil's M2:* one tick (2 steps) = **11.2 ms**; loading a brain + baseline = about 3 s; graph build 30 s.
+Speed fallback: the 2-hop core (37,004 neurons) if the demo laptop can't hold 50 Hz.
 
-**Speed fallback:** the 2-hop core (neurons within 2 strong connections of both a sense and an output) is **37,004 neurons**.
-Use it only if the laptop can't keep 50 Hz, and say so.
+### Inputs (v2): one neuron group per phone button (`brain/io_sets.json`)
 
-### Inputs: which neurons each role drives (`brain/io_sets.py` -> `io_sets.json`)
+Each button stimulates a named group of real sensory neurons, chosen from a scan of all 330 sensory types against all 480 descending-neuron
+types (True Prince vs Changeling). `Brain.step(drives)` takes one drive (0 to 1) per group.
 
-| Role | Cell types | Count | Split by | Drive rule (per tick, if that sense is open) |
+| Group | Button | Neurons | Count | Target (True Prince z at 0.6 / 1.0) |
 |---|---|---|---|---|
-| Lookout (Eyes) | LC10a | 275 | `somaSide` (L/R) | Sum over small moving objects (Princess, rivals) in that eye's half of the view of angular size x motion, normalized 0 to 1 |
-| | LPLC2, LC4 | 185, 126 | `somaSide` | Looming rate (growth of angular size per second) of approaching objects on that side (the Giant's hand, fast rivals), 0 to 1 |
-| Perfumer (Nose) | ORN_VA1v (Or47b, her scent) | 130 | `rootSide` (L/R; about 90 ORNs are "unknown", leave them out) | Concentration of that scent at that antenna |
-| | ORN_DM1 (Or42b, the Feast) | 74 | `rootSide` | Same |
-| | ORN_DA1 (Or67d, rival cVA) | 204 | `rootSide` | Same |
-| Taster (Feet) | Foreleg ppk23 (`receptorType` = putative_ppk23 and `entryNerve` = ProLN) | 71 (37 L, 34 R) | `rootSide` | 100 ms pulse per tap, only while a foreleg touches her |
-| Spymaster (Ears) | JO-C*, JO-E* (wind) | part of 473 | `rootSide` (280 L, 193 R) | Wind from the Giant's swing (ramps up about 300 ms before impact; fake swings are weaker) |
-| | JO-A*, JO-B* (sound) | part of 473 | `rootSide` | Rival song loudness |
+| `forward` | Coachman FORWARD | LC9 + LC31a | 251 | DNp09 18 / 34 |
+| `back` | Coachman BACK | SNta02,SNta09 + LC16 + LoVP26 | 435 | MDN 2.2 / 4.2 (weakest; press sends 1.0) |
+| `left`, `right` | Helmsman | LLPC1, left / right | 143 / 142 | DNa02 L 6.4 / R 8.0 at 0.6 |
+| `up` | Falconer UP | LPLC1 + LLPC2 | 384 | DNg02 3.0 / 5.2 (press sends 0.8) |
+| `down` | Falconer DOWN | LPLC4 | 97 | DNp07 + DNp10 25 / 44 |
+| `duck` | Spymaster DUCK | LC4 + LPLC2 | 311 | DNp01 95 / 99 |
+| `serenade` | Spymaster SERENADE | LC10a + LC10d, both eyes | 489 | pIP10 6.5 / 8.9 |
+| `lock_L`, `lock_R` | Helmsman Lock on | LC10a + LC10d, one eye | 243 / 246 | DNa02 same side 8.7 / 18 |
 
-- Current per neuron = `I_max * drive`, spread evenly over that side's neurons of that type. `I_max` is tuned.
-- Side counts are unequal (e.g. ORNs 101 L vs 217 R), so normalize drive **per side by neuron count**.
-- **Antenna spacing is exaggerated** (about 2 mm apart instead of well under 1 mm) so left/right scent differences are playable. The Decree says so.
-- **Arena scents** are Gaussian blobs: `c(x) = strength * exp(-d^2 / (2 sigma^2))`. The rival leaves a cVA trail that decays over about 10 s.
+Left/right pairs are side-balanced (both deliver the same total drive). Full grids: `team/neil/probes_v2_level06.csv` and `..._level10.csv`.
 
-### Outputs: from neurons to movement (`server/body.py`)
+### Outputs (v2): from neurons to flight (`server/body.py`)
 
-Each output neuron's rate is turned into a z-score against its own resting baseline (5 seconds of rest with noise at the start
-of each trial): `z = (r - mean_rest) / sd_rest`, smoothed over about 100 ms.
+`Brain.step` returns a z-score per output (0 = resting). Mapping rules and starting numbers are in [GAME_FLOW.md](GAME_FLOW.md#body-out-serverbodypy-brain-z-scores--flight).
 
-| Output type (count) | Movement | Rule (start values) |
+| Output | Neurons | Moves |
 |---|---|---|
-| DNa02 (1 L, 1 R), DNa01 (1 L, 1 R) | Turning | `turn_rate = k_turn * (z_R - z_L)`. Check the sign in probe C (DNa02 activity predicts turning toward the same side) |
-| DNp09 (2), DNg100 (2) | Walking forward | `speed = v_max * sigmoid(mean z - theta_walk)`, v_max about 15 mm/s |
-| MDN (4) | Backing up | If z(MDN) > theta_back, walk backward at 5 mm/s |
-| DNp01 (2, the Giant Fiber) | Escape jump | If z(DNp01) > theta_jump: jump 10 to 20 mm away from the loom source; 1 s refractory |
-| pIP10 (2, male-only) | Wing out + serenade | If z(pIP10) > theta_song: wing extended, buzz plays, song meter counts when near and facing her |
-| pC1 cluster (148 male-specific) | Mood meter (display only) | Mean z shown as a "Courting" bar on the chart |
+| `DNp09` | DNp09 (2) | forward speed |
+| `DNg100` | DNg100 (2) | chart only (small) |
+| `MDN` | MDN (4) | back up / brake |
+| `DNa02_L`, `DNa02_R` | DNa02 | turning (right minus left) |
+| `DNg02` | the DNg02 population (29) | climb (wing power) |
+| `DNp07_10` | DNp07 + DNp10 (4) | descend (landing neurons) |
+| `DNp01` | the Giant Fiber (2) | escape dart |
+| `pIP10` | pIP10 (2, male-only) | serenade |
+| `pC1` | male-specific pC1 cluster (148) | chart only |
 
-**Hybrid steering (fallback if probe C fails at the 20:00 gate):** the brain still decides *whether* he walks, jumps, backs up or sings.
-Code turns him toward the strongest stimulus reaching an open sense, scaled by the walking output. The Decree says so.
+### The body and course (`server/body.py`, `server/course.py`, `server/obstacles.py`)
 
-### The arena and body (`server/arena.py`, `server/body.py`, `server/script_actors.py`)
-
-- Units: millimeters and seconds. Hall about 60 x 40 mm. Fly body about 2.5 mm long.
-- **Contact:** foreleg touching = centers within 3 mm and she's within +/- 60 degrees of his heading.
-- **Win geometry:** within 5 mm and facing her within +/- 45 degrees while pIP10 is above threshold; 5 s total wins.
-- **Princess:** walks waypoints at 3 to 6 mm/s, pauses; after `patience_s` without song she moves farther away.
-- **Rivals:** walk waypoints; may "sing" on a script (the song meter races the Prince's); leave cVA trails.
-- **The Giant:** a list of swings `{t, target, from_deg, fake, warning_whoosh_s}`. A swing is a shadow whose angular size grows
-  over about 0.5 s (drives LPLC2/LC4 on that side) plus wind (drives JO-C/E). A real swing lands after the growth. A fake one stops short.
-- **Eyes phone image:** the server renders each half of the view at low resolution and sends 2 x 37 hex brightness values at 10 Hz.
+- 3D flight in centimeters: position (x, y, z = altitude), heading, speed with inertia and drag, gravity glide; the camera needs `pitch`/`bank` too.
+- Courses are JSON ([GAME_FLOW.md](GAME_FLOW.md#7-the-chapters-course-json-owned-by-arnav-variants-by-veds-matchmaker)): boxes, rings, jewels, obstacles, a mini task, checkpoint, goal.
+- Collisions: the Prince is a sphere (r = 2 cm) against axis-aligned boxes and the floor. Obstacles (hand, spray cloud, door, fork, gust, rival) are
+  scripted with timings or ring triggers, and each sends a **tell** to the Spymaster's phone `tell_s` before it appears.
 
 ### The Changeling (`brain/changeling.py`)
 
@@ -150,16 +142,12 @@ keeping each edge's (receiver, synapse count) fixed. Then:
 Why not a plain global shuffle: in the earlier Fly-by-Wire spike, shuffling synapse counts across the whole graph made activity
 explode. That makes the random brain look broken for a boring reason, and judges would call it rigged.
 
-### Probes (`brain/probes.py`): the tests behind the 20:00 gate
+### Probes (`brain/probes.py`): the 20:00 gate (v2)
 
-| Probe | Stimulus | Read | Pass |
-|---|---|---|---|
-| A. Looming | Looming drive on the left LPLC2 + LC4 for 0.5 s | z(DNp01) | Above 3 within 200 ms in at least 9 of 10 runs |
-| B. Tapping | Foreleg ppk23 pulses at 4 Hz for 2 s | z(pIP10), mean pC1 | pIP10 above 2, and at least 2x the Changeling |
-| C. Steering | LC10a drive on the left only | z(DNa02 L) - z(DNa02 R), and DNa01 | Consistent sign that turns toward the stimulus, at least 2x the Changeling |
-| D. Smell | Or42b (Feast) on one side | Any output | Report the size. If tiny, the Perfumer's main job becomes the mood |
-
-Each probe runs on the True Prince and all 3 Changelings, 10 runs each with different noise seeds. Print a table.
+`python -m brain.probes --level 0.6` holds each button for 0.8 s on the True Prince and 3 Changelings and prints the **controls matrix**
+(button x output) plus pass/fail: target z > 3 and at least 2x the largest Changeling value. Result at 16:55 Sat, level 0.6: 8 of 10 pass
+(forward 18, left 6.4, right 8.0, down 25, duck 95, serenade 6.5, lock 8.7/8.8); `back` (2.2) and `up` (3.0) are weaker, so their presses send
+a stronger drive. The same matrix is the demo's **M** screen.
 
 ## Networking
 
@@ -174,92 +162,73 @@ Each probe runs on the True Prince and all 3 Changelings, 10 runs each with diff
 - **Fallback (LAN mode):** the same relay runs on the laptop (`python relay/relay.py --lan`) and phones join via a phone hotspot at `http://<laptop-ip>:8080`.
 - **Last fallback:** keyboard mode (no phones).
 
-### Messages (JSON)
+### Messages (JSON, v2)
 
 Phone to host (through the relay):
 ```json
 {"t":"join","room":"BZKT","name":"Ava","clientId":"c-7f3a"}
-{"t":"pick","role":"lookout"}                 // lookout | perfumer | taster | spymaster | auto
-{"t":"in","role":"lookout","L":1,"R":0,"seq":42}   // sent on change, plus every 1 s
-{"t":"in","role":"perfumer","L":0,"R":1,"seq":43}
-{"t":"tap","role":"taster","seq":44}
-{"t":"in","role":"spymaster","listen":1,"seq":45}
+{"t":"pick","role":"coachman"}                  // coachman | helmsman | falconer | spymaster | auto
+{"t":"btn","role":"coachman","b":"forward","down":1,"seq":42}   // every press/release; plus a 1 s heartbeat of held buttons
+{"t":"btn","role":"helmsman","b":"special","down":1,"seq":43}   // specials: charge | lock | launch (server picks lock side)
+{"t":"btn","role":"spymaster","b":"duck","down":1,"seq":44}
+{"t":"btn","role":"spymaster","b":"serenade","down":1,"seq":45}
 ```
 
 Host to phone(s):
 ```json
-{"t":"assigned","roles":["lookout"],"name":"Ava"}
-{"t":"phase","phase":"lobby|role|intro|play|chronicle|wedding","trial":"II"}
-{"t":"view","role":"lookout","L":[0,12,200,...],"R":[...],"alert":"loom_left"}      // 37 hex values per eye, 10 Hz
-{"t":"view","role":"perfumer","L":{"her":0.2,"feast":0.7,"rival":0.0},"R":{"her":0.4,"feast":0.1,"rival":0.3}}
-{"t":"view","role":"taster","contact":true}
-{"t":"view","role":"spymaster","wind":0.8,"song":0.1}
-{"t":"fx","kind":"splat|jump|win|hint","text":"Lookout! Her Highness is to the left!"}
-{"t":"honors","share":{"turn":0.41,"walk":0.22,"jump":0.0,"song":0.1},"events":["2 jumps from your left eye"],"line":"..."}
+{"t":"assigned","roles":["coachman"],"name":"Ava"}
+{"t":"phase","phase":"lobby|role|intro|fly|clear|chronicle|finale|wedding|decree","chapter":3}
+{"t":"special","role":"coachman","ready":true,"cooldown_s":0}
+{"t":"radar","princess":{"bearing_deg":-35,"dist_cm":420,"dz_cm":60},"threats":[{"kind":"giant_hand","bearing_deg":80,"eta_s":1.2}]}  // Spymaster only, 10 Hz
+{"t":"tell","kind":"giant_hand","pan":0.7,"eta_s":1.5}                              // Spymaster only: play the sound now
+{"t":"fx","kind":"splat|dart|ring|jewel|win|hint","text":"Spymaster! Something's coming from the right!"}
+{"t":"honors","share":{"thrust":0.41,"turn":0.0,"altitude":0.0,"escape":0.0,"song":0.0},"events":["Charged into a fork"],"line":"..."}
 ```
 
 Server to Godot (local WebSocket, 30 Hz):
 ```json
-{"t":"state","time":62.3,"brain":"true","phase":"play","trial":"II",
- "prince":{"x":21.5,"y":14.0,"h":87,"wing":0.8,"jumping":false},
- "princess":{"x":30.1,"y":16.2,"h":270},"rivals":[{"name":"Sir Cheapdate","x":40,"y":10,"h":180,"singing":false}],
- "giant":{"active":true,"x":25,"y":15,"size":0.6,"fake":false},
- "senses":{"lookout":{"L":1,"R":0},"perfumer":{"L":0,"R":0},"taster":{"tapping":false},"spymaster":{"listen":1}},
- "inputs":{"LC10a_L":0.6,"LC10a_R":0.0,"LPLC2_L":0.1,"ORN_VA1v_L":0.2,"ppk23":0.0,"JO_wind":0.1},
- "outputs":{"DNa02_L":1.8,"DNa02_R":0.2,"DNp09":1.1,"DNg100":0.9,"MDN":0.0,"DNp01":0.3,"pIP10":0.4,"pC1":1.2},
- "meters":{"song":0.4,"rival_song":0.1,"candle":0.69},
- "players":[{"name":"Ava","roles":["lookout"],"connected":true}]}
-{"t":"event","kind":"voice","id":"H_HINT_LEFT","caption":"Lookout! Her Highness is to the left!"}
-{"t":"event","kind":"voice_live","mp3_b64":"...","caption":"The Royal Perfumer did 41 percent of the steering..."}
+{"t":"state","time":41.3,"brain":"true","phase":"fly","chapter":3,"room":"BZKT",
+ "prince":{"x":312.0,"y":-40.5,"z":118.2,"heading":87.0,"pitch":4.0,"bank":-8.0,"speed":64.0,"wing_hz":1.8,"darting":false,"singing":false},
+ "princess":{"x":900,"y":0,"z":95}, "rivals":[{"name":"Sir Cheapdate","x":700,"y":20,"z":90,"heading":180}],
+ "obstacles":[{"id":"hand2","kind":"giant_hand","x":330,"y":-30,"z":0,"phase":"shadow","size":0.6}],
+ "pressed":{"coachman":["forward"],"helmsman":["left"],"falconer":[],"spymaster":[]},
+ "inputs":{"forward":0.6,"left":0.6},
+ "outputs":{"DNp09":17.8,"MDN":0.1,"DNa02_L":6.1,"DNa02_R":0.0,"DNg02":0.0,"DNp07_10":0.2,"DNp01":0.4,"pIP10":0.0,"pC1":0.1},
+ "meters":{"song":0.0,"rival":0.2,"candle":0.54,"jewels":7},
+ "players":[{"name":"Ava","roles":["coachman"],"connected":true}]}
+{"t":"course","course":{...}}        // once per chapter: the course JSON so Godot builds the stage
+{"t":"event","kind":"voice","id":"H_CH_3","caption":"Chapter the Third: the Kitchen."}
+{"t":"event","kind":"voice_live","mp3_b64":"...","caption":"..."}
 ```
+`room` is on every state message, so the lobby can show the wax-seal code (flagged by Anshul).
 
-Godot to server: `{"t":"cmd","cmd":"start|next|toggle_brain|reassign","arg":...}`.
+Godot to server: `{"t":"cmd","cmd":"start|next|toggle_brain|restart|matrix|lab|decree|keyboard|chapter","arg":...}`.
 
 ## The Chronicler
 
-After each trial (and while it's running, in 4 shadow processes):
+After each chapter (and while it runs, in 4 shadow processes):
+1. The recorder saved each player's button drives per tick and the full-brain outputs.
+2. For each player, replay the brain **open loop** with that player's drives set to 0.
+3. Credit = how much thrust, turning, altitude outputs, escapes (DNp01 darts) and song time change without them; shares normalized across players.
+4. Output JSON per [GAME_FLOW.md](GAME_FLOW.md#8-the-chronicle-per-player).
 
-1. The recorder saved each sense's input stream `I_s(t)` and the full-brain outputs.
-2. For each sense `s`, replay the brain **open loop** with `I_s = 0` and every other sense unchanged.
-3. Credit for sense `s` = how much each output changed without it: steering (DNa02 R minus L), walking, jump events, song time.
-   Shares are normalized across senses. Events (a jump, a song) are credited to the sense whose removal makes the event disappear.
-4. Output: a JSON of shares and events per player, used by the main screen, the phones and the Jester.
-
-**Honest caveat:** it's open loop. Without your sense he might have walked somewhere else and seen different things. We say
-"we replay the same trial with your sense switched off".
-
-Budget: 4 shadows x about 5.3 ms per step x 100 steps per simulated second is about 0.5 s of compute per simulated second each,
-so each shadow keeps up on its own core. Memory is about 50 to 100 MB per brain copy.
+Honest caveat: open loop (we replay the same inputs with a player's buttons removed; the flight path isn't re-simulated).
 
 ## Agents
 
 No agent ever runs inside the live tick loop. Certified trials are cached on disk, so the game still works offline.
 
-### Trial schema (`agents/schema.py`, Pydantic; the Matchmaker's output format)
+### Course schema (`agents/schema.py`, Pydantic; the Matchmaker's output format)
 
-```text
-Trial:
-  id: str
-  act: "I" | "II" | "III"                     # style: garden, banquet, great hall
-  title: str                                   # "The Banquet of Many Grapes"
-  flavor: str                                  # one line, in the lore voice
-  herald_intro: str                            # spoken by the Herald (must be under ~12 s)
-  arena: {w_mm: float, h_mm: float, theme: "garden" | "banquet" | "great_hall"}
-  prince_start: {x: float, y: float, heading_deg: float}
-  princess: {start: {x, y}, waypoints: [{x, y, pause_s}], speed_mm_s: float, patience_s: float}
-  scents: [{kind: "her" | "feast" | "rival", x, y, strength: 0-1, sigma_mm: float}]
-  rival: null | {name: "Sir Indy" | "Lord Tinman" | "Sir Cheapdate" | "Count Rutabaga",
-                 start: {x, y}, waypoints: [...], speed_mm_s, sings_at_s: float | null, cva_trail: bool}
-  giant: [{t_s: float, target: "prince" | "near", from_deg: float, fake: bool, warning_whoosh_s: float}]
-  time_limit_s: float                          # default 90
-  focus_roles: [role]                          # which senses this trial leans on
-```
+The chapter course format is in [GAME_FLOW.md](GAME_FLOW.md#7-the-chapters-course-json-owned-by-arnav-variants-by-veds-matchmaker)
+(boxes, rings, jewels, obstacles with tells, mini task, checkpoint, goal). Arnav owns the schema; the hand-made chapters live in `levels/`.
 
-### The Matchmaker (designs trials)
+### The Matchmaker (designs chapter variants)
 
-- **Model:** Gemini (decision O1), structured output with the Trial JSON schema. With Claude instead: structured outputs with the same schema.
-- **Input:** act style, the Chronicler's note on which sense the last team neglected ("focus the Perfumer"), the list of recent rejections with reasons, and the lore rules (cast list, tone).
-- **Output:** one Trial. Checked by code for geometry (inside the arena, reachable, no swing in the first 5 s) before testing.
+- **Model:** Gemini (decision O1), structured output with the Course schema.
+- **Input:** the chapter style (Pantry, Great Hall, Kitchen, Banquet, Fruit Bowl), the Chronicler's note on which role was idle last time
+  ("give the Falconer more height changes"), recent rejections with reasons, and the lore rules.
+- **Output:** one Course. Code checks geometry (rings reachable, no box inside a ring, obstacle tells ≥ 0.8 s) before testing.
 
 ### The Master of Trials (tests and certifies)
 
@@ -274,13 +243,16 @@ Trial:
   he's tapping; move it to 45 s or add a 1 s warning whoosh"). At most 3 revisions, then the trial is rejected and saved with its notes.
 - **Visible:** every step goes to `levels/*.json` and to the Level Lab screen.
 
-### Bots (`agents/bots.py`): scripted councils for testing
+### Bots (`agents/bots.py`): scripted crews for testing
 
-The bots see what the phones show plus a simulated "shout" channel (the team talking):
-- Lookout bot: opens the eye on the Princess's side; opens both eyes when the Spymaster bot shouts "whoosh"; closes the eye on the loom side otherwise.
-- Perfumer bot: sniffs the side with more of her scent unless that side's rival scent is above 0.3.
-- Taster bot: taps at 4 Hz during contact.
-- Spymaster bot: listens always; shouts "whoosh" when wind rises above 0.2.
+The bots see what the phones show plus the course route:
+- Coachman bot: FORWARD while the next ring is ahead within 45°; BACK when a box is within 30 cm ahead; Charge on the rival task.
+- Helmsman bot: LEFT/RIGHT toward the next ring's bearing (dead zone 8°); Lock on when the Princess is visible.
+- Falconer bot: UP/DOWN toward the next ring's height (dead zone 10 cm); Launch on its mini task.
+- Spymaster bot: DUCK when a hand's eta < 0.5 s; SERENADE when within 8 cm of the Princess and facing her.
+
+The Master of Trials certifies a course if the bot crew finishes within the time limit in **60 to 90%** of seeded runs on the True Prince and at
+least **40 points less often** on the Changeling (its controls are scrambled, so the bots mostly fail).
 
 ### `run_trials` worker pool (`agents/run_trials.py`)
 
@@ -299,17 +271,22 @@ The bots see what the phones show plus a simulated "shout" channel (the team tal
 - **Fallback:** if the live line isn't back within about 4 s, play a pre-generated generic Jester line.
 - Voice IDs and model names live in `.env` / config, not in code.
 
+## Rendering (Godot host, Anshul)
+
+- **Low-poly 3D, built from primitives:** `MeshInstance3D` with `BoxMesh`, `SphereMesh`, `CylinderMesh`, `PrismMesh`, `CapsuleMesh`, flat colors
+  (`StandardMaterial3D`, no textures; flat shading), one `DirectionalLight3D` with shadows off, an `Environment` with a flat sky color.
+  The Prince = 3 squashed spheres + 2 translucent prism wings (flap speed from `wing_hz`) + red sphere eyes + a gold cone crown.
+- **Stage from the course JSON:** boxes → `BoxMesh`; rings → `TorusMesh`; jewels → small rotating `PrismMesh`; obstacles as simple shapes
+  (a giant hand = boxes for palm and fingers; spray cloud = `GPUParticles3D` with ~200 particles; door = a thin box on a hinge).
+- **Chase camera:** a `SpringArm3D` behind and above the Prince; smooth position with an exponential lerp (~8 per second) and rotation
+  (~6 per second); bank up to 12°; FOV 70.
+- **Interpolation:** keep the last two `state` snapshots; render at `now - 100 ms` and lerp positions/angles between them (60 fps from 30 Hz).
+- **Blob shadow:** a dark transparent disc projected straight down onto the ground or box top under the Prince.
+- **HUD:** a `CanvasLayer` with the crests (light up on `pressed`), candle timer, jewel count, and the Royal Nervous System strip (bars for
+  the active inputs and the outputs).
+- **Budget:** 60 fps on the demo laptop with the server running; profile with Godot's monitor overlay at the 23:30 integration.
+
 ## Performance and memory budget (Neil's M2, 8 GB)
-
-| Item | Budget |
-|---|---|
-| Live brain | about 11 ms per 20 ms tick (2 steps at 5.3 ms, measured) |
-| Chronicler shadows | 4 processes, each about half a core |
-| Memory | under 100 MB per brain copy; under 1.5 GB total with shadows |
-| Godot | the rest. Close Chrome tabs during the demo |
-| Raw data build | once, in chunks (the full edge table is about 3.6 GB in memory) |
-
-The demo laptop should be the fastest machine on the team. Measure the tick rate on it at the 23:30 integration.
 
 ## Environment
 

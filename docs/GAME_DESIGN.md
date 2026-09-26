@@ -1,179 +1,153 @@
-# Game design: His Royal Flyness
+# Game design v2: three pilots and a Spymaster
 
-*A Courtship by Committee.* Plan as of Sat 26 Sept 2026. Lore details live in [LORE.md](LORE.md); the systems behind each
-mechanic are in [TECH_ARCHITECTURE.md](TECH_ARCHITECTURE.md).
+*His Royal Flyness: A Courtship by Committee.* Version 2, Sat 26 Sept 16:15. Replaces v1 (four senses), which is kept in git history
+and in `docs/council/`. Why it changed: the team wanted simpler controls, a third-person view and a low-poly look, and the brain data showed that the
+nose and feet barely reach any movement neuron while the eyes' channels are strong. **All 10 button channels pass the gate** (each drives
+its own movement neuron, only in the True Prince): [DATA_CHECK.md](DATA_CHECK.md#v2-button-channels-the-controls-matrix).
 
 ## In one breath
 
-Prince Hamlet can't see, smell, taste or hear. Up to four friends each become one of his senses on their phones. His real,
-fully mapped nervous system runs live and decides what to do with whatever you let through. Get him to Princess Miranda and
-make him sing before the Giant's hand comes down.
+Prince Hamlet must fly from the Pantry to the Royal Fruit Bowl to win Princess Miranda, past the Giants who rule the kitchen.
+**Three friends pilot him** (one forward/back, one left/right, one up/down), **one friend is his Spymaster** (listens for Giants and
+senses the Princess). Every button press stimulates a real group of his sensory neurons, and his real, fully mapped nervous system
+turns it into movement. Swap in the Changeling and the same buttons do nonsense.
 
 | | |
 |---|---|
-| Genre | Party co-op, 1 to 4 players, Jackbox-style (phones as controllers, one shared main screen) |
-| Player verb | **Signal** |
-| 30-second read | "Each phone is one of the fly's senses. He only feels what you let through. Get him to the princess and make him sing." |
-| A session | One Royal Ball: three trials and a wedding, about 8 minutes |
-| The fly brain's job | All 166,606 MaleCNS neurons run every tick. Only open senses feed it. Named output neurons move the body |
+| Genre | Party co-op flight game, 1 to 4 players, Jackbox-style (phones as controllers, one shared screen) |
+| Player verb | **Steer** (the pilots) / **warn** (the Spymaster) |
+| 30-second read | "Three of you fly the fly, one of you listens. His real brain is the steering wheel." |
+| Camera | Third person, behind and above the Prince (like Fortnite); low-poly, flat-shaded indie look |
+| A session | One journey: 4 chapters plus the finale, about 6 to 8 minutes |
 
-## Core loop
+## The crew (one role per phone)
 
-1. Scan the wax seal (QR) or type the code at the domain; sign your name; get a royal role.
-2. **Trial:** find her, get close, touch her, sing (about 90 seconds).
-3. **The Chronicle:** the game replays the trial with each sense switched off and shows who really moved him.
-4. Next trial: harder, designed by the Matchmaker and certified by the Master of Trials.
-5. After Trial III: the Royal Wedding.
-
-## The Privy Council (one role per phone)
-
-| Title | Sense | Phone shows (only this player sees it) | Controls | Real input neurons | Useful for | Goes wrong when |
-|---|---|---|---|---|---|---|
-| **Royal Lookout** | Eyes | LEFT EYE and RIGHT EYE panels with that side's view as blurry hex pixels; red flash on looming | Hold the left and/or right panel to open that eye | LC10a (275), LPLC2 (185), LC4 (126), split by side | Turning and walking toward her; letting him see the Giant so the Giant Fiber fires | An eye is open on the Giant's side and he jumps away from her; a fake shadow makes him jump for nothing |
-| **Royal Perfumer** | Nose | Two antennae, each with three scent bars: Her Highness, the Feast, a Rival's scent. Scent plumes are hidden on the main screen | Hold the LEFT or RIGHT antenna to sniff | ORN_VA1v (Or47b, courtship scent, 130), ORN_DM1 (Or42b, fermenting fruit, 74), ORN_DA1 (Or67d, the rival male's cVA, 204) | Getting him interested and steering by scent | Sniffing the Feast pulls him to the table; sniffing a rival's cVA kills the mood |
-| **Royal Taster** | Feet | His six feet on a pad; glows gold when his forelegs touch her | Tap while touching. Each tap is one foreleg tap on her | Foreleg ppk23 pheromone-taste neurons (71: 37 left, 34 right) | Confirming she's royalty, which drives the courtship cluster and triggers the serenade | Tapping when he isn't touching her does nothing, because there's nothing to taste |
-| **Royal Spymaster** | Ears | Wind meter and sound meter; the Giant's whoosh plays from the phone's speaker | Hold to listen | JO-C/E (wind), JO-A/B (sound: a rival's song), 473 total | Hearing the Giant's hand before it lands (the ear neurons connect straight to the Giant Fiber); hearing rivals | Listening during a false-alarm gust makes him jump |
-
-**Why it plays well together:** no role is enough alone. The Lookout can aim him but can't make him court. The Taster makes
-him court but only after the others get him there. The Perfumer knows where things are but can only hint. The Spymaster
-hears the danger first. Players end up shouting "close your left eye!" and "don't sniff, Sir Cheapdate is over there!",
-and the brain settles every argument.
-
-### Player counts
-
-| Players | Roles |
-|---|---|
-| 1 | Keyboard mode: Q/W = left/right eye, O/P = left/right antenna, Space = tap, L = listen |
-| 2 | Lookout + Taster · Perfumer + Spymaster |
-| 3 | Lookout · Perfumer · Taster + Spymaster |
-| 4 | One each |
-| 5+ | The Court (audience). Stretch goal: vote on the next trial's twist from the certified list |
-
-## A night at the Royal Ball (the trials)
-
-| Trial | What happens | New pressure | Senses tested | Real biology behind it |
+| Role | Phone buttons | Each button stimulates (real MaleCNS neurons) | Which drives (measured, True Prince vs Changeling) | Special (mini task) |
 |---|---|---|---|---|
-| **I. The Garden Audience** (tutorial) | Meet Miranda in the palace garden. She wanders slowly | None | Lookout, Taster | Males track females with LC10a, tap them with their forelegs to taste pheromones, then sing |
-| **II. The Banquet** | The Royal Feast (fermenting fruit) sits on one side of the hall. Sir Cheapdate, tipsy, circles her and leaves his scent | A food smell that competes with her; a rival's scent that kills the mood; a rival who might sing first | Perfumer | Vinegar smells pull flies to food through Or42b. A rival male's cVA puts other males off |
-| **III. The Giant's Shadow** | The Giant's hand strikes the hall, with fake shadows mixed in. Sir Indy, the Knight Who Is Not Dead Yet, keeps coming back | Real and fake swats; a persistent rival | Lookout, Spymaster | LC4 and LPLC2 looming detectors and the ear neurons connect straight to the giant fiber, the neuron that fires the escape jump |
-| **Finale: the Royal Wedding** | Fanfare, crowns, bells, then the final Chronicle | None | None | None |
+| **Royal Coachman** (front/back) | FORWARD, BACK, special | Forward: LC9 + LC31a. Back: touch bristles SNta02/09 + LC16 + LoVP26 | Forward: DNp09 thrust, z 37 vs ≤1.4. Back: MDN (the "moonwalker" neurons), z 3.9 vs ≤1.8 | **Charge!**: forward at full drive for 1.5 s (a speed burst) |
+| **Royal Helmsman** (side to side) | LEFT, RIGHT, special | LLPC1 on that side (wide-field motion) | DNa02 on that side (turn), z 9.4 / 12.0 vs ≤1.6 | **Lock on**: the Princess-detector (LC10a + LC10d) in the eye on her side, which turns him toward her (z 18 vs ≤2) |
+| **Royal Falconer** (up/down) | UP, DOWN, special | Up: LPLC1 + LLPC2. Down: LPLC4 | Up: DNg02 wing power, z 5.0 vs ≤0.3. Down: the landing neurons DNp07 + DNp10, z 43 vs ≤4 | **Launch**: up at full drive for 1.5 s (a climb burst) |
+| **Royal Spymaster** (ears + senses) | DUCK, SERENADE; private radar | Duck: looming detectors LC4 + LPLC2 (the Giant Fiber's inputs). Serenade: LC10a + LC10d in both eyes | Duck: DNp01 escape dart, z 99 vs ≤2.1. Serenade: pIP10 song, z 8.7 vs ≤1.3 | The Spymaster alone hears the Giants (their phone plays directional whooshes, footsteps, spray hisses) and sees the heart compass pointing to the Princess |
 
-The Matchmaker generates more trials in these three styles (garden, banquet, great hall). Only trials certified by the
-Master of Trials go into rotation ([TECH_ARCHITECTURE.md#agents](TECH_ARCHITECTURE.md#agents)).
+**Why this plays well:** nobody can fly him alone. Forward without a Helmsman flies into walls; the Falconer has to keep him at the height of
+the next doorway; only the Spymaster knows a Giant is coming and where the Princess is, so they shout ("UP! LEFT! DUCK!"). It's a
+Spaceteam / Lovers in a Dangerous Spacetime crew with one fly as the ship.
+
+### How a button becomes movement
+
+Pressing FORWARD doesn't move the fly. It stimulates the named neurons in the table (like optogenetics in a real lab); the signal runs
+through all 166,606 neurons of his wiring, and the movement comes from what his descending neurons do. That's why:
+- the response has a short, organic lag and a little wobble (it's a nervous system, not a joystick),
+- **the Changeling breaks the controls**: same neurons, same number of connections, scrambled partners, so FORWARD might spin him and
+  DUCK does nothing. That's the ablation test, and it's the best moment in the demo.
+
+## Camera and look: third person, low-poly, built for fluidity
+
+- **Chase camera** behind and a little above the Prince, like Fortnite, on a spring arm (it lags and eases, tilts slightly into turns).
+- **Low-poly indie look** (think BOMBANANA!, A Short Hike, Fall Guys): chunky, flat-shaded polygon shapes in bright saturated colors,
+  no textures needed. Everything is built from Godot's primitive meshes (boxes, spheres, cylinders, prisms, cones), so there's **no
+  modeling tool and no downloaded art**: the Prince is three squashed spheres (head, thorax, abdomen), two flat translucent prisms for
+  wings, big red eyes and a tiny gold cone crown.
+- **Cheap to render:** flat colors, one directional light, no real-time shadows except **a blob shadow under the Prince** (a soft dark
+  disc on the ground so players can judge height when flying up and down), no post-processing, a few hundred primitives per chapter.
+- **Fluidity budget:** the main screen renders at 60 fps; the server sends state at 30 Hz and Godot **interpolates** between states, so
+  the camera and the Prince never snap. Target: steady 60 fps on the demo laptop while the brain uses one CPU core.
+- **Instant feedback:** each crest on screen lights up the moment its player presses (before the fly responds), and phones animate the
+  button instantly, so controls feel responsive even with the nervous system's short lag. Wings flap faster with more thrust.
+
+## The journey (progression)
+
+One run through the palace, four chapters and a finale (about 60 to 90 s each). Each chapter has a route (rings or arches to fly
+through), royal jewels to collect (sugar crystals), human obstacles, and one **mini task** for one role's special button.
+
+| Chapter | Place | Human obstacles (the Spymaster hears them first) | Mini task | Teaches |
+|---|---|---|---|---|
+| 1. **The Pantry** | Shelves and jars | A Giant opening the cupboard (door swings) | **Falconer: Launch** off the jar lid when the door opens | Flying together; up/down |
+| 2. **The Great Hall** | Candles, banners, the long table | A Giant's breath (a gust that pushes him sideways) | **Helmsman: Lock on** to a glimpse of the Princess through the arch | Turning; the heart compass |
+| 3. **The Kitchen** | Stove, sink, fruit | **The Giant's hand** (the swatter), a spray can (a hissing cloud to avoid) | **Spymaster: Duck!** when the hand comes down | Listening; the Giant Fiber |
+| 4. **The Banquet** | The feast table | Giants' forks and a rival suitor racing him | **Coachman: Charge!** to beat Sir Cheapdate to the fruit bowl | Speed; teamwork under pressure |
+| Finale: **The Royal Fruit Bowl** | The Princess on a grape | One last Giant | **Spymaster: Serenade** while the pilots hold him facing her, close | The serenade (the win) |
+
+Checkpoints at each chapter start: a SPLAT or a fall costs time, not the run. After the finale: the Royal Wedding and the Chronicle.
 
 ## Winning, losing, scoring
 
-- **Win the trial:** he sings (pIP10 above its threshold) while within about 2 body lengths of her and facing her,
-  for **5 seconds in total** before the candle burns out (90 seconds).
-- **Lose the trial:**
-  - **SPLAT**: the Giant's hand lands on him. "The Giant has claimed another suitor."
-  - **A rival wins**: the rival's scripted serenade reaches 5 seconds first. "Alas! The Princess favors another."
-  - **Timeout**: the candle burns out. "Her Highness retires to her chambers."
-- **Stars (1 to 3):** win = 1 star, win with more than 30 seconds left = +1, no jumps triggered by fake shadows = +1.
-- A lost trial still moves the ball forward (the party keeps moving). The final screen totals the stars.
+- **Win the run:** reach the Fruit Bowl and serenade her for 3 s in total (Serenade held while he's within 5 mm of her and facing her,
+  and pIP10 is above its threshold, which is the brain's call).
+- **Setbacks:** SPLAT (the hand lands on him), a fall to the floor, or crashing into a wall send him back to the chapter's checkpoint (+5 s).
+- **Score:** finish time; royal jewels collected; mini tasks done on the first try; no SPLATs. Crowns 1 to 3 per chapter.
+- A run always finishes (there's a time cap per chapter; if it runs out, the Herald skips ahead with a joke), so a party never gets stuck.
 
-## The Chronicle (between trials, about 20 seconds)
+## The Chronicle (between chapters and at the end)
 
-- The Chronicler replays the trial with each sense switched off and measures how much his steering, walking, jumps and
-  song changed without it ([TECH_ARCHITECTURE.md#the-chronicler](TECH_ARCHITECTURE.md#the-chronicler)).
-- **Main screen:** each crest's share of the credit as a banner, one "Knight of the Realm" (the MVP), and one blunder of the round.
-- **Each phone:** that player's personal numbers. For example "You caused 41% of his turning", "Your left eye caused 2 jumps",
-  "Your sniff at 0:47 ended the romance". These numbers are examples; real ones always come from the Chronicler.
-- **Voice:** Clown the Jester reads two or three roast lines written from those numbers (Gemini writes, ElevenLabs speaks).
-  If the live line isn't ready in about 4 seconds, a pre-recorded generic line plays instead.
+The Chronicler replays each chapter with one player's inputs removed and measures how much of the flight (thrust, turning, altitude,
+escapes, song) disappears. Main screen: credit banners per crest, **Knight of the Realm** (the MVP), and the **blunder of the round**.
+Phones show personal numbers. Clown the Jester roasts the crew (live voice when available).
 
 ## Joining (the Jackbox part)
 
-1. **Main screen:** a big wax seal with a 4-letter code (consonants only, so it never spells a word), a QR code, and the domain,
-   e.g. "Go to **royalflyness.club** and present your seal".
-2. **Phone:** open the link (the QR fills in the code) → sign your name on a scroll → pick a heraldic crest, or "Let the Herald decide".
-3. The phone flips to that role's card with a stamp sound, one line of instructions and the controls.
-4. **Reconnecting:** phones sleep. Opening the page again with the same name (stored in the browser) gets you your role back.
-   If a sense drops mid-trial, the game pauses for up to 5 seconds and shows "The Royal Lookout has fainted!".
-5. **Leaving:** the host can reassign an empty role to someone else or merge it into another player (see the table above).
+Same as v1: the main screen shows a wax-seal room code, a QR code and the domain; phones join, sign a name, pick a crest (Coachman,
+Helmsman, Falconer, Spymaster) or "Let the Herald decide"; reconnect by name; a dropped player pauses the game for up to 5 s.
 
-## The first 30 seconds (tutorial)
+| Players | Roles |
+|---|---|
+| 1 | Keyboard or gamepad: W/S forward/back, A/D left/right, R/F up/down, Space duck, E serenade, Q special |
+| 2 | Pilot (forward/back + up/down) · Navigator (left/right + Spymaster) |
+| 3 | Pilot (forward/back + up/down) · Helmsman · Spymaster |
+| 4 | One each |
 
-| Time | Main screen | Phones |
-|---|---|---|
-| 0 to 10 s | The Herald: "Hear ye! The Royal Ball begins!" Seal code and QR. Crests light up as players join | Join, sign, crest |
-| 10 to 20 s | The Garden. Herald: "Lookout, Her Highness is to your left!" Hamlet turns and walks. The Royal Nervous System chart lights up from LC10a down to the steering neurons | The Lookout holds LEFT |
-| 20 to 30 s | Hamlet touches her. His wing buzzes and the pIP10 bar lights up. Hearts. "Her Highness is charmed!" | The Taster's pad glows and flashes TAP TAP TAP |
+## Inspiration (award-winning and similar games) and what we take
 
-The tutorial gives a hint only for the next useful action. Hints stop after the Garden.
+| Game | What it's known for | What we take | How we're different |
+|---|---|---|---|
+| **Spaceteam** (IGF 2013 finalist) | Co-op shouting on phones; each panel has what others need | Phones as panels; information split across players | Our panels feed a real nervous system |
+| **Lovers in a Dangerous Spacetime** | Each player mans a station of one ship | One vehicle, several stations | The "ship" is a fly and its stations are his senses |
+| **Octodad** (IGF 2011 Student Showcase winner, original) | Clumsy control of one body is the comedy | Split control of one body | The clumsiness comes from real wiring, not a physics joke |
+| **It Takes Two** (The Game Awards 2021 Game of the Year) | Co-op journey with a new mechanic per chapter | Chapters, each with its own mini task | Four players, one character |
+| **Keep Talking and Nobody Explodes** | One player has information the others need | The Spymaster's private radar and audio | The information comes from the fly's own senses |
+| **PEAK** (Steam 2025, Better With Friends) | Simple co-op chaos that's fun to watch | Short runs, funny failures, checkpoints | One shared body |
+| **BOMBANANA!** (Lefto Studio, Sept 2026; Steam Next Fest's top party game) | 3-player co-op where each player has only part of the information; stylized, friendly look | The Spymaster's private information; a bright, chunky, readable style | We add a real brain between the players and the character |
+| **Fall Guys / A Short Hike** | Chunky low-poly characters in bright colors | Flat-shaded primitive shapes, readable at a glance | One tiny royal fly in a giant kitchen |
+| **Jackbox** | Join with a room code on your phone | The whole join flow | Phones are controllers, not answer pads |
 
-## Screens
+## Art direction (low-poly royal kitchen)
 
-**Main screen (Godot):** title/lobby → role reveal → trial intro card (with a Royal Fact) → trial → Chronicle →
-next trial ... → wedding → final Chronicle. Plus two utility screens: the **Level Lab** (the Matchmaker/Master of Trials log)
-and the **Royal Decree** (the honesty panel).
+- **World:** a giant castle kitchen seen from fly height. Chunky low-poly shelves, jars, candles, banners, a long feast table, a stove, fruit
+  bowls, all flat-shaded in bright colors. Royal touches everywhere: crowns on the jars, pennant banners, a red carpet runner on the table.
+- **Characters:** the Prince (gold crown, blue body), the Princess (tiara, pink body, sitting on a giant grape), rivals (tabard colors),
+  the Giants (huge simplified low-poly hands, a fork, a spray can with a hissing cloud of particles).
+- **Palette:** saturated and friendly: royal blue `#2F5BEA`, crimson `#E63946`, gold `#F4B41A`, grape purple `#7B2FBE`, mint `#3DDC97`,
+  cream background `#FFF4E0`. Crests: Coachman = horse (gold), Helmsman = ship's wheel (blue), Falconer = falcon (mint),
+  Spymaster = ear (purple). Each crest has a distinct shape, not just a color.
+- **HUD:** the four crests along the bottom (light up while pressed), chapter title, a candle timer, jewel count, and a small **Royal Nervous
+  System** strip showing which neuron groups are firing (button channels → output neurons).
+- **Fonts (Google Fonts, OFL):** a chunky rounded font for HUD and phones (e.g. Fredoka or Baloo 2); a blackletter (UnifrakturMaguntia)
+  only for chapter titles and the Royal Decree, for the royal flavor.
 
-**Main screen layout during a trial:**
-- **Center:** the hall, top-down, framed like an illuminated manuscript page (margins with doodled insects).
-- **Right:** the **Royal Nervous System** chart: brain at the top, neck, nerve cord below. Glowing bars for each sense's
-  input neurons (LC10a L/R, LPLC2/LC4 L/R, ORN types, ppk23, JO) and for the outputs (DNa02 L/R, DNp09, DNg100, MDN, DNp01, pIP10),
-  with real neuron names in small type.
-- **Top:** the trial title in blackletter; the timer is a candle burning down.
-- **Bottom:** captions for every voice line; the four crests, lit while that sense is open.
-- **Corner badge:** TRUE PRINCE or CHANGELING.
+## Audio
 
-**Phone screens (browser):** join → crest pick → role card → live controls → Chronicle (personal honors) → "Next trial" wait screen.
-
-## Art direction (no dedicated artist needed)
-
-- **Look:** an illuminated manuscript. Parchment background, ink-line sprites, flat color, gold leaf accents. Medieval
-  manuscripts really are full of insects in the margins; we use that for decoration.
-- **Palette:** parchment `#F3E9D2`, ink `#2B2118`, royal blue `#1F3A8A`, crimson `#9B1C1C`, gold `#C9A227`. The four crests use
-  distinct shapes as well as colors (Lookout = eye sigil, Perfumer = flower, Taster = boot, Spymaster = ear), so no information
-  depends on color alone.
-- **Fonts (Google Fonts):** titles in **UnifrakturMaguntia**, body in **IM Fell English**. Keep blackletter for titles only; it's hard to read small.
-- **Sprites:** Hamlet in gold with a tiny crown; Miranda with a tiara and a different wing tint; rivals in muted colors with
-  heraldic tabards; the Giant's hand as a big gray shadow that grows (drawn, not photographed).
-- **Eyes phone:** pixelate the hall render into hexes on the server and send brightness values (cheap and looks great). MVP fallback: icons sized by closeness.
-- **Juice:** wing buzz shake, jump arc with a dust puff, SPLAT ink blot, hearts, fanfare banners, candle flicker.
-
-## Audio direction (this is also the ElevenLabs entry)
-
-- **Voices (ElevenLabs):** the **Herald** (booming announcer), **Princess Miranda** (a few reactions), **Clown the Jester**
-  (Chronicle roasts), and one-liners for rivals. About 80 lines generated in advance from [LORE.md](LORE.md#voice-line-bank).
-- **Live voice:** the Jester's Chronicle lines are written from the Chronicler's numbers and spoken while the scroll animation plays.
-- **Sound effects (ElevenLabs sound effects API):** fanfare, seal stamp, the Giant's whoosh, SPLAT, crowd gasp, wing buzz, wedding bells.
-- **Music (ElevenLabs music API):** a court-dance loop for the lobby and Garden; a tense version for the Giant's Shadow; a wedding theme.
-- **Phones:** the Spymaster's phone plays the whoosh through its own speaker. Browsers only allow sound after the first tap,
-  so the join button doubles as the "unlock audio" tap.
-- **Captions** on every line, always.
+ElevenLabs voices (Herald, Princess, Clown the Jester, rivals), sound effects (whooshes, footsteps, spray hiss, SPLAT, fanfares, wing
+buzz) and music (court dance, tense kitchen theme, wedding theme). The Spymaster's phone plays the Giants' tells **before** they show on
+screen, panned left/right by direction. Captions on every line.
 
 ## Accessibility
 
-1. **Hold-to-toggle mode:** any hold control becomes tap on / tap off, for players who can't keep pressing.
-2. **Play without the screen:** Perfumer and Spymaster have full audio versions. The Perfumer hears scent strength as stereo
-   pitch (left/right); the Spymaster hears wind and song directly. A blind or low-vision player can fully play either role.
-3. **Captions** for all voice lines; crests use shapes as well as colors; big touch targets (the whole half-screen is the button).
-4. Phone vibration only works in Android browsers, so every haptic also has a visual flash.
+1. **Hold-to-toggle** for every hold button.
+2. **The Spymaster role is fully playable by ear** (directional audio, spoken compass: "Her Highness, ahead and up").
+3. Captions on all voice lines; crests use shapes and colors; big buttons (half the phone screen each).
+4. Vibration only works in Android browsers, so every haptic also has a visual flash.
 
-## What's real and what's scripted (shown on the Royal Decree screen)
+## What's real and what's ours (the Royal Decree)
 
 | Part | Where it comes from |
 |---|---|
-| Hamlet's decisions (turn, walk, back up, jump, sing) | The MaleCNS v1.0 wiring run as a rate model. The connection counts are real; strengths and signs are our assumptions |
-| Where the senses enter and which neurons move him | Real, named cell types chosen by us (listed on the chart) |
-| How output neurons become movement | Our code |
-| Princess, rivals, the Giant | Scripted |
-| The names | Real fly genes. The personalities are ours |
+| Turning his button presses into thrust, turning, climbing, escapes and song | The MaleCNS v1.0 wiring run as a rate model (counts real; strengths, signs and the model are our assumptions) |
+| Which neurons each button stimulates | Real, named cell types chosen by us from the brain scan |
+| How output neurons become flight (speeds, inertia) | Our code |
+| The Princess, rivals, Giants, the course | Scripted |
+| The names | Real fly genes; the personalities are ours |
 
-## Lessons borrowed from award-winning games
+## Not in v2 (from v1)
 
-- **PEAK** (Steam 2025, Better With Friends): the fun is shared chaos and funny failure. **Different:** in PEAK everyone has a
-  body. Here four people share one body, and nobody directly controls where it goes.
-- **Mage Arena** (Steam 2025 Most Innovative finalist): a new kind of input can be the whole hook. **Different:** your input isn't
-  carried out. It goes through a real nervous system that can ignore it or misread it.
-- **Jackbox** (join by code): zero-install party onboarding. **Different:** the phones are sense organs, not answer pads.
-- **Keep Talking and Nobody Explodes:** each player has information the others don't, so talking is the game.
-
-## Stretch features (only after the 03:30 checkpoint, in this order)
-
-1. **The Court:** extra phones vote on the next trial's twist from the certified list.
-2. **Princess brain:** let her run on the female CNS (BANC). She has no pIP10, so the demo line is "she literally can't sing
-   his song". Needs the synapse-density normalization ([DATA_CHECK.md](DATA_CHECK.md#caveats)).
-3. **Replay theater:** rewatch the last trial side by side with the Changeling.
-4. flybody 3D body.
+The Perfumer (nose) and the Taster (feet) are gone: in a wiring-only model, smell and taste barely reach his movement neurons
+(they work through learning and neuromodulation, which a wiring diagram doesn't capture). They become Royal Facts cards instead.
