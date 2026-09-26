@@ -33,22 +33,30 @@ host/ (Godot 4, 2D): the only full-game screen; renders state, decides nothing
 
 ## Run it locally
 
-Python 3.11+ in a venv: `pip install -r requirements.txt`. Then one command starts the relay, the phone page and the game server:
+Python 3.11+ in a venv: `pip install -r requirements.txt`. Then one command starts the relay, the phone page, the game server and
+the host screen (from the repo folder, or give the full path to `run_local.py`):
 
 ```bash
-python run_local.py
+python run_local.py --room BZKT
 ```
 
-- It prints the **room code**, the **phone link** (`http://<laptop-lan-ip>:8000/?room=XXXX`, which fills in the code) and, if
-  `qrcode` is installed, a QR code to scan. Phones must be on the same Wi-Fi. On a Mac, allow incoming connections for Python the
-  first time, or phones can't reach the laptop.
+- The **host screen** opens in the laptop's browser (`http://localhost:8001`, this laptop only): a lobby with the big **room code**,
+  a **QR code** and the **join link** (`http://<laptop-lan-ip>:8000/?room=BZKT`, which fills in the code), and four seats that fill
+  in as players pick roles. When all four are in, it switches to the live view: each role's card lights up while that player
+  presses, the Helmsman, Liftmaster and Wingmaster cards show their axis, the Royal Nervous System bars show the brain, and the room
+  code stays in the corner. On the host screen, **F** is full screen and **Enter** starts with fewer than four players. The QR comes
+  from the `qrcode` package or OpenCV, whichever is installed.
+- Phones must be on the same Wi-Fi. On a Mac, allow incoming connections for Python the first time, or phones can't reach the laptop.
+- If it says a port is in use, the game is already running in another terminal: quit that one first (`q`, then Enter).
 - `--room BZKT` pins the code (use it for the demo, so phones reconnect on their own after a restart); `--seer true|changeling|placeholder`
   (default `true`, the real brain; it falls back to placeholder cues if `data/` is missing). Ports: `--http-port 8000`,
-  `--relay-port 8080`, `--godot-port 8765`. `ROOM_SECRET` comes from the environment; locally it may be blank.
+  `--relay-port 8080`, `--godot-port 8765`, `--host-port 8001`; `--no-browser` skips opening the host screen. `ROOM_SECRET` comes
+  from the environment; locally it may be blank.
 - **Host keys** in that terminal (letter, then Enter): `c` Changeling, `t` True Prince, `p` placeholder cues, `s` status (who holds
   which role, live inputs, fly position), `q` quit. It also prints a line whenever a phone takes or leaves a role.
-- Godot: open `host/project.godot` in Godot 4 (Anshul's branch). It connects to `ws://127.0.0.1:8765` and loops an offline sample
-  (clearly labeled "OFFLINE SAMPLE, not brain output") when no server is running.
+- The browser host screen (`host/web/index.html`) is a stand-in until Anshul's Godot screen is merged. Both read the same state
+  feed and decide nothing. Godot: open `host/project.godot` in Godot 4 (Anshul's branch); it connects to `ws://127.0.0.1:8765`
+  and loops an offline sample (clearly labeled "OFFLINE SAMPLE, not brain output") when no server is running.
 - Running the parts separately still works: `python3 relay/relay.py`, `python3 -m http.server 8000 --directory relay/public`,
   `python3 -m server.main --room BZKT --seer true` (`--relay-url` or `RELAY_URL` for a remote relay).
 
@@ -137,7 +145,8 @@ or null, `seconds` may be null.
  "brainActivity":{"vision":8.8,"looming":46.1,"escape":28.2},
  "fly":{"x":0.2,"y":0.0,"z":0.1,"vx":0.4,"vy":0.0,"vz":0.1},
  "render":{"princess":{"bearing_deg":16.4,"elevation_deg":11.9,"distance_cm":199.6},"giant":null},
- "roles":{"helmsman":true,"liftmaster":false,"wingmaster":false,"seer":true}}
+ "roles":{"helmsman":true,"liftmaster":false,"wingmaster":false,"seer":true},
+ "players":{"helmsman":"Ava","liftmaster":"Bo","wingmaster":"Cy","seer":"Dee"}}
 ```
 
 - `room` and `joinUrl`: for the lobby's big room code and QR (`joinUrl` is null when the server runs without `run_local.py`).
@@ -147,6 +156,7 @@ or null, `seconds` may be null.
   a left/right or "straight ahead" bar on the shared screen would give away the Seer's secret (tested:
   `test_hud_activity_does_not_give_away_where_the_princess_is`).
 - `roles`: whether each role's input is currently non-zero.
+- `players`: role to display name for the phones holding a role (filled by `run_local.py` from its relay; `{}` otherwise).
 - Still to define (Arnav, Anshul's request): `"controls"`, each movement axis's live value for the HUD's axis indicators.
 
 Godot may render this state but never decides outcomes. The whole-map positions in `render` must not be drawn as a map or an
@@ -356,7 +366,7 @@ python -m pytest brain/tests server/tests relay/tests -q
 npm test --prefix relay/public
 ```
 
-- **88 Python tests** (about 2 minutes): 67 brain, 10 server, 11 relay. `-m "not slow"` skips the slowest brain tests. Brain tests
+- **90 Python tests** (about 2 minutes): 67 brain, 12 server, 11 relay. `-m "not slow"` skips the slowest brain tests. Brain tests
   that need `data/` skip with a clear message on a fresh clone.
 - **3 JavaScript tests** for the phone modules (role-owned message shapes, private Seer view detection, room codes); they need Node.
 - What the brain suite covers: the graph matches the data check; signs follow the transmitter rule; the Changelings keep every

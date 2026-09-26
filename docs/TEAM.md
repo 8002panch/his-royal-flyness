@@ -27,7 +27,7 @@ table and add an entry to the phase log below instead. The protocol that prompts
 | 1 | Relay: rooms, roles, reconnect, `seq` validation, 1.2 s stale input, Seer-only routing | Ved | **Done** (PR #2), 10 tests |
 | 2 | Four phone controller screens, tap-to-latch, reconnect overlay | Ved | **Done** (PR #3, fix PR #5), 3 JS tests. Not yet tried on physical phones |
 | 3 | Authoritative x/y/z movement graybox; placeholder Seer; 50 / 30 / 10 Hz loops | Arnav (built with Ved's playbook) | **Done** (PR #4), 6 tests |
-| 4 | Godot first-person 2D graybox driven by live state; one-command local launch | Anshul (launcher: Arnav) | **Launcher done** (`python run_local.py`, Sat 19:25). Godot project + HUD on `anshul/host-seer-hud` (not merged); pixel-art direction chosen |
+| 4 | Godot first-person 2D graybox driven by live state; one-command local launch | Anshul (launcher: Arnav) | **Launcher done** (`python run_local.py`, Sat 19:25) and it opens a **browser host screen** (lobby with room code, QR and seats; live roster and brain bars), a stand-in until the Godot screen is merged. Godot project + HUD on `anshul/host-seer-hud` (not merged); pixel-art direction chosen |
 | 5 | Playable Garden trial: phases, win by alignment, lose on Giant / timeout / overshoot, real and fake Giant warnings, keyboard fallback, host restart | Arnav | Not started |
 | 6 | Brain-backed Seer in the server, `brainActivity` to Godot, Decree wording | Neil | **Done** (Sat 19:25): the server runs the real brain by default (placeholder if `data/` is missing), sends `brain` and `brainActivity` to Godot, host toggle for the Changeling. Decree already updated |
 | 7 | DigitalOcean + Caddy + domain, polish, demo runbook | Ved, everyone | Not started |
@@ -60,7 +60,8 @@ True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 
   relay connection, and every drop printed a traceback; (5) Godot got about 15 frames a second with the brain running; fixed-rate
   schedules give a steady 30. Added: `run_local.py` (relay + phone page + server, room code, join link and QR, host keys, join and
   leave log), `?room=` join links, the real brain in the server by default, `room`, `joinUrl`, `brain` and `brainActivity` in the
-  Godot state. 6 new tests. Verified in the browser: a 3 s hold stays held on the server for 2.96 s; the Seer's phone shows brain
+  Godot state. 6 new tests. Sat 19:35: `run_local.py` also opens the browser host screen (room code, QR, seats), explains a busy
+  port, and the state has `players`; 2 more tests. Verified in the browser: a 3 s hold stays held on the server for 2.96 s; the Seer's phone shows brain
   cues (bearing, distance, a Giant warning counting down from 1.4 s).
 
 ## Open requests: who is waiting on whom
@@ -87,6 +88,7 @@ Nothing is blocked on Neil right now. On request: the data files for anyone runn
 | Anshul → Arnav | Add `brainActivity` to the Godot state; wire the real Seer | **Done by Neil** (Sat 19:25): `brainActivity` (keys `vision`, `looming`, `escape`), `brain`, `room` and `joinUrl` are in the state, sensed once per tick |
 | Anshul → Arnav | `"controls"` (each axis's live value) for the HUD's axis bars | Waiting on Arnav to pick a format; `roles` (input non-zero) and `fly` velocities are there meanwhile |
 | Neil → Arnav, Ved | Heads-up: Neil edited your files to connect the join flow to the game (see the phase log): `server/main.py` (sensing, state fields, fixed-rate loop, `--seer`), `relay/relay.py` (disconnect clear, dropped-phone handling), `relay/public/app.js` (0.4 s resend, readout-only updates, `?room=` links), plus tests. Pull before you change these files | Please pull |
+| Neil → Anshul | Neil added `host/web/index.html` (a browser host screen: lobby with the room code, QR and seats, then a live roster and brain bars) so the game can be run and shown before your Godot screen merges. `host/web/.gdignore` keeps Godot from importing it. Keep it as the lobby, restyle it, or replace it; it reads the same state feed, now with `players` (role to name) | FYI |
 | Neil → Arnav | Movement feels very fast in the graybox: holding a direction crosses from the center to the wall in about 1 s (max speed 1.0 in a [-1, 1] box). Worth tuning with Phase 5's world scale | Your call |
 | Neil → Arnav, Ved | With a remote relay (DigitalOcean), the server doesn't reconnect if the relay connection drops; it needs a retry loop before Phase 7. The in-process relay in `run_local.py` doesn't have this problem | Before deploying |
 | Anshul → everyone | The `brainActivity` example in the planning repo's redesign (`vision`/`looming`/`motor`) doesn't match the code | Resolved: TECH.md has the real keys |

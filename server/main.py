@@ -55,6 +55,7 @@ class GameSession:
         self.simulator = MovementSimulator()
         self.seer = seer or PlaceholderSeerAdapter()
         self.join_url = join_url
+        self.players: dict[str, str] = {}  # role -> display name, for the host screen (run_local.py fills it from its relay)
         self.stimuli: dict[str, Any] | None = None
         self.cues: dict[str, Any] | None = None
 
@@ -126,6 +127,7 @@ class GameSession:
             "fly": {"x": round(fly.x, 4), "y": round(fly.y, 4), "z": round(fly.z, 4), "vx": round(fly.vx, 4), "vy": round(fly.vy, 4), "vz": round(fly.vz, 4)},
             "render": {"princess": stimuli["princess"], "giant": giant},
             "roles": {role: self.state.inputs[role].value != 0 for role in self.state.inputs},
+            "players": dict(self.players),
         }
 
 

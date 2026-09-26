@@ -51,9 +51,9 @@ running live in the server (True Prince vs Changeling, tested). In progress: the
 
 ## Run it
 
-`pip install -r requirements.txt`, then `python run_local.py`. It starts the relay, the phone page and the game server and prints
-the room code, the join link and a QR code; phones on the same Wi-Fi join from that link. Open `host/project.godot` in Godot 4 for
-the main screen. Details: [docs/TECH.md](docs/TECH.md#run-it-locally). Tests: `python -m pytest brain/tests server/tests relay/tests -q`.
+`pip install -r requirements.txt`, then `python run_local.py --room BZKT` from the repo folder. It starts the relay, the phone
+page and the game server, and opens the host screen in your browser with the room code and a QR code; phones on the same Wi-Fi
+scan it to join. Details: [docs/TECH.md](docs/TECH.md#run-it-locally). Tests: `python -m pytest brain/tests server/tests relay/tests -q`.
 
 ## Rules and honesty
 
