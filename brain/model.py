@@ -2,8 +2,11 @@
 
     r <- r + (dt / tau) * ( -r + clip(g * W @ r + I - theta, 0, 1) )
 
-W[i, j] = sign[j] * count[i, j] / in_total[i]: each input is its share of the receiving neuron's input synapses,
-with the presynaptic neuron's predicted sign. Built from data/graph_<kind>.npz by brain/build_graph.py or
+Weights (Params.weights):
+  "fractions" (default)  W[i, j] = sign[j] * count[i, j] / in_total[i]   each input as its share of all input synapses
+  "counts"               W[i, j] = w_syn * sign[j] * count[i, j]           raw synapse counts, as in Shiu et al. 2024
+Chosen Sat 26 Sept after probes (team/neil/README.md): "fractions" at gain 4 gives clean, side-specific visual channels
+that vanish in every Changeling; "counts" rescues foreleg taste -> song only at settings that break right-eye steering. Built from data/graph_<kind>.npz by brain/build_graph.py or
 brain/changeling.py. Outputs are z-scores of each output group's mean rate against its own resting activity.
 """
 
@@ -28,7 +31,9 @@ IO_SETS = Path(__file__).resolve().parent / "io_sets.json"
 class Params:
     dt: float = 0.010        # s per step (two steps per 20 ms tick)
     tau: float = 0.020       # s
-    gain: float = 3.0        # g, tuned in probes
+    weights: str = "fractions"  # "fractions" or "counts" (see module docstring)
+    w_syn: float = 0.003        # weight per synapse when weights == "counts"
+    gain: float = 4.0           # g, global multiplier on W
     theta: float = 0.0       # threshold
     i_max: float = 1.0       # input current at drive = 1 (per neuron, before side balancing)
     noise_sd: float = 0.05   # noise on input neurons each step (spontaneous activity)
@@ -41,12 +46,17 @@ def graph_path(kind: str, seed: int) -> Path:
     return DATA / ("graph_true.npz" if kind == "true" else f"graph_changeling_{seed}.npz")
 
 
-def load_weights(path: Path) -> sp.csr_matrix:
+def load_weights(path: Path, weights: str = "fractions", w_syn: float = 0.003) -> sp.csr_matrix:
     g = np.load(path)
     n = int(g["n"])
     post, pre, count = g["post"], g["pre"], g["count"]
     sign, in_total = g["sign"].astype(np.float32), g["in_total"].astype(np.float32)
-    w = sign[pre] * count.astype(np.float32) / np.maximum(in_total[post], 1.0)
+    if weights == "counts":
+        w = w_syn * sign[pre] * count.astype(np.float32)
+    elif weights == "fractions":
+        w = sign[pre] * count.astype(np.float32) / np.maximum(in_total[post], 1.0)
+    else:
+        raise ValueError(f"weights must be 'counts' or 'fractions', got {weights!r}")
     # duplicates (possible after a Changeling shuffle) are summed, so every row keeps its exact input total
     return sp.csr_matrix((w.astype(np.float32), (post, pre)), shape=(n, n))
 
@@ -75,7 +85,7 @@ class RateModel:
     # --- wiring -------------------------------------------------------------------------------------------
     def load(self, kind: str, seed: int = 0) -> None:
         self.kind, self.seed = kind, seed
-        self.W = load_weights(graph_path(kind, seed))
+        self.W = load_weights(graph_path(kind, seed), self.p.weights, self.p.w_syn)
         key = (kind, seed)
         if key not in self._baselines:
             self._baselines[key] = self._calibrate()

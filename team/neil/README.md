@@ -59,4 +59,14 @@
 ## Notes
 - 15:46 first look (gain sweep, one mixed stimulus): tick 11.2 ms; at gain 3 rest is quiet (4.7% of neurons above 0.1, 0.4% saturated);
   left stimulus drives DNa02_L (z 8.5) not DNa02_R (0.2); DNp01 z ~50; pIP10 weak at gain 3 (1.1), better at 5 (2.9). Probes will separate stimuli and add the Changeling.
+- **16:10 to 16:30 probes and scans (scripts in team/neil/scratch/, git-ignored):**
+  - Weights: "fractions" at gain 4 is the default. Rest: ~5-7% of neurons active, <1% saturated; Changelings are silent at rest.
+  - A (looming → Giant Fiber) passes hugely: LC4+LPLC2 → DNp01 z ~50-76 vs Changelings ~1.
+  - C (steering) passes: LC10a+LC10d left eye → DNa02_L 17.8, right → DNa02_R 17.6; Changelings small and inconsistent.
+  - **Serenade comes from seeing her, not tapping:** both eyes on her → pIP10 8.9 (one eye ~4); Changelings ≤1.3.
+  - B (foreleg taste taps → song) fails in every setting tried (≤0.4 fractions; 2.2 only with raw counts at settings that break steering).
+    Taps do raise vAB3 (0.20 → 0.32) but vAB3 is ~0.8% of its pC1 targets' input and those are ~0.8% of pIP10's input.
+  - Scan of all 330 sensory types (≥10 neurons): vision drives nearly everything. Walk: LC9+LC31a (21-34). Motion: LPC1+LLPC1
+    (turn to that side 9-12, walk 4-5). Ears: JO sound → DNp01 3.8. Nose and feet ≤1.4 on any output.
+  - Proposed: roles built on these channels (see chat / DECISIONS). Needs team sign-off.
 - Build: 30 s, under 600 MB. graph_true.npz is 22 MB: AirDrop it (plus neurons.parquet and the 3 Changelings) to teammates who need the real brain.
