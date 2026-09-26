@@ -18,12 +18,12 @@ SCENES = [
     {"wind": {"bearing_deg": 90.0, "strength": 0.8}},
 ]
 CUE_KEYS = {"princess", "giant", "activity", "source", "mode"}
+ACTIVITY_KEYS = {"vision", "looming", "escape"}  # the shared HUD's bars: side-free on purpose
 
 
 def S(*args, **kwargs) -> SeerAdapter:
     """A Seer that takes exactly one brain step per call (deterministic tests)."""
     return SeerAdapter(*args, realtime=False, **kwargs)
-ACTIVITY_KEYS = {"her_L", "her_R", "looming", "escape", "steer", "song"}
 
 
 def _check_shape(cues: dict) -> None:
@@ -162,6 +162,16 @@ def test_true_prince_gets_sides_right():
     for bearing, side in ((-70, "left"), (70, "right")):
         c = _hold(seer, {"giants": [{"bearing_deg": bearing, "elevation_deg": 20, "distance_cm": 100, "approach_cm_s": 400, "size_cm": 40}]})
         assert c["giant"]["side"] == side and c["giant"]["warning"] > 0.3
+
+
+@needs_data
+def test_hud_activity_does_not_give_away_where_the_princess_is():
+    """The main-screen HUD is seen by all four players; only the Seer may know her side (or that she's straight ahead)."""
+    seer = S("true")
+    vision = {b: _hold(seer, {"princess": {"bearing_deg": b, "elevation_deg": 0.0, "distance_cm": 120.0}})["activity"]["vision"]
+              for b in (-70, 0, 70)}
+    assert min(vision.values()) > 3.0, vision  # she is clearly seen...
+    assert max(vision.values()) <= 1.25 * min(vision.values()), vision  # ...but left, ahead and right look the same
 
 
 @needs_data

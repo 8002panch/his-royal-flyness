@@ -10,7 +10,7 @@ Princess and the Giants are relative to the Prince); the adapter drives the matc
     seer.swap("changeling", seed=0)            # the Changeling toggle (also: "true", "placeholder")
     view = to_seer_view(cues)                  # Ved's relay format: {"t": "seer_view", "bearing": "NE", "distance": "FAR", ...}
 
-Formats (team/README.md, "Open requests"):
+Formats (docs/TECH.md, "The Royal Seer"):
 
     stimuli = {"princess": {"bearing_deg": -35, "elevation_deg": 10, "distance_cm": 420} | None,
                "giants": [{"bearing_deg": 80, "elevation_deg": 30, "distance_cm": 150, "approach_cm_s": 300, "size_cm": 40}],
@@ -19,7 +19,7 @@ Formats (team/README.md, "Open requests"):
 
     cues = {"princess": {"side": "left"|"ahead"|"right", "bearing_deg": float, "confidence": 0-1, "distance": "near"|"mid"|"far"} | None,
             "giant": {"warning": 0-1, "side": "left"|"right"|"ahead"|None, "eta_s": float | None},
-            "activity": {"her_L", "her_R", "looming", "escape", "steer", "song": z-scores for the HUD},
+            "activity": {"vision", "looming", "escape": z-scores for the main-screen HUD; side-free on purpose},
             "source": "true"|"changeling"|"placeholder", "mode": "neural"|"hybrid"|"placeholder"}
 
 Modes:
@@ -157,9 +157,8 @@ def decode(out: dict[str, float], state: dict, eta_table: dict | None = None) ->
     return {
         "princess": princess,
         "giant": {"warning": round(warning, 2), "side": gside, "eta_s": eta},
-        "activity": {"her_L": round(out["seer_her_L"], 1), "her_R": round(out["seer_her_R"], 1), "looming": round(loom, 1),
-                     "escape": round(out["DNp01"], 1), "steer": round(out["DNa02_R"] - out["DNa02_L"], 1),
-                     "song": round(out["pIP10"], 1)},
+        # For the shared main-screen HUD, so no left/right (or both-eyes "ahead") signal: that would give away the Seer's secret.
+        "activity": {"vision": round(max(hl, hr), 1), "looming": round(loom, 1), "escape": round(out["DNp01"], 1)},
     }
 
 
@@ -182,14 +181,14 @@ def placeholder(stimuli: dict[str, Any], princess_full_cm: float = PRINCESS_FULL
                 warning, eta = w, round(t, 2)
                 gside = "ahead" if abs(g["bearing_deg"]) < 15 else ("right" if g["bearing_deg"] > 0 else "left")
     return {"princess": princess, "giant": {"warning": round(warning, 2), "side": gside, "eta_s": eta},
-            "activity": {"her_L": 0.0, "her_R": 0.0, "looming": 0.0, "escape": 0.0, "steer": 0.0, "song": 0.0}}
+            "activity": {"vision": 0.0, "looming": 0.0, "escape": 0.0}}
 
 
 COMPASS = {"left": "NW", "ahead": "N", "right": "NE"}  # relative to the Prince's heading (N = straight ahead)
 
 
 def to_seer_view(cues: dict) -> dict:
-    """Convert cues to Ved's relay `seer_view` message (relay/PROTOCOL.md, "Host-to-phone feedback")."""
+    """Convert cues to Ved's relay `seer_view` message (docs/TECH.md, "Protocol")."""
     p, g = cues.get("princess"), cues["giant"]
     return {
         "t": "seer_view",
