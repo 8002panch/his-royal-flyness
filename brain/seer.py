@@ -8,6 +8,7 @@ Princess and the Giants are relative to the Prince); the adapter drives the matc
     seer = SeerAdapter(source="true")          # "true" | "changeling" | "placeholder"; mode="neural" (default) or "hybrid"
     cues = seer.sense(stimuli)                 # every 20 ms tick
     seer.swap("changeling", seed=0)            # the Changeling toggle (also: "true", "placeholder")
+    view = to_seer_view(cues)                  # Ved's relay format: {"t": "seer_view", "bearing": "NE", "distance": "FAR", ...}
 
 Formats (team/README.md, "Open requests"):
 
@@ -157,6 +158,22 @@ def placeholder(stimuli: dict[str, Any], princess_full_cm: float = PRINCESS_FULL
                 gside = "ahead" if abs(g["bearing_deg"]) < 15 else ("right" if g["bearing_deg"] > 0 else "left")
     return {"princess": princess, "giant": {"warning": round(warning, 2), "side": gside, "eta_s": eta},
             "activity": {"her_L": 0.0, "her_R": 0.0, "looming": 0.0, "escape": 0.0, "steer": 0.0, "song": 0.0}}
+
+
+COMPASS = {"left": "NW", "ahead": "N", "right": "NE"}  # relative to the Prince's heading (N = straight ahead)
+
+
+def to_seer_view(cues: dict) -> dict:
+    """Convert cues to Ved's relay `seer_view` message (relay/PROTOCOL.md, "Host-to-phone feedback")."""
+    p, g = cues.get("princess"), cues["giant"]
+    return {
+        "t": "seer_view",
+        "bearing": COMPASS[p["side"]] if p else None,
+        "distance": p["distance"].upper() if p else None,
+        "confidence": p["confidence"] if p else 0.0,
+        "giant": {"direction": g["side"].upper() if g["side"] else None, "seconds": g["eta_s"], "confidence": g["warning"]},
+        "source": cues["source"],
+    }
 
 
 class SeerAdapter:

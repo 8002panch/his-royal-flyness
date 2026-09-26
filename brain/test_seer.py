@@ -6,7 +6,7 @@ plus sanity checks that the True Prince's readout gets sides right.
 
 from __future__ import annotations
 
-from brain.seer import SeerAdapter
+from brain.seer import SeerAdapter, to_seer_view
 
 SCENES = [
     {},
@@ -79,6 +79,19 @@ def test_unseen_princess_is_not_reported() -> None:
     for _ in range(25):
         cues = seer.sense(SCENES[3])
     assert cues["princess"] is None
+
+
+def test_converts_to_ved_seer_view() -> None:
+    for source in ("placeholder", "true"):
+        seer = SeerAdapter(source)
+        for scene in SCENES:
+            seer.reset()
+            for _ in range(10):
+                view = to_seer_view(seer.sense(scene))
+            assert view["t"] == "seer_view" and set(view) >= {"bearing", "distance", "confidence", "giant"}
+            assert view["bearing"] in (None, "NW", "N", "NE")
+            assert view["distance"] in (None, "NEAR", "MID", "FAR")
+            assert set(view["giant"]) == {"direction", "seconds", "confidence"}
 
 
 if __name__ == "__main__":
