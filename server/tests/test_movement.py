@@ -116,6 +116,16 @@ class GameSessionTests(unittest.TestCase):
         self.assertAlmostEqual(sent / 10.0, 30.0, delta=1.0)
         self.assertGreater(_next_time(0.0, GODOT_S, now=5.0), 5.0, "after a 5 s stall the next frame is in the future")
 
+    def test_world_geometry_puts_the_princess_behind_and_stops_the_hand_at_contact(self) -> None:
+        from server.seer_adapter import projected_stimuli
+
+        ahead = projected_stimuli(0.25, 0.18, 0.0, 0.0)["princess"]
+        behind = projected_stimuli(0.0, 0.18, 1.0, 0.0)["princess"]  # the fly has flown past her
+        self.assertAlmostEqual(ahead["bearing_deg"], 0.0)
+        self.assertGreater(behind["bearing_deg"], 90.0)
+        distances = [g["distance_cm"] - g["size_cm"] for t in range(400) for g in projected_stimuli(0, 0, 0, t * 0.02)["giants"]]
+        self.assertTrue(distances and min(distances) >= 0.0, "the hand must never pass through the fly")
+
 
 if __name__ == "__main__":
     unittest.main()

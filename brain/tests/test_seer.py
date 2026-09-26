@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from brain.seer import (BINOCULAR_DEG, SeerAdapter, encode, eye_weights, looming_rate_deg_s, placeholder,
+from brain.seer import (BINOCULAR_DEG, PRINCESS_FULL_CM, SeerAdapter, encode, eye_weights, looming_rate_deg_s, placeholder,
                         to_seer_view)
 from brain.tests.conftest import needs_data
 
@@ -84,7 +84,8 @@ def test_placeholder_reads_the_geometry():
     c = placeholder(SCENES[2])
     assert c["princess"]["side"] == "right"
     g = placeholder({"giants": [{"bearing_deg": -30, "elevation_deg": 0, "distance_cm": 200, "approach_cm_s": 400}]})["giant"]
-    assert g["side"] == "left" and g["eta_s"] == pytest.approx(0.5) and 0 < g["warning"] <= 1
+    # contact when the 40 cm hand reaches the fly: (200 - 40) / 400 = 0.4 s (the same definition as the brain's calibration)
+    assert g["side"] == "left" and g["eta_s"] == pytest.approx(0.4) and 0 < g["warning"] <= 1
 
 
 # --- the adapter interface --------------------------------------------------------------------------------------------------------
@@ -219,33 +220,38 @@ def test_seer_accuracy_true_prince_vs_changelings():
     princess = [(float(rng.uniform(-150, 150)), float(rng.uniform(40, 800))) for _ in range(20)]
     giants = [(float(rng.choice([-1, 1]) * rng.uniform(20, 150)), float(rng.uniform(150, 700)), float(rng.uniform(150, 500))) for _ in range(12)]
 
+    in_range = 4.5 * PRINCESS_FULL_CM  # detection needs the stronger eye 3 z above rest: out to ~5x the full-drive distance
+
     def score(source, seed=0):
         seer = S(source, seed)
-        sides = 0
+        detected, sides, missed_in_range = 0, 0, 0
         for b, d in princess:
             truth = "ahead" if abs(b) < BINOCULAR_DEG else ("right" if b > 0 else "left")
             p = _hold(seer, {"princess": {"bearing_deg": b, "elevation_deg": 0, "distance_cm": d}}, 40)["princess"]
+            detected += p is not None
             sides += p is not None and p["side"] == truth
+            missed_in_range += p is None and d <= in_range
         warned, leads, eta_err = 0, [], []
         for b, d0, v in giants:
             first = None
             for cues, left in _approach(seer, b, d0, v):
-                if first is None and cues["giant"]["warning"] >= 0.3:
+                if first is None and cues["giant"]["side"] is not None:  # the moment the Seer's phone shows the Giant
                     first = left
                 if cues["giant"]["eta_s"] is not None and 0.3 <= left <= 2.0:
                     eta_err.append(abs(cues["giant"]["eta_s"] - left))
             if first is not None:
                 warned += 1
                 leads.append(first)
-        return sides, warned, (np.median(leads) if leads else 0.0), (np.median(eta_err) if eta_err else None)
+        return (detected, sides, missed_in_range), warned, (np.median(leads) if leads else 0.0), (np.median(eta_err) if eta_err else None)
 
-    sides, warned, lead, eta = score("true")
-    assert sides >= 18, f"True Prince Princess sides {sides}/20"
+    (detected, sides, missed_in_range), warned, lead, eta = score("true")
+    assert missed_in_range == 0, f"True Prince missed {missed_in_range} Princesses within {in_range:.0f} cm"
+    assert detected >= 16 and sides >= 0.9 * detected, f"True Prince sides {sides} of {detected} detected"
     assert warned == len(giants) and lead >= 0.6, f"True Prince warned {warned}/{len(giants)}, lead {lead:.2f} s"
     assert eta is not None and eta <= 0.25, f"time-to-impact error {eta}"
     for s in (0, 1, 2):
-        c_sides, c_warned, _, _ = score("changeling", s)
-        assert c_warned == 0 and c_sides <= 12, f"Changeling {s}: sides {c_sides}/20, warned {c_warned}"
+        (c_detected, _, _), c_warned, _, _ = score("changeling", s)
+        assert c_warned == 0 and c_detected <= 1, f"Changeling {s}: reported the Princess {c_detected}/20, warned {c_warned}"
 
 
 # --- real-time stepping and the server integration ----------------------------------------------------------------------------------
@@ -362,3 +368,43 @@ def test_server_uses_the_real_brain_and_falls_back_without_it(monkeypatch):
 
     monkeypatch.setattr(brain.seer, "SeerAdapter", broken)
     assert isinstance(make_seer("true"), PlaceholderSeerAdapter)  # no data files: the game still runs
+
+
+@needs_data
+@pytest.mark.slow
+def test_in_the_game_world_the_cues_make_sense():
+    """The server's own hall (projected_stimuli) at the server's scale: right sides, ordered distance bands, blind Changelings,
+    and the test Giant warned well before contact by the True Prince only."""
+    from server.main import SEER_PRINCESS_FULL_CM
+    from server.seer_adapter import projected_stimuli
+
+    positions = [(x, y, z) for x in (-1, -0.5, 0, 0.5, 1) for y in (-0.8, 0.8) for z in (-1, 0, 0.7, 1.0)]
+    brains = {"true": S("true", princess_full_cm=SEER_PRINCESS_FULL_CM)}
+    brains.update({f"changeling{k}": S("changeling", k, princess_full_cm=SEER_PRINCESS_FULL_CM) for k in (0, 1, 2)})
+    right, reported, bands = 0, {name: 0 for name in brains}, {"near": [], "mid": [], "far": []}
+    for pos in positions:
+        stimuli = projected_stimuli(*pos, 0.0)
+        b, d = stimuli["princess"]["bearing_deg"], stimuli["princess"]["distance_cm"]
+        truth = "ahead" if abs(b) < BINOCULAR_DEG else ("right" if b > 0 else "left")
+        for name, seer in brains.items():
+            p = _hold(seer, stimuli)["princess"]
+            reported[name] += p is not None
+            if name == "true" and p is not None:
+                right += p["side"] == truth
+                bands[p["distance"]].append(d)
+    assert right >= 0.9 * len(positions), f"True Prince sides {right}/{len(positions)}"
+    assert all(bands.values()) and np.median(bands["near"]) < np.median(bands["mid"]) < np.median(bands["far"]), bands
+    assert all(reported[f"changeling{k}"] <= 1 for k in (0, 1, 2)), reported
+
+    for name, seer in brains.items():
+        seer.reset()
+        first = None
+        for k in range(int(6.0 / 0.02)):  # the test Giant: seconds 4 to 6 of the server's 8 s cycle, contact at 6.0
+            cues = seer.sense(projected_stimuli(0.0, 0.0, 0.0, k * 0.02))
+            if first is None and cues["giant"]["side"] is not None:
+                first = k * 0.02
+                assert cues["giant"]["side"] == "left"
+        if name == "true":
+            assert first is not None and 6.0 - first >= 1.0, f"True Prince warned {None if first is None else 6.0 - first} s ahead"
+        else:
+            assert first is None, f"{name} warned of the Giant"

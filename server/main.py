@@ -26,6 +26,9 @@ TICK_S = 1 / 50
 GODOT_S = 1 / 30
 PHONE_S = 1 / 10
 SEER_SOURCES = ("true", "changeling", "placeholder")
+# Distance at which the Princess fully drives the Seer's Princess detectors, set to this hall's scale (world units x 220 cm, so
+# she is 10 to 540 cm away): NEAR within ~170 cm, MID to ~330 cm, FAR to ~530 cm (detection limit ~5x this). Retune for Phase 5's hall.
+SEER_PRINCESS_FULL_CM = 100.0
 
 
 def make_seer(source: str = "true") -> Any:
@@ -38,7 +41,7 @@ def make_seer(source: str = "true") -> Any:
     try:
         from brain.seer import SeerAdapter
 
-        seer = SeerAdapter(source)
+        seer = SeerAdapter(source, princess_full_cm=SEER_PRINCESS_FULL_CM)
         seer.swap("changeling" if source == "true" else "true")
         seer.swap(source)
         return seer

@@ -272,35 +272,63 @@ cues = {
 
 - Each eye sees its own side plus a **binocular strip of +/-10 degrees** across the midline (edge softness 2 degrees); the
   Princess straight ahead drives both eyes, which reads as "ahead". Nothing is seen within 15 degrees of straight behind.
-- Princess drive falls with distance: full at `princess_full_cm` (default 150 cm), detected out to about 7x that.
+- Princess drive falls with distance: `min(1, princess_full_cm / distance)`. `princess_full_cm` defaults to 150 cm; the server
+  sets 100 cm to fit its hall (`SEER_PRINCESS_FULL_CM` in `server/main.py`). She's detected out to about 5x that distance.
 - Looming drive is **logarithmic** in the Giant's angular expansion rate, `log1p(v/2) / log1p(300/2)` for v in degrees per
   second (like real looming detectors), which gives about a second of warning.
 - Wind drives the antenna on the gust's side (smooth left/right split).
 
 **Decoding (fixed, not trained)**
 
-- Side from the left-vs-right balance of the Princess readout (under 0.25 = ahead); confidence from its total (1.5 to detect,
-  12 for full); distance band from confidence (over 0.66 NEAR, over 0.25 MID, else FAR).
-- Giant warning from the looming readout (starts at z 3, full at z 60), or half-strength from wind; side from the larger side.
-- Seconds to impact from a lookup of warning level measured on the True Prince (`brain/seer_calibration.json`, 24 points,
-  rebuilt with `python -m brain.seer --calibrate`). Wind alone gives no time estimate.
-- The Changeling is read out the same way, so its cues degrade on their own.
+- **Princess found** when the stronger eye's readout is at least **3 z above rest** (resting noise is about 0.3 z, so that's
+  about 10x the noise). Using the stronger eye, not the sum, keeps "straight ahead" (both eyes) from reading as "closer".
+- **Side** from the left-vs-right balance (under 0.25 = ahead). **Confidence** = (stronger eye - 3) / (17 - 3), where 17 z is the
+  measured single-eye readout at full drive; it grows in proportion to the drive, so it tracks distance. **Distance band**:
+  confidence at least 0.5 NEAR (about 1.7x `princess_full_cm` or closer), at least 0.15 MID (about 3.3x), else FAR.
+- **Giant warning level** from the looming readout (rises from z 3, full at z 60), or half-strength from wind. The Seer is told
+  about a Giant (side and seconds) once the level reaches **0.3**, the same bar the evaluation counts as "warned".
+- **Seconds to impact** (contact = the hand reaching the fly) from a lookup of warning level measured on the True Prince
+  (`brain/seer_calibration.json`, 24 points, rebuilt with `python -m brain.seer --calibrate`). It comes from looming strength
+  alone, so it's most accurate for Giants like the calibration mix (median error 0.12 s; 0.23 s for the server's slow test Giant).
+  Wind alone gives no time estimate.
+- The Changeling is read out exactly the same way. Its single-eye Princess readout stays at or below 3.1 z even at full drive
+  (the True Prince reaches about 18), so it essentially never crosses the detection bar: it goes blind rather than guessing.
 
 **Readouts** (side-selective descending neurons found by a left-vs-right scan; same side / other side z, True Prince):
 
 | Readout | Neurons | Response |
 |---|---|---|
-| `seer_her_L/R` | DNa02, DNg111, DNae002, DNae001, DNg41, DNa10 | 9.5 / -0.6 and 9.9 / -0.6 |
+| `seer_her_L/R` | DNa02, DNg111, DNae002, DNae001, DNg41, DNa10 | 18.0 / -0.9 and 17.9 / -0.7 (full drive) |
 | `seer_loom_L/R` | DNp04, DNp02, DNp01 (Giant Fiber), DNg40, DNp11, DNp03 | 85 / 1.0 and 81 / 0.6 |
 | `seer_wind_L/R` | DNge016, DNg29, DNge175, DNp18, DNg05_a | 16 / 1.1 and 19 / 0.2 |
 
+**Why these neurons** (for judges' questions; the readout populations were picked by a left-vs-right scan of the data, and not
+every neuron in them has a known role):
+
+| Choice | Biology behind it |
+|---|---|
+| LC10a as Princess detectors | Males use LC10a visual projection neurons to track the female during courtship (Ribeiro et al. 2018). LC10d is our addition from the same LC10 family, chosen by the scan |
+| LC4 + LPLC2 as looming detectors, DNp01 in the Giant readout | Both detect looming and drive the giant fiber (DNp01), the escape neuron (von Reyn et al. 2014; Ache et al. 2019); in MaleCNS they send it 11,224 synapses |
+| DNp02, DNp04, DNp11 in the Giant readout | Looming-responsive descending neurons downstream of LC4/LPLC2 (von Reyn et al. 2017) |
+| JO-C/E as wind sensors | Johnston's organ C and E neurons respond to sustained antennal deflection (wind), A and B to sound (Yorozu et al. 2009) |
+| DNa02 in the Princess readout | A steering descending neuron whose left-right activity predicts turning (Rayshubskiy et al. 2020) |
+| Rate model, signs from transmitters | A simplification: real neurons spike, adapt and are modulated. The Royal Decree says so |
+
 **Evaluation** (`python -m brain.seer --evaluate`: 60 fresh random scenes per brain; `team/neil/seer_eval.csv`)
 
-| Brain | Princess side correct | Giant warned before impact | Warning lead | Giant side correct | Time-to-impact error |
-|---|---|---|---|---|---|
-| **True Prince** | **59/60** (within 20 ms) | **60/60** | **1.20 s** | **60/60** | **0.12 s** |
-| Changelings (3 seeds) | 1 to 10 of 60 | **0/60** | none | 0 to 25 of 60 | none |
-| Placeholder (true geometry) | 60/60 | 60/60 | 1.18 s | 60/60 | 0.15 s |
+| Brain | Princess found | Side correct | Giant warned before impact | Warning lead | Giant side correct | Time-to-impact error |
+|---|---|---|---|---|---|---|
+| **True Prince** | **54/60** | **53/60** (cue in 40 ms) | **60/60** | **1.20 s** | **60/60** | **0.12 s** |
+| Changelings (3 seeds) | **0/60** | 0/60 | **0/60** | none | 0/60 | none |
+| Placeholder (true geometry) | 60/60 | 60/60 | 60/60 | 1.28 s | 60/60 | 0.00 s |
+
+The scenes put the Princess 40 to 800 cm away at the default 150 cm scale; the 6 the True Prince missed were beyond about 700 cm
+(its detection range), and its one wrong side was at 8.7 degrees, on the edge of "ahead".
+
+**In the game's own hall** (the server's `projected_stimuli` at its 100 cm scale, 120 fly positions; tested in
+`test_in_the_game_world_the_cues_make_sense`): True Prince sides right from 116 of 120 positions, including when the fly has flown
+past her; NEAR 69 to 173 cm, MID 170 to 330 cm, FAR 305 to 510 cm, nothing reported beyond about 410 to 540 cm; the three
+Changelings report her 0 times. The test Giant is warned 1.96 s before contact by the True Prince and never by a Changeling.
 
 **Behavior worth knowing**
 
@@ -366,7 +394,7 @@ python -m pytest brain/tests server/tests relay/tests -q
 npm test --prefix relay/public
 ```
 
-- **90 Python tests** (about 2 minutes): 67 brain, 12 server, 11 relay. `-m "not slow"` skips the slowest brain tests. Brain tests
+- **92 Python tests** (about 2 minutes): 68 brain, 13 server, 11 relay. `-m "not slow"` skips the slowest brain tests. Brain tests
   that need `data/` skip with a clear message on a fresh clone.
 - **3 JavaScript tests** for the phone modules (role-owned message shapes, private Seer view detection, room codes); they need Node.
 - What the brain suite covers: the graph matches the data check; signs follow the transmitter rule; the Changelings keep every

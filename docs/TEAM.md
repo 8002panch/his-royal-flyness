@@ -36,7 +36,7 @@ table and add an entry to the phase log below instead. The protocol that prompts
 
 **Brain (Neil), done:** whole-CNS rate model (166,606 neurons, about 6 ms per tick); three fair Changelings; all 10 button
 channels pass; the Royal Seer (neural, hybrid and placeholder modes, safe fallback, real-time stepping, side-free HUD activity);
-True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 67 brain tests. Full suite: 88 Python tests pass.
+True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 68 brain tests. Full suite: 92 Python tests pass.
 
 ### Phase log
 
@@ -61,7 +61,15 @@ True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 
   schedules give a steady 30. Added: `run_local.py` (relay + phone page + server, room code, join link and QR, host keys, join and
   leave log), `?room=` join links, the real brain in the server by default, `room`, `joinUrl`, `brain` and `brainActivity` in the
   Godot state. 6 new tests. Sat 19:35: `run_local.py` also opens the browser host screen (room code, QR, seats), explains a busy
-  port, and the state has `players`; 2 more tests. Verified in the browser: a 3 s hold stays held on the server for 2.96 s; the Seer's phone shows brain
+  port, and the state has `players`; 2 more tests.
+- **Neuron audit (Neil, Sat 20:05):** checked the Seer inside the game's own hall, not just random test scenes. Fixed: (1) the
+  distance cue said NEAR from 69 to 464 cm and never FAR (a 150 cm scale in a 5 m hall, and both eyes summed, so "ahead" read as
+  "closer"); now the stronger eye decides, the server sets a 100 cm scale, and the bands track distance; (2) the Changelings' weak
+  noise crossed the old detection bar (1.5 z on the summed eyes), producing chance-level guesses; the bar is now 3 z on the
+  stronger eye (about 10x resting noise) and the Changelings report nothing; (3) the phone showed Giant warnings from level 0.05
+  while the evaluation counted from 0.3; both use 0.3 now; (4) the test world never put the Princess behind the fly and let the
+  hand pass through it (to 15 cm); fixed; (5) HUD labels now say what's measured. New numbers: True Prince 54/60 found, 53 sides,
+  60/60 Giants, 1.20 s lead; Changelings 0/60 on everything. In the hall: 116/120 sides, Changelings 0. 92 tests pass. Verified in the browser: a 3 s hold stays held on the server for 2.96 s; the Seer's phone shows brain
   cues (bearing, distance, a Giant warning counting down from 1.4 s).
 
 ## Open requests: who is waiting on whom

@@ -130,7 +130,8 @@
       { role: "wingmaster", crest: "⇄", title: "Royal Wingmaster", axis: "z", ends: ["Back", "Forward"] },
       { role: "seer", crest: "◉", title: "Royal Seer" },
     ];
-    const BAR_LABELS = { vision: "Vision (Princess detectors)", looming: "Looming (Giant detectors)", escape: "Giant Fiber (escape)" };
+    // What each value measures: descending neurons (brain to body), read out as z-scores above their resting activity
+    const BAR_LABELS = { vision: "Princess signal", looming: "Looming signal", escape: "Giant Fiber (DNp01)" };
     const BADGES = { true: ["TRUE PRINCE", "true"], changeling: ["CHANGELING", "changeling"], placeholder: ["BRAIN OFFLINE", "placeholder"] };
     const $ = (id) => document.getElementById(id);
     let startedByHost = false;
@@ -177,7 +178,7 @@
       // brain activity: whatever keys the server sends (side-free z-scores); nothing when the brain isn't running
       const activity = s.brainActivity || {};
       const keys = Object.keys(activity);
-      $("brain-note").textContent = keys.length ? "live MaleCNS readouts (z-scores)" : "brain offline: placeholder cues";
+      $("brain-note").textContent = keys.length ? "live MaleCNS descending neurons, z-scores above rest" : "brain offline: placeholder cues";
       const bars = $("bars");
       if (bars.dataset.keys !== keys.join(",")) {
         bars.dataset.keys = keys.join(",");

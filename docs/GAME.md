@@ -70,10 +70,13 @@ there's no 3D engine.
   and seconds to impact. The Seer has to talk; the others have to listen.
 - **True Prince vs Changeling**, measured on 60 fresh random scenes each (`team/neil/seer_eval.csv`):
 
-  | Brain | Princess side right | Giants warned before impact | Average warning lead |
+  | Brain | Princess found (side right) | Giants warned before impact | Average warning lead |
   |---|---|---|---|
-  | True Prince | 59 / 60 | 60 / 60 | 1.20 s |
-  | Changelings (3 seeds) | 1 to 10 / 60 | 0 / 60 | none |
+  | True Prince | 54 / 60 (53 right; the 6 missed were the farthest) | 60 / 60 | 1.20 s |
+  | Changelings (3 seeds) | 0 / 60 | 0 / 60 | none |
+
+  In the game's own hall the True Prince gets her side right from 116 of 120 fly positions, NEAR / MID / FAR track the real
+  distance, and none of the three Changelings ever reports her or the test Giant.
 
 - Movement is player-controlled in both modes, so the comparison is fair: only the senses change.
 - **Hybrid fallback (disclosed if used):** direction from the game's geometry, confidence and warnings from the brain. The

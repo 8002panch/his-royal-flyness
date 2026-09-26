@@ -49,13 +49,13 @@ class PlaceholderSeerAdapter:
 def projected_stimuli(fly_x: float, fly_y: float, fly_z: float, elapsed_s: float) -> dict[str, Any]:
     """Small deterministic world used until authored trials arrive in a later phase."""
     princess_x, princess_y, princess_z = 0.25, 0.18, 0.85
-    depth = max(0.05, princess_z - fly_z)
-    bearing = math.degrees(math.atan2(princess_x - fly_x, depth))
-    elevation = math.degrees(math.atan2(princess_y - fly_y, depth))
-    distance = math.sqrt((princess_x - fly_x) ** 2 + (princess_y - fly_y) ** 2 + depth**2) * 220.0
+    dx, dy, dz = princess_x - fly_x, princess_y - fly_y, princess_z - fly_z
+    bearing = math.degrees(math.atan2(dx, dz))  # 0 = straight ahead; up to +/-180 once the fly has flown past her
+    elevation = math.degrees(math.atan2(dy, math.hypot(dx, dz)))
+    distance = max(1.0, math.sqrt(dx * dx + dy * dy + dz * dz) * 220.0)
     phase = elapsed_s % 8.0
     giants: list[dict[str, float]] = []
     if 4.0 <= phase < 6.0:
-        remaining = 6.0 - phase
-        giants.append({"bearing_deg": -60.0, "elevation_deg": 15.0, "distance_cm": max(15.0, remaining * 150.0), "approach_cm_s": 150.0, "size_cm": 40.0})
+        remaining = 6.0 - phase  # the hand (40 cm across) reaches the fly at phase 6.0: contact at distance = its size
+        giants.append({"bearing_deg": -60.0, "elevation_deg": 15.0, "distance_cm": 40.0 + remaining * 150.0, "approach_cm_s": 150.0, "size_cm": 40.0})
     return {"princess": {"bearing_deg": bearing, "elevation_deg": elevation, "distance_cm": distance}, "giants": giants}

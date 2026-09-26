@@ -119,13 +119,26 @@ def encode(stimuli: dict[str, Any], princess_full_cm: float = PRINCESS_FULL_CM) 
 
 
 # --- decoding: brain readouts -> cues --------------------------------------------------------------------------------------------
-HER_DETECT_Z = 1.5      # total Princess readout needed to report her at all
-HER_FULL_Z = 12.0       # total readout that counts as full confidence
+# Princess: judged from the stronger eye's readout, so seeing her with both eyes ("ahead") doesn't read as "closer".
+# Measured Sat 19:45 (True Prince, 25 ticks): the single-eye readout grows in proportion to the drive, about 17.8 z at full drive
+# (15.2 straight ahead); the three Changelings stay at or below 3.1 even at full drive; resting noise is about 0.3 z (SD).
+HER_DETECT_Z = 3.0      # report her only when the stronger eye's readout is 3 z above rest (about 10x the resting noise)
+HER_FULL_Z = 17.0       # single-eye readout at full drive
+NEAR_CONF, MID_CONF = 0.5, 0.15  # confidence bands: NEAR from drive ~0.6 (distance < ~1.7x princess_full_cm), MID from ~0.3
 AHEAD_BALANCE = 0.25    # |R - L| / (R + L) below this = "ahead"
-LOOM_WARN_Z = 3.0       # looming readout where a warning starts
+LOOM_WARN_Z = 3.0       # looming readout where the warning level starts to rise
 LOOM_FULL_Z = 60.0      # looming readout that counts as a full warning
+GIANT_SHOW = 0.3        # warning level at which the Seer is told about a Giant (side and seconds); the evaluation uses the same bar
 WIND_FULL_Z = 15.0
 SECTOR_DEG = {"left": -60.0, "ahead": 0.0, "right": 60.0}
+
+
+def _her_confidence(single_eye_z: float) -> float:
+    return float(min(1.0, max(0.0, (single_eye_z - HER_DETECT_Z) / (HER_FULL_Z - HER_DETECT_Z))))
+
+
+def _distance_band(confidence: float) -> str:
+    return "near" if confidence >= NEAR_CONF else ("mid" if confidence >= MID_CONF else "far")
 
 
 def decode(out: dict[str, float], state: dict, eta_table: dict | None = None) -> dict:
@@ -134,25 +147,25 @@ def decode(out: dict[str, float], state: dict, eta_table: dict | None = None) ->
     wl, wr = max(out["seer_wind_L"], 0.0), max(out["seer_wind_R"], 0.0)
 
     princess = None
-    total = hl + hr
-    if total >= HER_DETECT_Z:
-        balance = (hr - hl) / total
+    strongest = max(hl, hr)
+    if strongest >= HER_DETECT_Z:
+        balance = (hr - hl) / (hl + hr)
         side = "ahead" if abs(balance) < AHEAD_BALANCE else ("right" if balance > 0 else "left")
         bearing = SECTOR_DEG[side]
-        confidence = float(min(1.0, (total - HER_DETECT_Z) / (HER_FULL_Z - HER_DETECT_Z)))
-        distance = "near" if confidence > 0.66 else ("mid" if confidence > 0.25 else "far")
-        princess = {"side": side, "bearing_deg": round(bearing, 1), "confidence": round(confidence, 2), "distance": distance}
+        confidence = _her_confidence(strongest)
+        princess = {"side": side, "bearing_deg": round(bearing, 1), "confidence": round(confidence, 2),
+                    "distance": _distance_band(confidence)}
 
     loom = max(ll, lr)
     loom_warning = min(1.0, max(0.0, loom - LOOM_WARN_Z) / (LOOM_FULL_Z - LOOM_WARN_Z))
     warning = max(loom_warning, 0.5 * min(1.0, max(wl, wr) / WIND_FULL_Z))
     gside = None
-    if warning > 0.05:
+    if warning >= GIANT_SHOW:
         a, b = (ll, lr) if loom >= LOOM_WARN_Z else (wl, wr)
         gside = "ahead" if abs(b - a) < 0.25 * max(a + b, 1e-6) else ("right" if b > a else "left")
     # seconds to impact: looked up from the looming warning level (table measured on the True Prince; wind alone gives no estimate)
     eta = None
-    if eta_table is not None and loom_warning >= eta_table["warning"][0]:
+    if eta_table is not None and gside is not None and loom_warning >= max(GIANT_SHOW, eta_table["warning"][0]):
         eta = round(float(np.interp(loom_warning, eta_table["warning"], eta_table["seconds"])), 2)
     return {
         "princess": princess,
@@ -162,22 +175,33 @@ def decode(out: dict[str, float], state: dict, eta_table: dict | None = None) ->
     }
 
 
+def _nearest_giant_side(stimuli: dict[str, Any]) -> str | None:
+    """Side of the approaching Giant closest to contact, from the true geometry (hybrid mode)."""
+    approaching = [g for g in stimuli.get("giants") or [] if g.get("approach_cm_s", 0.0) > 0]
+    if not approaching:
+        return None
+    g = min(approaching, key=lambda g: max(0.0, g["distance_cm"] - g.get("size_cm", 40.0)) / g["approach_cm_s"])
+    return "ahead" if abs(g["bearing_deg"]) < 15 else ("right" if g["bearing_deg"] > 0 else "left")
+
+
 def placeholder(stimuli: dict[str, Any], princess_full_cm: float = PRINCESS_FULL_CM) -> dict:
     """No brain: cues straight from the geometry (deterministic). Also the fallback if the brain ever fails."""
     p = stimuli.get("princess")
     princess = None
     if p and abs(p["bearing_deg"]) < BLIND_BEHIND_DEG:
-        conf = min(1.0, princess_full_cm / max(p["distance_cm"], 1.0))
+        # the same scale as the brain's decoder: an ideal single-eye readout of HER_FULL_Z x drive
+        conf = _her_confidence(HER_FULL_Z * min(1.0, princess_full_cm / max(p["distance_cm"], 1.0)))
         b = p["bearing_deg"]
-        princess = {"side": "ahead" if abs(b) < 10 else ("right" if b > 0 else "left"), "bearing_deg": round(b, 1),
-                    "confidence": round(conf, 2), "distance": "near" if conf > 0.66 else ("mid" if conf > 0.25 else "far")}
+        if conf > 0.0:
+            princess = {"side": "ahead" if abs(b) < 10 else ("right" if b > 0 else "left"), "bearing_deg": round(b, 1),
+                        "confidence": round(conf, 2), "distance": _distance_band(conf)}
     warning, gside, eta = 0.0, None, None
     for g in stimuli.get("giants") or []:
         v = g.get("approach_cm_s", 0.0)
         if v > 0:
-            t = g["distance_cm"] / v
+            t = max(0.0, g["distance_cm"] - g.get("size_cm", 40.0)) / v  # contact when the hand reaches the fly
             w = max(0.0, min(1.0, 1.0 - t / 2.0))
-            if w > warning:
+            if w > warning and w >= GIANT_SHOW:
                 warning, eta = w, round(t, 2)
                 gside = "ahead" if abs(g["bearing_deg"]) < 15 else ("right" if g["bearing_deg"] > 0 else "left")
     return {"princess": princess, "giant": {"warning": round(warning, 2), "side": gside, "eta_s": eta},
@@ -303,8 +327,8 @@ class SeerAdapter:
             if cues["princess"] is not None and truth["princess"] is not None:
                 cues["princess"]["side"] = truth["princess"]["side"]
                 cues["princess"]["bearing_deg"] = truth["princess"]["bearing_deg"]
-            if cues["giant"]["warning"] > 0.05:
-                cues["giant"]["side"] = truth["giant"]["side"]
+            if cues["giant"]["side"] is not None:
+                cues["giant"]["side"] = _nearest_giant_side(stimuli) or cues["giant"]["side"]
         cues = {**cues, "source": self.source, "mode": self.mode}
         self._last_cues = cues
         return cues
@@ -397,7 +421,7 @@ def evaluate(n: int = 60, seed: int = 7, out_csv: str | None = None) -> None:
             for cues, left in _approach(adapter, *case):
                 ticks += 1
                 last = cues
-                if t_warn is None and cues["giant"]["warning"] >= 0.3:
+                if t_warn is None and cues["giant"]["side"] is not None:  # the moment the Seer's phone shows the Giant
                     t_warn = left
                 if cues["giant"]["eta_s"] is not None and 0.3 <= left <= 2.0:
                     eta_err.append(abs(cues["giant"]["eta_s"] - left))
