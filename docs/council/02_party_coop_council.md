@@ -225,7 +225,7 @@ The Nose is the furthest sense from any movement neuron (3 or more hops), so it 
 
 ## Step 4: The Pitchman
 
-**Name: Fly by Committee.** It's exactly what the game is, it sounds like a Jackbox title, and it quietly keeps your team name (Fly-by-Wire).
+**Name: Fly by Committee.** It's exactly what the game is, and it sounds like a Jackbox title.
 
 **One-liner:** "Four friends, four senses, one real fly nervous system: get him to his date before the swatter gets him."
 

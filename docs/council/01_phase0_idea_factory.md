@@ -145,10 +145,6 @@ The three finalists use different genres, verbs and main tracks. Each one has it
 
 ---
 
-Two notes from outside the Council:
-- **This clashes with the plan you already have for today.** Your notes have Fly-by-Wire planned, with hacking starting at noon. If this is a pivot, the first-2-hours plan at the end will need to fit whatever time is left.
-- **Your current plan has an overlap problem.** *Swat* (a browser arcade where a MaleCNS circuit runs the fly's dodging) and *flyputer*'s swatter game are both on the community lists. That overlaps with Swat the Fly, so your Devpost should say what makes yours different.
-
 **Outcome:** the team chose **Neck** (the party co-op) and asked for Jackbox-style joining. See [02_party_coop_council.md](02_party_coop_council.md).
 
 Sources:

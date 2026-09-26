@@ -66,7 +66,7 @@ Message formats: [docs/TECH_ARCHITECTURE.md](../docs/TECH_ARCHITECTURE.md#messag
 - Every commit must be made between **12:00 PM Sat and 11:45 AM Sun**. Set your laptop clock to automatic now.
 - **Never force-push, rebase `main`, amend pushed commits, or change commit dates.** Commit times are how organizers check the window.
 - Work on a branch named `<name>/<feature>`, pull often, merge small. `main` must always run the demo.
-- Don't paste in code written before 12:00 Sat (no `fly-cns-sim`, no old Fly-by-Wire code, no pre-event plugins). Libraries are fine.
+- Don't paste in code written before 12:00 Sat (no `fly-cns-sim`, no code from our earlier pre-event plan, no pre-event plugins). Libraries are fine.
 - Keys only in `.env` (git-ignored). The repo is public. If a key ever gets committed, revoke it right away and tell the team.
 - If a task runs 2x over its time box, say so at the next check-in.
 

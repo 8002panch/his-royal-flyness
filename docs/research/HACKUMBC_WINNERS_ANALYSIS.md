@@ -1,5 +1,3 @@
-> **Note (26 Sept 2026):** written for the old Fly-by-Wire plan. The patterns still apply; how His Royal Flyness uses them is in [../TRACKS_AND_PRIZES.md](../TRACKS_AND_PRIZES.md).
-
 # What wins at hackUMBC (analysis, 2026-09-23)
 
 **Source:** every hackUMBC Devpost gallery (13 events, 2014–2025, plus the April 2026 mini hackathon). We scraped winners from
@@ -45,19 +43,6 @@ About 1 in 7 projects wins *something* now that the event has grown. There are 1
 9. **Every event has a theme** (2025 "center stage" / arcade game jam; 2024 "direct the future of tech"; 2023 movies; 2022 retro). The 2026 theme gets announced at the opening.
    Winners rarely depend on the theme, but a nod to it is free.
 10. **Write-ups are complete and visual.** Winners' Devposts have screenshots, a clear Inspiration → What it does → How we built it structure, and a video.
-
-## What this means for Fly-by-Wire (changes adopted in PLAN v3.1)
-
-| Pattern | Our move |
-|---|---|
-| Problem + number first (2) | Open the pitch and Devpost with a human stake, e.g. a statistic on cyclist or pedestrian collisions, or on drone crashes. **Look up and verify a real source before using any number.** Then "flies solve this with 100k neurons in milliseconds". |
-| Accessibility wins (3) | One slide on the future use: an on-device, millisecond **collision warning for low-vision pedestrians and cyclists**, as the fast counterpart to LLM "describe the scene" apps (Visionary, amberAI), which can't react in time to something flying at you. Frame it as a direction, not a claim. |
-| Real sensing beats wrappers (4, 5) | Our core already is this. Say it explicitly: "no LLM, a real fly circuit, runs on a laptop CPU". |
-| Webcam → alarm wins (6) | Keep the live webcam path solid (camera permission, exposure, lighting rehearsal). |
-| Playful demo (7) | "Swat the Fly" stays P0 for the demo. It's our Most Engaging Demo entry. |
-| Soft prizes (8) | Cheap add-ons, only after M3: register a **.Tech domain** (e.g. `swatthefly.tech`) for the project page; enter any sponsor challenge that fits at the opening (APL/Nightwing). Skip Gemini unless it does real work. |
-| 4-person teams win Overall (1) | We are 4. Keep everyone busy on P0; nobody goes solo on a side quest. |
-| Write-up quality (10) | Screenshots of the fly-eye view, T4/T5 panel, 3D neurons and the scorecard figure. Video recorded by 08:00 Sunday. |
 
 ## Honest caveats
 - Judging panels change every year. These are correlations from ~60 winners, not rules.

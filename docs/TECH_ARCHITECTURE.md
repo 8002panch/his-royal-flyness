@@ -147,7 +147,7 @@ keeping each edge's (receiver, synapse count) fixed. Then:
 - Make 3 seeds: `data/graph_changeling_{0,1,2}.npz`. The live toggle swaps the matrix between ticks and resets `r` to the resting state.
 - **Sanity checks** (print them): resting activity distribution of the True Prince vs each Changeling (they should look alike); per-row input sums identical.
 
-Why not a plain global shuffle: in the earlier Fly-by-Wire spike, shuffling synapse counts across the whole graph made activity
+Why not a plain global shuffle: in an earlier spike test, shuffling synapse counts across the whole graph made activity
 explode. That makes the random brain look broken for a boring reason, and judges would call it rigged.
 
 ### Probes (`brain/probes.py`): the tests behind the 20:00 gate
