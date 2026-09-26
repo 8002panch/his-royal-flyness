@@ -22,9 +22,14 @@
 
 ### B1 · 15:45-17:45 (2 h)
 - [ ] **15 min:** claim the ElevenLabs code; install Godot 4.
-- [ ] **40 min:** `host/` project + main scene layout: hall in the center, chart panel on the right, title + candle on top, captions + crests on the bottom ([GAME_DESIGN.md](../../docs/GAME_DESIGN.md#screens)).
-- [ ] **30 min:** WebSocket client reading server state (use `sample_state.json` until the server is up); the fly sprite moves and rotates.
-- [ ] **35 min:** lobby: wax-seal code, QR (PNG from the server), crests lighting up as players join.
+- [x] **40 min:** `host/` project + main scene layout — rebuilt against the real direct-movement + Seer design (not
+      the original 4-senses layout): Helmsman/Liftmaster/Wingmaster panel, Royal Seer panel (compass, Giant hazard,
+      nervous-system bars), hall center, bottom role cards.
+- [x] **30 min:** WebSocket client reading server state (`server/sample_state.json` still doesn't exist — Arnav
+      hasn't built the movement/arena step; built an offline `test/sample_sequence.json` fixture in the real
+      `cues` shape instead, auto-switches to the real server once it's up).
+- [ ] **35 min:** lobby: wax-seal code, QR (PNG from the server), crests lighting up as players join. *(Lobby
+      screen exists; code/QR still placeholder — no owner has defined a room-code field in any real message yet.)*
 
 ### B2 · 17:55-20:00 (2 h)
 - [ ] **30 min:** fonts (UnifrakturMaguntia, IM Fell English), palette, parchment + manuscript margins ([GAME_DESIGN.md](../../docs/GAME_DESIGN.md#art-direction-no-dedicated-artist-needed)).
@@ -51,4 +56,12 @@
 - [ ] **30 min:** 5 screenshots for Devpost; give them and the video link to Ved.
 
 ## Notes
-(your notes here)
+- **Accepting the open ask in `team/README.md#open-requests`:** yes to the proposed HUD grouping —
+  vision = `her_L`/`her_R`, reaction = `looming`/`escape`, flight = `steer`, song = `song`. Built `host/` against it.
+- `host/` now reads `cues.princess` / `cues.giant` / `cues.activity` exactly as `team/README.md#proposed-formats`
+  specifies. If that shape changes, the only place to update is `host/scripts/main.gd::_update_seer`.
+- Still need from Arnav: the actual `state.controls` field (each movement axis's current value) for the
+  Helmsman/Liftmaster/Wingmaster bars — not defined anywhere yet since the movement/arena step isn't built.
+  Degrades to 0 in the meantime, doesn't block anything.
+- Explored (with my user, not built): reskinning this into a Pokémon-style overworld with NPCs/quests. Not
+  reflected in any of the team's actual committed docs/code, so left out of `host/` pending real confirmation.

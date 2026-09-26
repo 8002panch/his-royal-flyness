@@ -1,0 +1,4682 @@
+[
+ {
+  "t": "state",
+  "time": 0.0,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 60.0,
+   "y": 200.0,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.4
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 6.0,
+    "her_R": 0.0,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -5.0,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 1.0
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.03,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 64.4,
+   "y": 201.4,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.07,
+   "y": 0.06,
+   "z": 0.41
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.93,
+    "her_R": 0.07,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -4.89,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.99
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.07,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 68.9,
+   "y": 202.8,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.14,
+   "y": 0.12,
+   "z": 0.41
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.87,
+    "her_R": 0.13,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -4.78,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.98
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.1,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 73.3,
+   "y": 204.2,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.21,
+   "y": 0.19,
+   "z": 0.42
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.8,
+    "her_R": 0.2,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -4.67,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.97
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.13,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 77.8,
+   "y": 205.5,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.28,
+   "y": 0.24,
+   "z": 0.42
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.73,
+    "her_R": 0.27,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -4.56,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.96
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.17,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 82.2,
+   "y": 206.8,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.34,
+   "y": 0.3,
+   "z": 0.43
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.67,
+    "her_R": 0.33,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -4.44,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.94
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.2,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 86.7,
+   "y": 208.1,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.41,
+   "y": 0.35,
+   "z": 0.43
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.6,
+    "her_R": 0.4,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -4.33,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.93
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.23,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 91.1,
+   "y": 209.4,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.47,
+   "y": 0.4,
+   "z": 0.44
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.53,
+    "her_R": 0.47,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -4.22,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.92
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.27,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 95.6,
+   "y": 210.6,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.53,
+   "y": 0.45,
+   "z": 0.44
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.47,
+    "her_R": 0.53,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -4.11,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.91
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.3,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 100.0,
+   "y": 211.8,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.59,
+   "y": 0.49,
+   "z": 0.45
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.4,
+    "her_R": 0.6,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -4.0,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.9
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.33,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 104.4,
+   "y": 212.9,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.64,
+   "y": 0.52,
+   "z": 0.46
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.33,
+    "her_R": 0.67,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -3.89,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.89
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.37,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 108.9,
+   "y": 213.9,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.69,
+   "y": 0.55,
+   "z": 0.46
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.27,
+    "her_R": 0.73,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -3.78,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.88
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.4,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 113.3,
+   "y": 214.9,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.74,
+   "y": 0.57,
+   "z": 0.47
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.2,
+    "her_R": 0.8,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -3.67,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.87
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.43,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 117.8,
+   "y": 215.8,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.79,
+   "y": 0.59,
+   "z": 0.47
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.13,
+    "her_R": 0.87,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -3.56,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.86
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.47,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 122.2,
+   "y": 216.6,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.83,
+   "y": 0.6,
+   "z": 0.48
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.07,
+    "her_R": 0.93,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -3.44,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.84
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.5,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 126.7,
+   "y": 217.3,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.87,
+   "y": 0.6,
+   "z": 0.48
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 5.0,
+    "her_R": 1.0,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -3.33,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.83
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.53,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 131.1,
+   "y": 218.0,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.9,
+   "y": 0.6,
+   "z": 0.49
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.93,
+    "her_R": 1.07,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -3.22,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.82
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.57,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 135.6,
+   "y": 218.5,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.93,
+   "y": 0.59,
+   "z": 0.49
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.87,
+    "her_R": 1.13,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -3.11,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.81
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.6,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 140.0,
+   "y": 219.0,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.95,
+   "y": 0.57,
+   "z": 0.5
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.8,
+    "her_R": 1.2,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -3.0,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.8
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.63,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 144.4,
+   "y": 219.4,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.97,
+   "y": 0.55,
+   "z": 0.51
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.73,
+    "her_R": 1.27,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -2.89,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.79
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.67,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 148.9,
+   "y": 219.7,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.98,
+   "y": 0.52,
+   "z": 0.51
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.67,
+    "her_R": 1.33,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -2.78,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.78
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.7,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 153.3,
+   "y": 219.9,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.99,
+   "y": 0.49,
+   "z": 0.52
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.6,
+    "her_R": 1.4,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -2.67,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.77
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.73,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 157.8,
+   "y": 220.0,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 1.0,
+   "y": 0.45,
+   "z": 0.52
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.53,
+    "her_R": 1.47,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -2.56,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.76
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.77,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 162.2,
+   "y": 220.0,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 1.0,
+   "y": 0.4,
+   "z": 0.53
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.47,
+    "her_R": 1.53,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -2.44,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.74
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.8,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 166.7,
+   "y": 219.9,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.99,
+   "y": 0.35,
+   "z": 0.53
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.4,
+    "her_R": 1.6,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -2.33,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.73
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.83,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 171.1,
+   "y": 219.7,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.98,
+   "y": 0.3,
+   "z": 0.54
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.33,
+    "her_R": 1.67,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -2.22,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.72
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.87,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 175.6,
+   "y": 219.4,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.97,
+   "y": 0.24,
+   "z": 0.54
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.27,
+    "her_R": 1.73,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -2.11,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.71
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.9,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 180.0,
+   "y": 219.0,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.95,
+   "y": 0.19,
+   "z": 0.55
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "far"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.2,
+    "her_R": 1.8,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -2.0,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.7
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.93,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 184.4,
+   "y": 218.5,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.93,
+   "y": 0.12,
+   "z": 0.56
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.13,
+    "her_R": 1.87,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -1.89,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.69
+  }
+ },
+ {
+  "t": "state",
+  "time": 0.97,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 188.9,
+   "y": 218.0,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.9,
+   "y": 0.06,
+   "z": 0.56
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.07,
+    "her_R": 1.93,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -1.78,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.68
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.0,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 193.3,
+   "y": 217.3,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.87,
+   "y": 0.0,
+   "z": 0.57
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 4.0,
+    "her_R": 2.0,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -1.67,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.67
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.03,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 197.8,
+   "y": 216.6,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.83,
+   "y": -0.06,
+   "z": 0.57
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.93,
+    "her_R": 2.07,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -1.56,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.66
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.07,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 202.2,
+   "y": 215.8,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.79,
+   "y": -0.12,
+   "z": 0.58
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.87,
+    "her_R": 2.13,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -1.44,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.64
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.1,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 206.7,
+   "y": 214.9,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.74,
+   "y": -0.19,
+   "z": 0.58
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.8,
+    "her_R": 2.2,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -1.33,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.63
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.13,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 211.1,
+   "y": 213.9,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.69,
+   "y": -0.24,
+   "z": 0.59
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.73,
+    "her_R": 2.27,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -1.22,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.62
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.17,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 215.6,
+   "y": 212.9,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.64,
+   "y": -0.3,
+   "z": 0.59
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.67,
+    "her_R": 2.33,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -1.11,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.61
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.2,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 220.0,
+   "y": 211.8,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.59,
+   "y": -0.35,
+   "z": 0.6
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.6,
+    "her_R": 2.4,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -1.0,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.6
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.23,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 224.4,
+   "y": 210.6,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.53,
+   "y": -0.4,
+   "z": 0.61
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.53,
+    "her_R": 2.47,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -0.89,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.59
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.27,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 228.9,
+   "y": 209.4,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.47,
+   "y": -0.45,
+   "z": 0.61
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.47,
+    "her_R": 2.53,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -0.78,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.58
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.3,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 233.3,
+   "y": 208.1,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.41,
+   "y": -0.49,
+   "z": 0.62
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.4,
+    "her_R": 2.6,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -0.67,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.57
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.33,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 237.8,
+   "y": 206.8,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.34,
+   "y": -0.52,
+   "z": 0.62
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.33,
+    "her_R": 2.67,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -0.56,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.56
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.37,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 242.2,
+   "y": 205.5,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.28,
+   "y": -0.55,
+   "z": 0.63
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.27,
+    "her_R": 2.73,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -0.44,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.54
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.4,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 246.7,
+   "y": 204.2,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.21,
+   "y": -0.57,
+   "z": 0.63
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.2,
+    "her_R": 2.8,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -0.33,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.53
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.43,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 251.1,
+   "y": 202.8,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.14,
+   "y": -0.59,
+   "z": 0.64
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.13,
+    "her_R": 2.87,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -0.22,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.52
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.47,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 255.6,
+   "y": 201.4,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.07,
+   "y": -0.6,
+   "z": 0.64
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.07,
+    "her_R": 2.93,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": -0.11,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.51
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.5,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 260.0,
+   "y": 200.0,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": 0.0,
+   "y": -0.6,
+   "z": 0.65
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 3.0,
+    "her_R": 3.0,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 0.0,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.5
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.53,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 264.4,
+   "y": 198.6,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.07,
+   "y": -0.6,
+   "z": 0.66
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 2.93,
+    "her_R": 3.07,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 0.11,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.49
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.57,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 268.9,
+   "y": 197.2,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.14,
+   "y": -0.59,
+   "z": 0.66
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 2.87,
+    "her_R": 3.13,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 0.22,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.48
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.6,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 273.3,
+   "y": 195.8,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.21,
+   "y": -0.57,
+   "z": 0.67
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 2.8,
+    "her_R": 3.2,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 0.33,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.47
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.63,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 277.8,
+   "y": 194.5,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.28,
+   "y": -0.55,
+   "z": 0.67
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 2.73,
+    "her_R": 3.27,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 0.44,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.46
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.67,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 282.2,
+   "y": 193.2,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.03
+  },
+  "controls": {
+   "x": -0.34,
+   "y": -0.52,
+   "z": 0.68
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.28,
+    "side": "left",
+    "eta_s": 1.4
+   },
+   "activity": {
+    "her_L": 2.67,
+    "her_R": 3.33,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 0.56,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.44
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.7,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 286.7,
+   "y": 191.9,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.08
+  },
+  "controls": {
+   "x": -0.41,
+   "y": -0.49,
+   "z": 0.68
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.33,
+    "side": "left",
+    "eta_s": 1.3
+   },
+   "activity": {
+    "her_L": 2.6,
+    "her_R": 3.4,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 0.67,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.43
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.73,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 291.1,
+   "y": 190.6,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.14
+  },
+  "controls": {
+   "x": -0.47,
+   "y": -0.45,
+   "z": 0.69
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.39,
+    "side": "left",
+    "eta_s": 1.2
+   },
+   "activity": {
+    "her_L": 2.53,
+    "her_R": 3.47,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 0.78,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.42
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.77,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 295.6,
+   "y": 189.4,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.19
+  },
+  "controls": {
+   "x": -0.53,
+   "y": -0.4,
+   "z": 0.69
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.44,
+    "side": "left",
+    "eta_s": 1.1
+   },
+   "activity": {
+    "her_L": 2.47,
+    "her_R": 3.53,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 0.89,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.41
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.8,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 300.0,
+   "y": 188.2,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.25
+  },
+  "controls": {
+   "x": -0.59,
+   "y": -0.35,
+   "z": 0.7
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.5,
+    "side": "left",
+    "eta_s": 1.0
+   },
+   "activity": {
+    "her_L": 2.4,
+    "her_R": 3.6,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 1.0,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.4
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.83,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 304.4,
+   "y": 187.1,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.31
+  },
+  "controls": {
+   "x": -0.64,
+   "y": -0.3,
+   "z": 0.71
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.56,
+    "side": "left",
+    "eta_s": 0.9
+   },
+   "activity": {
+    "her_L": 2.33,
+    "her_R": 3.67,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 1.11,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.39
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.87,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 308.9,
+   "y": 186.1,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.36
+  },
+  "controls": {
+   "x": -0.69,
+   "y": -0.24,
+   "z": 0.71
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.61,
+    "side": "left",
+    "eta_s": 0.8
+   },
+   "activity": {
+    "her_L": 2.27,
+    "her_R": 3.73,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 1.22,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.38
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.9,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 313.3,
+   "y": 185.1,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.42
+  },
+  "controls": {
+   "x": -0.74,
+   "y": -0.19,
+   "z": 0.72
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.67,
+    "side": "left",
+    "eta_s": 0.7
+   },
+   "activity": {
+    "her_L": 2.2,
+    "her_R": 3.8,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 1.33,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.37
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.93,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 317.8,
+   "y": 184.2,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.47
+  },
+  "controls": {
+   "x": -0.79,
+   "y": -0.12,
+   "z": 0.72
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.72,
+    "side": "left",
+    "eta_s": 0.6
+   },
+   "activity": {
+    "her_L": 2.13,
+    "her_R": 3.87,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 1.44,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.36
+  }
+ },
+ {
+  "t": "state",
+  "time": 1.97,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 322.2,
+   "y": 183.4,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.53
+  },
+  "controls": {
+   "x": -0.83,
+   "y": -0.06,
+   "z": 0.73
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.78,
+    "side": "left",
+    "eta_s": 0.4
+   },
+   "activity": {
+    "her_L": 2.07,
+    "her_R": 3.93,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 1.56,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.34
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.0,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 326.7,
+   "y": 182.7,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.58
+  },
+  "controls": {
+   "x": -0.87,
+   "y": -0.0,
+   "z": 0.73
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.83,
+    "side": "left",
+    "eta_s": 0.3
+   },
+   "activity": {
+    "her_L": 2.0,
+    "her_R": 4.0,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 1.67,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.33
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.03,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 331.1,
+   "y": 182.0,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.64
+  },
+  "controls": {
+   "x": -0.9,
+   "y": 0.06,
+   "z": 0.74
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.89,
+    "side": "left",
+    "eta_s": 0.2
+   },
+   "activity": {
+    "her_L": 1.93,
+    "her_R": 4.07,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 1.78,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.32
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.07,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 335.6,
+   "y": 181.5,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.69
+  },
+  "controls": {
+   "x": -0.93,
+   "y": 0.12,
+   "z": 0.74
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.94,
+    "side": "left",
+    "eta_s": 0.1
+   },
+   "activity": {
+    "her_L": 1.87,
+    "her_R": 4.13,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 1.89,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.31
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.1,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 340.0,
+   "y": 181.0,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.75
+  },
+  "controls": {
+   "x": -0.95,
+   "y": 0.19,
+   "z": 0.75
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 1.0,
+    "side": "left",
+    "eta_s": 0.1
+   },
+   "activity": {
+    "her_L": 1.8,
+    "her_R": 4.2,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 2.0,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.3
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.13,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 344.4,
+   "y": 180.6,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.81
+  },
+  "controls": {
+   "x": -0.97,
+   "y": 0.24,
+   "z": 0.76
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 1.0,
+    "side": "left",
+    "eta_s": 0.1
+   },
+   "activity": {
+    "her_L": 1.73,
+    "her_R": 4.27,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 2.11,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.29
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.17,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 348.9,
+   "y": 180.3,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.86
+  },
+  "controls": {
+   "x": -0.98,
+   "y": 0.3,
+   "z": 0.76
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 1.0,
+    "side": "left",
+    "eta_s": 0.1
+   },
+   "activity": {
+    "her_L": 1.67,
+    "her_R": 4.33,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 2.22,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.28
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.2,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 353.3,
+   "y": 180.1,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.92
+  },
+  "controls": {
+   "x": -0.99,
+   "y": 0.35,
+   "z": 0.77
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 1.0,
+    "side": "left",
+    "eta_s": 0.1
+   },
+   "activity": {
+    "her_L": 1.6,
+    "her_R": 4.4,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 2.33,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.27
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.23,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 357.8,
+   "y": 180.0,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": true,
+   "x": 350,
+   "y": 150,
+   "size": 0.97
+  },
+  "controls": {
+   "x": -1.0,
+   "y": 0.4,
+   "z": 0.77
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 1.0,
+    "side": "left",
+    "eta_s": 0.1
+   },
+   "activity": {
+    "her_L": 1.53,
+    "her_R": 4.47,
+    "looming": 80.0,
+    "escape": 60.0,
+    "steer": 2.44,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.26
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.27,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 362.2,
+   "y": 180.0,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -1.0,
+   "y": 0.45,
+   "z": 0.78
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 1.47,
+    "her_R": 4.53,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 2.56,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.24
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.3,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 366.7,
+   "y": 180.1,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.99,
+   "y": 0.49,
+   "z": 0.78
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 1.4,
+    "her_R": 4.6,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 2.67,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.23
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.33,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 371.1,
+   "y": 180.3,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.98,
+   "y": 0.52,
+   "z": 0.79
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 1.33,
+    "her_R": 4.67,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 2.78,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.22
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.37,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 375.6,
+   "y": 180.6,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.97,
+   "y": 0.55,
+   "z": 0.79
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 1.27,
+    "her_R": 4.73,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 2.89,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.21
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.4,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 380.0,
+   "y": 181.0,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.95,
+   "y": 0.57,
+   "z": 0.8
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "mid"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 1.2,
+    "her_R": 4.8,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 3.0,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.2
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.43,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 384.4,
+   "y": 181.5,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.93,
+   "y": 0.59,
+   "z": 0.81
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 1.13,
+    "her_R": 4.87,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 3.11,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.19
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.47,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 388.9,
+   "y": 182.0,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.9,
+   "y": 0.6,
+   "z": 0.81
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 1.07,
+    "her_R": 4.93,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 3.22,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.18
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.5,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 393.3,
+   "y": 182.7,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.87,
+   "y": 0.6,
+   "z": 0.82
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 1.0,
+    "her_R": 5.0,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 3.33,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.17
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.53,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 397.8,
+   "y": 183.4,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.83,
+   "y": 0.6,
+   "z": 0.82
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 0.93,
+    "her_R": 5.07,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 3.44,
+    "song": 0.5
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.16
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.57,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 402.2,
+   "y": 184.2,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.79,
+   "y": 0.59,
+   "z": 0.83
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 0.87,
+    "her_R": 5.13,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 3.56,
+    "song": 8.0
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.14
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.6,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 406.7,
+   "y": 185.1,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.74,
+   "y": 0.57,
+   "z": 0.83
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 0.8,
+    "her_R": 5.2,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 3.67,
+    "song": 8.0
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.13
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.63,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 411.1,
+   "y": 186.1,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.69,
+   "y": 0.55,
+   "z": 0.84
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 0.73,
+    "her_R": 5.27,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 3.78,
+    "song": 8.0
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.12
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.67,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 415.6,
+   "y": 187.1,
+   "h": -60.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.64,
+   "y": 0.52,
+   "z": 0.84
+  },
+  "cues": {
+   "princess": {
+    "side": "left",
+    "bearing_deg": -60.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 0.67,
+    "her_R": 5.33,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 3.89,
+    "song": 8.0
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.11
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.7,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 420.0,
+   "y": 188.2,
+   "h": 0.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.59,
+   "y": 0.49,
+   "z": 0.85
+  },
+  "cues": {
+   "princess": {
+    "side": "ahead",
+    "bearing_deg": 0.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 0.6,
+    "her_R": 5.4,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 4.0,
+    "song": 8.0
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.1
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.73,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 424.4,
+   "y": 189.4,
+   "h": 0.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.53,
+   "y": 0.45,
+   "z": 0.86
+  },
+  "cues": {
+   "princess": {
+    "side": "ahead",
+    "bearing_deg": 0.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 0.53,
+    "her_R": 5.47,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 4.11,
+    "song": 8.0
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.09
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.77,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 428.9,
+   "y": 190.6,
+   "h": 0.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.47,
+   "y": 0.4,
+   "z": 0.86
+  },
+  "cues": {
+   "princess": {
+    "side": "ahead",
+    "bearing_deg": 0.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 0.47,
+    "her_R": 5.53,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 4.22,
+    "song": 8.0
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.08
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.8,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 433.3,
+   "y": 191.9,
+   "h": 0.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.41,
+   "y": 0.35,
+   "z": 0.87
+  },
+  "cues": {
+   "princess": {
+    "side": "ahead",
+    "bearing_deg": 0.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 0.4,
+    "her_R": 5.6,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 4.33,
+    "song": 8.0
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.07
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.83,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 437.8,
+   "y": 193.2,
+   "h": 0.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.34,
+   "y": 0.3,
+   "z": 0.87
+  },
+  "cues": {
+   "princess": {
+    "side": "ahead",
+    "bearing_deg": 0.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 0.33,
+    "her_R": 5.67,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 4.44,
+    "song": 8.0
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.06
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.87,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 442.2,
+   "y": 194.5,
+   "h": 0.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.28,
+   "y": 0.24,
+   "z": 0.88
+  },
+  "cues": {
+   "princess": {
+    "side": "ahead",
+    "bearing_deg": 0.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 0.27,
+    "her_R": 5.73,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 4.56,
+    "song": 8.0
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.04
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.9,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 446.7,
+   "y": 195.8,
+   "h": 0.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.21,
+   "y": 0.19,
+   "z": 0.88
+  },
+  "cues": {
+   "princess": {
+    "side": "ahead",
+    "bearing_deg": 0.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 0.2,
+    "her_R": 5.8,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 4.67,
+    "song": 8.0
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.03
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.93,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 451.1,
+   "y": 197.2,
+   "h": 0.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.14,
+   "y": 0.12,
+   "z": 0.89
+  },
+  "cues": {
+   "princess": {
+    "side": "ahead",
+    "bearing_deg": 0.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 0.13,
+    "her_R": 5.87,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 4.78,
+    "song": 8.0
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.02
+  }
+ },
+ {
+  "t": "state",
+  "time": 2.97,
+  "phase": "play",
+  "trial": "II",
+  "prince": {
+   "x": 455.6,
+   "y": 198.6,
+   "h": 0.0
+  },
+  "princess": {
+   "x": 480,
+   "y": 190,
+   "h": 270
+  },
+  "giant": {
+   "active": false,
+   "x": 350,
+   "y": 150,
+   "size": 0.0
+  },
+  "controls": {
+   "x": -0.07,
+   "y": 0.06,
+   "z": 0.89
+  },
+  "cues": {
+   "princess": {
+    "side": "ahead",
+    "bearing_deg": 0.0,
+    "confidence": 0.7,
+    "distance": "near"
+   },
+   "giant": {
+    "warning": 0.0,
+    "side": null,
+    "eta_s": null
+   },
+   "activity": {
+    "her_L": 0.07,
+    "her_R": 5.93,
+    "looming": 1.0,
+    "escape": 0.5,
+    "steer": 4.89,
+    "song": 8.0
+   },
+   "source": "true"
+  },
+  "meters": {
+   "candle": 0.01
+  }
+ }
+]
