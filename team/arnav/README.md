@@ -56,4 +56,18 @@
 - [ ] **30 min:** test both fallbacks: LAN mode on a hotspot, and keyboard mode.
 
 ## Notes
-(your notes here)
+- **From Anshul (Sat 26 Sept), Godot brain-activity HUD contract.** Checked against `origin/main`. The HUD draws one bar per key of
+  `state.brainActivity`, generically, so it works with `{}` today and with Neil's real keys later with no host change.
+  Three small changes in your files, please:
+  1. `GameSession.godot_state()` in `server/main.py`: add `"brainActivity": self.seer.sense(stimuli).get("activity", {})`.
+     Reuse the `stimuli` already computed in that method. `PlaceholderSeerAdapter.sense()` returns no `activity`, so this is `{}`
+     until the real adapter is swapped in. Don't invent numbers for it: the HUD shows whatever is here as brain output.
+  2. `server/sample_state.json`: add `"brainActivity": {}`.
+  3. Phase 6 swap: `from brain.seer import SeerAdapter`, default `SeerAdapter(source="placeholder")`, flip to `"true"` / `"changeling"`
+     when the team is ready. `SeerAdapter.sense()` already falls back to placeholder on error, so don't duplicate that in `server/`.
+     Heads-up when swapping: `GameSession.phone_views()` calls `self.seer.to_phone_view(...)`, but `brain.seer` exposes a module
+     function `to_seer_view(cues)` and no such method, and its cues use `warning` / `eta_s` where your placeholder uses
+     `seconds` / `confidence`. Wrap it (or ask Neil) so the phone view keeps working.
+  Final key set from `brain/seer.py`: `her_L`, `her_R`, `looming`, `escape`, `steer`, `song` (z-scores). Top-level key name is
+  `brainActivity`, a sibling of `render` / `roles`; the HUD also accepts `cues.activity` as a fallback. Tell me if you'd rather
+  send it another way.

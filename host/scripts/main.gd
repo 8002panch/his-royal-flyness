@@ -37,21 +37,17 @@ extends Control
 @onready var compass_needle: ColorRect = $TrialView/RightPanel/CompassCard/CompassBox/CompassArrow/Needle
 @onready var hazard_value: Label = $TrialView/RightPanel/HazardCard/HazardBox/HazardValue
 @onready var hazard_bar: ProgressBar = $TrialView/RightPanel/HazardCard/HazardBox/HazardBar
-@onready var group_bars: VBoxContainer = $TrialView/RightPanel/NervousCard/NervousBox/GroupBars
+@onready var activity_rows: VBoxContainer = $TrialView/RightPanel/NervousCard/NervousBox/ActivityRows
 
+@onready var nervous_title: Label = $TrialView/RightPanel/NervousCard/NervousBox/NervousTitle
 @onready var caption_label: Label = $TrialView/CaptionLabel
 
 @onready var lobby_code_label: Label = $Lobby/Center/CodeLabel
 
-# team/README.md#proposed-formats' HUD grouping, addressed to Anshul directly:
-# "vision = her_L, her_R; reaction = looming, escape; flight = steer; song = song"
-const ACTIVITY_GROUPS := {
-	"vision": ["her_L", "her_R"],
-	"reaction": ["looming", "escape"],
-	"flight": ["steer"],
-	"song": ["song"],
-}
-const GROUP_ORDER := ["vision", "flight", "reaction", "song"]
+# Brain-activity bars are generic: one per key of state.brainActivity, key name as label,
+# no fixed key list (Neil's set today: her_L, her_R, looming, escape, steer, song).
+# Values are z-scores; bars clamp to +/- ACTIVITY_RANGE and the raw number is shown.
+const ACTIVITY_RANGE := 6.0
 
 const SIDE_TO_DEG := {"left": -60.0, "ahead": 0.0, "right": 60.0}
 
@@ -76,7 +72,9 @@ func _on_state_updated(state: Dictionary) -> void:
 	_update_actor(princess, state.get("princess", {}))
 	_update_giant(state.get("giant", {}))
 	_update_controls(state.get("controls", {}))
-	_update_seer(state.get("cues", {}))
+	var cues: Dictionary = state.get("cues", {})
+	_update_seer(cues)
+	_update_brain_activity(state.get("brainActivity", cues.get("activity", {})), state.get("offline_sample", false))
 	_update_meta(state)
 
 
@@ -152,41 +150,47 @@ func _update_seer(cues: Dictionary) -> void:
 		else:
 			hazard_value.text = str(side).to_upper() if side != null else "INCOMING"
 
-	_update_nervous_system(cues.get("activity", {}))
+
+func _update_brain_activity(activity: Dictionary, offline_sample: bool) -> void:
+	nervous_title.text = "FLY NERVOUS SYSTEM"
+	if offline_sample:
+		nervous_title.text += " (OFFLINE SAMPLE, not brain output)"
+	var seen := {}
+	for key in activity.keys():
+		var name := str(key)
+		seen[name] = true
+		var value: float = float(activity[key]) if typeof(activity[key]) in [TYPE_INT, TYPE_FLOAT] else 0.0
+		_update_activity_row(name, value)
+	# drop rows for keys that disappeared (e.g. {} or a smaller key set)
+	for row in activity_rows.get_children():
+		if not seen.has(row.name):
+			row.queue_free()
 
 
-func _update_nervous_system(activity: Dictionary) -> void:
-	for group in GROUP_ORDER:
-		var keys: Array = ACTIVITY_GROUPS[group]
-		var total := 0.0
-		var count := 0
-		for key in keys:
-			if activity.has(key):
-				total += float(activity[key])
-				count += 1
-		var avg: float = (total / count) if count > 0 else 0.0
-		_update_group_bar(group, avg)
-
-
-func _update_group_bar(group: String, value: float) -> void:
-	var bar: ProgressBar = group_bars.get_node_or_null(group)
-	if bar == null:
-		var row := HBoxContainer.new()
+func _update_activity_row(key: String, value: float) -> void:
+	var row: HBoxContainer = activity_rows.get_node_or_null(key)
+	if row == null:
+		row = HBoxContainer.new()
+		row.name = key
 		var lbl := Label.new()
-		lbl.text = group.capitalize()
+		lbl.name = "Label"
+		lbl.text = key
 		lbl.custom_minimum_size = Vector2(80, 0)
 		row.add_child(lbl)
-
-		bar = ProgressBar.new()
-		bar.name = group
-		bar.min_value = -2.0
-		bar.max_value = 2.0
+		var bar := ProgressBar.new()
+		bar.name = "Bar"
+		bar.min_value = -ACTIVITY_RANGE
+		bar.max_value = ACTIVITY_RANGE
 		bar.show_percentage = false
 		bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(bar)
-
-		group_bars.add_child(row)
-	bar.value = value
+		var num := Label.new()
+		num.name = "Value"
+		num.custom_minimum_size = Vector2(48, 0)
+		row.add_child(num)
+		activity_rows.add_child(row)
+	(row.get_node("Bar") as ProgressBar).value = clampf(value, -ACTIVITY_RANGE, ACTIVITY_RANGE)
+	(row.get_node("Value") as Label).text = "%.1f" % value
 
 
 func _update_meta(state: Dictionary) -> void:
@@ -194,4 +198,7 @@ func _update_meta(state: Dictionary) -> void:
 	var meters: Dictionary = state.get("meters", {})
 	candle_bar.value = float(meters.get("candle", 0.0)) * 100.0
 	var source: String = state.get("cues", {}).get("source", state.get("brain", "true"))
-	badge_label.text = "TRUE PRINCE" if source == "true" else "CHANGELING"
+	if state.get("offline_sample", false):
+		badge_label.text = "OFFLINE SAMPLE"
+	else:
+		badge_label.text = "TRUE PRINCE" if source == "true" else "CHANGELING"

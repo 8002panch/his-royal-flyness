@@ -13,9 +13,7 @@ Built against the **real, live interfaces** as of Sat 17:00+ (direct movement + 
 - `project.godot` + `scenes/Main.tscn` + `scripts/main.gd`: lobby screen and a trial screen. Left panel: Helmsman
   (left/right), Liftmaster (up/down), Wingmaster (forward/back) — the 3 direct-movement roles, matching
   `relay/PROTOCOL.md`'s role names exactly. Right panel ("Royal Seer"): compass + distance/confidence from
-  `cues.princess`, a Giant hazard meter from `cues.giant` (warning/side/eta_s), and nervous-system bars grouped
-  **vision/flight/reaction/song** from `cues.activity` — this is the literal grouping `team/README.md` proposed
-  to Anshul (accepted here, since nobody answered it before this was built). Bottom: the 4 player role cards.
+  `cues.princess`, a Giant hazard meter from `cues.giant` (warning/side/eta_s), and nervous-system bars drawn generically from the state's top-level `brainActivity` dict (one bar per key, key name as label, z-score shown; no fixed key list, works with `{}`; `cues.activity` accepted as a fallback). Offline fixture frames are tagged and the HUD labels them "OFFLINE SAMPLE, not brain output". Bottom: the 4 player role cards.
 - `scripts/game_state.gd` (autoload `GameState`): parses the `state` message (`prince`/`princess`/`giant`/`controls`/
   `cues`/`meters`) at 30 Hz, falling back to looping `test/sample_sequence.json` (built in the same shape) when no
   server is up, and retrying the real server in the background.

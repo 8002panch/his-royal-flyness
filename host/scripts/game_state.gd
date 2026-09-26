@@ -10,9 +10,9 @@ extends Node
 ##   - The Seer's cues come from the real MaleCNS brain (brain/seer.py) and
 ##     are shared with Anshul's HUD in the exact shape team/README.md#proposed-formats
 ##     gives (`cues`): princess side/bearing/confidence/distance, giant
-##     warning/side/eta_s, and `activity` z-scores for the HUD's nervous-
-##     system bars (vision/flight/reaction/song — the grouping team/README.md
-##     proposed to Anshul directly, accepted here since nobody overrode it).
+##     warning/side/eta_s. The HUD's nervous-system bars come from the state's
+##     top-level `brainActivity` dict ({key: z-score}), drawn generically, one
+##     bar per key (see main.gd). `cues.activity` is accepted as a fallback.
 ##
 ## `state.controls` (each axis's current x/y/z value + momentum, for the
 ## Helmsman/Liftmaster/Wingmaster HUD bars) is NOT yet a field any of Neil/
@@ -126,7 +126,8 @@ func _advance_fallback(delta: float) -> void:
 	var frame_len := 1.0 / TICK_HZ
 	while _fallback_timer >= frame_len:
 		_fallback_timer -= frame_len
-		var frame: Dictionary = _fallback_frames[_fallback_index]
+		var frame: Dictionary = (_fallback_frames[_fallback_index] as Dictionary).duplicate()
+		frame["offline_sample"] = true  # fixture data: the HUD must not present it as brain output
 		latest_state = frame
 		state_updated.emit(frame)
 		_fallback_index = (_fallback_index + 1) % _fallback_frames.size()

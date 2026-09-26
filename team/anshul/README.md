@@ -58,8 +58,19 @@
 ## Notes
 - **Accepting the open ask in `team/README.md#open-requests`:** yes to the proposed HUD grouping —
   vision = `her_L`/`her_R`, reaction = `looming`/`escape`, flight = `steer`, song = `song`. Built `host/` against it.
-- `host/` now reads `cues.princess` / `cues.giant` / `cues.activity` exactly as `team/README.md#proposed-formats`
-  specifies. If that shape changes, the only place to update is `host/scripts/main.gd::_update_seer`.
+- `host/` now reads `cues.princess` / `cues.giant` exactly as `team/README.md#proposed-formats` specifies. If that shape
+  changes, the only place to update is `host/scripts/main.gd::_update_seer`.
+- **Brain-activity HUD contract (supersedes the vision/flight/reaction/song grouping above; decided Sat 26 Sept):** the panel
+  renders whatever keys are in the state message's top-level `brainActivity` dict ({key: z-score}): one bar per key, key name
+  as the label, no hardcoded list (`host/scripts/main.gd::_update_brain_activity`). Works with `{}` now and with Neil's real keys
+  (`her_L`, `her_R`, `looming`, `escape`, `steer`, `song`) or a 7th key later, with zero host changes. `cues.activity` is a
+  fallback if the server nests it. Bars clamp to +/-6 and show the raw number. Offline fixture frames are tagged
+  `offline_sample` and the HUD says "OFFLINE SAMPLE, not brain output", so no fixture number passes as brain output.
+  Server-side changes needed are in `team/arnav/README.md` Notes (waiting on Arnav; the `brainActivity` name is my
+  proposal, unconfirmed).
+- **Doc mismatch:** the `"brainActivity":{"vision":0.8,"looming":0.5,"motor":0.6}` wireframe in `FIRST_PERSON_REDESIGN.md`
+  lives in the frozen planning repo (not in this repo) and doesn't match the real keys. Anyone reading it should use
+  `her_L`, `her_R`, `looming`, `escape`, `steer`, `song` instead. It needs the team's OK to change if it's ever copied here.
 - Still need from Arnav: the actual `state.controls` field (each movement axis's current value) for the
   Helmsman/Liftmaster/Wingmaster bars — not defined anywhere yet since the movement/arena step isn't built.
   Degrades to 0 in the meantime, doesn't block anything.
