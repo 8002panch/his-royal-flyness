@@ -204,17 +204,25 @@ def to_seer_view(cues: dict) -> dict:
 class SeerAdapter:
     """One interface for the placeholder, the True Prince and the Changeling."""
 
+    TICK_S = 0.020
+    MAX_CATCHUP_STEPS = 10  # after a long gap (e.g. the Seer wasn't scanning), settle on the current scene in at most 200 ms
+
     def __init__(self, source: str = "true", seed: int = 0, mode: str = "neural", princess_full_cm: float = PRINCESS_FULL_CM,
-                 brain: Any = None) -> None:
+                 brain: Any = None, realtime: bool = True) -> None:
         """`brain`: pass an existing brain.brain.Brain to share it with button-driven movement (one brain step per tick for both).
-        Its kind/seed win over `source`/`seed`."""
+        Its kind/seed win over `source`/`seed`.
+        `realtime`: each `sense()` call advances the brain by the wall-clock time since the previous call (in 20 ms steps, at least
+        one, at most MAX_CATCHUP_STEPS), so the senses stay in real time whether the server calls every tick or only while the
+        Seer scans. `realtime=False` = exactly one step per call (tests, evaluation). An explicit `dt=` always wins."""
         if mode not in ("neural", "hybrid"):
             raise ValueError("mode must be 'neural' or 'hybrid'")
         self.mode = mode
         self.princess_full_cm = princess_full_cm
         self._eta_table = _load_eta_table()
         self._brain = brain
+        self.realtime = realtime
         self.last_outputs: dict[str, float] | None = None
+        self._last_call: float | None = None
         if brain is not None:
             source, seed = brain.kind, brain.seed
         self.swap(source, seed)
@@ -236,11 +244,27 @@ class SeerAdapter:
 
     def reset(self) -> None:
         self._state: dict = {}
+        self._last_call = None
         if self._brain is not None:
             self._brain.reset()
 
-    def sense(self, stimuli: dict[str, Any], extra_drives: dict[str, float] | None = None) -> dict:
-        """One tick. `extra_drives` (e.g. button drives) go into the same brain step; the full outputs land in `self.last_outputs`."""
+    def _steps_for(self, dt: float | None) -> int:
+        now = time.perf_counter()
+        if dt is None and self.realtime and self._last_call is not None:
+            dt = now - self._last_call
+        self._last_call = now
+        if dt is None:
+            return 1
+        return int(min(self.MAX_CATCHUP_STEPS, max(1, round(dt / self.TICK_S))))
+
+    def to_phone_view(self, cues: dict) -> dict:
+        """The relay's `seer_view` message (same method name as server/seer_adapter.PlaceholderSeerAdapter)."""
+        return to_seer_view(cues)
+
+    def sense(self, stimuli: dict[str, Any], extra_drives: dict[str, float] | None = None, dt: float | None = None) -> dict:
+        """Advance the senses (see `realtime`) and return cues. `extra_drives` (e.g. button drives) go into the same brain steps;
+        the last step's full outputs land in `self.last_outputs`."""
+        steps = self._steps_for(dt)
         if self._brain is None:
             self.last_outputs = None
             return {**placeholder(stimuli, self.princess_full_cm), "source": "placeholder", "mode": "placeholder"}
@@ -248,8 +272,10 @@ class SeerAdapter:
             drives = encode(stimuli, self.princess_full_cm)
             for g, v in (extra_drives or {}).items():
                 drives[g] = min(1.0, drives.get(g, 0.0) + float(v))
-            out = self._brain.step(drives)
+            for _ in range(steps):
+                out = self._brain.step(drives)
             self.last_outputs = out
+            self._state["last_warning"] = self._state.get("last_warning", 0.0)
             cues = decode(out, self._state, self._eta_table)
         except Exception:  # never let the brain break the game: fall back to the placeholder for this tick
             return {**placeholder(stimuli, self.princess_full_cm), "source": "placeholder", "mode": "placeholder", "error": True}
@@ -290,7 +316,7 @@ def _random_giants(rng, n):
 
 def calibrate(n: int = 80, seed: int = 11) -> None:
     """Measure warning level vs true seconds to impact on the True Prince; save a monotonic lookup table."""
-    seer = SeerAdapter("true")
+    seer = SeerAdapter("true", realtime=False)
     seer._eta_table = None
     pairs = []
     for case in _random_giants(np.random.default_rng(seed), n):
@@ -324,7 +350,7 @@ def evaluate(n: int = 60, seed: int = 7, out_csv: str | None = None) -> None:
     giant_cases = _random_giants(rng, n)
     rows = []
     for source, s in (("true", 0), ("changeling", 0), ("changeling", 1), ("changeling", 2), ("placeholder", 0)):
-        adapter = SeerAdapter(source, s)
+        adapter = SeerAdapter(source, s, realtime=False)
         t0, ticks = time.time(), 0
         side_ok, err, detect, lat = 0, [], 0, []
         for bearing, dist in princess_cases:

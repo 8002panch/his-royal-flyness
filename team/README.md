@@ -71,6 +71,21 @@ wait: **if you don't answer by the time shown, build against the proposal.** Rep
 | Everyone | Seer accuracy and delay, True Prince vs Changeling (for the demo and the Devpost) | **Done 17:25**: team/neil/seer_eval.csv |
 | Anyone running the real brain | `data/graph_*.npz` + `data/neurons.parquet` (AirDrop from Neil; about 90 MB total) | On request |
 
+### Ready to plug in: the brain-powered Seer (Neil → Ved, Arnav)
+
+`server/main.py`'s `GameSession` already accepts it (tested in `brain/tests/test_seer.py::test_plugs_into_the_server_game_session`):
+
+```python
+from brain.seer import SeerAdapter
+session = GameSession(room, seer=SeerAdapter("true"))   # has .sense(), .to_phone_view(), .source like PlaceholderSeerAdapter
+session.seer.swap("changeling", seed=0)                 # the Changeling toggle; swap("true") / swap("placeholder") to go back
+```
+
+- **Please call `seer.sense(stimuli)` every game tick (50 Hz)** and only send the `seer_view` while the Seer holds scan. The adapter is
+  real-time safe either way (it advances the brain by the wall-clock time between calls), but calling it only at the 10 Hz phone rate
+  means ~30 ms catch-up bursts that can make a 50 Hz tick late. One brain tick costs ~6 ms.
+- Needs the data files in `data/` (AirDrop from Neil) or falls back to placeholder cues if the brain can't run.
+
 ### Proposed formats
 
 ```python
