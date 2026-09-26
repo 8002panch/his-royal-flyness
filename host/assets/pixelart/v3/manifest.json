@@ -71,10 +71,10 @@
     {
       "name": "Giant",
       "file": "hazards/giant_hand.png",
-      "notes": "Hand representation of the established obstacle",
+      "notes": "Clenched giant fist representation of the established obstacle; revised 2026-09-26",
       "width": 1254,
       "height": 1254,
-      "prompt": "Retained unchanged from v2; see ../v2/README.md for generation brief."
+      "prompt": "Use case: precise-object-edit. Replace only the open gray hand with a tightly clenched giant fist, posed as if about to slam downward. Preserve the royal-blue sleeve, gold cuff, transparent background, scale, diagonal orientation, and detailed original handheld monster-RPG-inspired pixel-art treatment."
     },
     {
       "name": "Lord Tinman",

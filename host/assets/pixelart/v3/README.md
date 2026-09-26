@@ -14,7 +14,7 @@ Use v3 for the current roster. Hamlet, Miranda, council members, and Tinman were
 | Council — Liftmaster | [council/liftmaster.png](council/liftmaster.png) | New: arrow staff, rope, green hood |
 | Council — Wingmaster | [council/wingmaster.png](council/wingmaster.png) | New: goggles, scarf, feather |
 | Council — Royal Seer | [council/royal_seer.png](council/royal_seer.png) | New: eye emblem, purple hood, orb |
-| Giant | [hazards/giant_hand.png](hazards/giant_hand.png) | Hand representation of the established obstacle |
+| Giant | [hazards/giant_hand.png](hazards/giant_hand.png) | Clenched fist hazard, ready to slam |
 | Lord Tinman | [npcs/lord_tinman.png](npcs/lord_tinman.png) | Revised: compact armor and broken-heart tabard |
 | Sir Cheapdate | [npcs/sir_cheapdate.png](npcs/sir_cheapdate.png) | Tipsy expression, feather cap, goblet |
 | Count Rutabaga | [npcs/count_rutabaga.png](npcs/count_rutabaga.png) | Puzzled expression, monocle, mismatched boots |
@@ -26,7 +26,7 @@ Use v3 for the current roster. Hamlet, Miranda, council members, and Tinman were
 - High-resolution static pixel-style sprite studies, not normalized 48x64 animation sheets. Sprite footprint and palette still need a production pixel-grid pass. Use nearest filtering and preserve aspect ratio in prototype previews.
 - PNG decoding and transparent corner samples checked for all 13 files; generated outputs visually inspected. In-engine animation and readability have not been validated.
 - Prospero's outcome mapping is documented for Claude; this pack does not implement boss logic.
-- The Giant is represented by the established hand hazard. Council uses current live roles: Helmsman, Liftmaster, Wingmaster and Royal Seer.
+- The Giant is represented by a clenched-fist hazard. Council uses current live roles: Helmsman, Liftmaster, Wingmaster and Royal Seer.
 - Runtime files are being edited in parallel by the world builder. Point scene textures at `res://assets/pixelart/v3/...` during integration; the old standalone demo may still reference older Hamlet art.
 
 Open [gallery.html](gallery.html) to review the entire roster together.

@@ -1,5 +1,9 @@
 # Pixel-art version history
 
+## v3.1 — 2026-09-26 — Giant fist revision
+
+Replaced the v3 Giant open-hand hazard with a matching transparent clenched-fist PNG, preserving its royal-blue sleeve, gold cuff, scale, and original pixel-art treatment. The v3 manifest and roster notes now identify it as a slam fist.
+
 ## v3 — 2026-09-26 — complete consistent roster
 
 Added new Hamlet and Miranda in the compact RPG style, four player council characters, and a shorter Tinman. Combined these with the six retained v2 images into a complete 13-PNG roster (including both Prospero moods). See `v3/README.md`, `v3/manifest.json` and `v3/gallery.html`. Source PNGs decode correctly and have transparent corner samples. Runtime integration and production pixel-grid normalization remain pending.
