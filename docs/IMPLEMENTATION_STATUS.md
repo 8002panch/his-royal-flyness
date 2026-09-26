@@ -81,7 +81,60 @@
 Phase 2 can implement the small controller pages in `relay/public/`. It must use this relay protocol and must not add a phone
 game view, shared world render, shared map, or gameplay HUD. Godot remains the sole game display.
 
+## Phase 2 — four phone screens
+
+**Status:** complete
+**Branch:** `ved/phase-2-phone-controller`
+**Scope:** a portrait, controller-only browser interface for joining a room, selecting one role, and transmitting touch input.
+
+### Delivered
+
+- `relay/public/index.html`, `styles.css`, and `app.js`: a no-build vanilla JavaScript phone app with join, role selection,
+  role restoration on reconnect, reconnect overlay, role-scoped feedback, errors, and one-second heartbeats.
+- `relay/public/screens/`: one renderer for each role. Movement roles have large press-and-hold controls; the Seer has a private
+  scan control and private bearing/distance/confidence/warning cards. The movement screens contain no target or hazard UI.
+- Touch safety: pointer release, pointer cancellation, lost pointer capture, page hide, and socket-close paths neutralize a
+  held control. The optional tap-to-latch mode provides an accessible alternative to continuous holding.
+- `relay/public/tests/controls.test.mjs`: browser-module tests for role-owned protocol message shape, private Seer-view detection,
+  and room-code normalization.
+- `relay/public/MANUAL_TEST_CHECKLIST.md`: repeatable four-phone local verification instructions.
+
+### Verification performed
+
+| Check | Result |
+|---|---|
+| `npm test --prefix relay/public` | Pass: 3 browser-module tests |
+| `python3 -m unittest discover -s relay/tests -v` | Pass: 10 relay tests, including a two-client WebSocket test |
+| `python3 relay/relay.py` + `python3 -m http.server 8000 --directory relay/public` | Pass: local relay and static controller page started |
+| Browser smoke test | Pass: join screen → role picker → Helmsman-only controller screen, then reload → saved role restored over local WebSocket relay |
+| Phone-controller boundary | Pass: the app renders no game scene, map, shared HUD, Princess, fly, or Giant outside the Seer’s private warning card |
+
+### Known limitations
+
+- Phase 2 provides only controller interfaces. It deliberately does not calculate movement, render the game, or generate real
+  role feedback; these begin with the authoritative Python server in Phase 3.
+- The relay and static files are launched as separate local processes for now. Static serving through Caddy is a later deployment
+  task.
+- The four-device flow has a repeatable checklist but was not exercised on physical phones in this workstation session.
+
+### Exact next phase prompt
+
+```text
+Implement Phase 3: authoritative movement on the Python game server.
+
+Create a deterministic x/y/z body simulator. The Helmsman owns x (horizontal/yaw), Liftmaster owns y (altitude), and Wingmaster
+owns z (forward/back and braking). Inputs must be smoothed with acceleration, drag, speed limits, and a small dead zone.
+The server, not the browser, calculates the actual state.
+
+Build a local fake world with a Princess target and a test Giant hazard. Broadcast role-specific control_view feedback and an
+authoritative shared state. Add tests proving one role cannot alter another axis, held input changes motion predictably,
+release and stale input stop acceleration, and identical input traces produce identical outcomes.
+
+Keep the Seer signal deterministic placeholder data. Run all prior tests, perform a four-client manual control test, update
+IMPLEMENTATION_STATUS.md, and stop.
+```
+
 ## Next phase
 
-Run **Phase 2 — phone controller shell** from the private planning repository's
+Run **Phase 3 — authoritative movement graybox** from the private planning repository's
 `docs/WEBAPP_BUILD_PLAYBOOK.md`.
