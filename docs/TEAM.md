@@ -62,7 +62,7 @@ True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 
   leave log), `?room=` join links, the real brain in the server by default, `room`, `joinUrl`, `brain` and `brainActivity` in the
   Godot state. 6 new tests. Sat 19:35: `run_local.py` also opens the browser host screen (room code, QR, seats), explains a busy
   port, and the state has `players`; 2 more tests.
-- **Neuron audit (Neil, Sat 20:05):** checked the Seer inside the game's own hall, not just random test scenes. Fixed: (1) the
+- **Neuron audit (Neil, Sat 19:55):** checked the Seer inside the game's own hall, not just random test scenes. Fixed: (1) the
   distance cue said NEAR from 69 to 464 cm and never FAR (a 150 cm scale in a 5 m hall, and both eyes summed, so "ahead" read as
   "closer"); now the stronger eye decides, the server sets a 100 cm scale, and the bands track distance; (2) the Changelings' weak
   noise crossed the old detection bar (1.5 z on the summed eyes), producing chance-level guesses; the bar is now 3 z on the
