@@ -1,0 +1,112 @@
+{
+  "version": "3.0.0",
+  "status": "complete cast of static generated sprite studies; runtime integration pending",
+  "generator": "built-in image generator",
+  "style_reference": "../v2/npcs/sir_cheapdate_v2.png",
+  "characters": [
+    {
+      "name": "Prince Hamlet",
+      "file": "characters/hamlet.png",
+      "notes": "New: compact gold prince with small crown",
+      "width": 1086,
+      "height": 1448,
+      "prompt": "Use case: stylized-concept. Reference image is style only: match its cute squat proportions, large head, short body, chunky pixel clusters, moderate detail and simple handheld RPG character aesthetic. Create a NEW original full-body fruit-fly character, three-quarter front idle view, centered on transparent canvas with feet and antennae visible, generous padding. Keep broad flat shade regions, dark brown ink outline, roughly 48x64 native-pixel complexity, restrained 3-tone shading. Use parchment #F3E9D2, ink #2B2118, royal blue #1F3A8A, crimson #9B1C1C, gold #C9A227 plus stated accent. No lettering, scene, shadow, panel, glow, ornate microdetail, smooth shading or franchise characters. Character: Prince Hamlet, the youthful protagonist. Small gold crown with one blue jewel, gold body, bright expressive dark-red fly eyes, short crimson cape, royal blue simple tunic, little brown boots, exactly two small cream wings, six stylized limbs. Brave friendly face. Keep crown small and body compact; no scepter, no beard, no goblet."
+    },
+    {
+      "name": "Princess Miranda",
+      "file": "characters/miranda.png",
+      "notes": "New: tiara and lavender wings",
+      "width": 1086,
+      "height": 1448,
+      "prompt": "Use case: stylized-concept. Reference image is style only: match its cute squat proportions, large head, short body, chunky pixel clusters, moderate detail and simple handheld RPG character aesthetic. Create a NEW original full-body fruit-fly character, three-quarter front idle view, centered on transparent canvas with feet and antennae visible, generous padding. Keep broad flat shade regions, dark brown ink outline, roughly 48x64 native-pixel complexity, restrained 3-tone shading. Use parchment #F3E9D2, ink #2B2118, royal blue #1F3A8A, crimson #9B1C1C, gold #C9A227 plus stated accent. No lettering, scene, shadow, panel, glow, ornate microdetail, smooth shading or franchise characters. Character: Princess Miranda, the youthful princess and courtship goal. Small silver tiara with a blue jewel, warm gold body, expressive dark-red fly eyes, short royal-blue dress with simple crimson sash, tiny slippers, exactly two lavender wings with a few simple veins. Friendly confident smile and graceful hands held in front. No tall crown, no feather hat, no goblet. Match reference head-to-body ratio."
+    },
+    {
+      "name": "Duke Prospero — nice",
+      "file": "characters/prospero_nice.png",
+      "notes": "Welcoming; use after defeating the Giant",
+      "width": 1086,
+      "height": 1448,
+      "prompt": "Retained unchanged from v2; see ../v2/README.md for generation brief."
+    },
+    {
+      "name": "Duke Prospero — mad",
+      "file": "characters/prospero_mad.png",
+      "notes": "Frowning; use after losing to the Giant",
+      "width": 1086,
+      "height": 1448,
+      "prompt": "Retained unchanged from v2; see ../v2/README.md for generation brief."
+    },
+    {
+      "name": "Council — Helmsman",
+      "file": "council/helmsman.png",
+      "notes": "New: wheel, blue navigator coat",
+      "width": 1086,
+      "height": 1448,
+      "prompt": "Use case: stylized-concept. Reference image is style only: match its cute squat proportions, large head, short body, chunky pixel clusters, moderate detail and simple handheld RPG character aesthetic. Create a NEW original full-body fruit-fly character, three-quarter front idle view, centered on transparent canvas with feet and antennae visible, generous padding. Keep broad flat shade regions, dark brown ink outline, roughly 48x64 native-pixel complexity, restrained 3-tone shading. Use parchment #F3E9D2, ink #2B2118, royal blue #1F3A8A, crimson #9B1C1C, gold #C9A227 plus stated accent. No lettering, scene, shadow, panel, glow, ornate microdetail, smooth shading or franchise characters. Character: The Helmsman, one of Hamlet's four player council members. Brown fruit fly with two small cream wings, royal-blue navigator coat, small flat blue cap with gold trim, holding a little wooden steering wheel with obvious spokes at waist height. Attentive cheerful expression, compact young adult proportions. No crown, no feather, no goblet. Steering wheel silhouette distinguishes this role."
+    },
+    {
+      "name": "Council — Liftmaster",
+      "file": "council/liftmaster.png",
+      "notes": "New: arrow staff, rope, green hood",
+      "width": 1086,
+      "height": 1448,
+      "prompt": "Use case: stylized-concept. Reference image is style only: match its cute squat proportions, large head, short body, chunky pixel clusters, moderate detail and simple handheld RPG character aesthetic. Create a NEW original full-body fruit-fly character, three-quarter front idle view, centered on transparent canvas with feet and antennae visible, generous padding. Keep broad flat shade regions, dark brown ink outline, roughly 48x64 native-pixel complexity, restrained 3-tone shading. Use parchment #F3E9D2, ink #2B2118, royal blue #1F3A8A, crimson #9B1C1C, gold #C9A227 plus stated accent. No lettering, scene, shadow, panel, glow, ornate microdetail, smooth shading or franchise characters. Character: The Liftmaster, one of Hamlet's four player council members, a plucky fruit-fly climber who controls altitude. Muted sage-green short tunic with gold trim, snug cloth hood, stout brown boots, cream wings. Carries a short vertical staff topped with a simple upward-pointing gold arrow, a small coil of climbing rope at belt. Cheerful sturdy stance, large red fly eyes. No crown, no feather cap, no goblet. Arrow staff silhouette distinguishes the role."
+    },
+    {
+      "name": "Council — Wingmaster",
+      "file": "council/wingmaster.png",
+      "notes": "New: goggles, scarf, feather",
+      "width": 1086,
+      "height": 1448,
+      "prompt": "Use case: stylized-concept. Reference image is style only: match its cute squat proportions, large head, short body, chunky pixel clusters, moderate detail and simple handheld RPG character aesthetic. Create a NEW original full-body fruit-fly character, three-quarter front idle view, centered on transparent canvas with feet and antennae visible, generous padding. Keep broad flat shade regions, dark brown ink outline, roughly 48x64 native-pixel complexity, restrained 3-tone shading. Use parchment #F3E9D2, ink #2B2118, royal blue #1F3A8A, crimson #9B1C1C, gold #C9A227 plus stated accent. No lettering, scene, shadow, panel, glow, ornate microdetail, smooth shading or franchise characters. Character: The Wingmaster, one of Hamlet's four player council members who controls flight speed. Athletic small fruit fly with amber-gold short flight vest over crimson tunic, simple brown leather flying cap with round goggles resting above red fly eyes, short wind-swept crimson scarf and two small cream wings. Carries one large cream feather shaped like a wing at side. Confident lively stance, squat proportions. No crown, no goblet. Goggles and scarf silhouette distinguish the role."
+    },
+    {
+      "name": "Council — Royal Seer",
+      "file": "council/royal_seer.png",
+      "notes": "New: eye emblem, purple hood, orb",
+      "width": 1086,
+      "height": 1448,
+      "prompt": "Use case: stylized-concept. Reference image is style only: match its cute squat proportions, large head, short body, chunky pixel clusters, moderate detail and simple handheld RPG character aesthetic. Create a NEW original full-body fruit-fly character, three-quarter front idle view, centered on transparent canvas with feet and antennae visible, generous padding. Keep broad flat shade regions, dark brown ink outline, roughly 48x64 native-pixel complexity, restrained 3-tone shading. Use parchment #F3E9D2, ink #2B2118, royal blue #1F3A8A, crimson #9B1C1C, gold #C9A227 plus stated accent. No lettering, scene, shadow, panel, glow, ornate microdetail, smooth shading or franchise characters. Character: The Royal Seer, one of Hamlet's four player council members. Small thoughtful fruit-fly mystic with muted purple hood, short royal-blue robe, one simple gold eye emblem on chest, cream wings, red fly eyes, holding a small blue crystal orb in a gold holder. Kind curious expression, compact body and large head. Orb is flat blue with a single pixel highlight, absolutely no glow. No crown, feather hat or goblet. Hood and orb distinguish this role."
+    },
+    {
+      "name": "Giant",
+      "file": "hazards/giant_hand.png",
+      "notes": "Hand representation of the established obstacle",
+      "width": 1254,
+      "height": 1254,
+      "prompt": "Retained unchanged from v2; see ../v2/README.md for generation brief."
+    },
+    {
+      "name": "Lord Tinman",
+      "file": "npcs/lord_tinman.png",
+      "notes": "Revised: compact armor and broken-heart tabard",
+      "width": 1086,
+      "height": 1448,
+      "prompt": "Use case: stylized-concept. Reference image is style only: match its cute squat proportions, large head, short body, chunky pixel clusters, moderate detail and simple handheld RPG character aesthetic. Create a NEW original full-body fruit-fly character, three-quarter front idle view, centered on transparent canvas with feet and antennae visible, generous padding. Keep broad flat shade regions, dark brown ink outline, roughly 48x64 native-pixel complexity, restrained 3-tone shading. Use parchment #F3E9D2, ink #2B2118, royal blue #1F3A8A, crimson #9B1C1C, gold #C9A227 plus stated accent. No lettering, scene, shadow, panel, glow, ornate microdetail, smooth shading or franchise characters. Character: Lord Tinman, the heartless rival pursuing Princess Miranda. Compact squat armored fruit fly with very large red eyes, short steel-gray angular helmet leaving face visible, small blue cape, simple blue tabard with one silver broken-heart emblem, tiny armored boots and exactly two small cream wings. Aloof brows, crossed arms. Short compact body like reference; no elongated armor, long robes, huge weapon, feathers or goblet."
+    },
+    {
+      "name": "Sir Cheapdate",
+      "file": "npcs/sir_cheapdate.png",
+      "notes": "Tipsy expression, feather cap, goblet",
+      "width": 1086,
+      "height": 1448,
+      "prompt": "Retained unchanged from v2; see ../v2/README.md for generation brief."
+    },
+    {
+      "name": "Count Rutabaga",
+      "file": "npcs/count_rutabaga.png",
+      "notes": "Puzzled expression, monocle, mismatched boots",
+      "width": 1086,
+      "height": 1448,
+      "prompt": "Retained unchanged from v2; see ../v2/README.md for generation brief."
+    },
+    {
+      "name": "Clown, the Court Jester",
+      "file": "npcs/clown_jester.png",
+      "notes": "Narrator: bell hat and joke baton",
+      "width": 1086,
+      "height": 1448,
+      "prompt": "Retained unchanged from v2; see ../v2/README.md for generation brief."
+    }
+  ]
+}
