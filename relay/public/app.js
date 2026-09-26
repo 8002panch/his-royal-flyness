@@ -30,13 +30,29 @@ function loadProfile() { try { return JSON.parse(localStorage.getItem(PROFILE_KE
 
 function render() {
   if (!state.role) {
+    app.dataset.screen = "";
     app.innerHTML = state.availableRoles.length ? roleScreen(state.availableRoles) : joinScreen({ room: state.room, name: state.name });
     if (state.availableRoles.length) bindRolePicker(); else bindJoin();
     return;
   }
   const views = { helmsman: renderHelmsman, liftmaster: renderLiftmaster, wingmaster: renderWingmaster, seer: renderSeer };
-  app.innerHTML = views[state.role](state.view);
+  const html = views[state.role](state.view);
+  if (app.dataset.screen === state.role && patchReadouts(html)) return;
+  app.innerHTML = html;
+  app.dataset.screen = state.role;
   bindControls();
+}
+
+// Feedback arrives 10 times a second: update only the readouts, so the button under a player's finger is never
+// replaced in the middle of a hold (which can drop or stick the input on phones).
+function patchReadouts(html) {
+  const next = document.createElement("template");
+  next.innerHTML = html;
+  const fresh = next.content.querySelectorAll(".feedback-card, .seer-grid");
+  const current = app.querySelectorAll(".feedback-card, .seer-grid");
+  if (!fresh.length || fresh.length !== current.length) return false;
+  current.forEach((element, index) => element.replaceWith(fresh[index]));
+  return true;
 }
 
 function bindJoin() {
@@ -115,12 +131,21 @@ function handleMessage(data) {
   if (message.t === "error") { state.role ? alert(message.message) : showJoinError(message.message); }
 }
 
-setInterval(() => { if (state.role) send({ t: "heartbeat" }); }, 1000);
+// While a control is held, resend it every 400 ms: the game server drops any input it hasn't heard about for 1.2 s,
+// and heartbeats stop at the relay. Otherwise send a plain heartbeat once a second.
+let lastBeat = 0;
+setInterval(() => {
+  if (!state.role) return;
+  if (state.heldValue) { send(buildControlMessage(state.role, state.heldValue)); lastBeat = Date.now(); }
+  else if (Date.now() - lastBeat >= 1000) { send({ t: "heartbeat" }); lastBeat = Date.now(); }
+}, 400);
 document.addEventListener("visibilitychange", () => { if (document.hidden) releaseControl(); });
 window.addEventListener("pagehide", releaseControl);
 
+// A join link or QR code (http://<laptop>:8000/?room=BZKT) fills in the room code; a saved profile only auto-joins its own room.
 const saved = loadProfile();
-state.room = saved.room || "";
+const linkedRoom = normalizeRoom(new URLSearchParams(location.search).get("room") || "");
+state.room = linkedRoom || saved.room || "";
 state.name = saved.name || "";
-if (state.room && state.name) connect();
+if (state.room && state.name && (!linkedRoom || linkedRoom === saved.room)) connect();
 else render();

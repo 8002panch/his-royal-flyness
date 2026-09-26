@@ -336,5 +336,29 @@ def test_plugs_into_the_server_game_session():
     session = GameSession("BZKT", seer=S("true"))
     session.apply_input({"t": "sense", "role": "seer", "scan": 1}, now=0.0)
     for k in range(25):
+        session.step(0.02, now=0.02 * (k + 1))
         view = session.phone_views()[-1]
     assert view["bearing"] in ("N", "NE") and view["confidence"] > 0.3
+    # Godot gets the brain's side-free activity and which brain is running; the host toggle swaps it
+    state = session.godot_state()
+    assert state["brain"] == "true" and set(state["brainActivity"]) == ACTIVITY_KEYS
+    assert state["brainActivity"]["vision"] > 3.0
+    assert session.set_brain("changeling") == "changeling" and session.godot_state()["brain"] == "changeling"
+    assert session.set_brain("true") == "true"
+
+
+@needs_data
+def test_server_uses_the_real_brain_and_falls_back_without_it(monkeypatch):
+    import brain.seer
+    from server.main import make_seer
+    from server.seer_adapter import PlaceholderSeerAdapter
+
+    seer = make_seer("true")
+    assert isinstance(seer, SeerAdapter) and seer.source == "true"
+    assert isinstance(make_seer("placeholder"), PlaceholderSeerAdapter)
+
+    def broken(*args, **kwargs):
+        raise FileNotFoundError("data/graph_true.npz")
+
+    monkeypatch.setattr(brain.seer, "SeerAdapter", broken)
+    assert isinstance(make_seer("true"), PlaceholderSeerAdapter)  # no data files: the game still runs

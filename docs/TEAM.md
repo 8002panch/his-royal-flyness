@@ -1,6 +1,6 @@
 # Team: who does what, status, schedule and rules
 
-Updated Sat 26 Sept 19:10 by Neil. The game: [GAME.md](GAME.md). The system and how to run it: [TECH.md](TECH.md).
+Updated Sat 26 Sept 19:25 by Neil. The game: [GAME.md](GAME.md). The system and how to run it: [TECH.md](TECH.md).
 These three files are the whole plan; earlier docs (the four-senses design, the build plan, the per-person task lists) were merged
 here and are in git history. **Please keep it to three docs:** add to the right section instead of creating new markdown files.
 
@@ -9,7 +9,7 @@ here and are in git history. **Please keep it to three docs:** add to the right 
 | Person | GitHub | Role | Owns (only edit your own files) |
 |---|---|---|---|
 | **Neil** | `8002panch` | Brain + science: the Seer's sensory decoder, True Prince vs Changeling, the Royal Decree and lore facts. Science Q&A at judging (not the presenter) | `brain/`, `server/chronicler.py`, `agents/run_trials.py`, `agents/bots.py` |
-| **Arnav** | `arnavp-1` | Game server: three-axis body, world and hazards, trial loop, Godot state. Integration lead at every gate | `server/` (except `chronicler.py`), `agents/schema.py`, `levels/` (hand-made), `run_local.sh` |
+| **Arnav** | `arnavp-1` | Game server: three-axis body, world and hazards, trial loop, Godot state. Integration lead at every gate | `server/` (except `chronicler.py`), `agents/schema.py`, `levels/` (hand-made), `run_local.py` |
 | **Ved** | `shahved25` | Relay and phone controllers, rooms and reconnect, the Seer's phone screen, cloud and domain, agents. Devpost submitter | `relay/`, `agents/matchmaker.py`, `agents/master_of_trials.py`, `agents/jester.py`, `levels/` (generated) |
 | **Anshul** | `darkspaz-v1` | Godot host: the first-person 2D hall, art, hand-shadow effects, HUD, audio and captions. Demo video; timekeeper at check-ins | `host/`, `audio/` |
 
@@ -27,16 +27,16 @@ table and add an entry to the phase log below instead. The protocol that prompts
 | 1 | Relay: rooms, roles, reconnect, `seq` validation, 1.2 s stale input, Seer-only routing | Ved | **Done** (PR #2), 10 tests |
 | 2 | Four phone controller screens, tap-to-latch, reconnect overlay | Ved | **Done** (PR #3, fix PR #5), 3 JS tests. Not yet tried on physical phones |
 | 3 | Authoritative x/y/z movement graybox; placeholder Seer; 50 / 30 / 10 Hz loops | Arnav (built with Ved's playbook) | **Done** (PR #4), 6 tests |
-| 4 | Godot first-person 2D graybox driven by live state; one-command local launch | Anshul (launcher: Arnav) | **In progress:** Godot project + HUD on `anshul/host-seer-hud` (not merged); pixel-art direction chosen |
+| 4 | Godot first-person 2D graybox driven by live state; one-command local launch | Anshul (launcher: Arnav) | **Launcher done** (`python run_local.py`, Sat 19:25). Godot project + HUD on `anshul/host-seer-hud` (not merged); pixel-art direction chosen |
 | 5 | Playable Garden trial: phases, win by alignment, lose on Giant / timeout / overshoot, real and fake Giant warnings, keyboard fallback, host restart | Arnav | Not started |
-| 6 | Brain-backed Seer in the server, `brainActivity` to Godot, Decree wording | Neil (adapter) then Arnav (wiring) | **Adapter done and tested** against `GameSession`; the server still defaults to the placeholder. Decree already updated |
+| 6 | Brain-backed Seer in the server, `brainActivity` to Godot, Decree wording | Neil | **Done** (Sat 19:25): the server runs the real brain by default (placeholder if `data/` is missing), sends `brain` and `brainActivity` to Godot, host toggle for the Changeling. Decree already updated |
 | 7 | DigitalOcean + Caddy + domain, polish, demo runbook | Ved, everyone | Not started |
 | Audio | ElevenLabs voices, sound effects, music (GAME.md) | Anshul | Not started |
 | Agents | Matchmaker, Master of Trials, Jester | Ved (+ Neil `run_trials`) | Not started; first thing to cut |
 
 **Brain (Neil), done:** whole-CNS rate model (166,606 neurons, about 6 ms per tick); three fair Changelings; all 10 button
 channels pass; the Royal Seer (neural, hybrid and placeholder modes, safe fallback, real-time stepping, side-free HUD activity);
-True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 66 brain tests. Full suite: 82 Python tests pass.
+True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 67 brain tests. Full suite: 88 Python tests pass.
 
 ### Phase log
 
@@ -52,10 +52,20 @@ True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 
 - **Brain (Neil), Sat 15:45 to 19:10:** graph, model, Changelings, controls matrix, the Seer, evaluation, Chronicler, tests.
   Sat 19:05: the Seer's HUD activity keys changed to `vision`, `looming`, `escape` (no left/right: a side bar on the shared screen
   gave away the Princess's side) and extra `sense()` calls within one tick now return cached cues.
+- **Join flow connected to the game (Neil, Sat 19:25, at Ved's request):** tested live with scripted phones and the real phone page.
+  Fixed: (1) every held button and the Seer's scan died after 1.2 s, because phones sent one message per press and heartbeats
+  stop at the relay; the phone now resends a held control every 0.4 s; (2) the phone page rebuilt its buttons 10 times a second,
+  which can drop or stick a hold on a phone; now only the readouts update; (3) a phone disconnecting mid-hold never cleared the
+  server's input (the relay addressed it to no room); (4) a phone dropping while the server sent it a view crashed the server's
+  relay connection, and every drop printed a traceback; (5) Godot got about 15 frames a second with the brain running; fixed-rate
+  schedules give a steady 30. Added: `run_local.py` (relay + phone page + server, room code, join link and QR, host keys, join and
+  leave log), `?room=` join links, the real brain in the server by default, `room`, `joinUrl`, `brain` and `brainActivity` in the
+  Godot state. 6 new tests. Verified in the browser: a 3 s hold stays held on the server for 2.96 s; the Seer's phone shows brain
+  cues (bearing, distance, a Giant warning counting down from 1.4 s).
 
 ## Open requests: who is waiting on whom
 
-Updated Sat 19:10. Reply by editing this section (or tell the person). If there's no answer by the time shown, build against the
+Updated Sat 19:25. Reply by editing this section (or tell the person). If there's no answer by the time shown, build against the
 proposal.
 
 ### Waiting on Neil
@@ -74,8 +84,11 @@ Nothing is blocked on Neil right now. On request: the data files for anyone runn
 
 | From → to | What | Status |
 |---|---|---|
-| Anshul → Arnav | Add `"brainActivity": cues.get("activity", {})` to `godot_state()` and `"brainActivity": {}` to `server/sample_state.json`; add `"controls"` (each axis's live value) for the HUD's axis bars | Waiting on Arnav. **Update from Neil:** the keys are now `vision`, `looming`, `escape` (the HUD is generic, so no host change). Compute the cues once per tick and reuse them; a second `sense()` call in the same tick is now harmless (cached) |
-| Anshul → Arnav | At Phase 6, `GameSession(room, seer=SeerAdapter("true"))`; `to_phone_view` exists and the fallback lives in the adapter | Ready (TECH.md, "Plugging it into the server") |
+| Anshul → Arnav | Add `brainActivity` to the Godot state; wire the real Seer | **Done by Neil** (Sat 19:25): `brainActivity` (keys `vision`, `looming`, `escape`), `brain`, `room` and `joinUrl` are in the state, sensed once per tick |
+| Anshul → Arnav | `"controls"` (each axis's live value) for the HUD's axis bars | Waiting on Arnav to pick a format; `roles` (input non-zero) and `fly` velocities are there meanwhile |
+| Neil → Arnav, Ved | Heads-up: Neil edited your files to connect the join flow to the game (see the phase log): `server/main.py` (sensing, state fields, fixed-rate loop, `--seer`), `relay/relay.py` (disconnect clear, dropped-phone handling), `relay/public/app.js` (0.4 s resend, readout-only updates, `?room=` links), plus tests. Pull before you change these files | Please pull |
+| Neil → Arnav | Movement feels very fast in the graybox: holding a direction crosses from the center to the wall in about 1 s (max speed 1.0 in a [-1, 1] box). Worth tuning with Phase 5's world scale | Your call |
+| Neil → Arnav, Ved | With a remote relay (DigitalOcean), the server doesn't reconnect if the relay connection drops; it needs a retry loop before Phase 7. The in-process relay in `run_local.py` doesn't have this problem | Before deploying |
 | Anshul → everyone | The `brainActivity` example in the planning repo's redesign (`vision`/`looming`/`motor`) doesn't match the code | Resolved: TECH.md has the real keys |
 | Neil → Anshul | When you merge `main` into `anshul/host-seer-hud`, git reports modify/delete conflicts on `host/README.md`, `team/anshul/README.md` and `team/arnav/README.md`. Their content (your status and notes) is now in this file and GAME.md, so resolve with `git rm` on those three. The pixel-art concept is summarized in GAME.md, "Art direction"; please extend that section rather than adding new .md files (the Claude prompt file can live in `team/anshul/`) | Please do at your next merge |
 | Neil → Ved | Codex phase prompts: record status in this file (see "Implementation status"); the protocol is in TECH.md | Please pass to your Codex runs |
@@ -87,20 +100,21 @@ From the redesign's ownership table and Ved's phase playbook. Owners, edit freel
 **Neil**
 - [x] Brain, Changelings, Seer adapter, evaluation, tests, Decree, fact checks, HUD privacy fix.
 - [ ] If not done yet: tell an organizer what was prepared before the event (plans and a data check, no code).
-- [ ] Phase 6 support: AirDrop the data files to whoever wires the adapter; check that the Decree matches what ships.
+- [x] Connect Ved's join flow to the game mechanics (Phase 6 wiring, launcher, hold and disconnect fixes).
+- [ ] AirDrop the data files to whoever runs the demo laptop; check that the Decree matches what ships.
 - [ ] Full-stack speed test on the demo laptop (relay + server + brain + Godot together) once Phase 4 runs.
 - [ ] `run_trials` + bots only if Arnav says yes.
 - [ ] On hold until the team says: Devpost science section; Q&A drill with the presenter (GAME.md).
 
 **Arnav**
-- [ ] Phase 4 launcher (`run_local.sh`: relay, static page, server, Godot).
+- [x] Phase 4 launcher and Phase 6 wiring (done by Neil: `run_local.py`, the real Seer, `brain` and `brainActivity`, host toggle).
 - [ ] Phase 5: the Garden trial (phases, alignment win, Giant / timeout / overshoot losses, real and fake warnings, keyboard
-      fallback, host start and restart), plus `brainActivity`, `brain` and `controls` in the state message.
-- [ ] Phase 6 wiring: `SeerAdapter("true")` in `GameSession`, a Changeling toggle key for the host.
+      fallback, host start and restart), plus `controls` in the state message; tune the movement speed.
+- [ ] A reconnect loop for the relay connection (needed before a remote relay).
 - [ ] README "Run it" check from a clean checkout on the demo laptop; test the LAN and keyboard fallbacks.
 
 **Ved**
-- [ ] Four physical phones on venue Wi-Fi (TECH.md, manual check).
+- [ ] Four physical phones on venue Wi-Fi with `python run_local.py` (TECH.md, manual check).
 - [ ] Phase 7 prep: Caddyfile, deployment steps and a health check (deploy only with the team's approval and credentials);
       claim DigitalOcean credits and the domain coupon.
 - [ ] Devpost: create the draft and add all four members before Sunday (create deadline 11:00); you submit.

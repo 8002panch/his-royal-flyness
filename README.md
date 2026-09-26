@@ -7,8 +7,8 @@
 > and those senses run through the real, fully mapped nervous system of a male fruit fly (MaleCNS v1.0, all 166,606 neurons).
 > Swap in the Changeling, with the same neurons and scrambled wiring, and the Seer goes blind.
 
-**Status:** being built now. Working so far: the phone controllers and relay, server-side movement, and the brain-powered Seer
-(True Prince vs Changeling, tested). In progress: the Godot main screen and the first playable trial. Details: [docs/TEAM.md](docs/TEAM.md#implementation-status).
+**Status:** being built now. Working so far: joining by room code on phones, server-side movement, and the brain-powered Seer
+running live in the server (True Prince vs Changeling, tested). In progress: the Godot main screen and the first playable trial. Details: [docs/TEAM.md](docs/TEAM.md#implementation-status).
 
 ## How it works
 
@@ -51,8 +51,9 @@
 
 ## Run it
 
-See [docs/TECH.md](docs/TECH.md#run-it-locally): start the relay, serve the phone page, start the server, open Godot, and join
-from phones on the same Wi-Fi. Tests: `python -m pytest brain/tests server/tests relay/tests -q`.
+`pip install -r requirements.txt`, then `python run_local.py`. It starts the relay, the phone page and the game server and prints
+the room code, the join link and a QR code; phones on the same Wi-Fi join from that link. Open `host/project.godot` in Godot 4 for
+the main screen. Details: [docs/TECH.md](docs/TECH.md#run-it-locally). Tests: `python -m pytest brain/tests server/tests relay/tests -q`.
 
 ## Rules and honesty
 

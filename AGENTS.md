@@ -25,7 +25,7 @@ add a row to "Open requests" in `docs/TEAM.md` or tell your user, so the owner c
 | Owner | GitHub | Owns |
 |---|---|---|
 | Neil | `8002panch` | `brain/`, `server/chronicler.py`, `agents/run_trials.py`, `agents/bots.py` |
-| Arnav | `arnavp-1` | `server/` (except `chronicler.py`), `agents/schema.py`, `levels/` (hand-made trials), `run_local.sh` |
+| Arnav | `arnavp-1` | `server/` (except `chronicler.py`), `agents/schema.py`, `levels/` (hand-made trials), `run_local.py` |
 | Ved | `shahved25` | `relay/`, `agents/matchmaker.py`, `agents/master_of_trials.py`, `agents/jester.py`, `levels/` (generated trials) |
 | Anshul | `darkspaz-v1` | `host/` (Godot 4), `audio/` |
 

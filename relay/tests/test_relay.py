@@ -56,6 +56,17 @@ class RelayStateTests(unittest.TestCase):
         self.assertEqual(self.state.clients["a"].held_input, 0)
         self.assertEqual(events[0]["payload"], {"t": "input_cleared", "role": "helmsman"})
 
+    def test_disconnect_mid_hold_notifies_this_rooms_host(self) -> None:
+        self.state.connect("host")
+        self.state.handle("host", {"t": "host_join", "room": "BZKT", "secret": "secret", "seq": 1}, now=0.0)
+        phone(self.state, "a", "a")
+        self.state.handle("a", {"t": "pick", "role": "helmsman", "seq": 2}, now=0.0)
+        self.state.handle("a", {"t": "move", "role": "helmsman", "axis": "x", "value": 1, "seq": 3}, now=0.0)
+        events = self.state.disconnect("a")
+        self.assertEqual(events[0]["payload"], {"t": "input_cleared", "role": "helmsman"})
+        # RelayServer._deliver finds the host through the event's room; without it the clear was silently dropped
+        self.assertEqual(self.state.rooms[events[0]["room"]].host_connection_id, "host")
+
     def test_non_seer_never_receives_seer_view(self) -> None:
         phone(self.state, "seer", "seer")
         phone(self.state, "helm", "helm")

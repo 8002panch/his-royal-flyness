@@ -18,6 +18,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any
 
+from websockets.exceptions import ConnectionClosed
 from websockets.server import WebSocketServerProtocol, serve
 
 
@@ -92,7 +93,7 @@ class RelayState:
         if session.role and room.role_connections.get(session.role) == connection_id:
             del room.role_connections[session.role]
             session.held_input = 0
-            events.append({"to": "host", "payload": {"t": "input_cleared", "role": session.role}})
+            events.append({"to": "host", "room": room.code, "payload": {"t": "input_cleared", "role": session.role}})
         return events
 
     def handle(self, connection_id: str, payload: dict[str, Any], now: float | None = None) -> tuple[dict[str, Any], list[dict[str, Any]]]:
@@ -301,6 +302,8 @@ class RelayServer:
                 except (json.JSONDecodeError, RelayError) as exc:
                     error = exc.payload() if isinstance(exc, RelayError) else {"t": "error", "code": "INVALID_JSON", "message": "Message must be valid JSON."}
                     await websocket.send(json.dumps(error))
+        except ConnectionClosed:
+            pass  # phones vanish without a close frame all the time (lock screen, Wi-Fi); cleanup below handles it
         finally:
             events = self.state.disconnect(session.connection_id)
             self.sockets.pop(session.connection_id, None)
@@ -321,7 +324,10 @@ class RelayServer:
                 connection_id = target
             websocket = self.sockets.get(connection_id) if connection_id else None
             if websocket is not None:
-                await websocket.send(json.dumps(event["payload"]))
+                try:
+                    await websocket.send(json.dumps(event["payload"]))
+                except ConnectionClosed:
+                    pass  # that socket is closing; its own handler cleans up
 
 
 async def run(host: str = "0.0.0.0", port: int = 8080) -> None:

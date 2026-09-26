@@ -14,7 +14,7 @@ relay/relay.py (rooms, roles, reconnect, validation; later on DigitalOcean behin
    v
 server/ (Python, authoritative: 50 Hz tick)
    - room and role state, x/y/z movement, world and hazards (trials, collisions, scoring: Phase 5)
-   - Seer adapter: placeholder now; brain/seer.py (True Prince / Changeling) plugs in unchanged
+   - Seer adapter: brain/seer.py (True Prince / Changeling), placeholder if data/ is missing
    |  local WebSocket, port 8765, 30 Hz "state"
    v
 host/ (Godot 4, 2D): the only full-game screen; renders state, decides nothing
@@ -27,33 +27,30 @@ host/ (Godot 4, 2D): the only full-game screen; renders state, decides nothing
 | Component | Owner | Files |
 |---|---|---|
 | Relay + phone page | Ved | `relay/relay.py`, `relay/public/` (join, role pick, 4 role screens), `relay/tests/` |
-| Game server | Arnav | `server/main.py`, `state.py`, `movement.py`, `seer_adapter.py` (placeholder + graybox world), `godot_link.py`, `relay_client.py`, `sample_state.json`, `server/tests/` |
+| Game server | Arnav | `server/main.py`, `state.py`, `movement.py`, `seer_adapter.py` (placeholder + graybox world), `godot_link.py`, `relay_client.py`, `sample_state.json`, `server/tests/`; `run_local.py` (one-command launcher) |
 | Brain + Seer | Neil | `brain/` (graph, model, Changeling, probes, replay, `seer.py`), `server/chronicler.py` |
 | Godot host + audio | Anshul | `host/` (on branch `anshul/host-seer-hud`), `audio/` (not started) |
 
 ## Run it locally
 
-Python 3.11+ in a venv: `pip install -r requirements.txt`. Then, in separate terminals:
+Python 3.11+ in a venv: `pip install -r requirements.txt`. Then one command starts the relay, the phone page and the game server:
 
 ```bash
-python3 relay/relay.py
+python run_local.py
 ```
 
-```bash
-python3 -m http.server 8000 --directory relay/public
-```
-
-```bash
-python3 -m server.main --room BZKT
-```
-
-- Phones (same Wi-Fi): open `http://<laptop-lan-ip>:8000/?relay=ws://<laptop-lan-ip>:8080` and enter the room code.
-- Server settings: `--room` (or `ROOM_CODE`), `--relay-url` (or `RELAY_URL`, default `ws://127.0.0.1:8080`), `--godot-port`
-  (default 8765). `ROOM_SECRET` comes from `.env`; local development may leave it blank.
+- It prints the **room code**, the **phone link** (`http://<laptop-lan-ip>:8000/?room=XXXX`, which fills in the code) and, if
+  `qrcode` is installed, a QR code to scan. Phones must be on the same Wi-Fi. On a Mac, allow incoming connections for Python the
+  first time, or phones can't reach the laptop.
+- `--room BZKT` pins the code (use it for the demo, so phones reconnect on their own after a restart); `--seer true|changeling|placeholder`
+  (default `true`, the real brain; it falls back to placeholder cues if `data/` is missing). Ports: `--http-port 8000`,
+  `--relay-port 8080`, `--godot-port 8765`. `ROOM_SECRET` comes from the environment; locally it may be blank.
+- **Host keys** in that terminal (letter, then Enter): `c` Changeling, `t` True Prince, `p` placeholder cues, `s` status (who holds
+  which role, live inputs, fly position), `q` quit. It also prints a line whenever a phone takes or leaves a role.
 - Godot: open `host/project.godot` in Godot 4 (Anshul's branch). It connects to `ws://127.0.0.1:8765` and loops an offline sample
   (clearly labeled "OFFLINE SAMPLE, not brain output") when no server is running.
-- The real brain needs the data files (see [Setup](#setup-the-brains-data)). Without them the Seer falls back to placeholder cues.
-- A one-command launcher (`run_local.sh`) is planned for Phase 4.
+- Running the parts separately still works: `python3 relay/relay.py`, `python3 -m http.server 8000 --directory relay/public`,
+  `python3 -m server.main --room BZKT --seer true` (`--relay-url` or `RELAY_URL` for a remote relay).
 
 ## Protocol
 
@@ -62,7 +59,8 @@ python3 -m server.main --room BZKT
 - Local development: WebSocket at `ws://<laptop>:8080`.
 - Every client message is a JSON object with a strictly increasing, non-negative integer `seq` per connection.
 - A malformed, stale, unauthorized or out-of-range message gets `{"t":"error","code":"...","message":"..."}`.
-- Phones send a `heartbeat` every second. Held inputs expire after 1.2 seconds without one.
+- While a control is held, the phone **resends it every 0.4 s**; otherwise it sends a `heartbeat` every second. The game server
+  drops any held input it hasn't heard about for 1.2 s, and heartbeats stop at the relay, so the resend is what keeps a hold alive.
 
 ### Joining
 
@@ -133,33 +131,37 @@ or null, `seconds` may be null.
 
 ### Server to Godot (`state`, 30 Hz)
 
-Current (`server/sample_state.json`):
-
 ```json
-{"t":"state","phase":"play","time":0.0,
- "fly":{"x":0.0,"y":0.0,"z":0.0,"vx":0.0,"vy":0.0,"vz":0.0},
+{"t":"state","phase":"play","time":12.4,
+ "room":"BZKT","joinUrl":"http://192.168.1.23:8000/?room=BZKT","brain":"true",
+ "brainActivity":{"vision":8.8,"looming":46.1,"escape":28.2},
+ "fly":{"x":0.2,"y":0.0,"z":0.1,"vx":0.4,"vy":0.0,"vz":0.1},
  "render":{"princess":{"bearing_deg":16.4,"elevation_deg":11.9,"distance_cm":199.6},"giant":null},
- "roles":{"helmsman":false,"liftmaster":false,"wingmaster":false,"seer":false}}
+ "roles":{"helmsman":true,"liftmaster":false,"wingmaster":false,"seer":true}}
 ```
 
-Agreed additions, not in the server yet (see TEAM.md, open requests):
-
-- `"brainActivity": {"vision": z, "looming": z, "escape": z}`: from `cues["activity"]` of the Seer adapter (`{}` with the
-  placeholder). The HUD draws one bar per key, whatever the keys are. The keys are **side-free on purpose**: a left/right or
-  "straight ahead" bar on the shared screen would give away the Seer's secret (tested:
+- `room` and `joinUrl`: for the lobby's big room code and QR (`joinUrl` is null when the server runs without `run_local.py`).
+- `brain`: `"true"`, `"changeling"` or `"placeholder"`, for the TRUE PRINCE / CHANGELING badge.
+- `brainActivity`: the Seer adapter's `cues["activity"]`, z-scores; `{}` whenever the cues aren't from a brain, so no placeholder
+  number is ever shown as brain output. The HUD draws one bar per key, whatever the keys are. The keys are **side-free on purpose**:
+  a left/right or "straight ahead" bar on the shared screen would give away the Seer's secret (tested:
   `test_hud_activity_does_not_give_away_where_the_princess_is`).
-- `"brain": "true" | "changeling" | "placeholder"` for the badge.
-- `"controls"`: each movement axis's live value, for the HUD's axis indicators (Anshul's request; format still to be defined by Arnav).
+- `roles`: whether each role's input is currently non-zero.
+- Still to define (Arnav, Anshul's request): `"controls"`, each movement axis's live value for the HUD's axis indicators.
 
 Godot may render this state but never decides outcomes. The whole-map positions in `render` must not be drawn as a map or an
 exact bearing (GAME.md, "The main screen").
 
 ## The game server (`server/`)
 
-- `GameSession(room, seer=None)` is pure and importable (headless replay and tests). `apply_input()` validates role and axis,
-  `step(dt, now)` expires inputs older than 1.2 s and moves the body, `phone_views()` builds the four views (the Seer's only while
-  scanning), `godot_state()` builds the state message.
-- `GameServer.run()`: 50 Hz loop; Godot state at 30 Hz; phone views at 10 Hz.
+- `GameSession(room, seer=None, join_url=None)` is pure and importable (headless replay and tests). `apply_input()` validates role
+  and axis; `step(dt, now)` expires inputs older than 1.2 s, moves the body and **senses once** (stimuli and cues are kept for the
+  tick); `phone_views()` builds the four views (the Seer's only while scanning); `godot_state()` builds the state message;
+  `set_brain("true" | "changeling" | "placeholder")` is the host toggle.
+- `make_seer(source)`: the brain-powered `SeerAdapter` with both brains preloaded (so the toggle is instant), or the placeholder
+  if `data/` is missing.
+- `GameServer.run()`: 50 Hz tick, Godot state at 30 Hz, phone views at 10 Hz, all on fixed-rate schedules, so the ~6 ms brain step
+  doesn't stretch every tick (measured: Godot gets a steady 30.0 frames per second with the real brain).
 - **Movement** (`server/movement.py`, `MovementTuning`): acceleration 2.4, drag 3.2 per second when released, max speed 1.0,
   dead zone 0.05, positions bounded to [-1, 1] per axis (hitting a bound stops that axis). Deterministic: the same inputs give the
   same trace (tested).
@@ -308,18 +310,17 @@ cues = {
 - Known interactions in the real wiring (not bugs): seeing the Princess pulls steering toward her and damps forward drive; activity
   carries over about 100 ms after an input stops.
 
-### Plugging it into the server (Phase 6)
+### In the server (Phase 6, done)
 
-`GameSession` already accepts it (tested in `brain/tests/test_seer.py::test_plugs_into_the_server_game_session`):
+`run_local.py` and `python -m server.main` use `make_seer("true")` by default; `GameSession` senses once per tick and sends
+`brain` and `brainActivity` to Godot (tested in `brain/tests/test_seer.py::test_plugs_into_the_server_game_session` and
+`test_server_uses_the_real_brain_and_falls_back_without_it`).
 
 ```python
-from brain.seer import SeerAdapter
-session = GameSession(room, seer=SeerAdapter("true"))   # has .sense(), .to_phone_view(), .source
-session.seer.swap("changeling", seed=0)                 # host toggle
+from server.main import GameSession, make_seer
+session = GameSession(room, seer=make_seer("true"))
+session.set_brain("changeling")                         # host toggle; set_brain("true") to go back
 ```
-
-Then add `"brainActivity": cues.get("activity", {})` and `"brain": session.seer.source` to `godot_state()`, reusing the cues
-computed once that tick.
 
 ## The Chronicler and replay (`server/chronicler.py`, `brain/replay.py`)
 
@@ -355,7 +356,7 @@ python -m pytest brain/tests server/tests relay/tests -q
 npm test --prefix relay/public
 ```
 
-- **82 Python tests** (about 2 minutes): 66 brain, 6 server, 10 relay. `-m "not slow"` skips the slowest brain tests. Brain tests
+- **88 Python tests** (about 2 minutes): 67 brain, 10 server, 11 relay. `-m "not slow"` skips the slowest brain tests. Brain tests
   that need `data/` skip with a clear message on a fresh clone.
 - **3 JavaScript tests** for the phone modules (role-owned message shapes, private Seer view detection, room codes); they need Node.
 - What the brain suite covers: the graph matches the data check; signs follow the transmitter rule; the Changelings keep every
@@ -366,9 +367,11 @@ npm test --prefix relay/public
 
 **Manual four-phone check** (repeat after big changes):
 
-1. Start the relay, the static page and the server (see [Run it locally](#run-it-locally)).
-2. Join four phones to one room; pick each role once. Each phone shows only its own controller.
-3. Hold and release each movement button: only that role's axis changes, and release sends 0.
+1. `python run_local.py` (see [Run it locally](#run-it-locally)).
+2. Join four phones with the printed link; pick each role once. Each phone shows only its own controller, and the terminal
+   prints each `[join]`.
+3. Hold each movement button for 3 seconds or more: only that role's axis changes, it keeps moving the whole time (type `s` to
+   see the live inputs), and release sends 0.
 4. Hold and release scan: `sense` 1 then 0; only the Seer's screen ever shows bearing, distance, confidence or a Giant warning.
 5. Background the browser mid-hold: a neutral event goes out; after 1.2 s the input is cleared anyway.
 6. Kill one phone's network and restore it: the reconnect overlay appears and the role comes back.
