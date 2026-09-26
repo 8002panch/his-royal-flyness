@@ -29,8 +29,8 @@
 - [ ] **20 min:** `relay/PROTOCOL.md` (from [TECH_ARCHITECTURE.md](../../docs/TECH_ARCHITECTURE.md#messages-json)), **pushed by 16:30**; latency test with 4 phones on venue Wi-Fi and on cellular.
 
 ### B2 · 17:55-20:00 (2 h)
-- [ ] **45 min:** phone join page (code from the QR/URL, name, audio-unlock tap) + crest pick (with "Let the Herald decide").
-- [ ] **75 min:** the 4 role screens v1: half-screen hold buttons (Lookout left/right eye, Perfumer left/right antenna), Taster tap pad, Spymaster hold; events on change + a 1 s heartbeat.
+- [x] **45 min:** phone join page (code from the QR/URL, name, audio-unlock tap) + crest pick (with "Let the Herald decide").
+- [x] **75 min:** the 4 role screens v1: half-screen hold buttons (Lookout left/right eye, Perfumer left/right antenna), Taster tap pad, Spymaster hold; events on change + a 1 s heartbeat.
 
 ### B3 · 20:00-23:30 (3½ h)
 - [ ] **90 min:** live role views: Lookout panels (icons first), Perfumer 3 x 2 scent meters, Taster contact glow, Spymaster meters; fx flashes; personal Chronicle honors screen.

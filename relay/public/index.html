@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#191125">
+    <meta name="description" content="His Royal Flyness phone controller">
+    <title>His Royal Flyness — Controller</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main id="app" aria-live="polite"></main>
+    <div id="reconnect-overlay" class="overlay" hidden role="status" aria-live="assertive">
+      <div class="overlay-card">
+        <p class="eyebrow">Royal signal interrupted</p>
+        <h2>Reconnecting your controller…</h2>
+        <p>Your saved role will be requested again when the signal returns.</p>
+      </div>
+    </div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
