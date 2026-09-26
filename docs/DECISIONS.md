@@ -6,10 +6,22 @@ Log of what's decided, why, and what was rejected. Newest open questions at the 
 
 | # | Question | Recommendation | Why |
 |---|---|---|---|
+| O5 | **Mechanic pivot in progress:** Anshul is moving the main-screen HUD to a 3-axis direct flight control layout (Left/Right, Up/Down, Forward/Back, one player each) plus a 4th **Royal Navigator** role who reads the senses and calls out the direction to Princess Miranda, instead of 4 players each gating one sense into the real brain. Needs Neil + Arnav to confirm: (1) do L/R, U/D, F/B still route through real output neurons (DNa02 etc.), or become direct position control — this changes what the Changeling twist is actually demonstrating; (2) `server/sample_state.json` / the 30 Hz state message needs new fields, proposed below. Until confirmed, `host/` is being built against the proposed schema with an offline fixture, and no server files are being touched. | Team decided to match a reference UI (direct flight + navigator) instead of the original 4-senses design in [GAME_DESIGN.md](GAME_DESIGN.md#the-privy-council-one-role-per-phone) | Flagging before `host/`, `brain/`, `server/`, `relay/` drift out of sync on what a "player input" even is |
 | O1 | LLM for the agents (Matchmaker, Master of Trials, Jester's script) | **Gemini** (Gemini 3.8 Flash, released 2 Sept 2026; confirm the model ID in AI Studio) | Makes us eligible for **[MLH] Best Use of Gemini API**. It supports function calling and JSON-schema output, which is all we need. The switching cost is near zero if we decide now. Claude also works if the team prefers it; there's no Anthropic prize here. |
 | O2 | Name and domain | ***His Royal Flyness***, subtitle *A Courtship by Committee*, at **`royalflyness.club`** | It's a pun on "His Royal Highness", it fits the theme, and .club suits a party game. Check availability; fallbacks `hisroyalflyness.club`, `royalflyness.co`. The domain is the join URL, which is also the GoDaddy Registry prize entry. |
 | O3 | Is this everyone's first hackathon? | Answer honestly | If all four are first-timers, enter **Best First Time Hack** (a prize most teams can't enter). |
 | O4 | Presenter | Not Neil | Same as the earlier plan. Neil coaches and takes the science questions. |
+
+### Proposed state-message additions for O5 (Anshul → Arnav, not yet implemented server-side)
+
+`host/` is built against these until Arnav confirms/changes them:
+
+```json
+"controls": {"lr": -1.0, "ud": -1.0, "fb": 0.0},
+"navigator": {"bearing_deg": 42.0, "distance_norm": 0.6, "hazard": {"level": 0.3, "eta_swats": 3}}
+```
+
+`controls.lr/ud/fb` = the current commanded flight axes (whatever combines the 3 movement players' input, post-brain or pre-brain per the O5 question above). `navigator.bearing_deg` = compass heading from Hamlet to Miranda, `distance_norm` 0-1, `hazard` = Giant-hand threat the Navigator's senses are picking up. Existing `inputs`/`outputs` (real neuron names) stay for the nervous-system chart.
 
 ## Pending tests (decided by data, not by vote)
 
