@@ -9,6 +9,10 @@
 One laptop hosts the authoritative Python game server and the Godot 2D renderer. Four phones connect to the same room through
 a WebSocket relay.
 
+**The phones are controllers, not game clients.** A phone may show joining, role selection, its own touch controls, connection
+state, and small role-specific feedback. It must never render the hall, fly, Princess, Giant, map, shared game HUD, or any
+other full-game view. The Godot application on the demo laptop is the sole full-game display for players and audience.
+
 | Role | Owned input | Phone-visible feedback |
 |---|---|---|
 | Royal Helmsman | `x`: left/right horizontal turn | actual horizontal drift and momentum |
@@ -66,5 +70,5 @@ A release, pointer cancellation, visibility loss, disconnect, or stale heartbeat
 
 ## Planned local development surface
 
-The project will use plain HTML/CSS/JavaScript for phones, Python 3.11+ and `websockets` for the relay/game-server boundary,
-and Godot 4 in 2D mode. Phase 1 establishes the first runnable relay. No runtime command exists at Phase 0.
+The project will use plain HTML/CSS/JavaScript for controller phones, Python 3.11+ and `websockets` for the relay/game-server
+boundary, and Godot 4 in 2D mode. Phase 1 establishes the first runnable relay. No runtime command exists at Phase 0.
