@@ -1,0 +1,8 @@
+{
+  "t": "state",
+  "phase": "play",
+  "time": 0.0,
+  "fly": {"x": 0.0, "y": 0.0, "z": 0.0, "vx": 0.0, "vy": 0.0, "vz": 0.0},
+  "render": {"princess": {"bearing_deg": 16.4, "elevation_deg": 11.9, "distance_cm": 199.6}, "giant": null},
+  "roles": {"helmsman": false, "liftmaster": false, "wingmaster": false, "seer": false}
+}
