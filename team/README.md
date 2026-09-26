@@ -67,8 +67,8 @@ wait: **if you don't answer by the time shown, build against the proposal.** Rep
 
 | For | What | When |
 |---|---|---|
-| Arnav, Ved | `brain/seer.py`: `SeerAdapter` with placeholder, True Prince and Changeling modes behind one interface | 18:30 |
-| Everyone | Seer accuracy and delay, True Prince vs Changeling (for the demo and the Devpost) | 20:00 |
+| Arnav, Ved | `brain/seer.py`: `SeerAdapter` with placeholder, True Prince and Changeling modes behind one interface | **Done 17:25** (see brain/README.md) |
+| Everyone | Seer accuracy and delay, True Prince vs Changeling (for the demo and the Devpost) | **Done 17:25**: team/neil/seer_eval.csv |
 | Anyone running the real brain | `data/graph_*.npz` + `data/neurons.parquet` (AirDrop from Neil; about 90 MB total) | On request |
 
 ### Proposed formats

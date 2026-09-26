@@ -38,6 +38,12 @@ def build(neurons: pd.DataFrame) -> dict:
         "serenade": pick(["LC10a", "LC10d"]),
         "lock_L": pick(["LC10a", "LC10d"], "L"),
         "lock_R": pick(["LC10a", "LC10d"], "R"),
+        "her_L": pick(["LC10a", "LC10d"], "L"),
+        "her_R": pick(["LC10a", "LC10d"], "R"),
+        "loom_L": pick(["LC4", "LPLC2"], "L"),
+        "loom_R": pick(["LC4", "LPLC2"], "R"),
+        "wind_L": neurons[t.str.match(r"^JO-(C|E)") & (neurons["rootSide"] == "L")],
+        "wind_R": neurons[t.str.match(r"^JO-(C|E)") & (neurons["rootSide"] == "R")],
     }
     male_specific = neurons["dimorphism"].fillna("").str.contains("male-specific")
     outputs: dict[str, pd.DataFrame] = {
@@ -52,6 +58,13 @@ def build(neurons: pd.DataFrame) -> dict:
         "pIP10": pick(["pIP10"]),
         "pC1": neurons[t.str.startswith("pC1") & male_specific],
     }
+    her_dn = ["DNa02", "DNg111", "DNae002", "DNae001", "DNg41", "DNa10"]
+    loom_dn = ["DNp04", "DNp02", "DNp01", "DNg40", "DNp11", "DNp03"]
+    wind_dn = ["DNge016", "DNg29", "DNge175", "DNp18", "DNg05_a"]
+    for s_ in "LR":
+        outputs[f"seer_her_{s_}"] = pick(her_dn, s_)
+        outputs[f"seer_loom_{s_}"] = pick(loom_dn, s_)
+        outputs[f"seer_wind_{s_}"] = pick(wind_dn, s_)
 
     assert set(groups) == set(INPUT_GROUPS), "input names out of sync with brain.py"
     assert set(outputs) == set(OUTPUT_NAMES), "output names out of sync with brain.py"

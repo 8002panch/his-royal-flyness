@@ -86,4 +86,8 @@ Anshul (which brain signals the HUD shows, 19:00), everyone (movement direct or 
 - **17:00 redesign (Ved's first-person 2D plan):** players move the fly directly; my job is the **Royal Seer's sensory decoder**
   (`brain/seer.py`). Deliver `SeerAdapter` (placeholder / True Prince / Changeling) by 18:30; accuracy and delay comparison by 20:00.
   Waiting on teammates: see "You need" above.
+- **17:25 Seer done (ahead of 18:30):** `brain/seer.py` + `brain/test_seer.py` (5 pass). A left-vs-right scan found side-selective
+  descending neurons: looming → DNp04/DNp02/DNp01 on the threat's side (same side 81-85 vs other side ~1; Changelings ~0-5).
+  Evaluation (60 scenes): True Prince gets the Princess's side 55/60, the Giant's side 60/60, warns 55/60; Changelings warn 0/60.
+  Bearing is coarse (left/ahead/right) because each eye's detectors are driven as a group. Results: team/neil/seer_eval.csv.
 - Build: 30 s, under 600 MB. graph_true.npz is 22 MB: AirDrop it (plus neurons.parquet and the 3 Changelings) to teammates who need the real brain.

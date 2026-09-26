@@ -33,6 +33,10 @@ INPUT_GROUPS: tuple[str, ...] = (
     "serenade",   # Spymaster: LC10a + LC10d, both eyes         -> pIP10 song (z 9)
     "lock_L",     # Helmsman special: LC10a + LC10d, left eye   -> turn left toward her (z 18)
     "lock_R",     # Helmsman special: LC10a + LC10d, right eye  -> turn right toward her
+    # Seer senses (world stimuli, not buttons): brain/seer.py drives these from where the Princess and the Giants are
+    "her_L", "her_R",     # Princess detectors LC10a + LC10d, each eye
+    "loom_L", "loom_R",   # looming detectors LC4 + LPLC2, each eye
+    "wind_L", "wind_R",   # antennal wind sensors JO-C + JO-E, each antenna
 )
 
 # Output names (v2): what moves the body (mapping to movement lives in server/body.py).
@@ -46,6 +50,10 @@ OUTPUT_NAMES: tuple[str, ...] = (
     "DNp01",                       # the Giant Fiber: escape dart
     "pIP10",                       # male-only song command: serenade
     "pC1",                         # male-specific courtship cluster (display only)
+    # Seer readouts: side-selective descending-neuron populations (chosen by a left-vs-right scan, team/neil/README.md)
+    "seer_her_L", "seer_her_R",    # DNa02, DNg111, DNae002, DNae001, DNg41, DNa10 on each side: where the Princess is
+    "seer_loom_L", "seer_loom_R",  # DNp04, DNp02, DNp01, DNg40, DNp11, DNp03 on each side: where the Giant is
+    "seer_wind_L", "seer_wind_R",  # DNge016, DNg29, DNge175, DNp18, DNg05_a on each side: where the gust comes from
 )
 
 KINDS = ("true", "changeling")
@@ -101,13 +109,16 @@ class _StubImpl:
             "DNp09": 30 * d["forward"],
             "DNg100": 2 * d["forward"],
             "MDN": 4 * d["back"],
-            "DNa02_L": 10 * d["left"] + 18 * d["lock_L"] + 11 * d["serenade"],
-            "DNa02_R": 12 * d["right"] + 18 * d["lock_R"] + 11 * d["serenade"],
+            "DNa02_L": 10 * d["left"] + 18 * max(d["lock_L"], d["her_L"]) + 11 * d["serenade"],
+            "DNa02_R": 12 * d["right"] + 18 * max(d["lock_R"], d["her_R"]) + 11 * d["serenade"],
             "DNg02": 5 * d["up"],
             "DNp07_10": 40 * d["down"],
-            "DNp01": 90 * d["duck"],
-            "pIP10": 9 * d["serenade"] + 3.5 * max(d["lock_L"], d["lock_R"]),
+            "DNp01": 90 * max(d["duck"], d["loom_L"], d["loom_R"]),
+            "pIP10": 9 * d["serenade"] + 3.5 * max(d["lock_L"], d["lock_R"]) + 9 * min(d["her_L"], d["her_R"]),
             "pC1": 1.5 * d["serenade"],
+            "seer_her_L": 18 * d["her_L"], "seer_her_R": 18 * d["her_R"],
+            "seer_loom_L": 90 * d["loom_L"], "seer_loom_R": 90 * d["loom_R"],
+            "seer_wind_L": 12 * d["wind_L"], "seer_wind_R": 12 * d["wind_R"],
         }
         a = self._ALPHA
         for name in OUTPUT_NAMES:

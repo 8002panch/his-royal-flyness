@@ -25,7 +25,7 @@ from brain.brain import INPUT_GROUPS, OUTPUT_NAMES
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 IO_SETS = Path(__file__).resolve().parent / "io_sets.json"
-PAIRS = (("left", "right"), ("lock_L", "lock_R"))
+PAIRS = (("left", "right"), ("lock_L", "lock_R"), ("her_L", "her_R"), ("loom_L", "loom_R"), ("wind_L", "wind_R"))
 
 
 @dataclass
