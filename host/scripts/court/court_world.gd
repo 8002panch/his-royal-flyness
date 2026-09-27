@@ -196,7 +196,7 @@ func _update_giant(shadow_items: Array) -> void:
 	var off := HallCam.offset_from_cue(_giant_cue)
 	var est := HallCam.from_server(_fly_target) + Vector3(off.x, 0.0, off.z)
 	est.x = clampf(est.x, -HallCam.WALL_X + 0.4, HallCam.WALL_X - 0.4)
-	est.z = clampf(est.z, -1.9, HallCam.BACK_Z - 0.35)
+	est.z = clampf(est.z, HallCam.COURSE_START_Z + 0.35, HallCam.BACK_Z - 0.35)
 	# a world object should stay put: latch the first estimate, then drift slowly
 	_giant_target = est if not _giant_tracking else _giant_target.lerp(est, 0.08)
 	_giant_tracking = true

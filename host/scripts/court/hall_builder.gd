@@ -12,16 +12,19 @@ extends RefCounted
 ## Grids (tiles, stone joints, carpet studs) are anchored in hall space, so they
 ## stay put as the camera moves; anything nearer than HallCam.near_z() is skipped.
 
-const GRID_Z := -3.5          # hall-space origin of the floor and wall grids
-static var ZN := -3.5         # nearest depth drawn this frame (HallCam.near_z())
+const GRID_Z := -4.2          # hall-space origin of the floor and wall grids
+static var ZN := -4.2         # nearest depth drawn this frame (HallCam.near_z())
 static var _items := {}
 const SPRING := 1.3           # where the arcade arches spring
 const COLUMN_R := 0.17
-const COLUMNS_Z := [-2.0, -0.9, 0.2, 1.3]
+## Repeated bays make the room read as a proper course, not a short ballroom.
+## The open middle aisle between them is reserved for future obstacle nodes.
+const COLUMNS_Z := [-2.7, -1.4, -0.1, 1.2, 2.5, 3.8, 5.1, 6.4, 7.7, 9.0, 10.3, 11.6,
+	12.9, 14.2, 15.5, 16.8, 18.1, 19.4, 20.7, 22.0]
 const TABLE_TOP := -0.88
 const DAIS_X := 1.15
-const DAIS_FRONT := 0.55
-const DAIS_STEP := 0.7
+const DAIS_FRONT := 21.35
+const DAIS_STEP := 21.5
 const DAIS_Y1 := -1.18
 const DAIS_Y2 := -1.06
 const CARPET_HALF := 0.45
@@ -126,9 +129,11 @@ static func paint_far(c) -> void:
 				z += 0.6
 			y = y1
 			row += 1
-		for zc in [-1.45, -0.35, 0.75]:
+		var zc := -2.15
+		while zc < bz - 0.45:
 			if zc - 0.3 > ZN:
 				_lancet(c, x, zc)
+			zc += 1.1
 
 	# back wall, block by block
 	var tl := _p(-wx, ty, bz)
