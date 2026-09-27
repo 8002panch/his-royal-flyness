@@ -1,0 +1,40 @@
+HIS ROYAL FLYNESS: A Courtship by Committee (hackUMBC 2026)
+
+A party game for 4 players: one laptop screen plus four phones on the same Wi-Fi.
+Three players each fly one axis of Prince Hamlet, a fruit fly; the fourth, the Royal Seer,
+senses the world through his real nervous system (all 166,606 neurons of the MaleCNS v1.0 connectome).
+
+YOU NEED
+  - Python 3.11 or newer  (https://www.python.org/downloads/)
+  - Godot 4.3, standard version, for the main screen  (https://godotengine.org/download/archive/4.3-stable/)
+    Mac: put Godot.app in Applications. Windows: leave the Godot .exe in Downloads or on the Desktop.
+    Without Godot, the launcher opens a simpler main screen in your browser.
+  - Four phones on the same Wi-Fi as the laptop (no app to install).
+
+PLAY
+  1. Open a terminal in this folder:
+       Mac:      open Terminal, type  cd  and a space, drag this folder into the window, press Enter.
+       Windows:  open this folder, click the address bar, type  cmd  and press Enter.
+  2. Start the game:
+       Mac:      python3 play.py
+       Windows:  py play.py
+     The first run installs the game's Python packages and prepares the art (a minute or two).
+     Starting it this way avoids the "unsafe file" warnings that downloaded scripts get.
+  3. The main screen opens. Choose "Enter the Court".
+  4. Everyone scans the QR code (or opens the link shown) and picks a seat.
+  5. Press Enter to begin. Keep the terminal open while you play; type q then Enter there to quit.
+
+KEYS ON THE MAIN SCREEN
+  Enter / Space   start, next line       A   auto-play cutscenes on/off
+  S               skip a cutscene        B   Hamlet's full-size brain
+  R               restart a stage        F6  the Royal Decree (what's real, what's assumed)
+  H               (end card) home        F11 fullscreen
+  In the terminal: c then Enter = the scrambled Changeling brain, t then Enter = the True Prince again.
+
+CREDITS
+  MaleCNS v1.0 connectome: Berg et al., Cell (2026). HHMI Janelia FlyEM, Google Research,
+  University of Cambridge and the MRC Laboratory of Molecular Biology. CC-BY 4.0.
+  The data/ folder holds files we derived from it (the wiring graph and neuron table).
+  Fonts: SIL Open Font License (host/assets/fonts).
+  Code: github.com/8002panch/his-royal-flyness
+  Team: Neil, Arnav, Ved, Anshul.

@@ -61,6 +61,7 @@ func _ready() -> void:
 		_open_dashboard.call_deferred()
 		return
 	hud.reliquary.toggled.connect(world.set_cosmetic)
+	hud.reliquary.reset_unsaved()  # the Reliquary's relics are retired: Hamlet always appears plain
 	hud.reliquary.announce()
 	StoryArt.warm.call_deferred()  # every rig and backdrop loaded now, not mid-scene
 	# the dizzy swirl sits between the world and the HUD
@@ -202,12 +203,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	match key.keycode:
-		KEY_1, KEY_KP_1:
-			hud.reliquary.toggle_index(0)
-		KEY_2, KEY_KP_2:
-			hud.reliquary.toggle_index(1)
-		KEY_3, KEY_KP_3:
-			hud.reliquary.toggle_index(2)
 		KEY_A:
 			if _demo == null:  # the keyboard demo flies with WASD
 				_set_auto(not auto_play)
@@ -220,8 +215,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			hud.toggle_debug()
 		KEY_F2:
 			_open_dashboard()
-		KEY_F3:
-			_toggle_demo()
 		KEY_F4:
 			HallCam.chase = not HallCam.chase
 		KEY_F6:

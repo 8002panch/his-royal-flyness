@@ -1,0 +1,7 @@
+# Just what the game needs to run (requirements.txt also lists the team's tools: voice generation, agents, figures)
+numpy>=1.26
+scipy>=1.11
+pandas>=2.1
+pyarrow>=14
+websockets>=13,<17
+qrcode>=7.4

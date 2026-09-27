@@ -6,7 +6,7 @@ extends Control
 ## Hamlet and Miranda cast rigs (animation_v1), the same ones the game uses.
 
 const COURT := "res://scenes/Court.tscn"
-const BUTTONS := [Rect2i(36, 214, 240, 28), Rect2i(36, 248, 240, 26), Rect2i(36, 280, 240, 22)]
+const BUTTONS := [Rect2i(36, 220, 240, 32), Rect2i(36, 262, 240, 26)]  # Enter the Court, Credits
 const DEVELOPERS := ["NEIL", "ARNAV", "VED", "ANSHUL"]
 
 var _backdrop: ImageTexture
@@ -95,11 +95,11 @@ func _gui_input(event: InputEvent) -> void:
 			queue_redraw()
 			return
 		var index := _button_at(event.position)
-		if index == 2:
+		if index == 1:
 			_credits = true
 			queue_redraw()
-		elif index >= 0:
-			_enter_court(index == 1)
+		elif index == 0:
+			_enter_court(false)
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -109,8 +109,6 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	match key.keycode:
 		KEY_ENTER, KEY_KP_ENTER:
 			_enter_court(false)
-		KEY_D:
-			_enter_court(true)
 		KEY_H, KEY_F1:
 			_help = not _help
 			_credits = false
@@ -157,9 +155,8 @@ func _draw() -> void:
 	HudDraw.text_center(self, PixelFonts.caption(), 156, 181, "Four minds. One tiny prince.", Pal.INK_SOFT, 13)
 	HudDraw.text_center(self, PixelFonts.label(), 156, 201, "REACH PRINCESS MIRANDA", Pal.ROYAL, 8)
 	_button(0, "ENTER THE COURT", "LIVE / LOBBY")
-	_button(1, "PLAY KEYBOARD DEMO", "SOLO")
-	_button(2, "CREDITS", "C")
-	HudDraw.text_center(self, PixelFonts.label(), 156, 311, "ENTER LIVE   D DEMO   H HOW TO PLAY   C CREDITS", Pal.INK_SOFT, 7)
+	_button(1, "CREDITS", "C")
+	HudDraw.text_center(self, PixelFonts.label(), 156, 311, "ENTER   H HOW TO PLAY   C CREDITS", Pal.INK_SOFT, 7)
 	HudDraw.text_center(self, PixelFonts.label(), 156, 326, "HACKUMBC 2026", Pal.GOLD_DARK, 7)
 
 	# The stage: the banquet backdrop, cropped to the frame at native pixels, under the gold margin.

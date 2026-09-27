@@ -75,6 +75,7 @@ func set_phase(phase: String) -> void:
 
 func apply_state(cs: CourtState, hazard_in_view: bool) -> void:
 	set_phase(cs.phase)
+	reliquary.visible = false  # retired
 	ribbon.apply(cs)
 	objective.set_hazard(hazard_in_view)
 	objective.set_demo(cs.demo)
