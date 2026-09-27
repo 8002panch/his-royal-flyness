@@ -1,0 +1,14 @@
+{
+ "note": "Background music, in story order (host/scripts/music_player.gd picks the track for each scene). Supplied by the team Sun 27 Sept; titles kept from the source files.",
+ "tracks": [
+  {"id": "PROMENADE", "file": "PROMENADE.mp3", "title": "Majesty's Playful Promenade", "scenes": ["TITLE", "LOBBY", "INTRO", "E02", "END_own_path"]},
+  {"id": "HEDGE", "file": "HEDGE.mp3", "title": "The Sovereign's Playful Hedge", "scenes": ["TUTORIAL"]},
+  {"id": "WOBBLE", "file": "WOBBLE.mp3", "title": "Chamber Wobble", "scenes": ["C01", "C02", "C03", "C04"]},
+  {"id": "GOBLET", "file": "GOBLET.mp3", "title": "The Tilted Goblet", "scenes": ["Q01", "Q02", "Q03"]},
+  {"id": "DEPTHS", "file": "DEPTHS.mp3", "title": "Depths of the Keep", "scenes": ["STAGE1"]},
+  {"id": "SIEGE", "file": "SIEGE.mp3", "title": "Siege at the Keep", "scenes": ["STAGE2"]},
+  {"id": "STORM", "file": "STORM.mp3", "title": "Storm over the Keep", "scenes": ["GIANT"]},
+  {"id": "SCOURGE", "file": "SCOURGE.mp3", "title": "Scourge of the Volcanic Keep", "scenes": ["FATHER"]},
+  {"id": "UNION", "file": "UNION.mp3", "title": "A Royal Union", "scenes": ["E01", "END_wedding"]}
+ ]
+}
