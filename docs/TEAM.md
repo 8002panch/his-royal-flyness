@@ -30,7 +30,7 @@ table and add an entry to the phase log below instead. The protocol that prompts
 | 4 | Godot first-person 2D graybox driven by live state; one-command local launch | Anshul (launcher: Arnav) | **Launcher done** (`python run_local.py`, Sat 19:25) and it opens a **browser host screen** (lobby with room code, QR and seats; live roster and brain bars), a stand-in until the Godot screen is merged. Godot project + HUD on `anshul/host-seer-hud` (not merged); pixel-art direction chosen |
 | 5 | Playable Garden trial: phases, win by alignment, lose on Giant / timeout / overshoot, real and fake Giant warnings, keyboard fallback, host restart | Arnav | Not started |
 | 6 | Brain-backed Seer in the server, `brainActivity` to Godot, Decree wording | Neil | **Done** (Sat 19:25): the server runs the real brain by default (placeholder if `data/` is missing), sends `brain` and `brainActivity` to Godot, host toggle for the Changeling. Decree already updated |
-| 7 | DigitalOcean + Caddy + domain, polish, demo runbook | Ved, everyone | **Code ready** (Sat 20:30): `relay/Caddyfile`, `config.js` for a separately hosted page, online mode in `run_local.py`, automatic relay reconnect; rehearsed locally. Deploying needs the team's approval (TECH.md, "Hosting the join link") |
+| 7 | DigitalOcean + Caddy + domain, polish, demo runbook | Ved, everyone | **Code ready** (Sat 21:30): `relay/Caddyfile`, `config.js` for a separately hosted page, online mode in `run_local.py`, automatic relay reconnect; rehearsed locally. Deploying needs the team's approval (TECH.md, "Hosting the join link") |
 | Audio | ElevenLabs voices, sound effects, music (GAME.md) | Anshul | Not started |
 | Agents | Matchmaker, Master of Trials, Jester | Ved (+ Neil `run_trials`) | Not started; first thing to cut |
 
@@ -70,7 +70,7 @@ True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 
   while the evaluation counted from 0.3; both use 0.3 now; (4) the test world never put the Princess behind the fly and let the
   hand pass through it (to 15 cm); fixed; (5) HUD labels now say what's measured. New numbers: True Prince 54/60 found, 53 sides,
   60/60 Giants, 1.20 s lead; Changelings 0/60 on everything. In the hall: 116/120 sides, Changelings 0. 92 tests pass.
-- **Online hosting prep and bug fixes (Neil, Sat 20:30):** GoDaddy's free website hosting can serve the phone page but can't
+- **Online hosting prep and bug fixes (Neil, Sat 21:30):** GoDaddy's free website hosting can serve the phone page but can't
   run the relay (a live WebSocket program), so: `relay/public/config.js` points a separately hosted page at a relay;
   `relay/Caddyfile` serves page + relay with HTTPS on a server; `run_local.py --relay-url wss://<domain>/ws` runs only the game
   and host screen on the laptop. Bugs fixed: after a relay restart phones had to re-pick roles (now the phone asks for its last
