@@ -3,6 +3,15 @@
 Owner: **Anshul**. The Godot 4.3 project for the main screen: the one full-game display everyone watches (phones are
 controllers only, see [docs/WEBAPP_ARCHITECTURE.md](../docs/WEBAPP_ARCHITECTURE.md)).
 
+## Entry screen (`scenes/Entry.tscn`)
+
+The project opens on a 640x360 pixel-art title screen with an animated Hamlet, the court palette, and two clear routes:
+**Enter the Court** opens the live court and its lobby; **Play Keyboard Demo** opens the same court with the solo demo
+driver. Press Enter for the court, D for the demo, or H/F1 for the control guide. The live lobby continues to display
+the server's seal code when available; the entry screen does not fabricate one. Existing `--demo`, `--dashboard`,
+`--shot` and `--live_shot` command-line launches still go straight to the court. Use `--entry-shot=PATH` to save a
+1280x720 preview. See [the entry screenshot](screenshots/08-entry.png).
+
 ## The main screen: a pixel-art royal court (`scenes/Court.tscn`)
 
 A banquet hall seen from the doors, drawn as 16/32-bit pixel art: rendered at **640x360** and scaled 2x to **1280x720** with
