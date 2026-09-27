@@ -62,7 +62,9 @@ var story := false
 var _backdrop := Sprite2D.new()
 var _backdrop_id := ""
 var props := StoryProps.new()
-var cast := StoryCast.new()
+## preloaded, not by class_name: a fresh pull runs before Godot has re-imported and registered new class names
+const STORY_CAST := preload("res://scripts/court/story_cast.gd")
+var cast: Node = STORY_CAST.new()
 var _impact: Dictionary = {}
 var _impact_left := 0.0
 var _impact_target := Vector3.ZERO
@@ -126,7 +128,7 @@ func _apply_story(cs: CourtState) -> void:
 		return
 	# Flying scenes with one of Anshul's backgrounds_v2 sets (garden, great hall, banquet) paint it through the hall layers,
 	# with its cast; other open backdrops (only ever behind a comic) are his v4 paintings.
-	var set_name := StoryCast.set_for(cs.backdrop)
+	var set_name: String = STORY_CAST.set_for(cs.backdrop)
 	cast.show_set(set_name)
 	var open := cs.backdrop in OPEN_BACKDROPS and set_name == ""
 	if open and cs.backdrop != _backdrop_id:

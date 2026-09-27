@@ -1,4 +1,3 @@
-class_name StoryCast
 extends Node
 
 ## The story's open scenes use Anshul's backgrounds_v2 sets with their casts of animated rigs (animation_v1), the same
@@ -26,7 +25,7 @@ const GH_CAST := [
 	["royal_seer", Vector3(1.48, -1.3, 1.28), 0.62, "scan", -1.0, 0.0],
 ]
 
-var world: CourtWorld
+var world: Node2D
 var current := ""
 var _scenery: Node = null
 var _npcs: Array = []
