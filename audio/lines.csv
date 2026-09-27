@@ -1,146 +1,146 @@
 id,scene,panel,branch,speaker,line,stability,sfx,note
 H_TITLE,LOBBY,,,clown,"[excited] Alright, quiet down! Duke Prospero's Royal Ball starts right now!",,,
-H_JOIN,LOBBY,,,clown,"[cheerfully] Scan in at the gate, you're on Prince Hamlet's council tonight.",,,
-H_PRINCE,LOBBY,,,clown,"[grandly] This is Prince Hamlet. We mapped his entire brain, all hundred and sixty-six thousand neurons of it.",,,"166,606 neurons: measured by brain/build_graph.py"
-H_ROLE_HELMSMAN,LOBBY,,,clown,"[playfully] You're the Helmsman. Left and right, that's all you.",,,
-H_ROLE_LIFTMASTER,LOBBY,,,clown,"[playfully] You're the Liftmaster. Up and down are yours.",,,
-H_ROLE_WINGMASTER,LOBBY,,,clown,"[playfully] You're the Wingmaster. Forward's your job, don't forget the brakes.",,,
-H_ROLE_SEER,LOBBY,,,clown,"[dramatically] You're the Seer. Only one who can see the Princess, and the Giant. So talk.",,,
-TUT_WELCOME,TUTORIAL,welcome,,clown,"[cheerfully] We need four grapes for the banquet. Four of you, four grapes. Should be easy.",,,
-TUT_GRAPE_1,TUTORIAL,grape 1,,clown,"[briskly] Wingmaster, ease forward. Let go to slow down. It's a grape, not a getaway.",,,
-TUT_GRAPE_2,TUTORIAL,grape 2,,clown,"[briskly] Helmsman, left and right. Small taps, we're picking grapes, not storming a castle.",,,
-TUT_GRAPE_3,TUTORIAL,grape 3,,clown,"[briskly] Liftmaster, up to grab it, down to drop it in. Try not to lose the crown.",,,
-TUT_GRAPE_4,TUTORIAL,grape 4,,clown,"[encouragingly] All together now. Slow down before the turn, that cup's taken enough hits today.",,,
-TUT_SEER,TUTORIAL,Seer return lesson,,clown,"[conspiratorially] Seer, Miranda's near the cup somewhere. Find her and call it out.",,,
-TUT_SEER_MIRANDA,TUTORIAL,Seer return lesson,,miranda,"[warmly] Hi, Hamlet. Your Seer can find me. Everyone else should probably just listen to them.",,,"Plays when the lesson starts, never by distance, so it can't hint where she is"
-TUT_FINISH,TUTORIAL,finish,,clown,"[delighted] All four delivered! Not bad for a job that's basically just grape juice now.",,,
-TUT_FINISH_MIRANDA,TUTORIAL,finish,,miranda,"[warmly] Four grapes, all in one piece. Father might actually be impressed. Eventually.",,,
-C01_P1_CLOWN,C01,p1.1,,clown,"[upbeat] Tonight's the night. Prospero's announcing Hamlet and Miranda's engagement. But first, one tiny errand.",,,
-C01_P2_HAMLET,C01,p1.2,,hamlet,"Four grapes, delivered. Like a pro.",,,
-C01_P2_CLOWN,C01,p1.2,,clown,"[wryly] Didn't even try one. Very disciplined.",,,
-C01_P3_HAMLET,C01,p1.3,,hamlet,"Totally under control... oh no.",,,
-C01_P3_CLOWN,C01,p1.3,,clown,"[dryly] Being innocent doesn't get the stains out, unfortunately.",,,
-C01_P4_PROSPERO,C01,p2.4,,prospero,"[indignant] Purple lips? Stumbling around next to the banquet cup? Hamlet!",,,
-C01_P4_HAMLET,C01,p2.4,,hamlet,"It was a landing accident. A very purple one, but an accident.",,,
-C01_P5_PROSPERO,C01,p2.5,,prospero,"[angry] Tonight I'm supposed to trust you next to my daughter, and you can't even show up sober for breakfast?",,,
-C01_P6_HAMLET,C01,p2.6,,hamlet,"[desperately] I haven't had a drop! Ask them, ask the council!",,,
-C01_P6_PROSPERO,C01,p2.6,,prospero,"Then prove it. Because right now you look like the opposite. The announcement's off. For now.",,,
-C01_P6_MIRANDA,C01,p2.6,,miranda,"[gently] Father, please, let him explain first.",,,Nobody listens to her either; E01_P3 pays it off
-C01_P7_PROSPERO,C01,p3.7,,prospero,"Stay outside. Come back when you can hold yourself together.",,,
-C01_P7_CLOWN,C01,p3.7,,clown,"[sighs] Classic misunderstanding. And of course, nobody listened to the people who actually saw what happened.",,,
-C01_P8_HAMLET,C01,p3.8,,hamlet,"There's a window. Come on, council, we can still fix this.",,,
-C01_P8_CLOWN,C01,p3.8,,clown,"[wryly] Let's hope the window's more reasonable than the door was.",,,
-Q01_P1_TINMAN,Q01,p1.1,,tinman,"[smugly] Locked out of your own engagement party. Bold move, Hamlet.",,,
-Q01_P1B_TINMAN,Q01,p1.1,,tinman,"[politely] My heart goes out to you. Oh wait, I don't have one. Runs in the family.",,,True gene fact: tinman flies grow no heart
-Q01_P2_TINMAN,Q01,p1.2,,tinman,"[amused] My window, my rules. Get this right, you get pear nectar. Get it wrong, you get more of whatever you've clearly been drinking.",,,
-Q01_QUESTION,Q01,question,,tinman,"[crisply] Here's your question. Does alcohol make your balance and coordination... A: worse. Or B: sharper?",,,Tinman asks; the options stay on screen
-Q01_Q_HAMLET,Q01,question,,hamlet,"Council, a little help here.",,,
-Q01_Q_TINMAN,Q01,question,,tinman,"Take your time. Nobody rushes composure.",,,
-Q01_EXPLAIN,Q01,explanation,,tinman,"[matter-of-factly] It's A. Alcohol messes with the exact brain functions you need for balance and coordination.",,,"Plays after the answer, before the drink panel. Fact: NIAAA"
-Q01_P3A_TINMAN,Q01,p2.3A,correct,tinman,"[coolly] Correct. Annoyingly. Pear nectar, like I promised.",,,
-Q01_P3B_TINMAN,Q01,p2.3B,wrong,tinman,"[delighted] Wrong. Completely wrong, actually. Grape cordial it is.",,,
-Q01_P3B_CLOWN,Q01,p2.3B,wrong,clown,"[mock-dramatic] And the misunderstanding just got a sequel.",,,
-Q01_P4_TINMAN,Q01,p2.4,,tinman,"[airily] Try not to fall apart before you get there. Miranda hates a scene. Me? I don't feel much either way. No heart, remember.",,,
-Q01_P4_CLOWN,Q01,p2.4,,clown,"[ominously] Below the window is storage. Below storage is trouble.",,,
-S1_SPIKE,STAGE1,spike popup,,clown,"[cheerfully] Nice look at the wall. Now let's try the actual opening.",,,After a spike hit; nondirectional
-Q02_P1_RUTABAGA,Q02,p1.1,,rutabaga,"[nervously] Oh! A person! Was I heading down here or running from someone? Doesn't matter. You look... busy.",,,
-Q02_P1B_RUTABAGA,Q02,p1.1,,rutabaga,"[brightly] Are you here for Miranda? Me too! I think. Or was it her dad? No, no, Miranda. Probably.",,,He forgets whom he's courting (lore)
-Q02_P2_RUTABAGA,Q02,p1.2,,rutabaga,"I wrote myself a question so I'd remember which drink goes to who. Can you help me answer it?",,,
-Q02_Q_HAMLET,Q02,question,,hamlet,"We really just need to get past you.",,,
-Q02_Q_RUTABAGA,Q02,question,,rutabaga,"Right! The stairs. One quick question and they're all yours.",,,
-Q02_QUESTION,Q02,question,,rutabaga,"[reading slowly] Can heavy drinking mess with forming new memories? A: no. B: yes. [pause] Whoever wrote this has great handwriting. Oh, that's me.",,,Rutabaga asks; the options stay on screen
-Q02_EXPLAIN,Q02,explanation,,rutabaga,"[excitedly] It's B! Drinking can mess with new memories forming. Doesn't erase the old ones, though, I double-checked. For personal reasons.",,,"Plays after the answer, before the drink panel. Fact: NIAAA"
-Q02_P3A_RUTABAGA,Q02,p2.3A,correct,rutabaga,"[excited] Yes! You got it. Pear nectar for the one person who remembered the answer.",,,
-Q02_P3B_RUTABAGA,Q02,p2.3B,wrong,rutabaga,"[flustered] Wrong! I had a really good comeback ready and now I've forgotten it. Purple one for you, then.",,,
-Q02_P4_RUTABAGA,Q02,p2.4,,rutabaga,"[startled] Oh! Now I remember why I came down here. Bye!",,GIANT_GROAN_THUD,The groan and thud upstairs play first
-Q02_P4_HAMLET,Q02,p2.4,,hamlet,What was that?,,,
-Q02_P5_CLOWN,Q02,p2.5,,clown,"[wryly] Good question. Naturally, we decided to go find out ourselves.",,,
-S2_INTRO,STAGE2,intro,,clown,"[urgently] Sixty seconds before the gate closes. Quiet wings, everyone. Quiet wings!",,,
-S2_TIMEOUT,STAGE2,timeout popup,,clown,"[sighs] The gate won that round. Let's try it again, a little quieter this time.",,,
-Q03_P1_CHEAPDATE,Q03,p1.1,,cheapdate,"[hiccups] Hamlet! Perfect timing. I've got two drinks and almost enough hands for them.",,,
-Q03_P1B_CHEAPDATE,Q03,p1.1,,cheapdate,"[proudly, tipsy] Half a grape's worth, that's it. [hiccups] I'm just very efficient with it.",,,True gene fact: cheapdate flies get drunk on less alcohol
-Q03_P2_CHEAPDATE,Q03,p1.2,,cheapdate,"Before you go in, one toast. Pass my test, you get the pear. Fail, you get to share whatever this purple stuff is.",,,
-Q03_Q_CHEAPDATE,Q03,question,,cheapdate,"A question about bouncing back. I've done a lot of firsthand, and regrettable, research on this one.",,,
-Q03_QUESTION,Q03,question,,cheapdate,"[squinting] Does coffee cancel out alcohol's effect on judgment and coordination? A: yes. B: no. Choose wisely, you beautiful blur of a person.",,,Cheapdate asks; the options stay on screen
-Q03_EXPLAIN,Q03,explanation,,cheapdate,"[sheepishly] It's B. Coffee just makes you feel more awake, it doesn't undo anything. Trust me, I've tested this. A lot.",,,"Plays after the answer, before the drink panel. Fact: NIAAA"
-Q03_P3A_CHEAPDATE,Q03,p2.3A,correct,cheapdate,"[cheerfully] Correct! Sharper than me tonight, which, okay, low bar. Pear nectar for you.",,,
-Q03_P3B_CHEAPDATE,Q03,p2.3B,wrong,cheapdate,"[hiccups] Wrong! Purple for you. Guess we're matching now.",,,
-Q03_P4_CLOWN,Q03,p2.4,,clown,"[shouting] Cheapdate! Your chair is in the punch bowl again!",,,Clown is off-panel
-Q03_P4_CHEAPDATE,Q03,p2.4,,cheapdate,My seat has arrived before me!,,,
-Q03_P5_HAMLET,Q03,p2.5,,hamlet,At last...,,,Cut off by the crash
-Q03_P5_CLOWN,Q03,p2.5,,clown,"[wryly] The evening had other plans for that sentence.",,GIANT_CRASH,
-C02_P1_CLOWN,C02,p1.1,,clown,"[dramatically] The Giant showed up. Nobody invited it, and it clearly didn't RSVP for manners either.",,GIANT_GROWL,
-C02_P2_PROSPERO,C02,p1.2,,prospero,[alarmed] You? I told you to stay outside!,,,
-C02_P2_MIRANDA,C02,p1.2,,miranda,[surprised] Hamlet! Did you come in through the window?,,,
-C02_P2_HAMLET,C02,p1.2,,hamlet,"The garden wasn't what it looked like. Please, let me explain.",,,
-C02_P3_PROSPERO,C02,p1.3,,prospero,"Then prove it. Keep that thing busy. Outlast it until it gives up and leaves.",,GIANT_SLAM,
-C02_P4_HAMLET,C02,p2.4,,hamlet,"Council, together. We don't have to hurt it. We have to stay out of reach.",,,
-C02_P4_MIRANDA,C02,p2.4,,miranda,"[worried] Then stay out of reach, Hamlet. And listen to your Seer.",,,
-C02_P5_CLOWN,C02,p2.5,,clown,"[excited] Ten dodges. One giant temper. Let's see which one runs out first.",,,"The objective text is on screen only, not voiced"
+H_JOIN,LOBBY,,,clown,"[cheerful] Scan in at the gate, you're on Prince Hamlet's council tonight.",,,
+H_PRINCE,LOBBY,,,clown,"[grand] This is Prince Hamlet. We mapped his entire brain, all hundred and sixty six thousand neurons of it.",,,"166,606 neurons: measured by brain/build_graph.py"
+H_ROLE_HELMSMAN,LOBBY,,,clown,"[playful] You're the Helmsman. Left and right, that's all you.",,,
+H_ROLE_LIFTMASTER,LOBBY,,,clown,"[playful] You're the Liftmaster. Up and down are yours.",,,
+H_ROLE_WINGMASTER,LOBBY,,,clown,"[playful] You're the Wingmaster. Forward's your job, don't forget the brakes.",,,
+H_ROLE_SEER,LOBBY,,,clown,"[dramatic] You're the Seer. Only one who can see the Princess, and the Giant. So talk.",,,
+TUT_WELCOME,TUTORIAL,welcome,,clown,"[cheerful] We need four grapes for the banquet. Four of you, four grapes. Should be easy.",,,
+TUT_GRAPE_1,TUTORIAL,grape 1,,clown,"[brisk] Wingmaster, ease forward. Let go to slow down. It's a grape, not a getaway.",,,
+TUT_GRAPE_2,TUTORIAL,grape 2,,clown,"[brisk] Helmsman, left and right. Small taps, we're picking grapes, not storming a castle.",,,
+TUT_GRAPE_3,TUTORIAL,grape 3,,clown,"[brisk] Liftmaster, up to grab it, down to drop it in. Try not to lose the crown.",,,
+TUT_GRAPE_4,TUTORIAL,grape 4,,clown,"[encouraging] All together now. Slow down before the turn, that cup's taken enough hits today.",,,
+TUT_SEER,TUTORIAL,Seer return lesson,,clown,"[conspiratorial] Seer, Princess Miranda's near the cup somewhere. Find her and call it out.",,,
+TUT_SEER_MIRANDA,TUTORIAL,Seer return lesson,,miranda,"[warm] Hello, Hamlet. Your Seer can find me. The rest of you would do well to listen to them.",,,"Plays when the lesson starts, never by distance, so it can't hint where she is"
+TUT_FINISH,TUTORIAL,finish,,clown,"[delighted] All four delivered! Not bad, for a job that's mostly grape juice now.",,,
+TUT_FINISH_MIRANDA,TUTORIAL,finish,,miranda,"[warm, amused] Four grapes, all in one piece. Father might even be impressed. Eventually.",,,
+C01_P1_CLOWN,C01,p1.1,,clown,"[upbeat] Tonight's the night. Duke Prospero announces Prince Hamlet and Princess Miranda's engagement. But first... one tiny errand.",,,
+C01_P2_HAMLET,C01,p1.2,,hamlet,"[pleased with himself] Four grapes, delivered, and not one spilled.",,,
+C01_P2_CLOWN,C01,p1.2,,clown,"[wry] Not even a taste. Remarkably disciplined.",,,
+C01_P3_HAMLET,C01,p1.3,,hamlet,"[proud, then alarmed] Perfectly steady... oh no.",,,
+C01_P3_CLOWN,C01,p1.3,,clown,"[dry] Innocent or not, the stain remains.",,,
+C01_P4_PROSPERO,C01,p2.4,,prospero,"[indignant, raising his voice] Purple stains on your lips? Stumbling by the banquet cup, this morning of all mornings? Hamlet!",,,
+C01_P4_HAMLET,C01,p2.4,,hamlet,"[flustered] It was only a landing accident, Your Grace. A messy one, but an accident all the same.",,,
+C01_P5_PROSPERO,C01,p2.5,,prospero,"[angry] Tonight of all nights I must trust you beside my daughter, and you cannot even arrive at breakfast steady on your feet?",,,
+C01_P6_HAMLET,C01,p2.6,,hamlet,"[desperate] I have not touched a drop, Your Grace! Ask my council, they were with me the whole time!",,,
+C01_P6_PROSPERO,C01,p2.6,,prospero,"[cold, final] Then prove it some other way, for right now you show me nothing but the opposite. The announcement is suspended, until you do.",,,
+C01_P6_MIRANDA,C01,p2.6,,miranda,"[gentle, pleading] Father, please, at least let him explain.",,,Nobody listens to her either; E01_P3 pays it off
+C01_P7_PROSPERO,C01,p3.7,,prospero,"[stern] Stay outside, until you can hold yourself together.",,,
+C01_P7_CLOWN,C01,p3.7,,clown,"[sighing] A royal misunderstanding. Naturally, no one listened to the ones who actually saw it happen.",,,
+C01_P8_HAMLET,C01,p3.8,,hamlet,"[determined] There, a window. Come, council, we may still set this right.",,,
+C01_P8_CLOWN,C01,p3.8,,clown,"[wry] Let us hope the window has better manners than the door.",,,
+Q01_P1_TINMAN,Q01,p1.1,,tinman,"[cold, contemptuous] Locked out of your own betrothal, Prince Hamlet? How very becoming of a future king.",,,
+Q01_P1B_TINMAN,Q01,p1.1,,tinman,"[flat, mocking] My heart would go out to you, if I had one to spare. A family trait, I am told.",,,True gene fact: tinman flies grow no heart
+Q01_P2_TINMAN,Q01,p1.2,,tinman,"[irritated, superior] This is my window, so we shall do this my way. Answer correctly, and you get pear nectar. Answer wrongly, and you may have more of whatever you have clearly already been drinking.",,,
+Q01_QUESTION,Q01,question,,tinman,"[crisp, testing] Here is your question, little prince. Does alcohol make one's balance and coordination... A, worse. Or B, sharper?",,,Tinman asks; the options stay on screen
+Q01_Q_HAMLET,Q01,question,,hamlet,"[nervous, murmuring] Council... a little help, please.",,,
+Q01_Q_TINMAN,Q01,question,,tinman,"[dry] Take your time. I have nowhere better to be, apparently.",,,
+Q01_EXPLAIN,Q01,explanation,,tinman,"[matter-of-fact] The answer is A. Alcohol interferes with the exact brain functions used for balance and coordinated movement.",,,"Plays after the answer, before the drink panel. Fact: NIAAA"
+Q01_P3A_TINMAN,Q01,p2.3A,correct,tinman,"[grudging, annoyed] Correct. How inconvenient. Pear nectar, as promised.",,,
+Q01_P3B_TINMAN,Q01,p2.3B,wrong,tinman,"[delighted, mocking] Wrong. Utterly wrong. The grape cordial, then, as agreed.",,,
+Q01_P3B_CLOWN,Q01,p2.3B,wrong,clown,"[mock-dramatic] And so the misunderstanding gains a sequel.",,,
+Q01_P4_TINMAN,Q01,p2.4,,tinman,"[dismissive, cold] Do try not to fall to pieces before you arrive, Prince Hamlet. Princess Miranda dislikes a scene. I would not know; I feel very little, one way or the other.",,,
+Q01_P4_CLOWN,Q01,p2.4,,clown,"[ominous] Below the window, storage. Below the storage, trouble.",,,
+S1_SPIKE,STAGE1,spike popup,,clown,"[cheerful] A fine inspection of the stonework. Now, let us try the opening.",,,After a spike hit; nondirectional
+Q02_P1_RUTABAGA,Q02,p1.1,,rutabaga,"[flustered, irritated] Oh. You again. Or is it someone else? It hardly matters, you all look equally troublesome to me tonight.",,,
+Q02_P1B_RUTABAGA,Q02,p1.1,,rutabaga,"[testy] Are you here for Princess Miranda? So is everyone, apparently, myself included, and I find it rather tiresome to keep explaining that.",,,He forgets whom he's courting (lore)
+Q02_P2_RUTABAGA,Q02,p1.2,,rutabaga,"[muttering, annoyed] I wrote myself a question, so I would remember which drink goes to whom. Whom proved difficult to spell, but no matter. Answer it, and be quick about it.",,,
+Q02_Q_HAMLET,Q02,question,,hamlet,"[urgent, polite] Count Rutabaga, we really do need the stairs.",,,
+Q02_Q_RUTABAGA,Q02,question,,rutabaga,"[snippy] Yes, yes, the stairs. One question, and they are entirely yours, Prince Hamlet. Do stop hovering.",,,
+Q02_QUESTION,Q02,question,,rutabaga,"[reading slowly, irritated] Can heavy drinking interfere with forming new memories? A, no. B, yes. Whoever wrote this has dreadful handwriting. Oh. That would be me.",,,Rutabaga asks; the options stay on screen
+Q02_EXPLAIN,Q02,explanation,,rutabaga,"[relieved, matter-of-fact] It is B. Alcohol can disrupt the forming of new memories. It does not erase the old ones, though. I have checked. More than once. For reasons I would rather not discuss.",,,"Plays after the answer, before the drink panel. Fact: NIAAA"
+Q02_P3A_RUTABAGA,Q02,p2.3A,correct,rutabaga,"[surprised, pleased] Correct. New memories, yes, that was the important part. Pear nectar, then, for the one of us who remembered anything at all tonight.",,,
+Q02_P3B_RUTABAGA,Q02,p2.3B,wrong,rutabaga,"[flustered, cross] Wrong! I had a rather cutting remark prepared for this moment, and now I cannot recall it. How fitting. The purple one, then, and good riddance.",,,
+Q02_P4_RUTABAGA,Q02,p2.4,,rutabaga,"[startled, alarmed] Oh! Now I remember why I came down here in the first place! Farewell!",,GIANT_GROAN_THUD,The groan and thud upstairs play first
+Q02_P4_HAMLET,Q02,p2.4,,hamlet,"[uneasy] What in the world was that?",,,
+Q02_P5_CLOWN,Q02,p2.5,,clown,"[wry] A sensible question. Naturally, we went up to answer it ourselves.",,,
+S2_INTRO,STAGE2,intro,,clown,"[urgent] One minute before the inner gate closes. Quiet wings, council, quiet wings!",,,
+S2_TIMEOUT,STAGE2,timeout popup,,clown,"[sighing] The gate won that round. Once more, and a little quieter this time.",,,
+Q03_P1_CHEAPDATE,Q03,p1.1,,cheapdate,"[hiccup, irritated] Prince Hamlet. Of course it is you. I have two drinks, and apparently, only just enough patience.",,,
+Q03_P1B_CHEAPDATE,Q03,p1.1,,cheapdate,"[proud, slurring] Only half a grape's worth tonight. [hiccup] I consider myself a most efficient drinker. Unlike some engaged princes I could mention.",,,True gene fact: cheapdate flies get drunk on less alcohol
+Q03_P2_CHEAPDATE,Q03,p1.2,,cheapdate,"[sour, tipsy] Before you go swanning in there, a toast, and a test. Pass it, and take the pear. Fail, and you may share my purple vintage, and my evening.",,,
+Q03_Q_CHEAPDATE,Q03,question,,cheapdate,"[bitter, hiccup] A question about recovering afterward. A subject on which I have done extensive, and thoroughly regrettable, research. Unlike you, apparently.",,,
+Q03_QUESTION,Q03,question,,cheapdate,"[squinting, slurred] Does coffee undo alcohol's effect on one's judgment and coordination? A, yes. B, no. Choose carefully, Your Highness.",,,Cheapdate asks; the options stay on screen
+Q03_EXPLAIN,Q03,explanation,,cheapdate,"[sheepish, hiccup] It is B. Coffee only makes one feel more awake. It undoes nothing at all. I have tested this claim thoroughly. And repeatedly. To my own detriment.",,,"Plays after the answer, before the drink panel. Fact: NIAAA"
+Q03_P3A_CHEAPDATE,Q03,p2.3A,correct,cheapdate,"[grudging, hiccup] Correct. Sharper than me tonight, which, I admit, is not saying very much. Pear nectar, for the prince who apparently thinks ahead.",,,
+Q03_P3B_CHEAPDATE,Q03,p2.3B,wrong,cheapdate,"[delighted, hiccup] Wrong! Purple for you, then, Prince Hamlet. Welcome to my level, for once.",,,
+Q03_P4_CLOWN,Q03,p2.4,,clown,"[shouting] Sir Cheapdate! Your chair is in the punch bowl again!",,,Clown is off-panel
+Q03_P4_CHEAPDATE,Q03,p2.4,,cheapdate,"[hiccup, mournful] My chair has arrived at the punch bowl before I have. Again.",,,
+Q03_P5_HAMLET,Q03,p2.5,,hamlet,"[relieved] At last...",,,Cut off by the crash
+Q03_P5_CLOWN,Q03,p2.5,,clown,"[wry] The evening had other plans for that sentence.",,GIANT_CRASH,
+C02_P1_CLOWN,C02,p1.1,,clown,"[dramatic] The Giant arrived. It brought neither invitation nor manners.",,GIANT_GROWL,
+C02_P2_PROSPERO,C02,p1.2,,prospero,"[alarmed] You? Hamlet, I told you to stay outside!",,,
+C02_P2_MIRANDA,C02,p1.2,,miranda,"[surprised] Hamlet! Did you come in through the window?",,,
+C02_P2_HAMLET,C02,p1.2,,hamlet,"[pleading] The garden was not what it looked like, Your Grace. Please, let me explain.",,,
+C02_P3_PROSPERO,C02,p1.3,,prospero,"[urgent, commanding] Then prove it. Keep that creature's attention. Outlast its swats until it abandons this hall.",,GIANT_SLAM,
+C02_P4_HAMLET,C02,p2.4,,hamlet,"[resolute] Council, together now. We need not hurt it. We need only stay beyond its reach.",,,
+C02_P4_MIRANDA,C02,p2.4,,miranda,"[worried] Then stay beyond its reach, Hamlet, and listen to your Seer.",,,
+C02_P5_CLOWN,C02,p2.5,,clown,"[excited] Ten dodges. One enormous temper. Let us see which one outlasts the other.",,,"The objective text is on screen only, not voiced"
 G_DODGE_MIRANDA_1,GIANT,after a dodge,,miranda,"[relieved] Oh, well flown, Hamlet!",,GIANT_SWAT,"Plays after the attack resolves, never at warning onset; the game picks one line from the pool"
-G_DODGE_MIRANDA_2,GIANT,after a dodge,,miranda,[excitedly] Yes! It missed you completely!,,GIANT_SWAT,
-G_DODGE_HAMLET,GIANT,after a dodge,,hamlet,"[breathless] Missed me! Council, that was beautiful.",,GIANT_SWAT,
-G_DODGE_CLOWN,GIANT,after a dodge,,clown,[delighted] Missed! The table takes another beating.,,GIANT_SWAT,
-G_DODGE_PROSPERO,GIANT,after a dodge,,prospero,[grudgingly] Hm. Not entirely hopeless.,,GIANT_SWAT,
-G_DODGE_TINMAN,GIANT,after a dodge,,tinman,[unimpressed] Luck. Remarkably consistent luck.,,GIANT_SWAT,
-G_DODGE_CHEAPDATE,GIANT,after a dodge,,cheapdate,"[hiccups] Bravo! Do it again, I blinked!",,GIANT_SWAT,
-G_DODGE_RUTABAGA,GIANT,after a dodge,,rutabaga,"[confused] Wait, which one is Hamlet? The one still flying? Good.",,GIANT_SWAT,
-G_HIT_MIRANDA_1,GIANT,after a hit,,miranda,[gasps] Hamlet! Are you hurt?,,GIANT_SPLAT,"Plays after the attack resolves, never at warning onset; the game picks one line from the pool"
-G_HIT_MIRANDA_2,GIANT,after a hit,,miranda,[worried] Hamlet? Say something! Anything princely!,,GIANT_SPLAT,
-G_HIT_HAMLET,GIANT,after a hit,,hamlet,[dazed] Still here. Mostly crown.,,GIANT_SPLAT,
-G_HIT_CLOWN,GIANT,after a hit,,clown,[wincing] Ooh. That one goes in the chronicle.,,GIANT_SPLAT,
-G_HIT_PROSPERO,GIANT,after a hit,,prospero,[scoffs] And this is why I said stay outside.,,GIANT_SPLAT,
-G_HIT_TINMAN,GIANT,after a hit,,tinman,"[delighted] Splendid! Could you do that again, slower?",,GIANT_SPLAT,
-G_HIT_CHEAPDATE,GIANT,after a hit,,cheapdate,"[hiccups] Ooh, I felt that one. Sympathetically.",,GIANT_SPLAT,
-G_HALF_MIRANDA,GIANT,after dodge 5,,miranda,"[hopeful] Five! Hamlet, it's getting tired!",,COURT_CHEER,Plays instead of an after-a-dodge line
-G_HALF_CLOWN,GIANT,after dodge 5,,clown,"[encouragingly] Halfway there! You can tell it's having second thoughts.",,COURT_CHEER,
-G_LAST_HIT_MIRANDA,GIANT,after hit 2,,miranda,[pleading] One more hit and Father steps in. Please be careful!,,COURT_GASP,Plays instead of an after-a-hit line
-G_LAST_HIT_CLOWN,GIANT,after hit 2,,clown,"[urgently] Careful, council. The next hit ends this. Trust your Seer.",,COURT_GASP,
+G_DODGE_MIRANDA_2,GIANT,after a dodge,,miranda,"[excited] Yes! It missed you completely!",,GIANT_SWAT,
+G_DODGE_HAMLET,GIANT,after a dodge,,hamlet,"[breathless, relieved] Missed me! Council, that was beautifully done.",,GIANT_SWAT,
+G_DODGE_CLOWN,GIANT,after a dodge,,clown,"[delighted] Missed! The table takes another beating.",,GIANT_SWAT,
+G_DODGE_PROSPERO,GIANT,after a dodge,,prospero,"[grudging] Hm. Not entirely hopeless, I suppose.",,GIANT_SWAT,
+G_DODGE_TINMAN,GIANT,after a dodge,,tinman,"[flat, unimpressed] Luck. Remarkably consistent luck, for someone so clumsy.",,GIANT_SWAT,
+G_DODGE_CHEAPDATE,GIANT,after a dodge,,cheapdate,"[hiccup, sour] Congratulations. Even a broken clock is right twice a night.",,GIANT_SWAT,
+G_DODGE_RUTABAGA,GIANT,after a dodge,,rutabaga,"[confused, irritated] Which one is Prince Hamlet again? The one still flying? Fine. Good. Whatever that means.",,GIANT_SWAT,
+G_HIT_MIRANDA_1,GIANT,after a hit,,miranda,"[gasping] Hamlet! Are you hurt?",,GIANT_SPLAT,"Plays after the attack resolves, never at warning onset; the game picks one line from the pool"
+G_HIT_MIRANDA_2,GIANT,after a hit,,miranda,"[worried] Hamlet? Say something, anything at all!",,GIANT_SPLAT,
+G_HIT_HAMLET,GIANT,after a hit,,hamlet,"[dazed] Still here. Mostly crown.",,GIANT_SPLAT,
+G_HIT_CLOWN,GIANT,after a hit,,clown,"[wincing] Ooh. That one goes in the chronicle.",,GIANT_SPLAT,
+G_HIT_PROSPERO,GIANT,after a hit,,prospero,"[scoffing] And this is precisely why I told you to stay outside.",,GIANT_SPLAT,
+G_HIT_TINMAN,GIANT,after a hit,,tinman,"[amused, cold] Splendid. Do that again, slower this time, so I may enjoy it properly.",,GIANT_SPLAT,
+G_HIT_CHEAPDATE,GIANT,after a hit,,cheapdate,"[hiccup, wincing] Ooh, I felt that one. Sympathetically. And a little smugly.",,GIANT_SPLAT,
+G_HALF_MIRANDA,GIANT,after dodge 5,,miranda,"[hopeful] Five, Hamlet! It is tiring!",,COURT_CHEER,Plays instead of an after-a-dodge line
+G_HALF_CLOWN,GIANT,after dodge 5,,clown,"[encouraging] Halfway there. You can see it reconsidering its life choices.",,COURT_CHEER,
+G_LAST_HIT_MIRANDA,GIANT,after hit 2,,miranda,"[pleading] One more hit and Father steps in. Please, be careful!",,COURT_GASP,Plays instead of an after-a-hit line
+G_LAST_HIT_CLOWN,GIANT,after hit 2,,clown,"[urgent] Careful, council. The next hit ends this. Trust your Seer.",,COURT_GASP,
 G_NINE_MIRANDA,GIANT,after dodge 9,,miranda,"[excited] One more, Hamlet! Just one more!",,COURT_CHEER,Plays instead of an after-a-dodge line
-G_NINE_CLOWN,GIANT,after dodge 9,,clown,"[dramatically] Nine! One more and this thing's out of here.",,COURT_CHEER,
-C03_P1_CLOWN,C03,p1.1,giant_win,clown,"[triumphantly] Ten swats down. The Giant gave up and left to go squash something easier.",,GIANT_LEAVES,
-C03_P2_PROSPERO,C03,p1.2,giant_win,prospero,"You held your ground by never staying still. Well flown, Hamlet.",,,
-C03_P3_MIRANDA,C03,p1.3,giant_win,miranda,"[softly] You're okay. Next time, find me before you volunteer to get swatted.",,,
-C03_P3_HAMLET,C03,p1.3,giant_win,hamlet,"Next time, I'm delivering flowers.",,,
-C03_P4_MIRANDA,C03,p1.3,giant_win,miranda,"[laughs softly] Flowers are lovely. Deliver them, though. Don't wear them.",,,
-C04_P1_PROSPERO,C04,p1.1,giant_loss,prospero,[furious] First the garden. Now this. Stand back.,,,
-C04_P2_PROSPERO,C04,p1.2,giant_loss,prospero,"[out of breath, furious] There. Finished it myself. My patience did not make it out alive.",,GIANT_HUFF,Was Clown narration; Prospero now says it himself
-C04_P2_MIRANDA,C04,p1.2,giant_loss,miranda,"[upset] Father, he took three hits keeping that thing away from us.",,,
-C04_P3_PROSPERO,C04,p2.3,giant_loss,prospero,"You think I'm blessing this after tonight? You're not getting past me.",,,
-C04_P3_HAMLET,C04,p2.3,giant_loss,hamlet,Then let Miranda speak for herself.,,,
-C04_P4_CLOWN,C04,p2.4,giant_loss,clown,[wincing] His Grace decided to settle this personally.,,,"The objective text is on screen only, not voiced"
-F_DODGE_MIRANDA_1,FATHER,after a dodge,giant_loss,miranda,[scolding] Father! We do not throw things at guests!,,FATHER_MISS,"Plays after the attack resolves, never at warning onset; the game picks one line from the pool"
+G_NINE_CLOWN,GIANT,after dodge 9,,clown,"[dramatic] Nine! One more, and this creature is finished.",,COURT_CHEER,
+C03_P1_CLOWN,C03,p1.1,giant_win,clown,"[triumphant] Ten swats survived. The Giant gave up, and went to squash something less troublesome.",,GIANT_LEAVES,
+C03_P2_PROSPERO,C03,p1.2,giant_win,prospero,"[approving] You held your ground by never once holding still. Well flown, Prince Hamlet.",,,
+C03_P3_MIRANDA,C03,p1.3,giant_win,miranda,"[soft, relieved] You are safe. Next time, find me before you volunteer yourself to a giant hand.",,,
+C03_P3_HAMLET,C03,p1.3,giant_win,hamlet,"[wry, tired] Next time, I shall simply bring flowers.",,,
+C03_P4_MIRANDA,C03,p1.3,giant_win,miranda,"[laughing softly] Flowers would be lovely. Bring them, though. Do not become them.",,,
+C04_P1_PROSPERO,C04,p1.1,giant_loss,prospero,"[furious] First the garden. Now this. Stand back, Hamlet.",,,
+C04_P2_PROSPERO,C04,p1.2,giant_loss,prospero,"[breathless, furious] There. I have finished your task myself. My patience did not survive the effort.",,GIANT_HUFF,Was Clown narration; Prospero now says it himself
+C04_P2_MIRANDA,C04,p1.2,giant_loss,miranda,"[upset] Father, he endured three strikes trying to keep that creature away from us.",,,
+C04_P3_PROSPERO,C04,p2.3,giant_loss,prospero,"[cold] You expect my blessing after tonight? You shall not pass me, Prince Hamlet.",,,
+C04_P3_HAMLET,C04,p2.3,giant_loss,hamlet,"[quiet, firm] Then let Miranda speak for herself, Your Grace.",,,
+C04_P4_CLOWN,C04,p2.4,giant_loss,clown,"[wincing] His Grace decided to settle this personally.",,,"The objective text is on screen only, not voiced"
+F_DODGE_MIRANDA_1,FATHER,after a dodge,giant_loss,miranda,"[scolding] Father! We do not throw things at our guests!",,FATHER_MISS,"Plays after the attack resolves, never at warning onset; the game picks one line from the pool"
 F_DODGE_MIRANDA_2,FATHER,after a dodge,giant_loss,miranda,"[exasperated] Father! You are a duke, not a catapult!",,FATHER_MISS,
-F_DODGE_PROSPERO_1,FATHER,after a dodge,giant_loss,prospero,[muttering] Missed. How does something so small dodge so much?,,FATHER_MISS,
-F_DODGE_PROSPERO_2,FATHER,after a dodge,giant_loss,prospero,[out of breath] I have... plenty more... where that came from.,,FATHER_MISS,
-F_DODGE_HAMLET,FATHER,after a dodge,giant_loss,hamlet,"[breathless] Your Grace, I'd much rather talk this out!",,FATHER_MISS,
-F_DODGE_CLOWN,FATHER,after a dodge,giant_loss,clown,[wryly] That floor has never taken this much abuse.,,FATHER_MISS,
-F_FOUR_MIRANDA,FATHER,after dodge 4,giant_loss,miranda,"[hopeful] One more, Hamlet! Father, you're out of breath.",,COURT_CHEER,Plays instead of an after-a-dodge line
-F_FOUR_PROSPERO,FATHER,after dodge 4,giant_loss,prospero,[wheezing] I am... not... out of breath.,,,Prospero's reply to F_FOUR_MIRANDA; play them as a pair
-F_HIT_MIRANDA,FATHER,after the hit,giant_loss,miranda,[gasps] Father! How could you?,,FATHER_HIT,The one hit ends the fight; E02 follows
-E01_P1A_MIRANDA,E01,p1.1A,giant_win,miranda,"[gently] Father, thank him. Then listen to him.",,,
-E01_P1B_MIRANDA,E01,p1.1B,father_win,miranda,"[softly, but firm] Enough, Father. I love Hamlet. You do not get to throw things at the person I choose.",,,
-E01_P2_CLOWN,E01,p1.2,,clown,[cheerfully] For the record: he was delivering my grapes. The chalice splashed him. I was there.,,,
-E01_P3_PROSPERO,E01,p2.3,,prospero,"[softly] Then I judged you before I listened. Miranda, do you still want this announcement to happen?",,,
-E01_P3_MIRANDA,E01,p2.3,,miranda,[softly] Yes. Because I choose it.,,,
-E01_P4_PROSPERO,E01,p2.4,,prospero,Then let the banquet begin again.,,,
-E01_P4_MIRANDA,E01,p2.4,,miranda,"[warmly] And this time, Hamlet, use the door.",,,
-E01_P4_CLOWN,E01,p2.4,,clown,"[delighted] A royal announcement, approved by Miranda. The grapes abstained.",,,
-E02_P1_CLOWN,E02,p1.1,father_loss,clown,"[wryly] Hamlet's night had officially hit the floor. The other suitors saw an opening.",,,
-E02_P2_TINMAN,E02,p1.2,father_loss,tinman,"[smugly] Your Grace, I think we can all agree there's a more composed option standing right here.",,,
-E02_P2_CHEAPDATE,E02,p1.2,father_loss,cheapdate,"[hiccups] And one behind him! Slightly behind. Swaying, but behind!",,,
-E02_P2_RUTABAGA,E02,p1.2,father_loss,rutabaga,[confused] Which position am I applying for? Is it husband? It feels like husband.,,,
-E02_P3_MIRANDA,E02,p2.3,father_loss,miranda,[passionately] Enough. I never wanted a marriage chosen for me. Not by a contest. Not by any of you.,0.5,,Her one passionate line
+F_DODGE_PROSPERO_1,FATHER,after a dodge,giant_loss,prospero,"[muttering, annoyed] Missed. How does something so small dodge so very much?",,FATHER_MISS,
+F_DODGE_PROSPERO_2,FATHER,after a dodge,giant_loss,prospero,"[breathless] I have... plenty more... where that came from.",,FATHER_MISS,
+F_DODGE_HAMLET,FATHER,after a dodge,giant_loss,hamlet,"[breathless, pleading] Your Grace, I would much rather we simply talked this through!",,FATHER_MISS,
+F_DODGE_CLOWN,FATHER,after a dodge,giant_loss,clown,"[wry] That floor has never been so thoroughly argued with.",,FATHER_MISS,
+F_FOUR_MIRANDA,FATHER,after dodge 4,giant_loss,miranda,"[hopeful] One more, Hamlet! Father, you are quite out of breath.",,COURT_CHEER,Plays instead of an after-a-dodge line
+F_FOUR_PROSPERO,FATHER,after dodge 4,giant_loss,prospero,"[wheezing, defensive] I am... not... out of breath.",,,Prospero's reply to F_FOUR_MIRANDA; play them as a pair
+F_HIT_MIRANDA,FATHER,after the hit,giant_loss,miranda,"[gasping] Father! How could you?",,FATHER_HIT,The one hit ends the fight; E02 follows
+E01_P1A_MIRANDA,E01,p1.1A,giant_win,miranda,"[gentle, firm] Father, thank him. Then, please, listen to him.",,,
+E01_P1B_MIRANDA,E01,p1.1B,father_win,miranda,"[soft but firm] Enough, Father. I love Hamlet. You do not get to throw things at the person I choose.",,,
+E01_P2_CLOWN,E01,p1.2,,clown,"[cheerful] For the record, he was delivering my grapes. The chalice splashed him. I was there to see it.",,,
+E01_P3_PROSPERO,E01,p2.3,,prospero,"[soft, humbled] Then I judged you before I listened to you. Miranda, do you still wish this announcement to go ahead?",,,
+E01_P3_MIRANDA,E01,p2.3,,miranda,"[soft] Yes. Because I choose it.",,,
+E01_P4_PROSPERO,E01,p2.4,,prospero,"[warm] Then let the banquet begin again.",,,
+E01_P4_MIRANDA,E01,p2.4,,miranda,"[warm, amused] And this time, Hamlet, do use the door.",,,
+E01_P4_CLOWN,E01,p2.4,,clown,"[delighted] A royal announcement, approved by Princess Miranda herself. The grapes, for once, abstained.",,,
+E02_P1_CLOWN,E02,p1.1,father_loss,clown,"[wry] Prince Hamlet's evening had reached the floor. The competition mistook this for an opening.",,,
+E02_P2_TINMAN,E02,p1.2,father_loss,tinman,"[smug, cold] Your Grace, I believe we can all agree there stands a far more composed candidate before you now.",,,
+E02_P2_CHEAPDATE,E02,p1.2,father_loss,cheapdate,"[hiccup, eager] And one directly behind him! Slightly behind. Swaying, admittedly, but behind!",,,
+E02_P2_RUTABAGA,E02,p1.2,father_loss,rutabaga,"[confused] Which position am I applying for, exactly? Husband? It rather feels like husband.",,,
+E02_P3_MIRANDA,E02,p2.3,father_loss,miranda,"[passionate] Enough. I never wanted a marriage chosen for me. Not by a contest. Not by any of you.",0.5,,Her one passionate line
 E02_P4_MIRANDA,E02,p2.4,father_loss,miranda,"[calm, resolute] I can decide my own future.",,,
-E02_P4_CLOWN,E02,p2.4,father_loss,clown,"[softly] For once, the entire court had nothing useful to add. It was a peaceful ending.",,,
-UI_DIZZY,ANYTIME,steadiness notice,,clown,"[briskly] Getting dizzier, give yourself more room to stop.",,,"After a wrong answer raises dizziness; optional voice, the notice is on screen"
-H_FAINTED_HELMSMAN,ANYTIME,phone disconnected,,clown,[alarmed] The Helmsman's down! Somebody revive them!,,,Pre-generated form of H_FAINTED {role}
-H_FAINTED_LIFTMASTER,ANYTIME,phone disconnected,,clown,[alarmed] The Liftmaster's down! Somebody revive them!,,,Pre-generated form of H_FAINTED {role}
-H_FAINTED_WINGMASTER,ANYTIME,phone disconnected,,clown,[alarmed] The Wingmaster's down! Somebody revive them!,,,Pre-generated form of H_FAINTED {role}
-H_FAINTED_SEER,ANYTIME,phone disconnected,,clown,[alarmed] The Seer's down! Somebody revive them!,,,Pre-generated form of H_FAINTED {role}
-H_CHANGELING,ANYTIME,Changeling toggle,,clown,"[gasps] Wait, that's a changeling! Same neurons, all wired differently. Let's see how the Seer handles this.",,,
-H_TRUE_PRINCE,ANYTIME,Changeling toggle,,clown,[relieved] And... he's back to normal.,,,
-H_DECREE,ANYTIME,Royal Decree,,clown,"[grandly] Royal decree: his brain wiring is real. Everything else, we'll tell you straight up.",,,
-J_CHANGELING,ANYTIME,after a Changeling run,,clown,"Same exact neurons as our Prince. [laughs] And its Seer still couldn't find a princess in a room full of people.",,,
-J_GENERIC_1,ANYTIME,Jester fallback,,clown,"[playfully] Solid effort, everyone. Mostly solid. Partly effort.",,,
-J_GENERIC_2,ANYTIME,Jester fallback,,clown,[wryly] The court will remember this trial. The court will try to forget it.,,,
+E02_P4_CLOWN,E02,p2.4,father_loss,clown,"[soft] For once, the entire court had nothing useful to add. It was, in its own way, a peaceful ending.",,,
+UI_DIZZY,ANYTIME,steadiness notice,,clown,"[brisk] Growing dizzier. Allow yourself more room to stop.",,,"After a wrong answer raises dizziness; optional voice, the notice is on screen"
+H_FAINTED_HELMSMAN,ANYTIME,phone disconnected,,clown,"[alarmed] The Helmsman has fainted! Revive them, quickly!",,,Pre-generated form of H_FAINTED {role}
+H_FAINTED_LIFTMASTER,ANYTIME,phone disconnected,,clown,"[alarmed] The Liftmaster has fainted! Revive them, quickly!",,,Pre-generated form of H_FAINTED {role}
+H_FAINTED_WINGMASTER,ANYTIME,phone disconnected,,clown,"[alarmed] The Wingmaster has fainted! Revive them, quickly!",,,Pre-generated form of H_FAINTED {role}
+H_FAINTED_SEER,ANYTIME,phone disconnected,,clown,"[alarmed] The Seer has fainted! Revive them, quickly!",,,Pre-generated form of H_FAINTED {role}
+H_CHANGELING,ANYTIME,Changeling toggle,,clown,"[gasping] Wait, a changeling! The same neurons, wired quite differently. Let us see how the Seer manages now.",,,
+H_TRUE_PRINCE,ANYTIME,Changeling toggle,,clown,"[relieved] And... he is himself again.",,,
+H_DECREE,ANYTIME,Royal Decree,,clown,"[grand] By royal decree, his wiring is real. Everything else, we shall tell you plainly.",,,
+J_CHANGELING,ANYTIME,after a Changeling run,,clown,"[laughing] The very same neurons as our Prince. And yet its Seer could not find a princess in a room full of people.",,,
+J_GENERIC_1,ANYTIME,Jester fallback,,clown,"[playful] A fine effort, everyone. Mostly fine. Partly effort.",,,
+J_GENERIC_2,ANYTIME,Jester fallback,,clown,"[wry] The court will remember this trial. The court will try to forget it.",,,
