@@ -15,16 +15,16 @@ nearest-neighbour filtering (`project.godot`: `stretch/mode="viewport"`, `scale_
 
 | Layer | What | How |
 |---|---|---|
-| `FarBackground` | vault, side walls with lancet windows, the great pointed arch, rose window, cloth of estate | baked once (`hall_builder.gd`) |
-| `FloorCarpet` | tiled floor, red carpet, royal-blue dais | baked once |
-| `ColumnsBanners` | arcade, columns, hanging banners; two back-wall banners sway | baked + animated `Sprite2D`s |
-| `Feast` | two feast tables and their dishes; candle flames flicker | baked + animated `Sprite2D`s |
+| `FarBackground` | vault, side walls with lancet windows, the great pointed arch, rose window, cloth of estate | repainted each frame through the camera (`hall_builder.gd`, `hall_layer.gd`) |
+| `FloorCarpet` | tiled floor, red carpet, royal-blue dais | repainted each frame |
+| `ColumnsBanners` | arcade, columns, hanging banners; two back-wall banners sway | repainted each frame |
+| `Feast` | two feast tables and their dishes; candle flames flicker | repainted each frame |
 | `Shadows` | dithered floor shadows, the Giant's pulsing target ring | `_draw` |
 | `Actors` | Prince Hamlet, Princess Miranda, Sir Cheapdate, Sir Indy, the Giant's hand, depth-sorted | independent `Node2D`/`Sprite2D` |
 | `FX` | wing buzz, dust puffs, ink SPLAT, hearts, sparkles, short screen shake | `fx_layer.gd` |
 | `Labels` | name tags over Hamlet and Miranda | `name_tags.gd` |
 
-The camera is fixed at the doors (`hall_cam.gd`), so Hamlet shrinks as he flies up the carpet towards Miranda.
+The camera chases Hamlet (`hall_cam.gd`), so the hall moves around him; see Movement below.
 The rivals are scenery only: no server field drives them.
 
 **The parchment HUD stays at the edges** (`scripts/court/hud/`): ribbon (trial title, candle timer, TRUE PRINCE /
@@ -36,8 +36,35 @@ the Royal Seer panel, captions on a scroll, and lobby / Chronicle overlays.
 **Hamlet's Reliquary** (top-left): Royal Mantle, Sun Halo and Wing Filigree, toggled with a click or keys `1` `2` `3`.
 Cosmetic and local only: nothing goes to the relay or the server. The choice is kept in `user://reliquary.cfg`.
 
-Keys: `1`/`2`/`3` relics, `F1` debug overlay (raw state + the six brain-activity waveforms, which are debug-only),
-`F2` the old dashboard, `F11` fullscreen.
+Keys: `1`/`2`/`3` relics, `F1` debug overlay (raw state + brain-activity waveforms, which are debug-only),
+`F2` the old dashboard, `F3` keyboard demo, `F4` chase / fixed camera, `F11` fullscreen.
+
+## Movement
+
+Three players split Hamlet's flight, one axis each, and each can only push -1, 0 or +1 (`relay/PROTOCOL.md`):
+
+| Role | Axis | Demo keys | Effect |
+|---|---|---|---|
+| Helmsman | x | A / D | left / right |
+| Liftmaster | y | Space / Shift | climb / dive |
+| Wingmaster | z | W / S | forward towards Miranda / brake and back up |
+| Royal Seer | none | hold E | scans; never moves Hamlet |
+
+The physics is Arnav's `server/movement.py`, stepped at 50 Hz: while a direction is held the axis accelerates at 2.4 units/s²
+up to 1 unit/s (about 0.4 s to full speed); on release it coasts and slows (drag 3.2/s) and snaps to zero below 0.05; the
+body lives in a -1..1 box and stops on any axis that hits the edge. Input with no update for 1.2 s counts as released. Hamlet
+starts at the centre and Miranda sits at (0.25, 0.18, 0.85), so at full speed the hall takes about 2 s to cross: taps work
+better than holding.
+
+Godot only draws that: the server sends `fly` at 30 Hz, the court smooths it for display and draws x about 1.3x wider.
+The **chase camera** (`hall_cam.gd`) follows Hamlet from behind and above with a little lag, so he stays near the same spot
+on screen and the hall moves around him; his floor shadow shows his height and the role cards' gauges show each axis. `F4`
+switches to the fixed view from the doors, where he flies away from the camera and shrinks.
+
+**Keyboard demo** (`F3`, or `-- --demo`): `scripts/court/demo_driver.gd` runs the same movement numbers and the placeholder
+Princess maths in Godot and sends states in the real feed shape, so one laptop can play without phones or a server. It also
+drops the Giant's hand every 8 s just ahead of where Hamlet is heading (a Splat if he is within about 0.28 units when it lands),
+and counts reaching within about 0.22 units of Miranda as a win. The screen is stamped KEYBOARD DEMO.
 
 ## What it reads (and what it never shows)
 
