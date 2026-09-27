@@ -103,6 +103,18 @@ C03_P2_PROSPERO,C03,p1.2,giant_win,prospero,"[approving] You held your ground by
 C03_P3_MIRANDA,C03,p1.3,giant_win,miranda,"[soft, relieved] You are safe. Next time, find me before you volunteer yourself to a giant hand.",,,
 C03_P3_HAMLET,C03,p1.3,giant_win,hamlet,"[wry, tired] Next time, I shall simply bring flowers.",,,
 C03_P4_MIRANDA,C03,p1.3,giant_win,miranda,"[laughing softly] Flowers would be lovely. Bring them, though. Do not become them.",,,
+TWIST_P1_PROSPERO,TWIST,p1.1,giant_win_twist,prospero,"[breathless, awestruck] By every leaf in this garden... did you see that speed? That nerve? Ten strikes, and not one landed.",,,"Rare alternate branch off giant_win, before E01/E03; needs a new server ending value to trigger"
+TWIST_P2_PROSPERO,TWIST,p1.2,giant_win_twist,prospero,"[dawning realization, giddy] Miranda... forgive me. I believe I no longer wish him for a son. I wish him for a husband.",,,
+TWIST_P2_HAMLET,TWIST,p1.2,giant_win_twist,hamlet,"[alarmed, confused] Your Grace, I... I think there has been some manner of misunderstanding, and I am beginning to suspect I am unusually prone to them tonight.",,,
+TWIST_P3_MIRANDA,TWIST,p2.3,giant_win_twist,miranda,"[stunned, then delighted] Father. Are you proposing? To Hamlet? At my own engagement banquet?",,,
+TWIST_P3_PROSPERO,TWIST,p2.3,giant_win_twist,prospero,"[resolute, delighted with himself] I am a duke, Miranda. I do precisely as I please, and what pleases me tonight is a suitor who does not flinch. Fetch the priest. We are amending the guest list.",,,
+TWIST_P4_CLOWN,TWIST,p2.4,giant_win_twist,clown,"[barely containing laughter] Ladies and gentlemen of the court, I write the jokes around here, and I did not see that one coming.",,,
+TWIST_P4_TINMAN,TWIST,p2.4,giant_win_twist,tinman,"[flat, disturbed] I possess very few feelings. This is, remarkably, becoming one of them.",,,
+TWIST_P4_CHEAPDATE,TWIST,p2.4,giant_win_twist,cheapdate,"[hiccup, delighted] Wonderful! Someone else is finally as confused as I am, every single night!",,,
+TWIST_P4_RUTABAGA,TWIST,p2.4,giant_win_twist,rutabaga,"[very confused] Wait. Is anyone still marrying Princess Miranda? Should I ask? I feel I ought to ask.",,,
+TWIST_P5_MIRANDA,TWIST,p3.5,giant_win_twist,miranda,"[relieved, laughing] Honestly, this solves rather a lot. Carry on, you two. I have a future of my own to attend to.",,,
+TWIST_P5_CLOWN,TWIST,p3.5,giant_win_twist,clown,"[delighted] By royal decree, and by absolutely nobody's expectations: Duke Prospero, and Prince Hamlet.",,,
+E03_WEDDING_CLOWN,E03,final,giant_win_twist,clown,"[delighted] Let it be recorded. His Grace found love in a swatting match, and the whole court is still recovering.",,,New ending card; needs its own end_scene rig layout alongside wedding/own_path
 C04_P1_PROSPERO,C04,p1.1,giant_loss,prospero,"[furious] First the garden. Now this. Stand back, Hamlet.",,,
 C04_P2_PROSPERO,C04,p1.2,giant_loss,prospero,"[breathless, furious] There. I have finished your task myself. My patience did not survive the effort.",,GIANT_HUFF,Was Clown narration; Prospero now says it himself
 C04_P2_MIRANDA,C04,p1.2,giant_loss,miranda,"[upset] Father, he endured three strikes trying to keep that creature away from us.",,,
