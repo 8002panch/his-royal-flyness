@@ -150,11 +150,24 @@ certification claim is required. Display delivery/dodge/time counts computed by 
   plays if it isn't ready in about 4 seconds.
 - Browsers only allow sound after the first tap, so the join button doubles as the audio-unlock tap.
 
-### Legacy voice identifiers (reference, not the new story script)
+### Voice links supplied by Arnav
 
 The panel dialogue in the story plan is the campaign writing source. Keep existing IDs for
 compatibility until Anshul maps/replaces them; old trial/wedding lines are not required in
-the new flow. No voice IDs or supplied voice links are selected by this planning pass.
+the new flow. These are the ElevenLabs voice pages supplied in Arnav's original storyline so the audio owner can review them.
+They are references only; no audio has been generated or committed by this planning change.
+
+| Character | ElevenLabs voice page |
+|---|---|
+| Prince Hamlet | [yhf80q1381zd2JJQ4tM7](https://elevenlabs.io/voices/yhf80q1381zd2JJQ4tM7) |
+| Princess Miranda | [fgDJOgmENIR82PueQrVs](https://elevenlabs.io/voices/fgDJOgmENIR82PueQrVs) |
+| Duke Prospero | [LvmvHEBEmMJBJw9UuhwO](https://elevenlabs.io/voices/LvmvHEBEmMJBJw9UuhwO) |
+| Lord Tinman | [1aPDmPEYltTp3yDMQLiT](https://elevenlabs.io/voices/1aPDmPEYltTp3yDMQLiT) |
+| Sir Cheapdate | [eadgjmk4R4uojdsheG9t](https://elevenlabs.io/voices/eadgjmk4R4uojdsheG9t) |
+| Count Rutabaga | [GsfuR3Wo2BACoxELWyEF](https://elevenlabs.io/voices/GsfuR3Wo2BACoxELWyEF) |
+| Clown, the Court Jester | [7rQX8r6PVq3gfJ8rZzyE](https://elevenlabs.io/voices/7rQX8r6PVq3gfJ8rZzyE) |
+
+The Giant has no supplied voice link because the approved plan treats it as a static obstacle.
 
 Square brackets are ElevenLabs v3 audio tags. `{braces}` are filled in at runtime from computed numbers only.
 
@@ -538,7 +551,7 @@ cup guessing, hidden random swap or second choice after the result.
 These are general human-health teaching facts, not results from this fly simulation. Sources
 checked for the quiz: [NIAAA: Alcohol and the Brain](https://www.niaaa.nih.gov/publications/alcohol-and-brain-overview)
 and [NIAAA: The Truth About Holiday Spirits](https://www.niaaa.nih.gov/publications/brochures-and-fact-sheets/truth-about-holiday-spirits).
-Neil should review wording before voice production. The supplied voice links are not used.
+Neil should review wording before voice production. The supplied voice links above are references for the audio owner; voice selection and production still require that review.
 
 Correct → safe pear nectar; no new penalty. Wrong → grape cordial; add one dizziness level.
 **Proposed persistence:** 0–3 levels, carried through the rest of the run, including the father
