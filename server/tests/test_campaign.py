@@ -278,3 +278,30 @@ def test_the_free_flight_world_is_unchanged_without_a_campaign():
     s.apply_input({"t": "move", "role": "wingmaster", "axis": "z", "value": 1}, 0.0)
     s.step(0.1, 0.1)
     assert s.state.fly.vz > 0 and math.isfinite(s.state.fly.z)
+
+
+def test_the_real_brain_warns_the_seer_of_each_attack_and_the_changeling_does_not():
+    """The connectome's job in the story: the True Prince's looming neurons and Giant Fiber warn the Seer's phone, from the
+    right side, before each hand lands; the Changeling (same neurons, scrambled partners) doesn't. Needs data/ (skips otherwise)."""
+    from server.main import make_seer
+
+    warned = {}
+    for source in ("true", "changeling"):
+        seer = make_seer(source)
+        if seer.source != source:
+            pytest.skip("the brain's data files aren't built (python -m brain.build_graph && python -m brain.changeling)")
+        g = Game()
+        g.s.seer, g.s.sense_in_step = seer, False  # as the live server: the brain on its own 20 ms steps
+        g.c.jump("GIANT")
+        warned[source] = {}
+        for _ in range(int(20 / DT)):
+            g.s.apply_input({"t": "sense", "role": "seer", "scan": 1}, g.t)
+            g.step()
+            g.s.cues = seer.sense(g.s.stimuli, dt=DT)
+            a = g.c.fight.attack if g.c.fight else None
+            views = [v for v in g.s.phone_views() if v["t"] == "seer_view"]  # none during the count-in (inputs clear)
+            view = views[-1] if views else {"giant": {"direction": None}}
+            if a is not None and view["giant"]["direction"] and a.n not in warned[source]:
+                warned[source][a.n] = (view["giant"]["direction"], a.side.upper(), a.impact - g.c.fight.t)
+    assert len(warned["true"]) >= 3 and all(d == s and lead > 0.8 for d, s, lead in warned["true"].values()), warned
+    assert warned["changeling"] == {}

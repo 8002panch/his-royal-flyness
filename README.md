@@ -55,8 +55,12 @@ running live in the server (True Prince vs Changeling, tested). In progress: the
 
 `pip install -r requirements.txt`, then `python run_local.py --room BZKT` from the repo folder. It starts the relay, the phone
 page and the game server, and opens the host screen in your browser with the room code and a QR code; phones on the same Wi-Fi
-scan it to join. To host the join link on your domain, see [docs/TECH.md](docs/TECH.md#hosting-the-join-link-godaddy-domain).
-Details: [docs/TECH.md](docs/TECH.md#run-it-locally). Tests: `python -m pytest brain/tests server/tests relay/tests -q`.
+scan it to join. The main screen is the Godot court: `godot --path host` (Godot 4.3), then **Enter the Court**. It shows the same QR.
+Enter starts the story; Space (or a clicker's Page Down) moves through the comics; Ctrl+1..9 jumps to a chapter for judging.
+To host the join link on your domain, see [docs/TECH.md](docs/TECH.md#hosting-the-join-link-godaddy-domain).
+Details: [docs/TECH.md](docs/TECH.md#run-it-locally) and [the campaign](docs/TECH.md#the-campaign-servercampaignpy).
+Tests: `python -m pytest brain/tests server/tests relay/tests audio/tests -q`, `npm test --prefix relay/public`, and the Godot
+smoke tests in `host/test/`.
 
 ## Rules and honesty
 

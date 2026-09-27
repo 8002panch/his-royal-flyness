@@ -241,11 +241,20 @@
       const feed = new URLSearchParams(location.search).get("feed") || "ws://127.0.0.1:8765";
       ws = new WebSocket(feed);
       ws.onopen = () => document.body.classList.remove("disconnected");
-      ws.onmessage = (event) => { try { render(JSON.parse(event.data)); } catch (err) { console.error(err); } };
+      ws.onmessage = (event) => { try { const m = JSON.parse(event.data); if (m.t !== "state") return; storyPhase = m.phase; render(m); } catch (err) { console.error(err); } };
       ws.onclose = () => { document.body.classList.add("disconnected"); setTimeout(connect, 1000); };
     }
+    // The story's presenter keys, the same as the Godot screen's (server/campaign.py): Enter starts from the lobby or the end,
+    // Space / Right / Page Down move on, Left / Page Up reread, S skips a comic (never past an unanswered question).
+    let storyPhase = "";
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") startedByHost = !startedByHost;
+      const story = { " ": "next", ArrowRight: "next", PageDown: "next", ArrowLeft: "back", PageUp: "back", s: "skip", S: "skip" }[event.key];
+      if (story) command({ command: story });
+      if (event.key === "Enter") {
+        if (storyPhase === "lobby" || storyPhase === "end") command({ command: "start" });
+        else if (storyPhase === "comic" || storyPhase === "question") command({ command: "next" });
+        startedByHost = !startedByHost;
+      }
       if (event.key === "f" || event.key === "F") document.documentElement.requestFullscreen?.();
       if (event.key === "n" || event.key === "N") newCode();
       if (event.key === "l" || event.key === "L") toggleLock();

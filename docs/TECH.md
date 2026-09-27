@@ -54,9 +54,11 @@ python run_local.py --room BZKT
   from the environment; locally it may be blank.
 - **Host keys** in that terminal (letter, then Enter): `c` Changeling, `t` True Prince, `p` placeholder cues, `s` status (who holds
   which role, live inputs, fly position), `q` quit. It also prints a line whenever a phone takes or leaves a role.
-- The browser host screen (`host/web/index.html`) is a stand-in until Anshul's Godot screen is merged. Both read the same state
-  feed and decide nothing. Godot: open `host/project.godot` in Godot 4 (Anshul's branch); it connects to `ws://127.0.0.1:8765`
-  and loops an offline sample (clearly labeled "OFFLINE SAMPLE, not brain output") when no server is running.
+- **The main screen is the Godot court** (`godot --path host`, Godot 4.3; open the project once or run
+  `godot --headless --path host --import` on a fresh clone). It connects to `ws://127.0.0.1:8765`, shows the lobby with the join
+  QR, and runs the story (see [The campaign](#the-campaign-servercampaignpy)); with no server it loops an offline sample, clearly
+  labeled "OFFLINE SAMPLE". The browser host screen (`host/web/index.html`) reads the same feed and has the same story keys.
+- **Story keys** in the launcher's terminal: `g` start, Enter next, `b` back, `k` skip, `r` restart the stage, `j GIANT` jump.
 - **Online** (relay on the internet, see [Hosting the join link](#hosting-the-join-link-godaddy-domain)):
   `python run_local.py --room BZKT --relay-url wss://<domain>/ws` runs only the game server and host screen on the laptop; the
   join link and QR become `https://<domain>/?room=BZKT` (`--join-url` to show a different page).
@@ -178,6 +180,41 @@ or null, `seconds` may be null.
 
 Godot may render this state but never decides outcomes. The whole-map positions in `render` must not be drawn as a map or an
 exact bearing (GAME.md, "The main screen").
+
+## The campaign (`server/campaign.py`)
+
+Arnav's story (GAME.md, "Story campaign"), run by the server: `GameSession(..., campaign=True)` (the launcher and
+`server.main` turn it on; without it the session is the free-flight test world the older tests use).
+
+- **Flow:** lobby -> TUTORIAL -> C01 -> Q01 -> STAGE1 -> Q02 -> STAGE2 -> Q03 -> C02 -> GIANT -> C03 or C04 -> (FATHER) ->
+  E01 or E02 -> end. Comic and quiz lines come from `audio/lines.csv` on the route taken, so the script lives in one place.
+  Play-time lines (tutorial tips, Stage 2 notices) are queued so none cuts another off.
+- **Phases** (`state.phase`): `lobby`, `comic`, `question` (the Seer must answer), `ready` (a 2 s count-in; inputs clear, so
+  players press again), `play`, `end`. Flight, clocks and attacks are frozen outside `play`.
+- **Quizzes:** only the Seer's phone can answer (`{"t": "answer", "choice": "A"|"B"}`; the relay refuses it from any other role),
+  once per quiz; Back rereads but never undoes it; Skip stops at an unanswered question. A wrong answer adds a dizziness level
+  (0 to 3): about 10% more stopping distance each, a scripted movement change, not alcohol in the nervous system.
+- **Courses:** Ved's four wall gates (Stage 2 mirrored), openings off the centre line; the server sends them in `state.walls`
+  and Godot draws those. Stage 2 has a 60 s clock and three swats; a timeout or a hit restarts it without repeating anything.
+- **Attacks** (Stage 2, Giant, father): the target is locked at onset beside Hamlet on the hand's side; he's hit if still within
+  0.3 of it when it lands (2 to 2.4 s later). During the warning the attack exists only as a looming hand in the brain's stimuli,
+  so the Seer's phone warns from the real brain (the True Prince warned 3 of 3 attacks, on the right side, about 2.2 s ahead; the
+  Changeling none: `test_campaign.py`). Godot gets `state.impact` only after it lands, plus `dodge`/`hit` events. Giant: 10 dodges
+  -> C03, 3 hits -> C04. Father: 5 dodges -> E01, 1 hit -> E02.
+- **State fields for the screens:** `phase`, `scene`, `backdrop` (Anshul's v4 backdrop id), `objective`, `beat` {id, speaker,
+  name, caption, panel, gesture, index, count, cast, prev}, `question` {id, text, a, b, chosen, correct}, `counters`, `props`,
+  `walls`, `impact`, `dizzy`, `steadiness`, `ready`, `storyDemo`, and `joinQr` (the join link as QR rows) in the lobby. Phones get
+  `{"t": "phase", ...}` on each change and once a second.
+- **Presenter commands** (`{"t": "host_command", "command": ...}` on the Godot link, this laptop only): `start`, `next`, `back`,
+  `skip`, `restart`, `jump` (+ `scene`; marks the run DEMO and never grants a story result). Godot keys: Enter (start / next), Space,
+  Right or Page Down (next), Left or Page Up (back), S (skip), R (restart), Ctrl+1..9 (TUTORIAL, Q01, STAGE1, Q02, STAGE2, Q03,
+  C02, GIANT, FATHER), F6 the Royal Decree.
+- **Godot** (`host/scripts/court/`): `hud/comic_overlay.gd` (backdrop, the cast as Anshul's animated rigs, bubbles, the quiz
+  card), `hud/story_banner.gd` (objective, counters, count-in, end card, DEMO), `story_art.gd` (backdrops and rigs),
+  `story_props.gd` (chalice and grape), `court_world.gd` (backdrop or hall, walls, the landed fist), `voice_player.gd`.
+  `--state=file.json --shot=out.png` renders a saved server state.
+- **Tests:** `server/tests/test_campaign.py` (Arnav's acceptance checklist with an autopilot, the Seer's secret, the real brain in
+  the fight), `relay/tests` (Seer-only answers), `relay/public/tests` (phone story screens), `host/test/story_smoke.gd`.
 
 ## The game server (`server/`)
 

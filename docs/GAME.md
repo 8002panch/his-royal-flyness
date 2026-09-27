@@ -323,7 +323,13 @@ the Giant's Shadow and a dodge; the Changeling flip and the measured numbers; th
 
 ## Story campaign and comic cutscenes — approved team plan
 
-**Status: approved by Arnav for team sharing and prototyping on September 26; planning only, not implemented.** This expands Arnav's
+**Status: built and on `main` (Sun 27 Sept, 02:00): `server/campaign.py`, the Godot court and the phones; see TECH.md, "The
+campaign".** Built as written, with these choices: the courses use Ved's visible wall gates (openings moved off the centre line;
+no hidden walls or spikes, so no scripted Seer guidance to disclose); the tutorial teaches one grape at a time; attacks come from
+the left or the right and the real brain warns the Seer; Stage 2 has three swats; Prospero throws grapes. Tune difficulty after
+playtests. The original plan note follows.
+
+**Status then: approved by Arnav for team sharing and prototyping on September 26; planning only, not implemented.** This expands Arnav's
 supplied storyline. Existing team code remains the technical starting point. The cast,
 scene order, four grapes, sixty-second Stage 2, ten Giant dodges and five untouched father
 dodges come from his story. The strict cast, drink names and three-hit Giant limit are also
