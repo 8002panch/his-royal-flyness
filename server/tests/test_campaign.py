@@ -151,7 +151,7 @@ def test_only_the_seer_answers_once_and_skip_never_answers():
     assert g.c.answers == {"Q01": "B"} and g.c.dizzy == 1, "applied once, Back can't undo it"
     g.read_comic(); g.drain()
     assert "Q01_P3B_TINMAN" in g.voices and "Q01_P3A_TINMAN" not in g.voices
-    assert g.s.simulator.tuning.drag_per_second == pytest.approx(cm.MovementTuning().drag_per_second / 1.1)
+    assert g.s.simulator.tuning.drag_per_second == pytest.approx(cm.MovementTuning().drag_per_second / 1.25)
 
 
 def test_a_correct_answer_adds_nothing():
@@ -342,3 +342,37 @@ def test_no_brain_bars_on_the_shared_screen_during_a_fight():
     assert g.s.godot_state()["brainActivity"] == {}
     g.c.jump("TUTORIAL")
     assert g.s.godot_state()["brainActivity"]["looming"] == 3.0
+
+
+def test_walls_are_solid_and_a_hit_thuds():
+    g = Game("STAGE1")
+    g.run(2.5)  # the count-in
+    w = cm.STAGE1_WALLS[0]
+    g.s.state.fly.x, g.s.state.fly.y, g.s.state.fly.z = 0.8, 0.0, w.z - 0.3  # lined up with the solid part
+    events = []
+    for _ in range(int(2.0 / DT)):
+        g.hold(z=1)
+        g.s.step(DT, g.t)
+        g.t += DT
+        events += [e["kind"] for e in g.c.events]
+        g.c.events.clear()
+        assert g.s.state.fly.z <= w.z - 0.059, "never into or through the wall"
+    assert "bump" in events and events.count("bump") <= 5
+
+
+def test_dizzy_flight_sways_and_reacts_late_sober_flight_doesnt():
+    drift = {}
+    for dizzy in (0, 3):
+        g = Game()
+        g.c.dizzy = dizzy
+        g.c._apply_dizziness()
+        g.c.jump("STAGE2")
+        g.run(2.5)
+        x0 = g.s.state.fly.x
+        g.run(2.0)  # hands off the controls
+        drift[dizzy] = abs(g.s.state.fly.x - x0)
+    assert drift[0] == 0.0 and drift[3] > 0.1
+    g = Game()
+    g.c.dizzy = 2
+    first = g.c.steer({"x": 1.0, "y": 0.0, "z": 0.0}, DT)
+    assert abs(first["x"]) < 0.5  # the press hasn't arrived yet

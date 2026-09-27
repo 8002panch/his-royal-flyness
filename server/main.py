@@ -76,6 +76,7 @@ class GameSession:
         # Tests and replays sense inside step() (exact and deterministic). The live server sets this False and runs the brain on
         # its own thread (GameServer), so a slow brain step never delays movement, the relay or the host screen.
         self.sense_in_step = True
+        self._last_bump = -1.0
         self.seer_lock = threading.Lock()
         self.brain_steps = 0  # senses done by the brain thread (for the host's status line)
         self.players: list[dict[str, str]] = []  # [{"name", "role"}] for the host screens, from the relay's roster messages
@@ -121,7 +122,12 @@ class GameSession:
                 input_state.value = 0
         intents = {axis: self.state.inputs[role].value for role, axis in MOVEMENT_ROLES.items()}
         if self.campaign is None or self.campaign.flying:  # comics, quizzes and the count-in freeze the fly
+            if self.campaign is not None:
+                intents = self.campaign.steer(intents, dt)
             self.simulator.step(self.state.fly, intents, dt)
+            if self.campaign is not None and self.simulator.bump >= 0.2 and self.state.elapsed_s - self._last_bump >= 0.4:
+                self._last_bump = self.state.elapsed_s  # a wall hit: the screens thud (a solid wall, not a glitch)
+                self.campaign.events.append({"t": "event", "kind": "bump", "speed": round(self.simulator.bump, 2)})
         self.state.elapsed_s += dt
         fly = self.state.fly
         if self.campaign is not None:

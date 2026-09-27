@@ -167,6 +167,11 @@ func shake(duration: float, px: int) -> void:
 func on_event(ev: Dictionary) -> void:
 	var kind := str(ev.get("kind", ""))
 	var id := str(ev.get("id", ""))
+	if kind == "bump":  # flew into a wall: it's solid
+		shake(0.15, 2)
+		hamlet.play_gesture("hit", 0.3)
+		fx.puff(hamlet_screen + Vector2(0, -6), 5)
+		return
 	if kind == "hit":  # an attack landed on him (the story server; only ever after it resolves)
 		cast.startle()
 		hamlet.play_gesture("hit", 0.45)
@@ -197,6 +202,7 @@ func _process(delta: float) -> void:
 	var ahead := _fly_target
 	if state.has_fly and state.phase in ["", "play"]:
 		ahead += state.fly_vel * minf(_since_state, 0.1)
+		ahead.z = _wall_clamp(_fly_target, ahead.z)
 	_fly_shown = _fly_shown.lerp(ahead, 1.0 - exp(-delta * 20.0))
 	var shadow_items: Array = []
 
@@ -315,6 +321,22 @@ func _update_giant(shadow_items: Array) -> void:
 	var rx := maxi(4, roundi((0.25 + 0.55 * p) * sp.z * 0.55))
 	shadow_items.append({"pos": Vector2i(roundi(sp.x), roundi(sp.y)), "rx": rx, "ry": maxi(2, roundi(rx * 0.3)), "ring": p > 0.3})
 	giant_in_view = p > 0.2 and sp.x > -rx and sp.x < HallCam.W + rx
+
+
+## The server's walls are solid: the glide between server states never carries him through one (it would snap back).
+func _wall_clamp(at: Vector3, z: float) -> float:
+	if not state.has_walls:
+		return z
+	for w in state.walls:
+		var wz := float(w[0])
+		var open := at.x >= float(w[1]) + 0.1 and at.x <= float(w[2]) - 0.1 and at.y >= float(w[3]) + 0.1 and at.y <= float(w[4]) - 0.1
+		if open:
+			continue
+		if at.z <= wz and z > wz - 0.06:
+			z = minf(z, maxf(at.z, wz - 0.06))
+		elif at.z >= wz and z < wz + 0.06:
+			z = maxf(z, minf(at.z, wz + 0.06))
+	return z
 
 
 func _ground_y(x: float, z: float) -> float:

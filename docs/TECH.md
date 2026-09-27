@@ -194,7 +194,9 @@ Arnav's story (GAME.md, "Story campaign"), run by the server: `GameSession(..., 
   players press again), `play`, `end`. Flight, clocks and attacks are frozen outside `play`.
 - **Quizzes:** only the Seer's phone can answer (`{"t": "answer", "choice": "A"|"B"}`; the relay refuses it from any other role),
   once per quiz; Back rereads but never undoes it; Skip stops at an unanswered question. A wrong answer adds a dizziness level
-  (0 to 3): about 10% more stopping distance each, a scripted movement change, not alcohol in the nervous system.
+  (0 to 3): 25% less drag each, controls that answer 0.1 s later per level and a slow sway that pushes Hamlet off line
+  (`Campaign.steer`), and a swirl-and-wave wobble of the court on screen: a scripted movement change, not alcohol in the
+  nervous system. Walls are solid: the body stops 0.06 short of a wall and a hit sends a `bump` event (a thud).
 - **Courses:** Ved's four wall gates (Stage 2 mirrored), openings off the centre line; the server sends them in `state.walls`
   and Godot draws those. Stage 2 has a 60 s clock and three swats; a timeout or a hit restarts it without repeating anything.
 - **Attacks** (Stage 2, Giant, father): the target is locked at onset beside Hamlet on the hand's side; he's hit if still within

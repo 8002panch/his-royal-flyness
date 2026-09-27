@@ -175,12 +175,33 @@ class Campaign:
         self.hint_wait = 0.0
         self.leave_in: float | None = None    # a finished play scene lingers so its last line or shout can play
         self._dizzy_told = 0
+        self._sway_t = 0.0
+        self._lag: list[dict[str, float]] = []
         self._apply_dizziness()
 
     def _apply_dizziness(self) -> None:
-        """Each wrong answer: about 10% more stopping distance (docs/GAME.md). Not alcohol in the nervous system."""
-        drag = self.base_tuning.drag_per_second / (1.0 + 0.1 * self.dizzy)
+        """Each wrong answer: more stopping distance (docs/GAME.md). A scripted movement change, not alcohol in the nervous
+        system; `steer` adds the sway and the slow reactions."""
+        drag = self.base_tuning.drag_per_second / (1.0 + 0.25 * self.dizzy)
         self.session.simulator.tuning = replace(self.base_tuning, drag_per_second=drag)
+
+    def steer(self, intents: dict[str, float], dt: float) -> dict[str, float]:
+        """Dizzy flight is hard to control: the council's presses take effect late (0.1 s more per level) and a slow,
+        never-quite-repeating sway keeps pushing Hamlet off his line (stronger each level). Sober flight is untouched."""
+        if self.dizzy <= 0:
+            return intents
+        self._sway_t += dt
+        self._lag.append(dict(intents))
+        keep = max(1, round(0.1 * self.dizzy / max(dt, 1e-3)))
+        while len(self._lag) < keep:  # nothing pressed before the first tick
+            self._lag.insert(0, {})
+        del self._lag[:-keep]
+        late = self._lag[0]
+        t, a = self._sway_t, 0.17 * self.dizzy
+        sway = {"x": a * (math.sin(1.7 * t) + 0.6 * math.sin(2.9 * t + 1.3)),
+                "y": 0.8 * a * (math.sin(1.3 * t + 2.1) + 0.5 * math.sin(3.7 * t)),
+                "z": 0.5 * a * math.sin(0.9 * t + 0.4)}
+        return {axis: max(-1.0, min(1.0, float(late.get(axis, 0.0)) + sway[axis])) for axis in ("x", "y", "z")}
 
     def _hint(self, line_id: str, once: bool = True) -> None:
         """A play-time line (tutorial tips, Stage 2 notices): queued, so lines never talk over each other. A newer tutorial

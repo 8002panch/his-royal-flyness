@@ -39,6 +39,8 @@ var _demo: DemoDriver = null
 var _voice: Node = null
 var _last_frame := -1
 var _phase := ""
+const DIZZY_WOBBLE := preload("res://scripts/court/dizzy_wobble.gd")
+var _wobble: CanvasLayer = null
 const JUMPS := ["TUTORIAL", "Q01", "STAGE1", "Q02", "STAGE2", "Q03", "C02", "GIANT", "FATHER"]
 
 
@@ -51,6 +53,10 @@ func _ready() -> void:
 		return
 	hud.reliquary.toggled.connect(world.set_cosmetic)
 	hud.reliquary.announce()
+	# the dizzy swirl sits between the world and the HUD
+	_wobble = DIZZY_WOBBLE.new()
+	add_child(_wobble)
+	hud.layer = 2
 	if args.has("debug"):
 		hud.toggle_debug()
 	_sample_events = _load_json(EVENTS) if FileAccess.file_exists(EVENTS) else []
@@ -81,6 +87,8 @@ func _on_state(msg: Dictionary) -> void:
 	_phase = cs.phase
 	world.apply_state(cs)
 	hud.apply_state(cs, world.giant_in_view)
+	if _wobble != null:
+		_wobble.apply(cs.dizzy, cs.phase)
 	world.show_tags = cs.phase != "lobby" and cs.phase != "chronicle"
 	if _voice != null and _voice.has_method("on_state"):
 		_voice.call("on_state", msg)  # flight buzz and the host-side lines (roles, the Changeling swap)

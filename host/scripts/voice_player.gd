@@ -249,6 +249,8 @@ func _on_event(ev: Dictionary) -> void:
 			_resolved(str(ev.get("fight", "giant")), "dodge" if kind == "dodge" else "hit", ev.get("n"))
 		"win", "charmed":
 			play_sound("COURT_CHEER")
+		"bump":  # a wall: a soft bonk
+			play_sound("FATHER_HIT")
 		_:
 			pass  # "giant" is a warning: silent on purpose (the Seer's secret)
 

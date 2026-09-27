@@ -41,13 +41,18 @@ class WallGate:
 class MovementSimulator:
     """Integrates controller intent into a bounded three-axis body state."""
 
+    # How far from a wall's plane the fly's body stops: it has a body, so it never pokes into the wall on screen.
+    WALL_STANDOFF = 0.06
+
     def __init__(self, tuning: MovementTuning = MovementTuning(), walls: tuple[WallGate, ...] = ()) -> None:
         self.tuning = tuning
         self.walls = walls
+        self.bump = 0.0  # speed of the last wall hit this step (0 = none): the screens thud on it
 
     def step(self, fly: FlyState, inputs: dict[str, float], dt: float) -> None:
         if dt <= 0:
             return
+        self.bump = 0.0
         for axis in ("x", "y", "z"):
             intent = float(inputs.get(axis, 0.0))
             if abs(intent) < self.tuning.dead_zone:
@@ -67,13 +72,21 @@ class MovementSimulator:
                 position = max(-self.tuning.bounds, min(self.tuning.bounds, position))
                 velocity = 0.0
             if axis == "z":
-                crossed = [wall for wall in self.walls if wall.crossed(previous_position, position)]
-                crossed.sort(key=lambda wall: abs(wall.z - previous_position))
-                for wall in crossed:
+                # A wall is solid from its plane out to the body's standoff on each side: moving towards it, the fly
+                # stops at the standoff unless it is lined up with the opening. Checked against the standoff zone, not
+                # just the plane, so a fly resting against a wall can never creep through it.
+                pad = self.WALL_STANDOFF
+                for wall in sorted(self.walls, key=lambda w: abs(w.z - previous_position)):
                     if wall.opening_contains(fly):
                         continue
-                    position = wall.z - 0.001 if velocity > 0.0 else wall.z + 0.001
-                    velocity = 0.0
+                    if velocity > 0.0 and previous_position <= wall.z and position > wall.z - pad:
+                        stop = min(previous_position, wall.z - pad) if previous_position > wall.z - pad else wall.z - pad
+                    elif velocity < 0.0 and previous_position >= wall.z and position < wall.z + pad:
+                        stop = max(previous_position, wall.z + pad) if previous_position < wall.z + pad else wall.z + pad
+                    else:
+                        continue
+                    self.bump = max(self.bump, abs(velocity))
+                    position, velocity = stop, 0.0
                     break
             setattr(fly, axis, position)
             setattr(fly, velocity_name, velocity)
