@@ -1,5 +1,5 @@
 id,scene,panel,branch,speaker,line,stability,sfx,note
-H_TITLE,LOBBY,,,clown,"[excited] Alright, quiet down — Duke Prospero's Royal Ball starts right now!",,,
+H_TITLE,LOBBY,,,clown,"[excited] Alright, quiet down! Duke Prospero's Royal Ball starts right now!",,,
 H_JOIN,LOBBY,,,clown,"[cheerfully] Scan in at the gate, you're on Prince Hamlet's council tonight.",,,
 H_PRINCE,LOBBY,,,clown,"[grandly] This is Prince Hamlet. We mapped his entire brain, all hundred and sixty-six thousand neurons of it.",,,"166,606 neurons: measured by brain/build_graph.py"
 H_ROLE_HELMSMAN,LOBBY,,,clown,"[playfully] You're the Helmsman. Left and right, that's all you.",,,
@@ -18,7 +18,7 @@ TUT_FINISH_MIRANDA,TUTORIAL,finish,,miranda,"[warmly] Four grapes, all in one pi
 C01_P1_CLOWN,C01,p1.1,,clown,"[upbeat] Tonight's the night. Prospero's announcing Hamlet and Miranda's engagement. But first, one tiny errand.",,,
 C01_P2_HAMLET,C01,p1.2,,hamlet,"Four grapes, delivered. Like a pro.",,,
 C01_P2_CLOWN,C01,p1.2,,clown,"[wryly] Didn't even try one. Very disciplined.",,,
-C01_P3_HAMLET,C01,p1.3,,hamlet,"Totally under control—oh no.",,,
+C01_P3_HAMLET,C01,p1.3,,hamlet,"Totally under control... oh no.",,,
 C01_P3_CLOWN,C01,p1.3,,clown,"[dryly] Being innocent doesn't get the stains out, unfortunately.",,,
 C01_P4_PROSPERO,C01,p2.4,,prospero,"[indignant] Purple lips? Stumbling around next to the banquet cup? Hamlet!",,,
 C01_P4_HAMLET,C01,p2.4,,hamlet,"It was a landing accident. A very purple one, but an accident.",,,
@@ -67,7 +67,7 @@ Q03_P3A_CHEAPDATE,Q03,p2.3A,correct,cheapdate,"[cheerfully] Correct! Sharper tha
 Q03_P3B_CHEAPDATE,Q03,p2.3B,wrong,cheapdate,"[hiccups] Wrong! Purple for you. Guess we're matching now.",,,
 Q03_P4_CLOWN,Q03,p2.4,,clown,"[shouting] Cheapdate! Your chair is in the punch bowl again!",,,Clown is off-panel
 Q03_P4_CHEAPDATE,Q03,p2.4,,cheapdate,My seat has arrived before me!,,,
-Q03_P5_HAMLET,Q03,p2.5,,hamlet,At last—,,,Cut off by the crash
+Q03_P5_HAMLET,Q03,p2.5,,hamlet,At last...,,,Cut off by the crash
 Q03_P5_CLOWN,Q03,p2.5,,clown,"[wryly] The evening had other plans for that sentence.",,GIANT_CRASH,
 C02_P1_CLOWN,C02,p1.1,,clown,"[dramatically] The Giant showed up. Nobody invited it, and it clearly didn't RSVP for manners either.",,GIANT_GROWL,
 C02_P2_PROSPERO,C02,p1.2,,prospero,[alarmed] You? I told you to stay outside!,,,
