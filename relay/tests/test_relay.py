@@ -98,13 +98,13 @@ class RelayStateTests(unittest.TestCase):
     def test_host_gets_a_roster_on_join_pick_and_leave(self) -> None:
         self.state.connect("host")
         _, events = self.state.handle("host", {"t": "host_join", "room": "BZKT", "secret": "secret", "seq": 1})
-        self.assertEqual(events[0]["payload"], {"t": "roster", "players": []})
+        self.assertEqual(events[0]["payload"], {"t": "roster", "players": [], "locked": False})
         phone(self.state, "a", "a")
         _, events = self.state.handle("a", {"t": "pick", "role": "liftmaster", "seq": 2})
         self.assertEqual(events[0]["payload"]["players"], [{"name": "a", "role": "liftmaster"}])
         self.assertEqual(self.state.rooms[events[0]["room"]].host_connection_id, "host")
         events = self.state.disconnect("a")
-        self.assertEqual(events[-1]["payload"], {"t": "roster", "players": []})
+        self.assertEqual(events[-1]["payload"], {"t": "roster", "players": [], "locked": False})
 
     def test_stale_input_clears_and_notifies_host(self) -> None:
         self.state.connect("host")
@@ -157,6 +157,79 @@ class RelayStateTests(unittest.TestCase):
         phone(self.state, "a", "a")
         with self.assertRaisesRegex(RelayError, "stale"):
             self.state.handle("a", {"t": "heartbeat", "seq": 1})
+
+
+class JoinSystemTests(unittest.TestCase):
+    """Jackbox/Kahoot-style joining: codes live only while hosted, lock, remove, unique names, a new code closes the old room."""
+
+    def setUp(self) -> None:
+        self.state = RelayState(require_host=True)
+
+    def host(self, code: str = "BZKT") -> None:
+        self.state.connect("host")
+        self.state.handle("host", {"t": "host_join", "room": code, "secret": "", "seq": 1})
+
+    def join(self, cid: str, name: str, client: str, room: str = "BZKT") -> dict:
+        self.state.connect(cid)
+        try:
+            return self.state.handle(cid, {"t": "join", "room": room, "name": name, "clientId": client, "seq": 1})[0]
+        except RelayError as error:
+            return error.payload()
+
+    def test_a_code_only_works_while_a_game_hosts_it(self) -> None:
+        self.assertEqual(self.join("a", "Ava", "ava")["code"], "ROOM_NOT_FOUND")
+        self.host()
+        self.assertEqual(self.join("b", "Bo", "bo")["t"], "joined")
+
+    def test_a_room_survives_a_brief_game_server_drop(self) -> None:
+        self.host()
+        self.state.disconnect("host")  # the game server reconnects within about a second
+        self.assertEqual(self.join("a", "Ava", "ava")["t"], "joined")
+        self.state.rooms["BZKT"].host_left_at -= 60  # ...but a room abandoned for a minute is gone
+        self.assertEqual(self.join("b", "Bo", "bo")["code"], "ROOM_NOT_FOUND")
+
+    def test_names_are_unique_in_a_room_but_a_phone_may_rejoin_with_its_own(self) -> None:
+        self.host()
+        self.assertEqual(self.join("a", "Ava", "ava")["t"], "joined")
+        self.assertEqual(self.join("b", "ava ", "someone-else")["code"], "NAME_TAKEN")
+        self.assertEqual(self.join("a2", "Ava", "ava")["t"], "joined")  # the same phone reconnecting
+
+    def test_lock_keeps_new_phones_out_but_lets_members_back(self) -> None:
+        self.host()
+        self.join("a", "Ava", "ava")
+        response, events = self.state.handle("host", {"t": "lock", "locked": True, "seq": 2})
+        self.assertTrue(response["locked"])
+        self.assertTrue(events[0]["payload"]["locked"])
+        self.assertEqual(self.join("b", "Bo", "bo")["code"], "ROOM_LOCKED")
+        self.state.disconnect("a")
+        self.assertEqual(self.join("a2", "Ava", "ava")["t"], "joined")  # Ava's phone had joined before the lock
+
+    def test_removing_a_player_frees_the_seat_and_keeps_them_out(self) -> None:
+        self.host()
+        self.join("a", "Ava", "ava")
+        self.state.handle("a", {"t": "pick", "role": "seer", "seq": 2})
+        response, events = self.state.handle("host", {"t": "kick", "role": "seer", "seq": 2})
+        self.assertTrue(response["removed"])
+        self.assertIn({"to": "a", "payload": {"t": "kicked"}}, events)
+        self.assertNotIn("seer", self.state.rooms["BZKT"].role_connections)
+        self.assertEqual(self.join("a2", "Ava", "ava")["code"], "REMOVED")
+
+    def test_a_new_code_closes_the_old_room_for_everyone(self) -> None:
+        self.host("BZKT")
+        self.join("a", "Ava", "ava")
+        self.state.handle("a", {"t": "pick", "role": "helmsman", "seq": 2})
+        _, events = self.state.handle("host", {"t": "close_room", "seq": 2})
+        self.assertIn({"to": "a", "payload": {"t": "room_closed"}}, events)
+        self.assertNotIn("BZKT", self.state.rooms)
+        self.assertEqual(self.join("b", "Bo", "bo")["code"], "ROOM_NOT_FOUND")
+        self.state.handle("host", {"t": "host_join", "room": "QWRT", "secret": "", "seq": 3})  # same game server, new code
+        self.assertEqual(self.join("c", "Cy", "cy", room="QWRT")["t"], "joined")
+
+    def test_only_the_game_server_can_lock_or_remove(self) -> None:
+        self.host()
+        self.join("a", "Ava", "ava")
+        with self.assertRaisesRegex(RelayError, "Only the game server"):
+            self.state.handle("a", {"t": "lock", "locked": True, "seq": 2})
 
 
 if __name__ == "__main__":

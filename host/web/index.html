@@ -47,6 +47,16 @@
     .url { font-family: ui-monospace, Menlo, monospace; font-size: clamp(.9rem, min(1.9vw, 3.2vh), 1.8rem); background: var(--parchment-dark);
            border: 2px solid var(--ink-soft); border-radius: 4px; padding: .3em .6em; align-self: flex-start; word-break: break-all; }
     .hint { color: var(--ink-soft); font-size: clamp(.9rem, 1.3vw, 1.2rem); }
+    .controls { display: flex; align-items: center; gap: .8vw; }
+    .ctl { font: inherit; font-size: clamp(.8rem, 1.2vw, 1.1rem); padding: .35em .7em; border: 3px solid var(--ink); border-radius: 4px;
+           background: var(--parchment); cursor: pointer; }
+    .ctl.on { background: var(--crimson); color: var(--parchment); }
+    kbd { font-family: ui-monospace, Menlo, monospace; font-size: .8em; opacity: .7; }
+    .step { font-size: clamp(1rem, min(1.9vw, 3.2vh), 1.8rem); }
+    .seal-row { display: flex; align-items: center; gap: 1.5vw; }
+    .locked-tag { font-size: clamp(1rem, 2vw, 1.8rem); letter-spacing: .12em; color: var(--parchment); background: var(--ink); padding: .2em .6em; border-radius: 4px; }
+    .seat.filled { cursor: pointer; }
+    .seat.filled:hover .name { text-decoration: line-through; }
 
     /* seats */
     .seats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5vw; }
@@ -93,16 +103,20 @@
   <main class="page">
     <header>
       <div><h1>His Royal Flyness</h1><div class="subtitle">A Courtship by Committee</div></div>
-      <span class="badge" id="badge">…</span>
+      <div class="controls">
+        <button class="ctl" id="new-code" title="Start a new game with a fresh code (N)">New code <kbd>N</kbd></button>
+        <button class="ctl" id="lock" title="Stop new phones from joining (L)">Lock <kbd>L</kbd></button>
+        <span class="badge" id="badge">…</span>
+      </div>
     </header>
 
     <section class="lobby" aria-label="Join the game">
       <div class="qr-card" id="qr-card"><img id="qr" src="/qr.svg" alt="QR code to join"></div>
       <div class="join">
         <p class="prompt">Join the Privy Council on your phone</p>
-        <div class="seal" id="code" aria-label="Room code">····</div>
-        <div class="url" id="url"></div>
-        <div class="hint">Scan the code or open the link on the same Wi-Fi, then pick a royal role.</div>
+        <div class="step">Scan the QR, or go to <span class="url" id="url"></span> and enter</div>
+        <div class="seal-row"><div class="seal" id="code" aria-label="Room code">····</div><span class="locked-tag" id="locked" hidden>LOCKED</span></div>
+        <div class="hint">Then pick a royal role. The code is new every game and only works while this game is running.</div>
       </div>
     </section>
 
@@ -155,7 +169,18 @@
     function render(s) {
       const code = s.room || "····";
       $("code").textContent = code; $("code-small").textContent = code;
-      $("url").textContent = s.joinUrl || "Open the phone page on this laptop's address, port 8000";
+      // Jackbox style: the address and the code separately (the QR carries both)
+      let address = "this laptop's address, port 8000";
+      if (s.joinUrl) { const u = new URL(s.joinUrl); u.searchParams.delete("room"); address = u.toString().replace(/\/$/, "").replace(/^https?:\/\//, ""); }
+      $("url").textContent = address;
+      if (s.room && s.room !== shownCode) {  // a new code: fetch the matching QR
+        shownCode = s.room;
+        ["qr", "qr-small"].forEach((id) => { if ($(id)) $(id).src = `/qr.svg?room=${encodeURIComponent(s.room)}`; });
+      }
+      locked = Boolean(s.locked);
+      $("locked").hidden = !locked;
+      $("lock").classList.toggle("on", locked);
+      $("lock").firstChild.textContent = locked ? "Unlock " : "Lock ";
       const [label, cls] = BADGES[s.brain] || ["…", ""];
       $("badge").textContent = label; $("badge").className = `badge ${cls}`;
 
@@ -199,9 +224,22 @@
       }
     }
 
+    let ws = null, shownCode = "", locked = false;
+    function command(payload) { if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ t: "host_command", ...payload })); }
+    function newCode() { command({ command: "new_room" }); }
+    function toggleLock() { command({ command: "lock", locked: !locked }); }
+    $("new-code").addEventListener("click", newCode);
+    $("lock").addEventListener("click", toggleLock);
+    for (const r of ROLES) {  // Kahoot style: click a player to remove them
+      $(`seat-${r.role}`).addEventListener("click", () => {
+        const name = $(`seat-${r.role}`).classList.contains("filled") ? $(`seat-${r.role}`).querySelector(".name").textContent : "";
+        if (name && confirm(`Remove ${name} from the court? They won't be able to rejoin this game.`)) command({ command: "kick", role: r.role });
+      });
+    }
+
     function connect() {
       const feed = new URLSearchParams(location.search).get("feed") || "ws://127.0.0.1:8765";
-      const ws = new WebSocket(feed);
+      ws = new WebSocket(feed);
       ws.onopen = () => document.body.classList.remove("disconnected");
       ws.onmessage = (event) => { try { render(JSON.parse(event.data)); } catch (err) { console.error(err); } };
       ws.onclose = () => { document.body.classList.add("disconnected"); setTimeout(connect, 1000); };
@@ -209,6 +247,8 @@
     document.addEventListener("keydown", (event) => {
       if (event.key === "Enter") startedByHost = !startedByHost;
       if (event.key === "f" || event.key === "F") document.documentElement.requestFullscreen?.();
+      if (event.key === "n" || event.key === "N") newCode();
+      if (event.key === "l" || event.key === "L") toggleLock();
     });
     connect();
   </script>

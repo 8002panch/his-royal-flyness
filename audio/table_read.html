@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Table Read · His Royal Flyness</title>
+<!-- Plays audio/lines.csv in story order from voice/manifest.js, with the sound cues from sfx/manifest.js (both written by
+     gen_voices.py). Open this file straight from disk. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #F3E9D2; --parchment-2: #EADCBB; --ink: #2B2118; --ink-soft: #6B5B4A;
+    --blue: #1F3A8A; --crimson: #9B1C1C; --gold: #C9A227; --line: #CDBB94;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--parchment); color: var(--ink); font: 17px/1.45 "IM Fell English", Georgia, serif; }
+  header { position: sticky; top: 0; z-index: 2; background: var(--parchment-2); border-bottom: 2px solid var(--gold);
+           padding: 12px 16px; }
+  h1 { font: 30px/1.1 "UnifrakturMaguntia", serif; margin: 0 0 4px; }
+  h2 { font: 22px/1.2 "UnifrakturMaguntia", serif; margin: 0; }
+  .sub { color: var(--ink-soft); font-size: 15px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin-top: 8px; font-size: 15px; }
+  .bar label { display: inline-flex; gap: 6px; align-items: center; }
+  select, button { font: inherit; font-size: 15px; color: var(--ink); background: var(--parchment); border: 1px solid var(--ink-soft);
+                   border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+  button.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+  button:disabled { opacity: .45; cursor: default; }
+  main { max-width: 880px; margin: 0 auto; padding: 8px 16px 140px; }
+  section { border: 1px solid var(--line); border-radius: 10px; margin: 16px 0; background: #F7F0DE; }
+  section.off { opacity: .5; }
+  .scene-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px;
+                border-bottom: 1px solid var(--line); }
+  .line { display: grid; grid-template-columns: 34px 1fr; gap: 8px; padding: 8px 12px; border-top: 1px dashed var(--line); }
+  .line:first-of-type { border-top: 0; }
+  .line.off { opacity: .38; }
+  .line.now { background: #FFF6D8; outline: 2px solid var(--gold); outline-offset: -2px; }
+  .line .play { width: 30px; height: 30px; padding: 0; border-radius: 50%; }
+  .who { font-weight: bold; letter-spacing: .02em; }
+  .meta { color: var(--ink-soft); font-size: 13px; margin-left: 6px; }
+  .tag { font-size: 12px; border: 1px solid var(--ink-soft); border-radius: 4px; padding: 0 5px; margin-left: 6px; color: var(--ink-soft); }
+  button.tag { background: #EFE3C4; cursor: pointer; }
+  button.tag.nofile { border-style: dashed; }
+  .note { color: var(--ink-soft); font-size: 14px; font-style: italic; }
+  .missing { color: var(--crimson); font-size: 13px; margin-left: 6px; }
+  #stage { position: fixed; left: 0; right: 0; bottom: 0; z-index: 3; background: var(--ink); color: var(--parchment);
+           padding: 12px 16px; min-height: 84px; display: flex; align-items: center; justify-content: center; text-align: center;
+           border-top: 3px solid var(--gold); font-size: 20px; }
+  #stage .who { color: var(--gold); margin-right: 8px; }
+  .empty { padding: 24px; border: 2px dashed var(--crimson); border-radius: 10px; margin-top: 24px; }
+  code { font-size: 14px; background: var(--parchment-2); padding: 1px 4px; border-radius: 3px; }
+  @media (max-width: 560px) { header { position: static; } h1 { font-size: 24px; } #stage { font-size: 17px; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Table Read</h1>
+  <div class="sub" id="summary">Loading the script…</div>
+  <div class="bar">
+    <label>Q01 Tinman <select data-quiz="Q01"><option value="correct">correct</option><option value="wrong">wrong</option></select></label>
+    <label>Q02 Rutabaga <select data-quiz="Q02"><option value="correct">correct</option><option value="wrong">wrong</option></select></label>
+    <label>Q03 Cheapdate <select data-quiz="Q03"><option value="correct">correct</option><option value="wrong">wrong</option></select></label>
+    <label>Giant <select id="giant"><option value="win">10 dodges</option><option value="loss">3 hits</option></select></label>
+    <label>Father <select id="father"><option value="win">5 clean dodges</option><option value="loss">hit</option></select></label>
+  </div>
+  <div class="bar">
+    <label>Speaker <select id="speaker"><option value="">everyone</option></select></label>
+    <button class="primary" id="playAll">▶ Play the story</button>
+    <button id="stop" disabled>■ Stop</button>
+    <label title="The quiet flight loop, to judge its level under the voices"><input type="checkbox" id="buzz"> Fly buzz</label>
+    <span class="sub">Space pauses. Lines without audio show for reading time. ♪ tags are sound cues.</span>
+  </div>
+</header>
+<main id="script"></main>
+<div id="stage" aria-live="polite"><span class="sub">Captions appear here.</span></div>
+<script src="voice/manifest.js"></script>
+<script src="sfx/manifest.js"></script>
+<script>
+"use strict";
+const TITLES = {
+  LOBBY: "Lobby and roles", TUTORIAL: "Tutorial: A Small Favor in the Royal Garden", C01: "C01: A Royal Misunderstanding",
+  Q01: "Q01: Tinman's Courtesy", STAGE1: "Stage 1: The Journey to the Court", Q02: "Q02: Rutabaga on the Stairs",
+  STAGE2: "Stage 2: Prove Yourselves", Q03: "Q03: Cheapdate's Welcome", C02: "C02: A Much Larger Problem",
+  GIANT: "Outlast the Giant: shouts after each swat", C03: "C03: The Giant Gives Up", C04: "C04: Prospero's Patience Ends", FATHER: "Prospero's Last Word: shouts after each throw",
+  E01: "E01: An Announcement by Choice",
+  E02: "E02: Miranda Writes Her Own Ending", ANYTIME: "Any time: notices, the Changeling, the Decree",
+};
+const NOT_STORY = new Set(["ANYTIME"]);  // played on events, not in the story run
+// The fights are pools the game picks from after each attack resolves. The story run plays a short sample of each, by outcome.
+const FIGHT_SAMPLE = {
+  GIANT: { key: "giant", win: ["G_DODGE_MIRANDA_1", "G_DODGE_TINMAN", "G_HIT_MIRANDA_1", "G_DODGE_CLOWN", "G_HALF_MIRANDA",
+                               "G_DODGE_CHEAPDATE", "G_NINE_MIRANDA"],
+           loss: ["G_DODGE_MIRANDA_2", "G_HIT_HAMLET", "G_DODGE_RUTABAGA", "G_LAST_HIT_MIRANDA", "G_HIT_PROSPERO"] },
+  FATHER: { key: "father", win: ["F_DODGE_MIRANDA_1", "F_DODGE_PROSPERO_1", "F_DODGE_MIRANDA_2", "F_FOUR_MIRANDA", "F_FOUR_PROSPERO"],
+            loss: ["F_DODGE_MIRANDA_1", "F_DODGE_HAMLET", "F_HIT_MIRANDA"] },
+};
+
+function storyQueue(r, who) {
+  const out = [];
+  for (const sc of scenes()) {
+    if (NOT_STORY.has(sc.key)) continue;
+    const sample = FIGHT_SAMPLE[sc.key];
+    const lines = sample ? (sample[r[sample.key]] || []).map((id) => sc.lines.find((l) => l.id === id)).filter(Boolean)
+                         : sc.lines;
+    out.push(...lines.filter((l) => onRoute(l, r) && (!who || l.speaker === who)));
+  }
+  return out;
+}
+const COLORS = { clown: "#9B1C1C", hamlet: "#1F3A8A", miranda: "#6E4FA3", prospero: "#5A3A1A",
+                 tinman: "#4F5B66", cheapdate: "#7A2E5A", rutabaga: "#5E6B1F" };
+const M = window.VOICE_MANIFEST;
+const SFX = Object.fromEntries(((window.SFX_MANIFEST || {}).sounds || []).map((s) => [s.id, s]));
+const GAP_MS = 200;       // silence between lines
+const CUE_LEAD_MS = 900;  // a line starts this long after its sound cue, or when the cue ends if sooner
+const BUZZ = "FLY_BUZZ_LOOP";
+const usable = (x) => !!(x && x.file && !x.stale);  // a stale take was made from an older version of the line
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+let run = null;  // {queue, i, audio, cues, timer, paused, spoke, speak}
+let buzz = null;
+
+function route() {
+  const quiz = {};
+  document.querySelectorAll("[data-quiz]").forEach((s) => { quiz[s.dataset.quiz] = s.value; });
+  return { quiz, giant: $("#giant").value, father: $("#father").value };
+}
+
+function onRoute(line, r) {
+  const b = line.branch, fatherPlayed = r.giant === "loss";
+  if (line.scene === "E01" && fatherPlayed && r.father === "loss") return false;  // E02 replaces E01
+  if (b === "correct" || b === "wrong") return r.quiz[line.scene] === b;
+  if (b === "giant_win") return r.giant === "win";
+  if (b === "giant_loss") return fatherPlayed;
+  if (b === "father_win") return fatherPlayed && r.father === "win";
+  if (b === "father_loss") return fatherPlayed && r.father === "loss";
+  return true;
+}
+
+function scenes() {
+  const out = [];
+  for (const ln of M.lines) {
+    if (!out.length || out[out.length - 1].key !== ln.scene) out.push({ key: ln.scene, lines: [] });
+    out[out.length - 1].lines.push(ln);
+  }
+  return out;
+}
+
+function render() {
+  const r = route(), who = $("#speaker").value;
+  $("#father").disabled = r.giant === "win";  // the father encounter only happens after losing to the Giant
+  $("#script").innerHTML = scenes().map((sc) => {
+    const live = sc.lines.some((ln) => onRoute(ln, r));
+    return `<section class="${live ? "" : "off"}" data-scene="${sc.key}">
+      <div class="scene-head"><h2>${esc(TITLES[sc.key] || sc.key)}</h2>
+        <button data-play-scene="${sc.key}">▶ Scene</button></div>
+      ${sc.lines.filter((ln) => !who || ln.speaker === who).map((ln) => `
+        <div class="line ${onRoute(ln, r) ? "" : "off"}" id="L_${ln.id}">
+          <button class="play" data-play="${ln.id}" title="Play ${esc(ln.id)}">▶</button>
+          <div>
+            <span class="who" style="color:${COLORS[ln.speaker] || "inherit"}">${esc(ln.name)}</span>
+            <span class="meta">${esc(ln.id)}${ln.panel ? " · " + esc(ln.panel) : ""}</span>
+            ${ln.branch ? `<span class="tag">${esc(ln.branch.replace("_", " "))}</span>` : ""}
+            ${ln.sfx ? cueTag(ln.sfx) : ""}
+            ${ln.file ? (ln.stale ? `<span class="missing">old take, regenerate</span>` : "") : `<span class="missing">no audio yet</span>`}
+            <div>${esc(ln.caption)}</div>
+          </div>
+        </div>`).join("")}
+    </section>`;
+  }).join("") + (who ? "" : soundBank());
+}
+
+const soundName = (id) => id.toLowerCase().replace(/_/g, " ");
+
+function cueTag(id) {
+  const s = SFX[id], ok = usable(s);
+  return `<button class="tag${ok ? "" : " nofile"}" data-sfx="${esc(id)}" title="${esc(ok ? (s.when || id) : id + ": not generated yet")}"
+    >♪ ${esc(soundName(id))}</button>`;
+}
+
+function soundBank() {
+  const all = Object.values(SFX);
+  if (!all.length) return "";
+  return `<section data-scene="SFX">
+    <div class="scene-head"><h2>Sound effects</h2><span class="sub">Giant sounds are mono and only play once a swat resolves.</span></div>
+    ${all.map((s) => `
+      <div class="line">
+        <button class="play" data-sfx="${esc(s.id)}" title="Play ${esc(s.id)}">▶</button>
+        <div>
+          <span class="who">${esc(soundName(s.id))}</span><span class="meta">${esc(s.id)}</span>
+          ${s.loop ? `<span class="tag">loop</span>` : ""}
+          ${usable(s) ? "" : `<span class="missing">${s.file ? "old take, regenerate" : "no audio yet"}</span>`}
+          <div class="note">${esc(s.when || "")}</div>
+        </div>
+      </div>`).join("")}
+  </section>`;
+}
+
+function playSound(id) {
+  const s = SFX[id];
+  if (!usable(s)) return null;
+  const a = new Audio("sfx/" + s.file);
+  a.play().catch(() => {});
+  return a;
+}
+
+function setBuzz(on) {
+  if (buzz) { buzz.pause(); buzz = null; }
+  if (on && usable(SFX[BUZZ])) {
+    buzz = new Audio("sfx/" + SFX[BUZZ].file);
+    buzz.loop = true;
+    buzz.play().catch(() => {});
+  }
+  $("#buzz").checked = !!buzz;
+}
+
+function show(ln) {
+  $("#stage").innerHTML = `<span><span class="who">${esc(ln.name.toUpperCase())}:</span>${esc(ln.caption)}</span>`;
+  document.querySelectorAll(".line.now").forEach((el) => el.classList.remove("now"));
+  const el = document.getElementById("L_" + ln.id);
+  if (el) { el.classList.add("now"); el.scrollIntoView({ block: "center", behavior: "smooth" }); }
+}
+
+function stop() {
+  if (run) { if (run.audio) run.audio.pause(); run.cues.forEach((a) => a.pause()); clearTimeout(run.timer); }
+  run = null;
+  $("#stage").style.opacity = "";
+  $("#stop").disabled = true;
+  document.querySelectorAll(".line.now").forEach((el) => el.classList.remove("now"));
+}
+
+function next() {
+  if (!run) return;
+  if (run.i >= run.queue.length) { stop(); return; }
+  const ln = run.queue[run.i++], me = run;
+  let moved = false;
+  const advance = (ms) => {  // once per line, and never on behalf of a run that was stopped or replaced
+    if (moved || run !== me) return;
+    moved = true;
+    me.timer = setTimeout(next, ms);
+  };
+  const speak = () => {  // once per line, after its sound cue has had a head start
+    if (me.spoke || me.paused || run !== me) return;
+    me.spoke = true;
+    clearTimeout(me.timer);
+    if (usable(ln)) {
+      me.audio = new Audio("voice/" + ln.file);
+      me.audio.onended = () => advance(GAP_MS);
+      me.audio.onerror = () => advance(readMs(ln));
+      me.audio.play().catch(() => advance(readMs(ln)));
+    } else {
+      advance(readMs(ln));
+    }
+  };
+  show(ln);
+  me.audio = null;
+  me.spoke = false;
+  me.speak = speak;
+  const cue = ln.sfx && playSound(ln.sfx);
+  if (!cue) { speak(); return; }
+  me.cues = me.cues.filter((a) => !a.ended).concat(cue);
+  cue.addEventListener("ended", speak);
+  cue.addEventListener("error", speak);
+  me.timer = setTimeout(speak, CUE_LEAD_MS);
+}
+
+function togglePause() {
+  if (!run) return;
+  if (!run.paused) {
+    run.paused = true;
+    clearTimeout(run.timer);
+    if (run.audio) run.audio.pause();
+    run.cues.forEach((a) => a.pause());
+    $("#stage").style.opacity = ".6";
+    return;
+  }
+  run.paused = false;
+  $("#stage").style.opacity = "";
+  run.cues.forEach((a) => { if (!a.ended && a.currentTime > 0) a.play().catch(() => {}); });
+  if (!run.spoke) run.timer = setTimeout(run.speak, 300);
+  else if (run.audio && !run.audio.ended) run.audio.play();
+  else next();
+}
+
+const readMs = (ln) => Math.max(1400, ln.caption.split(/\s+/).length * 330);
+
+function play(queue) {
+  stop();
+  if (!queue.length) return;
+  run = { queue, i: 0, audio: null, cues: [], timer: 0, paused: false, spoke: false, speak: null };
+  $("#stop").disabled = false;
+  next();
+}
+
+function init() {
+  if (!M || !Array.isArray(M.lines)) {
+    $("#summary").textContent = "No manifest yet.";
+    $("#script").innerHTML = `<div class="empty">Run <code>python audio/gen_voices.py --manifest-only</code> (or generate the
+      voices) from the repo folder, then reload. It writes <code>audio/voice/manifest.js</code>.</div>`;
+    $("#playAll").disabled = true;
+    return;
+  }
+  const voiced = M.lines.filter(usable).length, old = M.lines.filter((l) => l.stale).length, sounds = Object.values(SFX);
+  $("#summary").textContent = `${M.lines.length} lines, ${voiced} voiced (${M.model || "no model"})` +
+    `${old ? `, ${old} old takes to regenerate` : ""}; ${sounds.filter(usable).length} of ${sounds.length} sounds made. ` +
+    "Pick the quiz answers and outcomes to hear a route.";
+  $("#buzz").disabled = !usable(SFX[BUZZ]);
+  $("#buzz").onchange = (e) => setBuzz(e.target.checked);
+  for (const [key, name] of Object.entries(M.speakers || {})) {
+    const n = M.lines.filter((l) => l.speaker === key).length;
+    $("#speaker").insertAdjacentHTML("beforeend", `<option value="${esc(key)}">${esc(name)} (${n})</option>`);
+  }
+  document.querySelectorAll("header select").forEach((s) => s.addEventListener("change", () => { stop(); render(); }));
+  $("#playAll").onclick = () => {
+    const r = route(), who = $("#speaker").value;
+    play(storyQueue(r, who));
+  };
+  $("#stop").onclick = stop;
+  $("#script").addEventListener("click", (e) => {
+    const one = e.target.closest("[data-play]"), sc = e.target.closest("[data-play-scene]"), fx = e.target.closest("[data-sfx]");
+    if (fx) { if (fx.dataset.sfx === BUZZ) setBuzz(!buzz); else playSound(fx.dataset.sfx); return; }
+    if (one) play(M.lines.filter((l) => l.id === one.dataset.play));
+    if (sc) {
+      const r = route(), who = $("#speaker").value, key = sc.dataset.playScene;
+      const lines = M.lines.filter((l) => l.scene === key && (!who || l.speaker === who));
+      const routed = lines.filter((l) => onRoute(l, r));
+      play(routed.length ? routed : lines);
+    }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.code !== "Space" || !run || e.target.tagName === "SELECT") return;
+    e.preventDefault();
+    togglePause();
+  });
+  render();
+}
+init();
+</script>
+</body>
+</html>

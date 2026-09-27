@@ -17,7 +17,7 @@ from typing import Any
 
 from .godot_link import GodotLink
 from .movement import MovementSimulator
-from .relay_client import RelayClient
+from .relay_client import HostJoinError, RelayClient
 from .seer_adapter import PlaceholderSeerAdapter, projected_stimuli
 from .state import MOVEMENT_ROLES, RoomState
 
@@ -55,10 +55,12 @@ class GameSession:
     """Pure authoritative game state; importable for headless replay and tests."""
 
     def __init__(self, room_code: str, seer: Any = None, join_url: str | None = None) -> None:
+        """`join_url` is the phone link shown with the room code; put `{room}` where the code goes so it follows a new code."""
         self.state = RoomState(room_code=room_code)
         self.simulator = MovementSimulator()
         self.seer = seer or PlaceholderSeerAdapter()
-        self.join_url = join_url
+        self.join_url_template = join_url
+        self.locked = False  # from the relay's roster
         # Tests and replays sense inside step() (exact and deterministic). The live server sets this False and runs the brain on
         # its own thread (GameServer), so a slow brain step never delays movement, the relay or the host screen.
         self.sense_in_step = True
@@ -71,6 +73,7 @@ class GameSession:
     def apply_input(self, message: dict[str, Any], now: float) -> None:
         kind, role = message.get("t"), message.get("role")
         if kind == "roster":  # from the relay whenever a phone takes or leaves a role
+            self.locked = bool(message.get("locked", False))
             self.players = [{"name": str(p.get("name", "?"))[:32], "role": p["role"]}
                             for p in message.get("players", []) if isinstance(p, dict) and p.get("role") in self.state.inputs]
             return
@@ -101,6 +104,11 @@ class GameSession:
         self.stimuli = projected_stimuli(fly.x, fly.y, fly.z, self.state.elapsed_s)
         if self.sense_in_step:
             self._sense()
+
+    @property
+    def join_url(self) -> str | None:
+        template = self.join_url_template
+        return template.replace("{room}", self.state.room_code) if template else None
 
     def _sense(self) -> dict[str, Any]:
         """Sense once per tick; the Seer's phone view and Godot's brainActivity both reuse these cues."""
@@ -144,7 +152,8 @@ class GameSession:
         activity = cues.get("activity", {}) if cues.get("source") in ("true", "changeling") else {}
         return {
             "t": "state", "phase": "play", "time": round(self.state.elapsed_s, 3),
-            "room": self.state.room_code, "joinUrl": self.join_url, "brain": self.seer.source, "brainActivity": activity,
+            "room": self.state.room_code, "joinUrl": self.join_url, "locked": self.locked,
+            "brain": self.seer.source, "brainActivity": activity,
             "fly": {"x": round(fly.x, 4), "y": round(fly.y, 4), "z": round(fly.z, 4), "vx": round(fly.vx, 4), "vy": round(fly.vy, 4), "vz": round(fly.vz, 4)},
             "render": {"princess": stimuli["princess"], "giant": giant},
             "roles": {role: self.state.inputs[role].value != 0 for role in self.state.inputs},
@@ -153,8 +162,49 @@ class GameSession:
 
 
 class GameServer:
-    def __init__(self, session: GameSession, relay: RelayClient, godot: GodotLink) -> None:
+    def __init__(self, session: GameSession, relay: RelayClient, godot: GodotLink, new_code=None) -> None:
+        """`new_code`: a callable giving a fresh room code. With it, the host can start a new game with a new code, and a code
+        that's already taken on a shared relay is swapped automatically; without it (a pinned --room) the code never changes."""
         self.session, self.relay, self.godot = session, relay, godot
+        self.new_code = new_code
+        self._switching_room = False
+
+    async def new_room(self) -> str:
+        """Jackbox/Kahoot style: every game gets a fresh code. The old room closes (its phones are told to scan the new code)."""
+        if self.new_code is None:
+            return self.session.state.room_code
+        await self.relay.send_host({"t": "close_room"})
+        code = self.new_code()
+        self._move_to(code)
+        return code
+
+    def _move_to(self, code: str) -> None:
+        self.session.state.room_code = self.relay.room = code
+        self.session.players, self.session.locked = [], False
+        for input_state in self.session.state.inputs.values():
+            input_state.value = 0
+        self._switching_room = True
+        asyncio.create_task(self.relay.close())  # relay_forever reconnects straight away as the new room's host
+
+    async def set_locked(self, locked: bool) -> None:
+        await self.relay.send_host({"t": "lock", "locked": locked})
+
+    async def kick(self, role: str) -> None:
+        await self.relay.send_host({"t": "kick", "role": role})
+
+    async def handle_host_command(self, message: dict[str, Any]) -> None:
+        """Lobby commands from a local host screen (see GodotLink) or the launcher's keys."""
+        command = message.get("command")
+        if command == "new_room":
+            code = await self.new_room()
+            print(f"[host]  New game: room code {code}", flush=True)
+        elif command == "lock":
+            locked = bool(message.get("locked", not self.session.locked))
+            await self.set_locked(locked)
+            print(f"[host]  Court {'locked: no new phones' if locked else 'unlocked'}", flush=True)
+        elif command == "kick" and message.get("role") in self.session.state.inputs:
+            await self.kick(message["role"])
+            print(f"[host]  Removed the {message['role']}", flush=True)
 
     async def accept_input(self, message: dict[str, Any]) -> None:
         self.session.apply_input(message, time.monotonic())
@@ -171,10 +221,24 @@ class GameServer:
                 await self.relay.receive_forever(self.accept_input)
             except asyncio.CancelledError:
                 raise
-            except Exception as exc:  # refused, dropped, auth failure: keep the game running and try again
+            except HostJoinError as exc:
+                if exc.code == "HOST_EXISTS" and self.new_code is not None:  # that code is in use on a shared relay: take another
+                    self.session.state.room_code = self.relay.room = self.new_code()
+                    print(f"[server] that room code was taken; new code {self.relay.room}", flush=True)
+                    continue
                 if not announced_down:
+                    print(f"[server] the relay refused this game ({exc}); retrying...", flush=True)
+                    announced_down = True
+            except Exception as exc:  # refused, dropped: keep the game running and try again
+                if self._switching_room:
+                    self._switching_room = False
+                elif not announced_down:
                     print(f"[server] relay connection lost or refused ({exc.__class__.__name__}); retrying...", flush=True)
                     announced_down = True
+            if self._switching_room:  # a new code: reconnect at once, quietly
+                self._switching_room = False
+                await self.relay.close()
+                continue
             await self.relay.close()
             for input_state in self.session.state.inputs.values():  # nobody's input can be trusted until phones are heard again
                 input_state.value = 0

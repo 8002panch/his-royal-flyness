@@ -27,3 +27,8 @@ host/export/
 # personal scratch (keep experiments local unless you want them shared)
 team/*/scratch/
 *.log
+
+# gen_voices.py: half-written files if interrupted, and each machine's raw takes (kept so polish changes are free)
+audio/*/.*.part
+audio/*/.*.polish.mp3
+audio/*/.raw/

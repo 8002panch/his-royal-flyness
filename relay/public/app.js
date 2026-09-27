@@ -1,5 +1,5 @@
 import { buildControlMessage, isPrivateSeerView } from "./screens/common.js";
-import { joinScreen, normalizeRoom, roleScreen } from "./screens/join.js";
+import { joinScreen, normalizeRoom, randomRoyalName, roleScreen } from "./screens/join.js";
 import { renderHelmsman } from "./screens/helmsman.js";
 import { renderLiftmaster } from "./screens/liftmaster.js";
 import { renderWingmaster } from "./screens/wingmaster.js";
@@ -63,6 +63,7 @@ function patchReadouts(html) {
 
 function bindJoin() {
   const form = document.querySelector("#join-form");
+  document.querySelector("#random-name")?.addEventListener("click", () => { form.name.value = randomRoyalName(); });
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     state.room = normalizeRoom(form.room.value);
@@ -142,11 +143,26 @@ function connect(isNewJoin = false) {
   socket.addEventListener("error", () => socket.close());
 }
 
+// The game this phone was in is gone (a new code, or the host removed it): back to the join form, forget the old code and
+// role so the phone never keeps retrying a dead room, and say what happened.
+function leaveCourt(message) {
+  releaseControl();
+  state.role = ""; state.joined = false; state.availableRoles = []; state.room = "";
+  localStorage.setItem(PROFILE_KEY, JSON.stringify({ name: state.name }));
+  const url = new URL(location.href);
+  url.searchParams.delete("room");
+  history.replaceState(null, "", url);
+  render();
+  showJoinError(message);
+}
+
 function scheduleReconnect() { reconnectOverlay.hidden = false; clearTimeout(state.reconnectTimer); state.reconnectTimer = setTimeout(() => connect(), 1200); }
 
 function handleMessage(data) {
   let message; try { message = JSON.parse(data); } catch { return; }
   if (message.t === "joined") { state.joined = true; state.availableRoles = message.roles || []; state.role = ""; render(); return; }
+  if (message.t === "room_closed") return leaveCourt("That game has ended. Enter the new code from the main screen.");
+  if (message.t === "kicked") return leaveCourt("The host removed you from this court.");
   if (message.t === "seat_moved") { releaseControl(); state.role = ""; state.joined = true; render(); showNotice("Your seat moved to your newer page."); return; }
   if (message.t === "roles") { state.availableRoles = message.roles || []; if (!state.role && state.joined) render(); return; }
   if (message.t === "assigned") { state.joined = true; state.role = message.role; state.availableRoles = []; state.view = {}; saveProfile(); render(); return; }
@@ -154,6 +170,8 @@ function handleMessage(data) {
   if (isPrivateSeerView(message) && state.role === "seer") { state.view = message; render(); return; }
   if (message.t === "error") {
     if (message.code === "ROLE_TAKEN") return showNotice("Someone just took that role. Pick another.");
+    if (["ROOM_NOT_FOUND", "REMOVED"].includes(message.code)) return leaveCourt(message.message);  // an old or closed code
+    if (message.code === "NAME_TAKEN" || message.code === "ROOM_LOCKED") { state.joined = false; state.role = ""; render(); return showJoinError(message.message); }
     if (!state.joined) render();  // back to the join form, never a blank page
     showJoinError(message.message);
   }

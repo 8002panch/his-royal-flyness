@@ -29,7 +29,7 @@ host/ (Godot 4, 2D): the only full-game screen; renders state, decides nothing
 | Relay + phone page | Ved | `relay/relay.py`, `relay/public/` (join, role pick, 4 role screens), `relay/tests/` |
 | Game server | Arnav | `server/main.py`, `state.py`, `movement.py`, `seer_adapter.py` (placeholder + graybox world), `godot_link.py`, `relay_client.py`, `sample_state.json`, `server/tests/`; `run_local.py` (one-command launcher) |
 | Brain + Seer | Neil | `brain/` (graph, model, Changeling, probes, replay, `seer.py`), `server/chronicler.py` |
-| Godot host + audio | Anshul | `host/` (on branch `anshul/host-seer-hud`), `audio/` (not started) |
+| Godot host + audio | Anshul | `host/` (on branch `anshul/host-seer-hud`), `audio/` (voice lines, sound effects and their generator: [Voices](#voices-elevenlabs)) |
 
 ## Run it locally
 
@@ -210,7 +210,7 @@ exact bearing (GAME.md, "The main screen").
 
 ## The brain (`brain/`)
 
-### Graph (`brain/build_graph.py`, about 30 s, under 600 MB)
+### Graph (`brain/build_graph.py`, about 35 s, peak memory about 700 MB)
 
 - MaleCNS v1.0 (Berg et al., *Cell* 2026; CC-BY 4.0). Neurons with a superclass not containing "tbc": **166,606**.
 - Connections with 5 or more synapses: **6,240,402** (72.4% of all synapses). Output: `data/graph_true.npz`, `data/neurons.parquet`.
@@ -257,7 +257,7 @@ Groups live in `brain/io_sets.json` (built by `brain/io_sets.py`; left and right
 | `down` | LPLC4 | `DNp07_10` landing 43.3 / 4.1 |
 | `duck` | LC4 + LPLC2 | `DNp01` Giant Fiber 99.2 / 2.1 |
 | `serenade` | LC10a + LC10d, both eyes | `pIP10` song 8.7 / 1.3 |
-| `lock_L`, `lock_R` | LC10a + LC10d, one eye | `DNa02` same side 18.2 / 17.3 |
+| `lock_L`, `lock_R` | LC10a + LC10d, one eye | `DNa02` same side: left 18.1 / 2.0, right 17.3 / 1.0 |
 
 The button groups (forward to lock) are from the earlier brain-driven movement plan. Movement is direct now, so the game only
 uses the Seer groups; the button channels stay available and tested. All pass the gate (target z above 3 and at least 2x every
@@ -426,6 +426,81 @@ can't run one. So the domain needs one of these, best first:
 - Fallbacks at the demo: the local mode (`python run_local.py`) on the venue Wi-Fi or a phone hotspot; the keyboard mode is Phase 5.
 - Secrets only in `.env` (git-ignored); `.env.example` lists the names with blank values.
 
+## Voices (ElevenLabs)
+
+Every voiced line of Arnav's story script (GAME.md, "Panel-by-panel story script", on `arnav/story-comic-draft` until it merges), the tutorial and stage popups, and the lobby,
+Changeling and Decree lines are in **`audio/lines.csv`**: 145 lines in story order, one row per speech bubble, with an `id`, the
+`scene` and `panel`, a `branch` (`correct` / `wrong` for the quizzes, `giant_win` / `giant_loss`, `father_win` / `father_loss`),
+the `speaker`, an optional `stability` override and an optional `sfx` cue. Square brackets are ElevenLabs v3 audio tags
+(`[hiccups]`, `[softly]`): they direct the voice and are stripped from captions. Delete a tag if a take sounds wrong. The bank
+started as Arnav's words and the voice pass changed some of them (TEAM.md, Neil to Arnav): each suitor now asks and explains
+their own quiz question, each quiz opens with a short suitor line (`Q0x_P1B`), C04 panel 2 is Prospero's own line, and
+Miranda has eight more bubbles (tutorial, C01, C02, C03, C04, E01).
+
+**Fight shouts.** The `GIANT` and `FATHER` scenes are pools of short shouts (Miranda, Hamlet, the Clown, Prospero and the
+rivals) for the two dodge fights, grouped by the event in `panel`: `after a dodge`, `after a hit`, and milestones (`after dodge
+5`, `after hit 2`, `after dodge 9`; `after dodge 4` and `after the hit` against Prospero). After an attack resolves, the game
+plays that event's sound (the shout's `sfx`) and may add one shout from the pool (a milestone line replaces the ordinary one).
+A shout never starts, stops or changes because a warning began, and none names a direction or a timing word (a test checks);
+that keeps the Seer's secret. Skip a shout if one is still playing.
+
+**`audio/voices.json`** is the cast: one ElevenLabs voice per speaker (Clown, Hamlet, Miranda, Prospero, Lord Tinman,
+Sir Cheapdate, Count Rutabaga), a short casting brief and the v3 `stability` (0.0 creative, 0.5 natural, 1.0 robust, closest to
+the voice's sample). Miranda runs at 1.0 so she stays soft; her refusal (E02_P3) overrides it to 0.5. Voice IDs are not secret,
+so they're committed and everyone generates the same cast; a voice-library link works in place of an ID. Library voices only,
+no clones of real people.
+
+**`audio/sfx.csv`** is the sound bank (ElevenLabs sound effects): the Giant's grunts, growls, huffs, swats and crashes, the
+comic-panel noises, three quiet fly sounds (`FLY_BUZZ_LOOP` for under flight, `FLY_TAKEOFF`, `FLY_ZIP`), a courtiers' gasp
+and cheer, and something Prospero throws missing or hitting Hamlet (there's no sound when he throws, which would give away the timing). Each has a prompt,
+a length, whether it loops, a `volume_db` baked into the file and a `when` column saying where it plays. Every sound is made mono.
+
+```bash
+python audio/gen_voices.py --dry-run      # no key needed: checks both banks and the cast, lists what would be sent
+python audio/gen_voices.py --my-voices    # the voices in your account, with IDs to paste into voices.json
+python audio/gen_voices.py --check        # the key works, each cast voice is found, characters left this month
+python audio/gen_voices.py                # generates what changed; --only C01 hamlet H_TITLE sfx, --force to redo
+python audio/gen_voices.py --prune        # also deletes mp3s whose line or sound was removed from a bank
+python audio/gen_voices.py --polish-only  # no key needed: applies polish changes that need no new take
+```
+
+- The key: `ELEVENLABS_API_KEY` in `.env` at the repo root (git-ignored) or the environment. Never in a commit.
+- Output: `audio/voice/<id>.mp3` and `audio/sfx/<id>.mp3`, each folder with a `manifest.json` (every entry with its caption or
+  cue and its file, `null` until generated, `stale: true` if the file was made from an older version of the line) and a
+  `manifest.js` (the same, for the table read). A line is regenerated only when its text, voice, model or stability changes, and
+  a sound only when its prompt, length or loop changes, so rerunning costs nothing for work that's done. The mp3s are committed so
+  the demo laptop needs no key. `--no-sfx` skips the sounds.
+- **Polish** (after generation, free): `level` in voices.json brings every speaker's speech to -16 dB so the cast sits at
+  one loudness (a gentle limiter keeps peaks such as hiccups below -1 dBFS); `tempo` (pitch kept) and `max_pause` speed up the
+  Clown (1.15, 0.4 s) and trim Miranda's long pauses (0.45 s); each sound gets its `volume_db`. It needs ffmpeg, which
+  `pip install -r requirements.txt` brings (`imageio-ffmpeg`). The manifest records the polish, so a take is never polished
+  twice. A new `level` or `volume_db` is applied to the polished take in place, for free, anywhere. The machine that generated
+  a take also keeps its raw version in a git-ignored `.raw/` folder, so a new `tempo` or `max_pause` is free there; on another
+  machine it means new takes.
+- A voice-library voice the API can't find has to be added to "My Voices" on elevenlabs.io first; `--check` says which.
+- Takes made in the ElevenLabs app or through Claude's ElevenLabs connector: save them as `audio/voice/<id>.mp3` and run
+  `--adopt` (or `--adopt --only <id>`) so the script treats them as up to date and polishes them on the next run.
+  `stability: null` in voices.json means the voice's own saved setting, which is what the app and the connector use.
+- Plan limits to know: the free account allows 2 generations at once, and the Miranda, Prospero and Lord Tinman library voices
+  need the Creator tier or above. An API key must be the secret that starts with `sk_` (shown once when created), not the key's
+  ID. The first bad-key or quota error stops the run. `--dry-run` lists anything left to do.
+- **Table read:** open `audio/table_read.html` from disk. Pick the quiz answers and the Giant and father outcomes, then play the
+  story route, one scene or one line, with captions and sound cues (a line starts 0.9 s after its cue). The story run plays a
+  short sample of each fight's shouts for the chosen outcome; a fight's ▶ Scene plays the whole pool. Lines without a current
+  take show for reading time, so it works as a script read before any voice exists. Filter by speaker to audition one voice;
+  the Fly buzz box loops the flight ambience to judge its level; every sound is listed at the bottom.
+- **In the game** (to wire up): the server sends `{"t":"event","kind":"voice","id":"C01_P4_PROSPERO","speaker":"Prospero",
+  "caption":"..."}` (the shape Anshul's `caption_scroll.gd` already reads) and the host plays `audio/voice/<id>.mp3`, with the
+  line's `sfx` cue from the manifest just before it. Only play lines on the route the server chose.
+- **The Seer's secret:** no voice line or sound may reveal a hidden hazard's side or timing (GAME.md). Giant, father-fight and crowd
+  sounds and the fight shouts are mono and centred, and they play only once an attack resolves (hit or miss), never when the
+  warning starts. `FLY_BUZZ_LOOP` sits 18 dB down
+  and stops during comics and questions.
+- Tests: `python -m pytest audio/tests -q` (both banks are sound, only the final cast speaks, the suitors ask their own questions,
+  fight shouts hold no direction or timing word,
+  every quiz has both outcomes, generation against a fake ElevenLabs client caches, recasts and survives a missing voice, and
+  polishing shortens pauses and runs once).
+
 ## Tests
 
 ```bash
@@ -477,6 +552,10 @@ The three MaleCNS v1.0 Feather files go in `data/` (git-ignored; public CC-BY 4.
 ```bash
 python -m brain.build_graph && python -m brain.changeling
 ```
+
+The same files are in Janelia's public bucket, which also works where the download page is blocked:
+`https://storage.googleapis.com/flyem-male-cns/v1.0/connectome-data/flat-connectome/<file name>`. A fresh build on Sun 27
+Sept reproduced every number here, all 68 brain tests, the probes gate and `team/neil/seer_eval.csv`.
 
 Teammates can skip this: ask Neil to AirDrop `data/graph_true.npz`, `data/graph_changeling_{0,1,2}.npz` and
 `data/neurons.parquet` (about 90 MB). Check it with `python -m brain.probes --level 1.0` (about 1 minute).

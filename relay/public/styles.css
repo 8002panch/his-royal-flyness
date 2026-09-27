@@ -16,6 +16,7 @@ input { width: 100%; min-height: 3.5rem; padding: .75rem 1rem; color: #fff; back
 input:focus-visible, button:focus-visible { outline: 4px solid #ffdc75; outline-offset: 3px; }
 .primary, .role-card { border: 0; border-radius: .9rem; color: #1a0e1e; background: #fbcf64; min-height: 3.8rem; font-weight: 900; cursor: pointer; }
 .primary:active { transform: translateY(1px); }
+.secondary { border: 2px solid #725b7f; border-radius: .9rem; color: #fff; background: transparent; min-height: 3rem; font-weight: 700; cursor: pointer; }
 .form-error { min-height: 1.4rem; color: #ffb6b6; font-weight: 700; }
 .microcopy { color: #c9b8d1; font-size: .85rem; line-height: 1.4; }
 .role-grid { display: grid; gap: .75rem; margin: 1.5rem 0; }
