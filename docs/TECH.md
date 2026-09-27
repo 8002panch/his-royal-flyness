@@ -29,7 +29,7 @@ host/ (Godot 4, 2D): the only full-game screen; renders state, decides nothing
 | Relay + phone page | Ved | `relay/relay.py`, `relay/public/` (join, role pick, 4 role screens), `relay/tests/` |
 | Game server | Arnav | `server/main.py`, `state.py`, `movement.py`, `seer_adapter.py` (placeholder + graybox world), `godot_link.py`, `relay_client.py`, `sample_state.json`, `server/tests/`; `run_local.py` (one-command launcher) |
 | Brain + Seer | Neil | `brain/` (graph, model, Changeling, probes, replay, `seer.py`), `server/chronicler.py` |
-| Godot host + audio | Anshul | `host/` (on branch `anshul/host-seer-hud`), `audio/` (not started) |
+| Godot host + audio | Anshul | `host/` (on branch `anshul/host-seer-hud`), `audio/` (voice lines and their generator: [Voices](#voices-elevenlabs)) |
 
 ## Run it locally
 
@@ -425,6 +425,40 @@ can't run one. So the domain needs one of these, best first:
 - Cloud and DNS changes need the team's approval and credentials (Ved owns the Droplet and the domain).
 - Fallbacks at the demo: the local mode (`python run_local.py`) on the venue Wi-Fi or a phone hotspot; the keyboard mode is Phase 5.
 - Secrets only in `.env` (git-ignored); `.env.example` lists the names with blank values.
+
+## Voices (ElevenLabs)
+
+Every voiced line of Arnav's story script (GAME.md, "Panel-by-panel story script", on `arnav/story-comic-draft` until it merges), the tutorial and stage popups, and the lobby,
+Changeling and Decree lines are in **`audio/lines.csv`**: 104 lines in story order, one row per speech bubble, with an `id`, the
+`scene` and `panel`, a `branch` (`correct` / `wrong` for the quizzes, `giant_win` / `giant_loss`, `father_win` / `father_loss`)
+and the `speaker`. The captions are Arnav's words exactly. Square brackets are ElevenLabs v3 audio tags (`[hiccups]`,
+`[nervously]`): they direct the voice and are stripped from captions. Delete a tag if a take sounds wrong.
+
+**`audio/voices.json`** is the cast: one ElevenLabs voice per speaker (Clown, Hamlet, Miranda, Prospero, Lord Tinman,
+Sir Cheapdate, Count Rutabaga), a short casting brief and the v3 `stability` (0.0 creative, 0.5 natural, 1.0 robust). Voice IDs are
+not secret, so they're committed and everyone generates the same cast; a voice-library link works in place of an ID. Library
+voices only, no clones of real people.
+
+```bash
+python audio/gen_voices.py --dry-run      # no key needed: checks the bank and the cast, lists what would be sent
+python audio/gen_voices.py --my-voices    # the voices in your account, with IDs to paste into voices.json
+python audio/gen_voices.py --check        # the key works, each cast voice is found, characters left this month
+python audio/gen_voices.py                # generates what changed; --only C01 hamlet H_TITLE, --force to redo
+```
+
+- The key: `ELEVENLABS_API_KEY` in `.env` at the repo root (git-ignored) or the environment. Never in a commit.
+- Output: `audio/voice/<id>.mp3`, plus `audio/voice/manifest.json` (every line in story order with its caption and file, `null`
+  until generated) and `manifest.js` (the same, for the table read). A line is regenerated only when its text, voice, model or
+  stability changes, so rerunning costs nothing for lines that are done. The mp3s are committed so the demo laptop needs no key.
+- A voice-library voice the API can't find has to be added to "My Voices" on elevenlabs.io first; `--check` says which.
+- **Table read:** open `audio/table_read.html` from disk. Pick the quiz answers and the Giant and father outcomes, then play the
+  story route, one scene or one line, with captions. Lines without audio show for reading time, so it works as a script read
+  before any voice exists. Filter by speaker to audition one voice.
+- **In the game** (to wire up): the server sends `{"t":"event","kind":"voice","id":"C01_P4_PROSPERO","speaker":"Prospero",
+  "caption":"..."}` (the shape Anshul's `caption_scroll.gd` already reads) and the host plays `audio/voice/<id>.mp3`. Only
+  play lines on the route the server chose. No voice line may reveal a hidden hazard's side or timing (GAME.md).
+- Tests: `python -m pytest audio/tests -q` (the bank is sound, only the final cast speaks, every quiz has both outcomes, and
+  generation against a fake ElevenLabs client caches, recasts and survives a missing voice).
 
 ## Tests
 

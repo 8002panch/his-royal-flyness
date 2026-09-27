@@ -27,3 +27,6 @@ host/export/
 # personal scratch (keep experiments local unless you want them shared)
 team/*/scratch/
 *.log
+
+# half-written voice files if gen_voices.py is interrupted
+audio/voice/.*.part

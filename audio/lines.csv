@@ -1,0 +1,105 @@
+id,scene,panel,branch,speaker,line,note
+H_TITLE,LOBBY,,,clown,"[excited] Hear ye, hear ye! By order of Duke Prospero, the Royal Ball of the Fruit Bowl begins!",Play the fanfare sound effect before it; [fanfare] is not a voice tag
+H_JOIN,LOBBY,,,clown,"Present your seal at the gate, and take your place on the Prince's Privy Council.",
+H_PRINCE,LOBBY,,,clown,"Behold Prince Hamlet, the first prince whose entire mind has been mapped. Every one of his hundred and sixty-six thousand neurons.","166,606 neurons: measured by brain/build_graph.py"
+H_ROLE_HELMSMAN,LOBBY,,,clown,The Royal Helmsman! Left and right are yours.,
+H_ROLE_LIFTMASTER,LOBBY,,,clown,The Royal Liftmaster! You hold the heights.,
+H_ROLE_WINGMASTER,LOBBY,,,clown,"The Royal Wingmaster! Forward, and mind the brakes.",
+H_ROLE_SEER,LOBBY,,,clown,"The Royal Seer! You alone can sense the Princess, and the Giant. Speak up.",
+TUT_WELCOME,TUTORIAL,welcome,,clown,Four grapes for the royal banquet. Surely an entire council can manage breakfast.,
+TUT_GRAPE_1,TUTORIAL,grape 1,,clown,Wingmaster: forward gently. Release to slow. The grape is not fleeing.,
+TUT_GRAPE_2,TUTORIAL,grape 2,,clown,"Helmsman: left and right. Small corrections; we are gardening, not invading.",
+TUT_GRAPE_3,TUTORIAL,grape 3,,clown,"Liftmaster: up for the grape, down for the chalice. Keep the crown attached.",
+TUT_GRAPE_4,TUTORIAL,grape 4,,clown,Together now. Slow before the turn; the chalice has suffered enough.,
+TUT_SEER,TUTORIAL,Seer return lesson,,clown,Seer: find Miranda beside the chalice. Tell your council which way to fly.,
+TUT_FINISH,TUTORIAL,finish,,clown,Four delivered! Responsibility has never looked so purple.,
+C01_P1_CLOWN,C01,p1.1,,clown,"Tonight, Prospero would announce Hamlet and Miranda's intended marriage. First: one tiny royal errand.",
+C01_P2_HAMLET,C01,p1.2,,hamlet,Four grapes. Delivered with princely precision.,
+C01_P2_CLOWN,C01,p1.2,,clown,And not a drop tasted.,
+C01_P3_HAMLET,C01,p1.3,,hamlet,Perfectly under—oh.,
+C01_P3_CLOWN,C01,p1.3,,clown,"Innocence, unfortunately, does not remove grape stains.",
+C01_P4_PROSPERO,C01,p2.4,,prospero,[indignant] Grape-stained lips? Swaying beside the banquet cup? Hamlet!,
+C01_P4_HAMLET,C01,p2.4,,hamlet,"A landing accident, Your Grace. An extremely purple one.",
+C01_P5_PROSPERO,C01,p2.5,,prospero,[angry] Tonight I must trust you beside my daughter. You cannot even arrive at breakfast with your judgment intact?,
+C01_P6_HAMLET,C01,p2.6,,hamlet,[desperately] I haven't drunk anything! Ask the council!,
+C01_P6_PROSPERO,C01,p2.6,,prospero,Then show me the judgment your appearance has failed to demonstrate. The announcement is suspended.,
+C01_P7_PROSPERO,C01,p3.7,,prospero,Stay outside until you can conduct yourself.,
+C01_P7_CLOWN,C01,p3.7,,clown,"A royal misunderstanding. Naturally, nobody listened to the useful witnesses.",
+C01_P8_HAMLET,C01,p3.8,,hamlet,"A window. Council, we can still explain.",
+C01_P8_CLOWN,C01,p3.8,,clown,Provided the window has fewer opinions than the door.,
+Q01_P1_TINMAN,Q01,p1.1,,tinman,"[smugly] Locked out of your own announcement? Bold entrance, Hamlet.",
+Q01_P2_TINMAN,Q01,p1.2,,tinman,"[amused] My window, my little test of judgment. Answer well: pear nectar. Answer poorly: the grape cordial you appear to favor.",
+Q01_Q_HAMLET,Q01,question,,hamlet,"Council, help me answer.",
+Q01_Q_TINMAN,Q01,question,,tinman,Take your time. Composure cannot be hurried.,
+Q01_QUESTION,Q01,question card,,clown,Alcohol can make balance and coordination... A: worse. B: more precise.,Reads the question card aloud; the options stay on screen
+Q01_EXPLAIN,Q01,explanation,,clown,Alcohol can interfere with the brain functions used for balance and coordinated movement.,"Plays after the answer, before the drink panel. Correct answer: A"
+Q01_P3A_TINMAN,Q01,p2.3A,correct,tinman,"A correct answer. How inconvenient for my first impression. Pear nectar, as promised.",
+Q01_P3B_TINMAN,Q01,p2.3B,wrong,tinman,"A charming answer. Entirely wrong. Grape cordial, as agreed.",
+Q01_P3B_CLOWN,Q01,p2.3B,wrong,clown,And now the misunderstanding has acquired a sequel.,
+Q01_P4_TINMAN,Q01,p2.4,,tinman,Do try not to arrive in pieces. Miranda dislikes a scene.,
+Q01_P4_CLOWN,Q01,p2.4,,clown,Below the window: storage. Below the storage: trouble.,
+S1_SPIKE,STAGE1,spike popup,,clown,An excellent inspection of the masonry. Let us try the opening.,After a spike hit; nondirectional
+Q02_P1_RUTABAGA,Q02,p1.1,,rutabaga,[nervously] Oh! A person. Was I coming downstairs or escaping them? Never mind. You look... scheduled.,
+Q02_P2_RUTABAGA,Q02,p1.2,,rutabaga,I wrote a question to remember which drink to offer. Or whom to offer it to. Could you help?,
+Q02_Q_HAMLET,Q02,question,,hamlet,We need the stairs.,
+Q02_Q_RUTABAGA,Q02,question,,rutabaga,"Yes! Those. Of course. A quick test, then I'll stop occupying them.",
+Q02_QUESTION,Q02,question card,,clown,Can heavy drinking interfere with forming new memories? A: No. B: Yes.,Reads the question card aloud; the options stay on screen
+Q02_EXPLAIN,Q02,explanation,,clown,Alcohol can disrupt the formation of new memories. That is not the same as magically deleting every old memory.,Correct answer: B
+Q02_P3A_RUTABAGA,Q02,p2.3A,correct,rutabaga,[excited] Yes! New memories. I knew that was important. Pear nectar for the person who remembered.,
+Q02_P3B_RUTABAGA,Q02,p2.3B,wrong,rutabaga,My card says otherwise. That means the purple one. I think the card is more organized than either of us.,
+Q02_P4_RUTABAGA,Q02,p2.4,,rutabaga,[startled] I remember why I came down! Goodbye!,"A heavy groan and THUD above first (sound effect, nondirectional)"
+Q02_P4_HAMLET,Q02,p2.4,,hamlet,What was that?,
+Q02_P5_CLOWN,Q02,p2.5,,clown,"A sensible question. Naturally, we went upstairs to investigate it personally.",
+S2_INTRO,STAGE2,intro,,clown,"One minute before Prospero's inner gate closes. Quiet wings, council. Quiet wings!",
+S2_TIMEOUT,STAGE2,timeout popup,,clown,"The gate beat you to the banquet. Once more, with quieter confidence.",
+Q03_P1_CHEAPDATE,Q03,p1.1,,cheapdate,[hiccups] Hamlet! Excellent. I have two drinks and almost enough hands.,
+Q03_P2_CHEAPDATE,Q03,p1.2,,cheapdate,"Before you enter, a toast. Pass my little test and take the pear. Fail, and share my purple vintage.",
+Q03_Q_CHEAPDATE,Q03,question,,cheapdate,"A question of recovery. A subject on which I have conducted extensive, regrettable research.",
+Q03_QUESTION,Q03,question card,,clown,Does coffee remove alcohol's effects on judgment and coordination? A: Yes. B: No.,Reads the question card aloud; the options stay on screen
+Q03_EXPLAIN,Q03,explanation,,clown,Feeling more awake does not remove those impairing effects.,Correct answer: B
+Q03_P3A_CHEAPDATE,Q03,p2.3A,correct,cheapdate,No? Coffee doesn't fix it? That explains several breakfasts. Pear nectar it is.,
+Q03_P3B_CHEAPDATE,Q03,p2.3B,wrong,cheapdate,"Wrong, apparently. Clown wrote the answer on my sleeve. Purple for you; humility for neither of us.",
+Q03_P4_CLOWN,Q03,p2.4,,clown,[shouting] Cheapdate! Your chair is in the punch bowl again!,Clown is off-panel
+Q03_P4_CHEAPDATE,Q03,p2.4,,cheapdate,My seat has arrived before me!,
+Q03_P5_HAMLET,Q03,p2.5,,hamlet,At last—,Cut off by the crash sound effect
+Q03_P5_CLOWN,Q03,p2.5,,clown,A sentence the evening declined to let him finish.,
+C02_P1_CLOWN,C02,p1.1,,clown,The Giant had arrived. It had neither invitation nor table manners.,
+C02_P2_PROSPERO,C02,p1.2,,prospero,[alarmed] You? I told you to stay outside!,
+C02_P2_HAMLET,C02,p1.2,,hamlet,"The garden wasn't what it looked like. Please, let me explain.",
+C02_P3_PROSPERO,C02,p1.3,,prospero,Then show me. Keep its attention. Outlast its swats until it abandons this hall.,
+C02_P4_HAMLET,C02,p2.4,,hamlet,"Council, together. We don't have to hurt it. We have to stay out of reach.",
+C02_P5_CLOWN,C02,p2.5,,clown,Ten dodges. One very large temper. Let us test which lasts longer.,"The objective text is on screen only, not voiced"
+C03_P1_CLOWN,C03,p1.1,giant_win,clown,Ten swats survived. The Giant departed to find something less organized to squash.,
+C03_P2_PROSPERO,C03,p1.2,giant_win,prospero,"You stood your ground by refusing to stay in one place. Well flown, Hamlet.",
+C03_P3_MIRANDA,C03,p1.3,giant_win,miranda,"[relieved] You're safe. Next time, find me before volunteering for the hand.",
+C03_P3_HAMLET,C03,p1.3,giant_win,hamlet,"Next time, I'm delivering flowers.",
+C04_P1_PROSPERO,C04,p1.1,giant_loss,prospero,[furious] First the garden. Now this. Stand back.,
+C04_P2_CLOWN,C04,p1.2,giant_loss,clown,Prospero finished the task himself—and returned with considerably less patience than he left with.,
+C04_P3_PROSPERO,C04,p2.3,giant_loss,prospero,You expect my blessing after this? You will not pass me.,
+C04_P3_HAMLET,C04,p2.3,giant_loss,hamlet,Then let Miranda speak for herself.,
+C04_P4_CLOWN,C04,p2.4,giant_loss,clown,His Grace's next argument was regrettably acidic.,"The objective text is on screen only, not voiced"
+E01_P1A_MIRANDA,E01,p1.1A,giant_win,miranda,"Father, thank him. Then listen to him.",
+E01_P1B_MIRANDA,E01,p1.1B,father_win,miranda,"[firmly] Enough, Father! I love Hamlet. You do not get to spit at the person I choose.",
+E01_P2_CLOWN,E01,p1.2,,clown,For the record: he was delivering my grapes. The chalice splashed him. I was there.,
+E01_P3_PROSPERO,E01,p2.3,,prospero,[softly] Then I judged before I listened. Miranda—do you still wish the announcement to go ahead?,
+E01_P3_MIRANDA,E01,p2.3,,miranda,Yes. Because I choose it.,
+E01_P4_PROSPERO,E01,p2.4,,prospero,Then let the banquet begin again.,
+E01_P4_CLOWN,E01,p2.4,,clown,"A royal announcement, approved by Miranda. The grapes abstained.",
+E02_P1_CLOWN,E02,p1.1,father_loss,clown,Hamlet's evening had reached the floor. The competition mistook this for a promotion.,
+E02_P2_TINMAN,E02,p1.2,father_loss,tinman,[smugly] A more composed candidate stands before you.,
+E02_P2_CHEAPDATE,E02,p1.2,father_loss,cheapdate,[hiccups] And one behind him!,
+E02_P2_RUTABAGA,E02,p1.2,father_loss,rutabaga,[confused] Which position am I applying for?,
+E02_P3_MIRANDA,E02,p2.3,father_loss,miranda,[firmly] Enough. I never wanted a marriage chosen for me. Not by a contest. Not by any of you.,
+E02_P4_MIRANDA,E02,p2.4,father_loss,miranda,I can decide my own future.,
+E02_P4_CLOWN,E02,p2.4,father_loss,clown,"For once, the entire court had nothing useful to add. It was a peaceful ending.",
+UI_DIZZY,ANYTIME,steadiness notice,,clown,Dizziness increased: allow more room to stop.,"After a wrong answer raises dizziness; optional voice, the notice is on screen"
+H_FAINTED_HELMSMAN,ANYTIME,phone disconnected,,clown,"The Royal Helmsman has fainted! Revive them, quickly!",Pre-generated form of H_FAINTED {role}
+H_FAINTED_LIFTMASTER,ANYTIME,phone disconnected,,clown,"The Royal Liftmaster has fainted! Revive them, quickly!",Pre-generated form of H_FAINTED {role}
+H_FAINTED_WINGMASTER,ANYTIME,phone disconnected,,clown,"The Royal Wingmaster has fainted! Revive them, quickly!",Pre-generated form of H_FAINTED {role}
+H_FAINTED_SEER,ANYTIME,phone disconnected,,clown,"The Royal Seer has fainted! Revive them, quickly!",Pre-generated form of H_FAINTED {role}
+H_CHANGELING,ANYTIME,Changeling toggle,,clown,"[gasps] A changeling! The same neurons, but scrambled within. Let us see how the Seer fares now.",
+H_TRUE_PRINCE,ANYTIME,Changeling toggle,,clown,The true Prince returns.,
+H_DECREE,ANYTIME,Royal Decree,,clown,"By royal decree: his wiring is real. Everything else, we will tell you.",
+J_CHANGELING,ANYTIME,after a Changeling run,,clown,The changeling had the very same neurons as our Prince. [laughs] Its Seer still could not find a princess in a banquet hall.,
+J_GENERIC_1,ANYTIME,Jester fallback,,clown,"A fine effort, my lords and ladies. Mostly fine. Partly effort.",
+J_GENERIC_2,ANYTIME,Jester fallback,,clown,The court will remember this trial. The court will try to forget it.,
