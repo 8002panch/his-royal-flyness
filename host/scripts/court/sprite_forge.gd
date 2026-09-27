@@ -135,7 +135,8 @@ static func _crown(w: int, h: int, cx: float, t: float, hh: int) -> PixelCanvas:
 
 
 static func _wing_angle(frame: int) -> float:
-	return [0.62, 0.30, -0.02][frame % 3]
+	# Wide power stroke followed by a foreshortened recovery stroke.
+	return [0.88, 0.48, 0.05, -0.32, -0.58, -0.20, 0.26, 0.66][frame % 8]
 
 
 static func hamlet_wings(hh: int, frame: int) -> ImageTexture:
@@ -153,7 +154,7 @@ static func _hamlet_wings(hh: int, frame: int, filigree: bool) -> PixelCanvas:
 	var c := PixelCanvas.new(g.w, g.h)
 	var a := _wing_angle(frame)
 	var length := 0.50 * hh
-	var width := 0.12 * hh
+	var width: float = [0.10, 0.125, 0.14, 0.11, 0.075, 0.028, 0.035, 0.065][frame % 8] * hh
 	for side in [-1.0, 1.0]:
 		var attach := Vector2(cx + side * 0.10 * hh, t + 0.43 * hh)
 		var dir := Vector2(side * cos(a), -sin(a))

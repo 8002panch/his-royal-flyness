@@ -58,6 +58,7 @@
 - [ ] **30 min:** 5 screenshots for Devpost; give them and the video link to Ved.
 
 ## Notes
+- **Animation package 1.0:** `host/assets/pixelart/animation_v1/README.md` is the cast-animation handoff. All 13 approved assets have compact reusable Godot rigs, walking/flying and named gestures; the Giant has slam/recoil. Run `host/scenes/AnimationPreview.tscn` (F6) to audition them. `example_cues.json` demonstrates script timing. Court Hamlet's existing rear-view wings now use eight poses plus velocity-driven bank and cloak sway. The scene rig API controls presentation only; actual world placement, NPC paths and dialogue timing remain with the world/script work. Godot 4.3 smoke and rendered preview checks passed; original v3 PNGs and game resolution are preserved.
 - **Accepting the open ask in `team/README.md#open-requests`:** yes to the proposed HUD grouping —
   vision = `her_L`/`her_R`, reaction = `looming`/`escape`, flight = `steer`, song = `song`. Built `host/` against it.
 - `host/` now reads `cues.princess` / `cues.giant` exactly as `team/README.md#proposed-formats` specifies. If that shape

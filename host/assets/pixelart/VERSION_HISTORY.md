@@ -1,5 +1,9 @@
 # Pixel-art version history
 
+## Animation package 1.0 — 2026-09-26 — hybrid cast rigs
+
+Added `animation_v1/`: thirteen compact Godot cutout rigs derived from the unchanged v3 art, idle/walk/fly/takeoff/land, named theatrical hand/body gestures, Giant slam/recoil, a cue timeline, and a runnable all-cast preview. Character bodies use a 72px visible height, not higher-resolution artwork. The actual court's rear-view Hamlet now has eight wing poses, foreshortened recovery, restrained banking and cloak sway. See the package README for measured preview performance, tests, integration boundaries, and pending script timing.
+
 ## v3.1 — 2026-09-26 — Giant fist revision
 
 Replaced the v3 Giant open-hand hazard with a matching transparent clenched-fist PNG, preserving its royal-blue sleeve, gold cuff, scale, and original pixel-art treatment. The v3 manifest and roster notes now identify it as a slam fist.
