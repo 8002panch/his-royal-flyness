@@ -423,7 +423,7 @@ can't run one. So the domain needs one of these, best first:
 
 - Set the same `ROOM_SECRET` on the relay and the laptop so nobody else can claim your room as its host.
 - Cloud and DNS changes need the team's approval and credentials (Ved owns the Droplet and the domain).
-- Fallbacks at the demo: the local mode (`python run_local.py`) on the venue Wi-Fi or a phone hotspot; the keyboard mode is Phase 5.
+- Fallbacks at the demo: the local mode (`python run_local.py`) on venue Wi-Fi or a phone hotspot; there is no keyboard player mode in Arnav's approved campaign.
 - Secrets only in `.env` (git-ignored); `.env.example` lists the names with blank values.
 
 ## Voices (ElevenLabs)
@@ -582,3 +582,72 @@ Teammates can skip this: ask Neil to AirDrop `data/graph_true.npz`, `data/graph_
 | Why a rate model | A spiking whole-brain model took about 42 s per simulated second on this laptop |
 
 These are structural facts; the behavior claims come from the probes and the Seer evaluation above.
+
+## Arnav's comic campaign — implementation planning, not a protocol change
+
+See [GAME.md](GAME.md#story-campaign-and-comic-cutscenes--approved-team-plan) for the full
+approved story script. This section is the implementation handoff; interface details still need owner agreement. It adds no working messages,
+screens, tests or neural abilities. Coordinate message names with Ved and Anshul before code.
+
+### State the server will need
+
+- Current scene, page/panel, phase (comic, question, ready, active, outcome), and previous result.
+- Four unique grape IDs; carried grape or none; delivered set. Count comes from that set.
+- Three quiz encounter IDs, pending/committed answer, correct/incorrect result and whether its
+  one-time drink effect was applied. Page navigation cannot mutate committed outcomes.
+- Dizziness 0–3; stage-entry snapshot; retry count; checkpoint; remaining active-play time.
+- Hazard ID, locked path/zone, warning and impact times, resolved flag, hit-or-dodge result;
+  Giant dodge/hit counters and father dodge counter. Never count an attack twice.
+- Campaign or DEMO mode. Test overrides and revealed positions cannot enter campaign results.
+
+The transition graph and named IDs in GAME.md are authoring labels, not a new relay envelope.
+Keep existing room/role identity, reconnect behavior and monotonically increasing input
+sequence rules. Send question choices only from the current Seer; validate encounter ID and
+reject duplicate, stale, wrong-role or previous-room answers. Persist committed outcomes for
+the current session across reconnect. Do not persist personal player data after the session.
+
+### Shared state versus Seer-only state
+
+Shared: phase, comic text/panels, question/options/result, grape/dodge counts, active timer,
+steadiness label, fly motion, neutral event feedback, roles and side-free brain activity.
+Seer only: hidden obstacle guidance, hazard direction/landing/path assistance and neural cues.
+Movement phones get controls and public scene/choice status, never hidden hazard data.
+
+The current coarse neural outputs cannot supply an exact wall map, safe altitude corridor
+or validated acid-projectile detector. First-version obstacle guidance is scripted and
+labeled as such. Keep that separate from measured brain cues. Large hand-attack sectors can
+use coarse neural side warnings; if exact help is added, disclose its source. Neil owns
+neural changes. No encoding of every object as a Princess merely to make the interface fit.
+
+### Pause, retry and hazard rules
+
+- Pause simulation time for comics, questions, ready screens and a connection pause. Wall-clock
+  time alone cannot expire a stage or deliver a paused attack. Stop advancing/sampling live
+  Seer stimuli while the world is frozen, and agree resume/reset behavior with Neil's adapter.
+- Clear held control/scan state on pause/transition; retain input sequence history. Ignore
+  live movement during comics and require a fresh press after ready. A latched phone control
+  must not immediately resend its old hold and move the fly behind the comic.
+- Stage 1 checkpoints retain delivered tutorial/quiz history; Stage 2 restarts with 60 seconds
+  and its entry dizziness. Retry never re-applies a drink, reveals a correct answer again
+  as a new choice, or carries an old projectile into the reset scene.
+- Giant: ten resolved threatening attacks avoided before three hits. Count a hit once, grant
+  recovery, then schedule a new attack. Father: five avoided projectiles before any hit.
+- Targets lock at warning onset. Check movement across an update for fast projectile hits;
+  do not check only its final point. Resolve final hit/dodge and scene transition together.
+- Dizziness changes only explicitly authored movement tuning, not the brain's weights,
+  reported measurements or role permissions. Release/disconnect clearing remains reliable.
+
+### Build order (story approved; implementation pending)
+
+1. Agree scene/choice/private-guidance fields with Ved and Anshul; keep current live loop working.
+2. Add pure campaign state, transition/choice persistence and table-driven tests without art.
+3. Make tutorial grapes and the reusable comic/question flow work end to end.
+4. Add reusable course collision/checkpoints, then Stage 1 and Stage 2 timer/private hazards.
+5. Reuse attacks for ten-dodge Giant; add the small projectile variant for Prospero; wire endings.
+6. Add isolated Demo presets and run all story paths with 0/1/2/3 dizziness levels.
+
+Accept only after verifying: one quiz effect per encounter; no stale input across panels;
+reconnect cannot answer twice; Stage 2 clock pauses correctly; maximum dizziness leaves safe
+routes; hidden data absent from shared messages and directional sound; 10th dodge/3rd hit
+choose exclusive outcomes; father 5th dodge stops future shots and one hit loses; Demo cannot
+award campaign progress; missing audio never blocks a panel. These tests are proposed, not run.
