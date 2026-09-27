@@ -17,8 +17,6 @@ data/*
 # godot
 host/.godot/
 host/export/
-final-demo/host/.godot/
-final-demo/host/export/
 *.import.tmp
 
 # os / editors
