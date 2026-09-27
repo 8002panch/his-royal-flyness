@@ -15,6 +15,7 @@ extends Node
 ##       otherwise moves on, like Space, Right and Page Down (a clicker); Left or Page Up rereads; S skips a comic (it stops at an
 ##       unanswered question); R restarts a stage; Ctrl+1..9 jumps to a chapter for judging (marked DEMO).
 ##       A switches auto play (on at start): comics and the cast cards move on by themselves after each line.
+##       B opens Hamlet's full-size brain (it pauses auto play); H on the end card goes back to the title screen.
 ##       `-- --debug` opens with the F1 overlay showing; `-- --demo` starts in the keyboard demo.
 ##
 ## Screenshot mode renders one screen from the host/test fixtures and quits:
@@ -129,14 +130,20 @@ func _track_auto(cs: CourtState) -> void:
 
 
 func _process(delta: float) -> void:
-	if not auto_play or _demo != null or _auto_key == "" or _auto_sent:
-		return
+	if not auto_play or _demo != null or _auto_key == "" or _auto_sent or hud.full_brain_open():
+		return  # the full-size brain view pauses auto play while the presenter explains
 	_auto_t += delta
 	# long enough to read it (about four words a second, at least 2.5 s), and never over the voice still speaking
 	var need := maxf(2.5, 0.25 * _auto_words + 1.0)
 	var speaking: bool = _voice != null and _voice.has_method("busy") and _voice.call("busy")
 	if _auto_t >= need and not speaking:
 		_auto_sent = GameState.send_command({"command": "next"})
+
+
+## The end card's Home: the story goes back to its lobby and the screen to the title (music and connection carry on).
+func _go_home() -> void:
+	GameState.send_command({"command": "lobby"})
+	get_tree().change_scene_to_file("res://scenes/Entry.tscn")
 
 
 func _set_auto(on: bool) -> void:
@@ -204,6 +211,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		KEY_A:
 			if _demo == null:  # the keyboard demo flies with WASD
 				_set_auto(not auto_play)
+		KEY_H:
+			if _phase == "end":
+				_go_home()
+		KEY_B:
+			hud.toggle_full_brain()
 		KEY_F1:
 			hud.toggle_debug()
 		KEY_F2:
@@ -262,6 +274,8 @@ func _run_shot(args: Dictionary) -> void:
 			hud.reliquary.toggle_index(i)
 	if args.has("state"):  # --state=file.json: one saved server state (the story's cutscenes, props, impacts)
 		var saved: Dictionary = _load_json(str(args["state"]))
+		if args.has("brain"):  # --brain: with the full-size brain open
+			hud.toggle_full_brain()
 		for i in int(args.get("frames", "45")):
 			_on_state(saved)
 			await get_tree().process_frame

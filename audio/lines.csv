@@ -38,10 +38,10 @@ C01_P8_HAMLET,C01,p3.8,,hamlet,"[determined] There, a window. Come, council, we 
 Q01_P1_TINMAN,Q01,p1.1,,tinman,"[cold, contemptuous] Locked out of your own betrothal, Prince Hamlet? How very becoming of a future king.",,,
 Q01_P1B_TINMAN,Q01,p1.1,,tinman,"[flat, mocking] My heart would go out to you, if I had one to spare. A family trait, I am told.",,,True gene fact: tinman flies grow no heart
 Q01_P2_TINMAN,Q01,p1.2,,tinman,"[irritated, superior] This is my window, so we shall do this my way. Answer correctly, and you get pear nectar. Answer wrongly, and you may have more of whatever you have clearly already been drinking.",,,
-Q01_QUESTION,Q01,question,,tinman,"[crisp, testing] Here is your question, little prince. Does alcohol make one's balance and coordination... A, worse. Or B, sharper?",,,Tinman asks; the options stay on screen
+Q01_QUESTION,Q01,question,,tinman,"[crisp, testing] Here is your question, little prince. After someone's last drink, can the alcohol in their blood keep rising? A, yes, for a while. Or B, no, it falls at once?",,,Tinman asks; the options stay on screen
 Q01_Q_HAMLET,Q01,question,,hamlet,"[nervous, murmuring] Council... a little help, please.",,,
 Q01_Q_TINMAN,Q01,question,,tinman,"[dry] Take your time. I have nowhere better to be, apparently.",,,
-Q01_EXPLAIN,Q01,explanation,,tinman,[matter-of-fact] The answer is A. Alcohol interferes with the exact brain functions used for balance and coordinated movement.,,,"Plays after the answer, before the drink panel. Fact: NIAAA"
+Q01_EXPLAIN,Q01,explanation,,tinman,"[matter-of-fact] The answer is A. Alcohol still in the stomach keeps seeping into the blood, so balance can keep getting worse after the last glass.",,,"Fact: NIAAA, Understanding the Dangers of Alcohol Overdose (BAC can keep rising after drinking stops)"
 Q01_P3A_TINMAN,Q01,p2.3A,correct,tinman,"[grudging, annoyed] Correct. How inconvenient. Pear nectar, as promised.",,,
 Q01_P3B_TINMAN,Q01,p2.3B,wrong,tinman,"[delighted, mocking] Wrong. Utterly wrong. The grape cordial, then, as agreed.",,,
 Q01_P4_TINMAN,Q01,p2.4,,tinman,"[dismissive, cold] Do try not to fall to pieces before you arrive, Prince Hamlet. Princess Miranda dislikes a scene. I would not know; I feel very little, one way or the other.",,,
@@ -51,9 +51,9 @@ Q02_P1B_RUTABAGA,Q02,p1.1,,rutabaga,"[testy] Are you here for Princess Miranda? 
 Q02_P2_RUTABAGA,Q02,p1.2,,rutabaga,"[muttering, annoyed] I wrote myself a question, so I would remember which drink goes to whom. Whom proved difficult to spell, but no matter. Answer it, and be quick about it.",,,
 Q02_Q_HAMLET,Q02,question,,hamlet,"[urgent, polite] Count Rutabaga, we really do need the stairs.",,,
 Q02_Q_RUTABAGA,Q02,question,,rutabaga,"[snippy] Yes, yes, the stairs. One question, and they are entirely yours, Prince Hamlet. Do stop hovering.",,,
-Q02_QUESTION,Q02,question,,rutabaga,"[reading slowly, irritated] Can heavy drinking interfere with forming new memories? A, no. B, yes. Whoever wrote this has dreadful handwriting. Oh. That would be me.",,,Rutabaga asks; the options stay on screen
-Q02_EXPLAIN,Q02,explanation,,rutabaga,"[relieved, matter-of-fact] It is B. Alcohol can disrupt the forming of new memories. It does not erase the old ones, though. I have checked. More than once. For reasons I would rather not discuss.",,,"Plays after the answer, before the drink panel. Fact: NIAAA"
-Q02_P3A_RUTABAGA,Q02,p2.3A,correct,rutabaga,"[surprised, pleased] Correct. New memories, yes, that was the important part. Pear nectar, then, for the one of us who remembered anything at all tonight.",,,
+Q02_QUESTION,Q02,question,,rutabaga,"[reading slowly, irritated] During an alcohol blackout, is the person passed out? A, yes, out cold. B, no, still awake. Whoever wrote this has dreadful handwriting. Oh. That would be me.",,,Rutabaga asks; the options stay on screen
+Q02_EXPLAIN,Q02,explanation,,rutabaga,"[relieved, matter-of-fact] It is B. In a blackout you are awake and talking, but the brain stops saving new memories. Drinking fast, or on an empty stomach, makes it likelier. I have checked. More than once.",,,"Fact: NIAAA, Interrupted Memories: Alcohol-Induced Blackouts (awake, no new memories; hippocampus; empty stomach, drinking fast)"
+Q02_P3A_RUTABAGA,Q02,p2.3A,correct,rutabaga,"[surprised, pleased] Correct. Awake, but remembering nothing. That explains my entire last season. Pear nectar, then, for the one of us who will remember tonight.",,,
 Q02_P3B_RUTABAGA,Q02,p2.3B,wrong,rutabaga,"[flustered, cross] Wrong! I had a rather cutting remark prepared for this moment, and now I cannot recall it. How fitting. The purple one, then, and good riddance.",,,
 Q02_P4_RUTABAGA,Q02,p2.4,,rutabaga,"[startled, alarmed] Oh! Now I remember why I came down here in the first place! Farewell!",,GIANT_GROAN_THUD,The groan and thud upstairs play first
 Q02_P4_HAMLET,Q02,p2.4,,hamlet,[uneasy] What in the world was that?,,,
@@ -62,10 +62,10 @@ S2_TIMEOUT,STAGE2,timeout popup,,clown,"[sighing] The gate won that round. Once 
 Q03_P1_CHEAPDATE,Q03,p1.1,,cheapdate,"[hiccup, irritated] Prince Hamlet. Of course it is you. I have two drinks, and apparently, only just enough patience.",,,
 Q03_P1B_CHEAPDATE,Q03,p1.1,,cheapdate,"[proud, slurring] Only half a grape's worth tonight. [hiccup] I consider myself a most efficient drinker. Unlike some engaged princes I could mention.",,,True gene fact: cheapdate flies get drunk on less alcohol
 Q03_P2_CHEAPDATE,Q03,p1.2,,cheapdate,"[sour, tipsy] Before you go swanning in there, a toast, and a test. Pass it, and take the pear. Fail, and you may share my purple vintage, and my evening.",,,
-Q03_Q_CHEAPDATE,Q03,question,,cheapdate,"[bitter, hiccup] A question about recovering afterward. A subject on which I have done extensive, and thoroughly regrettable, research. Unlike you, apparently.",,,
-Q03_QUESTION,Q03,question,,cheapdate,"[squinting, slurred] Does coffee undo alcohol's effect on one's judgment and coordination? A, yes. B, no. Choose carefully, Your Highness.",,,Cheapdate asks; the options stay on screen
-Q03_EXPLAIN,Q03,explanation,,cheapdate,"[sheepish, hiccup] It is B. Coffee only makes one feel more awake. It undoes nothing at all. I have tested this claim thoroughly. And repeatedly. To my own detriment.",,,"Plays after the answer, before the drink panel. Fact: NIAAA"
-Q03_P3A_CHEAPDATE,Q03,p2.3A,correct,cheapdate,"[grudging, hiccup] Correct. Sharper than me tonight, which, I admit, is not saying very much. Pear nectar, for the prince who apparently thinks ahead.",,,
+Q03_Q_CHEAPDATE,Q03,question,,cheapdate,"[bitter, hiccup] A question about seeing straight. A subject on which I have done extensive, and thoroughly regrettable, research.",,,
+Q03_QUESTION,Q03,question,,cheapdate,"[squinting, slurred] Can alcohol make the eyes worse at following something that moves, even far below the driving limit? A, no, only when very drunk. B, yes, even a little. Choose carefully, Your Highness.",,,Cheapdate asks; the options stay on screen
+Q03_EXPLAIN,Q03,explanation,,cheapdate,"[sheepish, hiccup] It is B. Even at a quarter of the legal driving limit, the eyes follow moving things worse. Which explains my last three landings.",,,"Fact: NHTSA, The ABCs of BAC (at .02 BAC, a quarter of the .08 limit: decline in visual functions, rapid tracking of a moving target)"
+Q03_P3A_CHEAPDATE,Q03,p2.3A,correct,cheapdate,"[grudging, hiccup] Correct. Sharper eyes than mine tonight, which, I admit, is not saying very much. Pear nectar, for the prince who can still see straight.",,,
 Q03_P3B_CHEAPDATE,Q03,p2.3B,wrong,cheapdate,"[delighted, hiccup] Wrong! Purple for you, then, Prince Hamlet. Welcome to my level, for once.",,,
 Q03_P4_CLOWN,Q03,p2.4,,clown,[shouting] Sir Cheapdate! Your chair is in the punch bowl again!,,,Clown is off-panel
 Q03_P4_CHEAPDATE,Q03,p2.4,,cheapdate,"[hiccup, mournful] My chair has arrived at the punch bowl before I have. Again.",,,

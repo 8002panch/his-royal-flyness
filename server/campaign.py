@@ -69,14 +69,30 @@ CHALICE = (-0.5, -0.3, -0.65)  # beside the start, clear of Hamlet on screen
 GRAPES = ((0.0, 0.0, 0.1), (0.7, 0.0, -0.3), (-0.3, 0.4, -0.2), (0.45, 0.25, -0.85))
 MIRANDA_BY_CHALICE = (-0.25, -0.15, -0.5)
 
-QUIZZES = {  # docs/GAME.md, "The three drink questions" (NIAAA facts; general human health, not fly results)
-    # focus: the brain-map regions (brain/brain_map.py) the question is about, highlighted on the main screen's map
-    "Q01": {"text": "Alcohol can make balance and coordination...", "a": "Worse", "b": "More precise", "correct": "A",
-            "focus": ["balance", "body"]},
-    "Q02": {"text": "Can heavy drinking interfere with forming new memories?", "a": "No", "b": "Yes", "correct": "B",
-            "focus": ["memory"]},
-    "Q03": {"text": "Does coffee remove alcohol's effects on judgment and coordination?", "a": "Yes", "b": "No", "correct": "B",
-            "focus": ["memory", "balance"]},
+QUIZZES = {  # docs/GAME.md, "The three drink questions": little-known human facts (NIAAA, NHTSA), not fly results
+    # focus: the brain-map regions (brain/brain_map.py) the question is about, highlighted on the main screen's map.
+    # brain: the full-size brain view's link from the question to the fly's brain part and the human one that does that job.
+    "Q01": {"text": "After someone's last drink, can the alcohol in their blood keep rising?", "a": "Yes, for a while",
+            "b": "No, it falls at once", "correct": "A", "focus": ["balance", "body"],
+            "brain": {"part": "balance", "fact": "Alcohol still in the stomach keeps entering the blood after the last drink.",
+                      "fly": "Central complex: keeps his flight steady and steered.",
+                      "human": "Your cerebellum keeps you balanced. Alcohol boosts its GABA braking, so you sway, and it can keep "
+                               "getting worse after your last drink.",
+                      "source": "NIAAA: BAC can keep rising after drinking stops"}},
+    "Q02": {"text": "During an alcohol blackout, is the person passed out?", "a": "Yes, out cold", "b": "No, still awake",
+            "correct": "B", "focus": ["memory"],
+            "brain": {"part": "memory", "fact": "In a blackout you are awake, but no new memories are saved.",
+                      "fly": "Mushroom body: where he learns and remembers.",
+                      "human": "Your hippocampus saves new memories. Enough alcohol blocks it, so you can talk and walk around, "
+                               "and later remember nothing.",
+                      "source": "NIAAA: Interrupted Memories, Alcohol-Induced Blackouts"}},
+    "Q03": {"text": "Can alcohol make the eyes worse at following movement, even far below the driving limit?",
+            "a": "No, only if very drunk", "b": "Yes, even a little", "correct": "B", "focus": ["eyes"],
+            "brain": {"part": "eyes", "fact": "At a quarter of the US driving limit, eyes already track moving things worse.",
+                      "fly": "Optic lobes: his motion detectors, behind each eye.",
+                      "human": "Your visual cortex and the circuits that steer your eyes. A little alcohol slows them, which "
+                               "matters most for anything that moves, like traffic.",
+                      "source": "NHTSA: The ABCs of BAC (.02 BAC)"}},
 }
 STEADINESS = ("steady", "wobbly", "very wobbly", "extremely wobbly")
 
@@ -288,6 +304,13 @@ class Campaign:
         self._reset_run()
         self.demo = False
         self.enter("INTRO")
+
+    def to_lobby(self) -> None:
+        """The end card's Home: back to the lobby (the title screen on the host), ready for a new story."""
+        self._reset_run()
+        self.demo = False
+        self.session.simulator.walls = ()
+        self._clear_inputs()
 
     def enter(self, scene: str) -> None:
         self.scene = scene

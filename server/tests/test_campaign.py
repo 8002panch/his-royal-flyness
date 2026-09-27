@@ -151,7 +151,8 @@ def test_only_the_seer_answers_once_and_skip_never_answers():
     with pytest.raises(ValueError):
         g.s.apply_input({"t": "answer", "role": "helmsman", "choice": "A"}, 0.0)
     assert g.s.phone_views()[-1] == {"t": "phase", "phase": "question", "scene": "Q01",
-                                     "question": {"id": "Q01", "text": cm.QUIZZES["Q01"]["text"], "a": "Worse", "b": "More precise"}}
+                                     "question": {"id": "Q01", "text": cm.QUIZZES["Q01"]["text"], "a": cm.QUIZZES["Q01"]["a"],
+                                                  "b": cm.QUIZZES["Q01"]["b"]}}
     g.s.apply_input({"t": "answer", "role": "seer", "choice": "B"}, 0.0)
     assert g.c.answers == {"Q01": "B"} and g.c.dizzy == 1
     g.s.apply_input({"t": "answer", "role": "seer", "choice": "A"}, 0.0)  # a second answer (a reconnect, a double tap)

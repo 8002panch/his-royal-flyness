@@ -140,5 +140,5 @@ func _end_card() -> void:
 	var line := "MIRANDA CHOOSES HER OWN PATH" if ending == "own_path" else "HAMLET AND MIRANDA, HAPPILY WED"
 	HudDraw.text_center(self, PixelFonts.bold(), 320, r.position.y + 55, line, Pal.CRIMSON, PixelFonts.LABEL_SIZE)
 	HudDraw.text_center(self, PixelFonts.label(), 320, r.position.y + 67, "THANK YOU FOR PLAYING", Pal.ROYAL, PixelFonts.LABEL_SIZE)
-	HudDraw.text_center(self, PixelFonts.label(), 320, r.position.y + 79, "F6: THE ROYAL DECREE   ENTER: A NEW STORY", Pal.INK_SOFT,
+	HudDraw.text_center(self, PixelFonts.bold(), 320, r.position.y + 79, "ENTER: A NEW STORY   H: HOME SCREEN   F6: DECREE", Pal.INK,
 		PixelFonts.LABEL_SIZE)

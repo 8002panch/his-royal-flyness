@@ -470,6 +470,13 @@ with the character large and animated, a spoken introduction by the Clown (`INTR
 the real gene behind the name. The Giant is drawn as the fights draw its hand. Space/Right moves on, Left goes back, S skips
 to the garden. Phones show "story time".
 
+**Full-size brain and Home (built Sun 27 Sept):** **B** opens *Inside Hamlet's Brain* over anything (it pauses auto play):
+the twelve-region map enlarged, and beside it each part's job in him and the human part that does that job (optic lobes /
+visual cortex, mushroom bodies / hippocampus, central complex / cerebellum, antennal lobes / olfactory bulb, descending
+neurons / brainstem pathways, nerve cord / spinal cord, Giant Fiber / startle reflex), with each part's real neuron count.
+In a drink question it explains that question instead: the fact, the part in him, the part in you, and what one cordial
+does to it in our model. The end card's **H** returns to the title screen and resets the story to its lobby.
+
 **Cutscenes play by themselves (built Sun 27 Sept):** comics and cast cards move on once each line has been spoken and
 there's been time to read it (at least 2.5 s, about four words a second). A question still waits for the Seer. **A** toggles
 auto play and manual (Space) on the main screen. Text in the bubbles always stays at the big caption size: a long line makes
@@ -592,16 +599,18 @@ team discussion, Seer selects then confirms. The server accepts one answer for t
 and shows a brief explanation before the drink panel. Answers are predetermined; there is no
 cup guessing, hidden random swap or second choice after the result.
 
-| ID / rival | Question and two choices | Correct / explanation |
-|---|---|---|
-| Q01 / Tinman | "Alcohol can make balance and coordination... A: worse. B: more precise." | **A.** Alcohol can interfere with the brain functions used for balance and coordinated movement. |
-| Q02 / Rutabaga | "Can heavy drinking interfere with forming new memories? A: No. B: Yes." | **B.** Alcohol can disrupt the formation of new memories. That is not the same as magically deleting every old memory. |
-| Q03 / Cheapdate | "Does coffee remove alcohol's effects on judgment and coordination? A: Yes. B: No." | **B.** Feeling more awake does not remove those impairing effects. |
+**Rewritten Sun 27 Sept (Neil):** the first three questions were facts most players already knew (alcohol hurts balance,
+blackouts, coffee). These three are true, less well known, and each one is tied to one part of Hamlet's brain and the part
+of a human brain that does the same job (the full-size brain view, **B**, explains the link during the question).
 
-These are general human-health teaching facts, not results from this fly simulation. Sources
-checked for the quiz: [NIAAA: Alcohol and the Brain](https://www.niaaa.nih.gov/publications/alcohol-and-brain-overview)
-and [NIAAA: The Truth About Holiday Spirits](https://www.niaaa.nih.gov/publications/brochures-and-fact-sheets/truth-about-holiday-spirits).
-Neil should review wording before voice production. The supplied voice links above are references for the audio owner; voice selection and production still require that review.
+| ID / rival | Question and two choices | Correct / explanation | Brain link (fly / you) |
+|---|---|---|---|
+| Q01 / Tinman | "After someone's last drink, can the alcohol in their blood keep rising? A: Yes, for a while. B: No, it falls at once." | **A.** Alcohol still in the stomach keeps entering the blood, so balance can keep getting worse after the last glass. Source: [NIAAA, Understanding the Dangers of Alcohol Overdose](https://www.niaaa.nih.gov/publications/brochures-and-fact-sheets/understanding-dangers-of-alcohol-overdose) ("BAC can continue to rise even when a person stops drinking or is unconscious"). | Central complex / cerebellum. Alcohol raises GABA inhibition in the cerebellum and impairs balance (["Brain ethanol metabolism by astrocytic ALDH2 drives the behavioural effects of ethanol intoxication"](https://pmc.ncbi.nlm.nih.gov/articles/PMC8294184/)), the same kind of change our model assumes. |
+| Q02 / Rutabaga | "During an alcohol blackout, is the person passed out? A: Yes, out cold. B: No, still awake." | **B.** "During a blackout, a person is still awake but their brain is not creating new memories"; blackouts are likelier drinking fast or on an empty stomach. Source: [NIAAA, Interrupted Memories](https://www.niaaa.nih.gov/publications/interrupted-memories-alcohol-induced-blackouts). | Mushroom bodies / hippocampus (NIAAA names the hippocampus). |
+| Q03 / Cheapdate | "Can alcohol make the eyes worse at following movement, even far below the driving limit? A: No, only if very drunk. B: Yes, even a little." | **B.** At a BAC of .02, a quarter of the US .08 limit, NHTSA lists a "decline in visual functions (rapid tracking of a moving target)". Source: [NHTSA, The ABCs of BAC](https://www.nhtsa.gov/sites/nhtsa.gov/files/809844-theabcsofbac.pdf). | Optic lobes / visual cortex and the circuits that steer the eyes. |
+
+The fly-to-human pairs are functional analogies (the part that does a similar job), not claims that the structures are
+the same. The model's percentages on screen are our alcohol assumption applied to the real wiring, not measured results.
 
 Correct → safe pear nectar; no new penalty. Wrong → grape cordial; add one dizziness level.
 **Proposed persistence:** 0–3 levels, carried through the rest of the run, including the father

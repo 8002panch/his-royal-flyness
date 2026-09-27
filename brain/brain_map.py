@@ -154,6 +154,7 @@ class BrainMap:
     def view(self) -> dict:
         return {"regions": {k: round(float(v), 2) for k, v in zip(REGION_KEYS, self._shown)},
                 "drinks": self.drinks, "kind": self.kind, "neurons": int(self.model.n),
+                "sizes": {k: int(len(v)) for k, v in self.regions.items()},
                 "gabaPct": round(100 * GABA_PER_DRINK), "excitePct": round(100 * EXCITE_PER_DRINK)}
 
     def drink_table(self) -> list[dict[str, float]]:

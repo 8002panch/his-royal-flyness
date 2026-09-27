@@ -14,6 +14,8 @@ var reliquary := Reliquary.new()
 ## preloaded, not by class_name, so a fresh pull runs before Godot has registered the new class
 const BRAIN_MAP := preload("res://scripts/court/hud/brain_map_panel.gd")
 var brain_map: Control = BRAIN_MAP.new()
+const BRAIN_FULL := preload("res://scripts/court/hud/brain_full_overlay.gd")
+var brain_full: Control = BRAIN_FULL.new()
 const INTRO := preload("res://scripts/court/hud/intro_overlay.gd")
 var intro: Control = INTRO.new()
 var caption := CaptionScroll.new()
@@ -54,6 +56,7 @@ func _ready() -> void:
 	intro.visible = false
 	add_child(intro)
 	move_child(brain_map, -1)  # over the comic, so it stays in view through the drink questions
+	add_child(brain_full)  # B: the full-size brain, over everything but the Decree
 	move_child(ribbon, -1)
 	decree.visible = false
 	add_child(decree)  # over everything, the ribbon included
@@ -84,6 +87,7 @@ func apply_state(cs: CourtState, hazard_in_view: bool) -> void:
 	intro.apply(cs)
 	# the brain map is for flying; in the story it steps aside, except in the drink questions (where it has its own column)
 	brain_map.visible = brain_map.visible and (cs.phase in ["play", "ready"] or brain_map.quiz_mode())
+	brain_full.apply(cs)
 	for c in cards:
 		(c as RoleCard).apply(cs)
 	if lobby.visible:
@@ -100,6 +104,14 @@ func on_event(ev: Dictionary) -> void:
 		var text := str(ev.get("caption", ev.get("text", "")))
 		if text != "":
 			caption.show_caption(str(ev.get("speaker", "")), text)
+
+
+func toggle_full_brain() -> void:
+	brain_full.toggle()
+
+
+func full_brain_open() -> bool:
+	return brain_full.visible
 
 
 func toggle_debug() -> void:

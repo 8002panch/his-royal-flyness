@@ -11,7 +11,7 @@ extends Control
 ## Words come from each part's log2(mean rate / sober rest); every number comes from the server; the alcohol effect is a
 ## disclosed model assumption (the Royal Decree).
 
-const PLAY_RECT := Rect2i(482, 27, 154, 196)
+const PLAY_RECT := Rect2i(482, 27, 154, 216)
 const QUIZ_RECT := Rect2i(482, 28, 154, 306)
 const PARTS := [["eyes", "Eyes"], ["memory", "Memory"], ["balance", "Balance"], ["body", "Body"]]
 const ROW_Y := 94          # first row, in both modes
@@ -158,6 +158,7 @@ func _footer(w: int) -> void:
 	HudDraw.text(self, PixelFonts.caption(), 8, y - 2, "Cordials", Pal.INK, PixelFonts.CAPTION_SIZE)
 	for i in 3:
 		_goblet(Vector2i(w - 44 + i * 13, y + 2), i < drinks)
+	HudDraw.text_center(self, PixelFonts.bold(), w / 2, y + 17, "B: SEE THE FULL BRAIN", Pal.ROYAL, PixelFonts.LABEL_SIZE)
 
 
 func _draw_quiz(w: int) -> void:
@@ -185,6 +186,7 @@ func _draw_quiz(w: int) -> void:
 		HudDraw.text(self, PixelFonts.bold(), 8, y + 16, "SLOWER" if n < 0 else ("BUSIER" if n > 0 else "NO CHANGE"), Pal.INK_SOFT,
 			PixelFonts.LABEL_SIZE)
 		y += 32
+	HudDraw.text_center(self, PixelFonts.bold(), w / 2, int(size.y) - 50, "B: SEE THE FULL BRAIN", Pal.ROYAL, PixelFonts.LABEL_SIZE)
 	var ly := int(size.y) - 36
 	draw_rect(Rect2(4, ly - 4, w - 8, 1), Pal.PARCHMENT_SHADE)
 	HudDraw.text(self, PixelFonts.label(), 8, ly, "IN OUR BRAIN MODEL, EACH", Pal.INK_SOFT, PixelFonts.LABEL_SIZE)

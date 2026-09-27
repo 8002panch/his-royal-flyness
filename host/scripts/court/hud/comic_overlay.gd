@@ -29,6 +29,7 @@ var narrow := false:
 			_cast_key = ""  # re-place the rigs across the new width
 var _feet_y := 238
 var auto := true          # set by court_main.gd: cutscenes move on by themselves
+var result := ""          # the answered question's outcome, for the footer
 const QUIZ_SCENES := ["Q01", "Q02", "Q03"]
 const RIG_SCALE := 1.6
 const INK_FOR := {"hamlet": Pal.ROYAL, "miranda": Pal.ROYAL_LIGHT, "prospero": Pal.CRIMSON_DARK, "tinman": Pal.STONE,
@@ -67,6 +68,10 @@ func apply(cs: CourtState) -> void:
 	scene = cs.scene
 	backdrop = cs.backdrop
 	waiting = cs.phase == "question"
+	var chosen := str(question.get("chosen", "")) if question.get("chosen") != null else ""
+	var correct := str(question.get("correct", "")) if question.get("correct") != null else ""
+	result = "" if chosen == "" or not scene in QUIZ_SCENES else (
+		"CORRECT: PEAR NECTAR" if chosen == correct else "WRONG: GRAPE CORDIAL, STEADINESS DOWN")
 	_layout()
 	var cast: Array = beat.get("cast", [])
 	var key := scene + ":" + ",".join(cast)
@@ -232,7 +237,7 @@ func _bubble(name: String, caption: String, ink: Color, empty: bool = false, spe
 func _question_card() -> void:
 	var qn := _lines(str(question.get("text", "")), ART.size.x - 36).size()
 	var qh := (qn - 1) * 17
-	var r := Rect2i(ART.position.x + 8, ART.position.y + 8, ART.size.x - 16, 84 + qh)
+	var r := Rect2i(ART.position.x + 8, ART.position.y + 8, ART.size.x - 16, 62 + qh)
 	HudDraw.panel(self, r, Pal.PARCHMENT, Pal.INK, Pal.ROYAL, Pal.PARCHMENT_SHADE)
 	_wrapped(str(question.get("text", "")), r.position.x + 10, r.position.y + 6, r.size.x - 20)
 	var chosen := str(question.get("chosen", "")) if question.get("chosen") != null else ""
@@ -249,11 +254,7 @@ func _question_card() -> void:
 		HudDraw.text(self, PixelFonts.title(), box.position.x + 8, box.position.y + 3, key, Pal.ROYAL, PixelFonts.TITLE_SIZE)
 		HudDraw.text(self, PixelFonts.caption(), box.position.x + 30, box.position.y + 5, str(question.get(key.to_lower(), "")),
 			Pal.INK, PixelFonts.CAPTION_SIZE)
-	var status := "THE ROYAL SEER ANSWERS ON THEIR PHONE"
-	if chosen != "":
-		status = ("CORRECT: PEAR NECTAR" if chosen == correct else "WRONG: THE GRAPE CORDIAL. STEADINESS DOWN")
-	HudDraw.text_center(self, PixelFonts.bold(), r.position.x + r.size.x / 2, r.position.y + 62 + qh, status,
-		Pal.ROYAL if chosen == "" or chosen == correct else Pal.CRIMSON, PixelFonts.LABEL_SIZE)
+	# the result reads in the footer (see apply), so the card stays short and the characters' heads never cover it
 
 
 func _footer() -> void:
@@ -261,9 +262,12 @@ func _footer() -> void:
 	var p := str(beat.get("panel", "")).trim_prefix("p")
 	var where := ("PAGE %s  PANEL %s   " % [p.get_slice(".", 0), p.get_slice(".", 1)]) if p.contains(".") else ""
 	var left := where + "LINE %d OF %d" % [int(beat.get("index", 1)), int(beat.get("count", 1))]
-	HudDraw.text(self, PixelFonts.label(), PANEL.position.x + 10, y, left, Pal.INK_SOFT, PixelFonts.LABEL_SIZE)
+	if result != "":
+		left = result
+	HudDraw.text(self, PixelFonts.bold() if result != "" else PixelFonts.label(), PANEL.position.x + 10, y,
+		left, Pal.CRIMSON if result.begins_with("WRONG") else (Pal.ROYAL if result != "" else Pal.INK_SOFT), PixelFonts.LABEL_SIZE)
 	var right := "WAITING FOR THE SEER'S ANSWER" if waiting else (
-		"AUTO PLAY   A: MANUAL   SPACE: SKIP AHEAD" if auto else "SPACE: NEXT   LEFT: BACK   S: SKIP   A: AUTO")
+		"AUTO PLAY   A: MANUAL" if auto else "SPACE: NEXT   LEFT: BACK   S: SKIP   A: AUTO")
 	HudDraw.text_right(self, PixelFonts.bold() if waiting else PixelFonts.label(), PANEL.position.x + PANEL.size.x - 10, y, right,
 		Pal.CRIMSON if waiting else Pal.INK_SOFT, PixelFonts.LABEL_SIZE)
 

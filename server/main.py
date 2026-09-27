@@ -217,7 +217,8 @@ class GameSession:
         else:
             status, before = "avoided", c.dizzy
         after = min(3, before + 1)
-        return {**bm.compare(before, after), "status": status, "focus": list(q["focus"]), "maxed": before >= 3}
+        return {**bm.compare(before, after), "status": status, "focus": list(q["focus"]), "maxed": before >= 3,
+                "brain": dict(q["brain"])}
 
     def phone_views(self) -> list[dict[str, Any]]:
         fly = self.state.fly
@@ -353,7 +354,7 @@ class GameServer:
         """The presenter's story controls (Godot keys, the launcher's letters): start, next, back, skip, restart, jump."""
         campaign = self.session.campaign
         command = message.get("command")
-        if campaign is None or command not in {"start", "next", "back", "skip", "restart", "jump"}:
+        if campaign is None or command not in {"start", "next", "back", "skip", "restart", "jump", "lobby"}:
             return False
         if command == "start":
             campaign.start()
@@ -367,6 +368,8 @@ class GameServer:
             campaign.restart_stage()
         elif command == "jump":
             campaign.jump(str(message.get("scene", "")).upper())
+        elif command == "lobby":
+            campaign.to_lobby()
         return True
 
     async def relay_forever(self) -> None:

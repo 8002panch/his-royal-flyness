@@ -40,6 +40,9 @@ True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 
 
 ### Phase log
 
+- **Sun 27 Sept, ~09:15 (Neil, with Claude):** three new, researched drink questions (NIAAA, NHTSA; GAME.md), each linked
+  to a part of his brain and of yours; the full-size brain view (B, `hud/brain_full_overlay.gd`); Home on the end card (H,
+  the server's `lobby` command). Voices for the nine rewritten quiz lines generated (1,519 characters).
 - **Sun 27 Sept, ~08:40 (Neil, with Claude):** Prospero's fight after a Giant win too (C03 → FATHER, two new C03 lines);
   spoken cast introduction (nine `INTRO_*` Clown lines); eight interrupting Clown quips cut; cutscenes auto-play (A toggles);
   comic text never shrinks (bubbles grow); both chalices drawn in the drink questions; the intro's Giant is the fight's
