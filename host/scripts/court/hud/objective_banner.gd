@@ -7,6 +7,7 @@ extends Control
 const Y := 27
 
 var hazard := false
+var demo := false
 var _t := 0.0
 
 
@@ -22,6 +23,12 @@ func set_hazard(on: bool) -> void:
 		queue_redraw()
 
 
+func set_demo(on: bool) -> void:
+	if on != demo:
+		demo = on
+		queue_redraw()
+
+
 func _process(delta: float) -> void:
 	_t += delta
 	if hazard:
@@ -30,6 +37,12 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	var bold := PixelFonts.bold()
+	if demo:
+		var k := "A/D STEER   W/S FLY / BRAKE   SPACE/SHIFT CLIMB / DIVE   E SCAN"
+		var kw := PixelFonts.width(PixelFonts.label(), k, PixelFonts.LABEL_SIZE) + 12
+		var kx := HallCam.W / 2 - kw / 2
+		HudDraw.panel(self, Rect2i(kx, Y + 15, kw, 12), Pal.INK, Pal.INK, Color(0, 0, 0, 0), Pal.INK)
+		HudDraw.text(self, PixelFonts.label(), kx + 6, Y + 17, k, Pal.GOLD_LIGHT, PixelFonts.LABEL_SIZE)
 	if hazard:
 		var s := "THE GIANT'S HAND! DODGE IT!"
 		var w := PixelFonts.width(bold, s, PixelFonts.LABEL_SIZE) + 14

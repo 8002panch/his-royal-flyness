@@ -28,6 +28,7 @@ var phase := "play"
 var time := 0.0
 var frame := -1
 var sample := false
+var demo := false
 
 var fly := Vector3.ZERO
 var fly_vel := Vector3.ZERO
@@ -57,6 +58,7 @@ static func read(msg: Dictionary) -> CourtState:
 	s.phase = str(msg.get("phase", "play"))
 	s.time = _f(msg.get("time", 0.0))
 	s.frame = int(_f(msg.get("frame", -1)))
+	s.demo = bool(msg.get("demo", false))
 	s.sample = bool(msg.get("offline_sample", false)) or bool(msg.get("sample", false))
 
 	var fly_msg: Variant = msg.get("fly", null)

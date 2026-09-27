@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/court/court_main.gd" id="1_main"]
 [ext_resource type="Script" path="res://scripts/court/court_world.gd" id="2_world"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/court/fx_layer.gd" id="8_fx"]
 [ext_resource type="Script" path="res://scripts/court/name_tags.gd" id="9_tags"]
 [ext_resource type="Script" path="res://scripts/court/hud/court_hud.gd" id="10_hud"]
+[ext_resource type="Script" path="res://scripts/court/hall_layer.gd" id="11_layer"]
 
 [node name="Court" type="Node"]
 script = ExtResource("1_main")
@@ -17,21 +18,21 @@ script = ExtResource("1_main")
 [node name="World" type="Node2D" parent="."]
 script = ExtResource("2_world")
 
-[node name="FarBackground" type="Sprite2D" parent="World"]
-centered = false
+[node name="FarBackground" type="Node2D" parent="World"]
+script = ExtResource("11_layer")
+layer = "far"
 
-[node name="FloorCarpet" type="Sprite2D" parent="World"]
-centered = false
+[node name="FloorCarpet" type="Node2D" parent="World"]
+script = ExtResource("11_layer")
+layer = "floor"
 
 [node name="ColumnsBanners" type="Node2D" parent="World"]
-
-[node name="Columns" type="Sprite2D" parent="World/ColumnsBanners"]
-centered = false
+script = ExtResource("11_layer")
+layer = "columns"
 
 [node name="Feast" type="Node2D" parent="World"]
-
-[node name="Tables" type="Sprite2D" parent="World/Feast"]
-centered = false
+script = ExtResource("11_layer")
+layer = "feast"
 
 [node name="Shadows" type="Node2D" parent="World"]
 script = ExtResource("3_shadows")

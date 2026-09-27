@@ -17,14 +17,21 @@ var _base := Vector2.ZERO
 func _ready() -> void:
 	body.centered = false
 	add_child(body)
-	var p := HallCam.project(hall_pos)
-	body_px = clampi(roundi(0.5 * p.z / 2.0) * 2, 16, 64)
-	body.texture = SpriteForge.fly_front(body_px, style_name, _style())
-	var feet := SpriteForge.front_feet(body_px)
-	body.offset = -feet
-	_base = Vector2(roundi(p.x), roundi(p.y))
-	position = _base
+	_place()
 	_t = 1.7 if style_name == "indy" else 0.0
+
+
+func _place() -> void:
+	var p := HallCam.project(hall_pos)
+	visible = p.z > 0.0
+	if not visible:
+		return
+	var px := clampi(roundi(0.5 * p.z / 2.0) * 2, 16, 96)
+	if px != body_px:
+		body_px = px
+		body.texture = SpriteForge.fly_front(body_px, style_name, _style())
+		body.offset = -SpriteForge.front_feet(body_px)
+	_base = Vector2(roundi(p.x), roundi(p.y))
 
 
 func depth() -> float:
@@ -42,6 +49,7 @@ func _style() -> Dictionary:
 
 func tick(delta: float) -> void:
 	_t += delta
+	_place()
 	var sway := 0
 	if style_name == "cheapdate":
 		# tipsy: a slow one-pixel lean and a hiccup hop every few seconds

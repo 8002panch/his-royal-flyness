@@ -11,6 +11,7 @@ var trial := ""
 var candle := -1.0
 var brain := ""
 var sample := false
+var demo := false
 var _t := 0.0
 
 
@@ -25,6 +26,7 @@ func apply(cs: CourtState) -> void:
 	candle = cs.candle
 	brain = cs.brain
 	sample = cs.sample
+	demo = cs.demo
 	queue_redraw()
 
 
@@ -80,8 +82,8 @@ func _draw() -> void:
 		HudDraw.panel(self, Rect2i(bx, 4, bw, 15), fill, Pal.INK, Pal.GOLD if brain == "true" else Color(0, 0, 0, 0), fill.darkened(0.25))
 		HudDraw.text(self, PixelFonts.bold(), bx + 6, 7, badge, ink, PixelFonts.LABEL_SIZE)
 		right = bx - 6
-	if sample:
-		var s := "OFFLINE SAMPLE"
+	if sample or demo:
+		var s := "KEYBOARD DEMO" if demo else "OFFLINE SAMPLE"
 		var sw := PixelFonts.width(PixelFonts.bold(), s, PixelFonts.LABEL_SIZE) + 8
 		HudDraw.frame(self, Rect2i(right - sw, 5, sw, 13), Pal.CRIMSON)
 		HudDraw.frame(self, Rect2i(right - sw + 1, 6, sw - 2, 11), Pal.CRIMSON)

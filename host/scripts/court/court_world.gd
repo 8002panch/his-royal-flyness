@@ -3,10 +3,12 @@ extends Node2D
 
 ## The Banquet Hall, the hero of the main screen. Independent layers, back to
 ## front (see scenes/Court.tscn):
-##   FarBackground  vault, walls, great arch, rose window, cloth of estate (baked)
-##   FloorCarpet    tiles, red carpet, royal-blue dais (baked)
-##   ColumnsBanners back-wall banners (animated sprites) + arcade and columns (baked)
-##   Feast          tables and dishes (baked) + candle flames (animated sprites)
+##   FarBackground  vault, walls, great arch, rose window, cloth of estate
+##   FloorCarpet    tiles, red carpet, royal-blue dais
+##   ColumnsBanners back-wall banners (swaying) + arcade and columns
+##   Feast          tables and dishes + candle flames
+## The four hall layers repaint every frame through HallCam, which chases
+## Hamlet: the hall moves around him (F4 switches to the fixed view).
 ##   Shadows        dithered floor shadows and the Giant's target ring
 ##   Actors         Hamlet, Miranda, Sir Cheapdate, Sir Indy, the Giant's hand
 ##   FX             dust, hearts, sparkles, the ink SPLAT
@@ -19,14 +21,8 @@ const MIRANDA_SIZE := 0.62
 ## until render.princess has been seen, and as the lobby backdrop.
 const DEFAULT_PRINCESS := Vector3(0.25, 0.18, 0.85)
 const IDLE_FLY := Vector3(0.0, -0.1, -1.0)
-const BANNER_SWAY := [0, 1, 0, -1]
 
-@onready var far: Sprite2D = $FarBackground
-@onready var floor_carpet: Sprite2D = $FloorCarpet
-@onready var columns_banners: Node2D = $ColumnsBanners
-@onready var columns: Sprite2D = $ColumnsBanners/Columns
-@onready var feast: Node2D = $Feast
-@onready var tables: Sprite2D = $Feast/Tables
+@onready var layers: Array = [$FarBackground, $FloorCarpet, $ColumnsBanners, $Feast]
 @onready var shadows: ShadowLayer = $Shadows
 @onready var actors: Node2D = $Actors
 @onready var hamlet: HamletActor = $Actors/Hamlet
@@ -41,8 +37,6 @@ var giant_in_view := false
 var show_tags := true
 var hamlet_screen := Vector2.ZERO
 
-var _banners: Array = []
-var _flames: Array = []
 var _t := 0.0
 var _anim_t := 0.0
 var _anim_step := 0
@@ -64,29 +58,8 @@ var _rng := RandomNumberGenerator.new()
 
 func _ready() -> void:
 	_rng.seed = 5
-	for s in [far, floor_carpet, columns, tables]:
-		var spr: Sprite2D = s
-		spr.centered = false
-	far.texture = HallBuilder.far_background().texture()
-	floor_carpet.texture = HallBuilder.floor_layer().texture()
-	columns.texture = HallBuilder.columns_layer().texture()
-	var fe := HallBuilder.feast_layer()
-	tables.texture = (fe["canvas"] as PixelCanvas).texture()
-	for spot in fe["flames"]:
-		var f := Sprite2D.new()
-		f.centered = false
-		f.position = Vector2(spot)
-		feast.add_child(f)
-		_flames.append(f)
-	for spec in HallBuilder.back_banners():
-		var b := Sprite2D.new()
-		b.centered = false
-		b.position = Vector2(spec["pos"]) - Vector2(4, 0)
-		columns_banners.add_child(b)
-		columns_banners.move_child(b, 0)
-		_banners.append({"sprite": b, "spec": spec})
 	rivals = [$Actors/SirCheapdate, $Actors/SirIndy]
-	_animate_props()
+	HallCam.follow(HallCam.from_server(_fly_shown), 0.0, true)
 
 
 func apply_state(cs: CourtState) -> void:
@@ -138,8 +111,9 @@ func _process(delta: float) -> void:
 	_fly_shown = _fly_shown.lerp(_fly_target, 1.0 - exp(-delta * 12.0))
 	var shadow_items: Array = []
 
-	# --- Hamlet
+	# --- Hamlet, and the camera chasing him (everything below projects through it)
 	var hp := HallCam.from_server(_fly_shown)
+	HallCam.follow(hp, delta)
 	var proj := HallCam.project(hp)
 	var hh := clampi(roundi(HAMLET_SIZE * proj.z / 2.0) * 2, 16, 96)
 	hamlet.set_body_px(hh)
@@ -194,7 +168,7 @@ func _process(delta: float) -> void:
 	if show_tags:
 		# under him while there is floor to spare, above him when he dives low
 		var below_y := roundi(hamlet.position.y + hh * 0.55)
-		var h_below := below_y < 280
+		var h_below := below_y < 300
 		var h_anchor := Vector2i(roundi(hamlet.position.x), below_y if h_below else roundi(hamlet.position.y - hh * 0.8))
 		tags.append({"anchor": h_anchor, "text": "PRINCE HAMLET", "below": h_below})
 		if miranda.visible:
@@ -262,12 +236,5 @@ func _sort_actors(hamlet_z: float) -> void:
 
 
 func _animate_props() -> void:
-	for i in _flames.size():
-		var f: Sprite2D = _flames[i]
-		f.texture = SpriteForge.flame((_anim_step + i * 2) % 3)
-	if _anim_step % 4 == 0:
-		for i in _banners.size():
-			var b: Dictionary = _banners[i]
-			var spec: Dictionary = b["spec"]
-			var sway: int = BANNER_SWAY[(_anim_step / 4 + i * 2) % BANNER_SWAY.size()]
-			(b["sprite"] as Sprite2D).texture = SpriteForge.banner(spec["w"], spec["h"], spec["field"], spec["emblem"], sway)
+	for l in layers:
+		(l as HallLayer).anim_step = _anim_step

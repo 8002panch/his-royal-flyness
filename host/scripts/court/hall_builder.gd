@@ -1,16 +1,20 @@
 class_name HallBuilder
 extends RefCounted
 
-## Bakes the Banquet Hall's static layers once, through HallCam's fixed camera,
-## into full-screen 640x360 images. Everything moving (banners, flames,
-## actors, FX) is a separate node drawn on top.
-##   far_background(): vault, side walls with lancet windows, back wall,
+## Paints the Banquet Hall's layers through HallCam's current camera. `c` is a
+## painter: a CanvasPainter (live, every frame, so the chase camera can move) or
+## a PixelCanvas (a one-off image). Both share the same pixel drawing API.
+##   paint_far(c):     vault, side walls with lancet windows, back wall,
 ##                     the great pointed arch with its rose window and cloth of estate
-##   floor_layer():    tiled floor, red carpet, the royal-blue dais
-##   columns_layer():  arcade spandrels, hanging side banners, columns
-##   feast_layer():    two feast tables and their food; returns the flame spots
+##   paint_floor(c):   tiled floor, red carpet, the royal-blue dais
+##   paint_columns(c): arcade spandrels, hanging side banners, columns
+##   paint_feast(c):   two feast tables and their food; returns the flame spots
+## Grids (tiles, stone joints, carpet studs) are anchored in hall space, so they
+## stay put as the camera moves; anything nearer than HallCam.near_z() is skipped.
 
-const ZN := -3.5              # nearest depth we bother drawing (off-screen below)
+const GRID_Z := -3.5          # hall-space origin of the floor and wall grids
+static var ZN := -3.5         # nearest depth drawn this frame (HallCam.near_z())
+static var _items := {}
 const SPRING := 1.3           # where the arcade arches spring
 const COLUMN_R := 0.17
 const COLUMNS_Z := [-2.0, -0.9, 0.2, 1.3]
@@ -23,23 +27,47 @@ const DAIS_Y2 := -1.06
 const CARPET_HALF := 0.45
 
 
+## First grid line at or before ZN, so patterns are fixed to the hall.
+static func _grid_start(step: float, offset: float = 0.0) -> float:
+	return GRID_Z + offset + floorf((ZN - GRID_Z - offset) / step) * step
+
+
+static func _item(kind: String, size: int) -> Variant:
+	var key := "%s_%d" % [kind, size]
+	if not _items.has(key):
+		match kind:
+			"candelabra":
+				_items[key] = SpriteForge.candelabra(size)
+			"bowl":
+				_items[key] = SpriteForge.fruit_bowl(size)
+			"goblet":
+				_items[key] = SpriteForge.goblet(size)
+			"roast":
+				_items[key] = SpriteForge.roast(size)
+			"grapes":
+				_items[key] = SpriteForge.grapes(size)
+			"bread":
+				_items[key] = SpriteForge.bread(size)
+	return _items[key]
+
+
 static func _p(x: float, y: float, z: float) -> Vector2:
 	return HallCam.pt(Vector3(x, y, z))
 
 
-static func _quad_x(c: PixelCanvas, x: float, y0: float, y1: float, z0: float, z1: float, col: Color) -> PackedVector2Array:
+static func _quad_x(c, x: float, y0: float, y1: float, z0: float, z1: float, col: Color) -> PackedVector2Array:
 	var q := PackedVector2Array([_p(x, y0, z0), _p(x, y0, z1), _p(x, y1, z1), _p(x, y1, z0)])
 	c.poly(q, col)
 	return q
 
 
-static func _quad_y(c: PixelCanvas, y: float, x0: float, x1: float, z0: float, z1: float, col: Color) -> PackedVector2Array:
+static func _quad_y(c, y: float, x0: float, x1: float, z0: float, z1: float, col: Color) -> PackedVector2Array:
 	var q := PackedVector2Array([_p(x0, y, z0), _p(x1, y, z0), _p(x1, y, z1), _p(x0, y, z1)])
 	c.poly(q, col)
 	return q
 
 
-static func _quad_z(c: PixelCanvas, z: float, x0: float, x1: float, y0: float, y1: float, col: Color) -> PackedVector2Array:
+static func _quad_z(c, z: float, x0: float, x1: float, y0: float, y1: float, col: Color) -> PackedVector2Array:
 	var q := PackedVector2Array([_p(x0, y0, z), _p(x1, y0, z), _p(x1, y1, z), _p(x0, y1, z)])
 	c.poly(q, col)
 	return q
@@ -69,8 +97,8 @@ static func _arch(cu: float, half: float, spring: float, sharp: float, steps: in
 
 # -------------------------------------------------------------- far layer --
 
-static func far_background() -> PixelCanvas:
-	var c := PixelCanvas.new(HallCam.W, HallCam.H)
+static func paint_far(c) -> void:
+	ZN = HallCam.near_z()
 	c.rect(0, 0, HallCam.W, HallCam.H, Pal.VAULT)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 11
@@ -89,14 +117,18 @@ static func far_background() -> PixelCanvas:
 		while y < ty:
 			var y1 := y + 0.3
 			c.linev(_p(x, y1, ZN), _p(x, y1, bz), Pal.STONE_DEEP)
-			var z := ZN + (0.3 if row % 2 == 1 else 0.0)
+			var z := _grid_start(0.6, 0.3 if row % 2 == 1 else 0.0)
 			while z < bz:
+				if z < ZN:
+					z += 0.6
+					continue
 				c.linev(_p(x, y, z), _p(x, y1, z), Pal.STONE_DEEP)
 				z += 0.6
 			y = y1
 			row += 1
 		for zc in [-1.45, -0.35, 0.75]:
-			_lancet(c, x, zc)
+			if zc - 0.3 > ZN:
+				_lancet(c, x, zc)
 
 	# back wall, block by block
 	var tl := _p(-wx, ty, bz)
@@ -120,10 +152,9 @@ static func far_background() -> PixelCanvas:
 		row2 += 1
 
 	_great_arch(c)
-	return c
 
 
-static func _lancet(c: PixelCanvas, x: float, zc: float) -> void:
+static func _lancet(c, x: float, zc: float) -> void:
 	var outer := _arch(zc, 0.27, 1.15, 1.0, 8)
 	outer.insert(0, Vector2(zc - 0.27, -0.25))
 	outer.append(Vector2(zc + 0.27, -0.25))
@@ -156,7 +187,7 @@ static func _on_z(uv: PackedVector2Array, z: float) -> PackedVector2Array:
 	return out
 
 
-static func _great_arch(c: PixelCanvas) -> void:
+static func _great_arch(c) -> void:
 	var bz := HallCam.BACK_Z
 	var fy := HallCam.FLOOR_Y
 	var spring := 0.35
@@ -218,8 +249,8 @@ static func _great_arch(c: PixelCanvas) -> void:
 
 # ------------------------------------------------------------ floor layer --
 
-static func floor_layer() -> PixelCanvas:
-	var c := PixelCanvas.new(HallCam.W, HallCam.H)
+static func paint_floor(c) -> void:
+	ZN = HallCam.near_z()
 	var wx := HallCam.WALL_X
 	var bz := HallCam.BACK_Z
 	var fy := HallCam.FLOOR_Y
@@ -228,16 +259,16 @@ static func floor_layer() -> PixelCanvas:
 	var i := 0
 	var x := -wx
 	while x < wx - 0.001:
-		var j := 0
-		var z := ZN
+		var z := _grid_start(tile_z)
 		while z < bz - 0.001:
+			var j := roundi((z - GRID_Z) / tile_z)
 			var col := Pal.FLOOR_B if (i + j) % 2 == 0 else Pal.FLOOR_A
-			_quad_y(c, fy, x, minf(x + tile_x, wx), z, minf(z + tile_z, bz), col)
+			if z + tile_z > ZN:
+				_quad_y(c, fy, x, minf(x + tile_x, wx), maxf(z, ZN), minf(z + tile_z, bz), col)
 			z += tile_z
-			j += 1
 		x += tile_x
 		i += 1
-	var gz := ZN
+	var gz := _grid_start(tile_z) + tile_z
 	while gz <= bz:
 		c.linev(_p(-wx, fy, gz), _p(wx, fy, gz), Pal.GROUT)
 		gz += tile_z
@@ -257,9 +288,10 @@ static func floor_layer() -> PixelCanvas:
 	# the red carpet runs from the doors to the dais
 	var h := CARPET_HALF
 	_quad_y(c, fy, -h, h, ZN, DAIS_FRONT, Pal.CRIMSON)
-	var dz := -3.0
+	var dz := _grid_start(0.5) + 0.5
 	while dz < DAIS_FRONT - 0.2:
-		c.poly(PackedVector2Array([_p(0, fy, dz - 0.1), _p(0.1, fy, dz), _p(0, fy, dz + 0.1), _p(-0.1, fy, dz)]), Pal.GOLD)
+		if dz - 0.1 > ZN:
+			c.poly(PackedVector2Array([_p(0, fy, dz - 0.1), _p(0.1, fy, dz), _p(0, fy, dz + 0.1), _p(-0.1, fy, dz)]), Pal.GOLD)
 		dz += 0.5
 	for side in [-1.0, 1.0]:
 		c.linev(_p(side * (h - 0.07), fy, ZN), _p(side * (h - 0.07), fy, DAIS_FRONT), Pal.GOLD)
@@ -272,10 +304,9 @@ static func floor_layer() -> PixelCanvas:
 	c.linev(_p(-h, DAIS_Y2, 1.15), _p(h, DAIS_Y2, 1.15), Pal.GOLD)
 	for side in [-1.0, 1.0]:
 		c.linev(_p(side * h, DAIS_Y2, DAIS_STEP), _p(side * h, DAIS_Y2, 1.15), Pal.GOLD)
-	return c
 
 
-static func _dais(c: PixelCanvas) -> void:
+static func _dais(c) -> void:
 	var fy := HallCam.FLOOR_Y
 	var bz := HallCam.BACK_Z
 	var x := DAIS_X
@@ -302,8 +333,8 @@ static func _dais(c: PixelCanvas) -> void:
 
 # ---------------------------------------------------------- columns layer --
 
-static func columns_layer() -> PixelCanvas:
-	var c := PixelCanvas.new(HallCam.W, HallCam.H)
+static func paint_columns(c) -> void:
+	ZN = HallCam.near_z()
 	var bz := HallCam.BACK_Z
 	var ty := HallCam.TOP_Y
 	for side in [-1.0, 1.0]:
@@ -316,8 +347,10 @@ static func columns_layer() -> PixelCanvas:
 		for k in bays.size():
 			var z0: float = bays[k][0]
 			var z1: float = bays[k][1]
-			if k == 0:
-				_quad_x(c, x, SPRING, ty, z0, z1, Pal.STONE)
+			if z1 <= ZN:
+				continue
+			if k == 0 or z0 < ZN:
+				_quad_x(c, x, SPRING, ty, maxf(z0, ZN), z1, Pal.STONE)
 				continue
 			var half := (z1 - z0) / 2.0 - COLUMN_R
 			var arch := _arch((z0 + z1) / 2.0, half, SPRING, 0.75, 10)
@@ -336,11 +369,11 @@ static func columns_layer() -> PixelCanvas:
 
 		# columns, far to near
 		for k in range(COLUMNS_Z.size() - 1, -1, -1):
-			_column(c, x, COLUMNS_Z[k], side < 0.0)
-	return c
+			if COLUMNS_Z[k] - COLUMN_R > ZN + 0.2:
+				_column(c, x, COLUMNS_Z[k], side < 0.0)
 
 
-static func _side_banner(c: PixelCanvas, x: float, zc: float, field: Color) -> void:
+static func _side_banner(c, x: float, zc: float, field: Color) -> void:
 	var hw := 0.17
 	var top := SPRING + 0.2
 	var bot := 0.15
@@ -361,7 +394,7 @@ static func _side_banner(c: PixelCanvas, x: float, zc: float, field: Color) -> v
 	c.linev(_p(x, top + 0.03, zc - hw - 0.05), _p(x, top + 0.03, zc + hw + 0.05), Pal.GOLD)
 
 
-static func _column(c: PixelCanvas, x: float, z: float, left: bool) -> void:
+static func _column(c, x: float, z: float, left: bool) -> void:
 	var fy := HallCam.FLOOR_Y
 	var s := HallCam.scale_at(z)
 	var cx := _p(x, 0.0, z).x
@@ -417,24 +450,29 @@ static func _column(c: PixelCanvas, x: float, z: float, left: bool) -> void:
 # ------------------------------------------------------------ feast layer --
 
 ## Returns {"canvas": PixelCanvas, "flames": Array[Vector2i]}
-static func feast_layer() -> Dictionary:
-	var c := PixelCanvas.new(HallCam.W, HallCam.H)
+## Returns the candle-flame spots (screen px) for the animated flames.
+static func paint_feast(c) -> Array:
+	ZN = HallCam.near_z()
 	var flames: Array = []
 	_table(c, -1.95, -1.45, -1.75, 0.35, true, flames)
 	_table(c, 1.45, 1.95, -1.25, 0.85, false, flames)
-	return {"canvas": c, "flames": flames}
+	return flames
 
 
-static func _table(c: PixelCanvas, x0: float, x1: float, z0: float, z1: float, left: bool, flames: Array) -> void:
+static func _table(c, x0: float, x1: float, z0: float, z1: float, left: bool, flames: Array) -> void:
 	var fy := HallCam.FLOOR_Y + 0.02
 	var ty := TABLE_TOP
+	if z1 <= ZN + 0.05:
+		return
+	var z_far := z1
+	z0 = maxf(z0, ZN)
 	var aisle := x1 if left else x0
 	var outer := x0 if left else x1
 	var xc := (x0 + x1) / 2.0
 
 	# the long side facing the aisle: tablecloth, folds, hanging crimson runner
 	var side := _quad_x(c, aisle, fy, ty, z0, z1, Pal.PARCHMENT)
-	var z := z0 + 0.2
+	var z := GRID_Z + ceilf((z0 - GRID_Z) / 0.2) * 0.2
 	while z < z1:
 		c.linev(_p(aisle, ty - 0.12, z), _p(aisle, fy, z), Pal.PARCHMENT_DARK)
 		z += 0.2
@@ -455,14 +493,16 @@ static func _table(c: PixelCanvas, x0: float, x1: float, z0: float, z1: float, l
 	# the feast, far to near so nearer dishes overlap farther ones
 	var menu := ["candelabra", "bowl", "goblet", "roast", "grapes", "goblet", "bread", "bowl", "candelabra"]
 	for k in menu.size():
-		var zz: float = lerpf(z1 - 0.18, z0 + 0.2, float(k) / (menu.size() - 1))
+		var zz: float = lerpf(z_far - 0.18, -1.55 if left else -1.05, float(k) / (menu.size() - 1))
+		if zz < ZN + 0.25:
+			continue
 		var base := HallCam.project(Vector3(xc + (0.05 if k % 2 == 0 else -0.05), ty, zz))
 		var s := base.z
 		var bx := roundi(base.x)
 		var by := roundi(base.y) + 1
 		match menu[k]:
 			"candelabra":
-				var cd := SpriteForge.candelabra(roundi(0.42 * s))
+				var cd: Dictionary = _item("candelabra", roundi(0.42 * s))
 				var cc: PixelCanvas = cd["canvas"]
 				var ox := bx - cc.w / 2
 				var oy := by - cc.h
@@ -470,18 +510,18 @@ static func _table(c: PixelCanvas, x0: float, x1: float, z0: float, z1: float, l
 				for f in cd["flames"]:
 					flames.append(Vector2i(ox + f.x, oy + f.y))
 			"bowl":
-				_place(c, SpriteForge.fruit_bowl(roundi(0.26 * s)), bx, by)
+				_place(c, _item("bowl", roundi(0.26 * s)), bx, by)
 			"goblet":
-				_place(c, SpriteForge.goblet(roundi(0.13 * s)), bx, by)
+				_place(c, _item("goblet", roundi(0.13 * s)), bx, by)
 			"roast":
-				_place(c, SpriteForge.roast(roundi(0.3 * s)), bx, by)
+				_place(c, _item("roast", roundi(0.3 * s)), bx, by)
 			"grapes":
-				_place(c, SpriteForge.grapes(roundi(0.14 * s)), bx, by)
+				_place(c, _item("grapes", roundi(0.14 * s)), bx, by)
 			"bread":
-				_place(c, SpriteForge.bread(roundi(0.2 * s)), bx, by)
+				_place(c, _item("bread", roundi(0.2 * s)), bx, by)
 
 
-static func _place(c: PixelCanvas, item: PixelCanvas, bx: int, by: int) -> void:
+static func _place(c, item: PixelCanvas, bx: int, by: int) -> void:
 	c.blit(item, bx - item.w / 2, by - item.h)
 
 

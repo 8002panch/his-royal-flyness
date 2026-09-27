@@ -8,7 +8,9 @@ extends Node
 ##
 ## Keys: 1/2/3 toggle Hamlet's Reliquary relics (cosmetic, local only),
 ##       F1 debug waveforms, F2 the old dashboard (scenes/Main.tscn), F11 fullscreen.
-##       `-- --debug` opens with the F1 overlay showing.
+##       F3 keyboard demo (WASD, no server or phones; see demo_driver.gd),
+##       F4 chase camera (default) / fixed view from the doors.
+##       `-- --debug` opens with the F1 overlay showing; `-- --demo` starts in the keyboard demo.
 ##
 ## Screenshot mode renders one screen from the host/test fixtures and quits:
 ##   godot --path host -- --screen=trial --frame=180 --shot=C:/tmp/trial.png
@@ -29,6 +31,8 @@ const CHRONICLE := "res://test/sample_chronicle.json"
 @onready var hud: CourtHud = $Hud
 
 var _sample_events: Array = []
+var _demo: DemoDriver = null
+var _voice: Node = null
 var _last_frame := -1
 
 
@@ -49,11 +53,14 @@ func _ready() -> void:
 		return
 	# Same audio hook as the dashboard: voice lines play from GameState's events.
 	if ResourceLoader.exists(VOICE_PLAYER):
-		add_child(load(VOICE_PLAYER).new())
-	GameState.state_updated.connect(_on_state)
+		_voice = load(VOICE_PLAYER).new()
+		add_child(_voice)
+	GameState.state_updated.connect(_on_live_state)
 	GameState.event_received.connect(_on_event)
 	if not GameState.latest_state.is_empty():
 		_on_state(GameState.latest_state)
+	if args.has("demo"):
+		_toggle_demo()
 	if args.has("live_shot"):
 		# the normal GameState pipeline, captured after a few seconds
 		await get_tree().create_timer(float(args.get("after", "6"))).timeout
@@ -67,6 +74,29 @@ func _on_state(msg: Dictionary) -> void:
 	world.show_tags = cs.phase != "lobby" and cs.phase != "chronicle"
 	if cs.sample:
 		_play_sample_events(cs.frame)
+
+
+## GameState's feed is set aside while the keyboard demo runs.
+func _on_live_state(msg: Dictionary) -> void:
+	if _demo == null:
+		_on_state(msg)
+
+
+func _toggle_demo() -> void:
+	if _demo == null:
+		_demo = DemoDriver.new()
+		_demo.state_ready.connect(_on_state)
+		_demo.event_ready.connect(_on_demo_event)
+		add_child(_demo)
+	else:
+		_demo.queue_free()
+		_demo = null
+
+
+func _on_demo_event(ev: Dictionary) -> void:
+	_on_event(ev)
+	if _voice != null and _voice.has_method("_on_event"):
+		_voice.call("_on_event", ev)
 
 
 func _on_event(ev: Dictionary) -> void:
@@ -102,6 +132,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			hud.toggle_debug()
 		KEY_F2:
 			_open_dashboard()
+		KEY_F3:
+			_toggle_demo()
+		KEY_F4:
+			HallCam.chase = not HallCam.chase
 		KEY_F11:
 			var win := get_window()
 			win.mode = Window.MODE_WINDOWED if win.mode == Window.MODE_FULLSCREEN else Window.MODE_FULLSCREEN

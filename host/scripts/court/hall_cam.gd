@@ -1,9 +1,10 @@
 class_name HallCam
 extends RefCounted
 
-## The fixed camera the Banquet Hall is drawn through. It stands at the hall's
-## entrance looking down the carpet. The prince flies away from it towards
-## Miranda, so he shrinks as he advances.
+## The camera the Banquet Hall is drawn through. By default it is a chase
+## camera: it follows Hamlet from behind and above (with a little lag), so the
+## hall moves past him while he stays near the same spot on screen. `chase =
+## false` gives the original fixed view from the doors (F4 in the court).
 ##
 ## Hall space: x = lateral, y = altitude, z = depth (towards the back wall).
 ## The server's fly body lives in a -1..1 cube (server/movement.py bounds).
@@ -16,10 +17,20 @@ extends RefCounted
 const W := 640
 const H := 360
 const CX := 320.0
-const HORIZON := 34.0
 const F := 300.0
-const CAM := Vector3(0.0, 1.9, -4.5)
 const NEAR := 0.5
+
+## Fixed view (the doors) and the chase offset from Hamlet, in hall units.
+const FIXED_CAM := Vector3(0.0, 1.9, -4.5)
+const FIXED_HORIZON := 34.0
+const CHASE_OFFSET := Vector3(0.0, 1.7, -2.9)
+const CHASE_HORIZON := 60.0
+const CHASE_FOLLOW_X := 0.85
+const CHASE_LAG := 5.0   # 1/s; higher = tighter follow
+
+static var chase := true
+static var CAM := FIXED_CAM
+static var HORIZON := FIXED_HORIZON
 
 const SX := 1.3
 const UNIT_CM := 220.0
@@ -45,6 +56,23 @@ static func pt(p: Vector3) -> Vector2:
 	var dz := maxf(d.z, NEAR)
 	var s := F / dz
 	return Vector2(CX + d.x * s, HORIZON - d.y * s)
+
+
+## Move the camera towards its place behind `target` (Hamlet, hall space).
+## `snap` jumps straight there (first frame, or after a reset).
+static func follow(target: Vector3, delta: float, snap: bool = false) -> void:
+	if not chase:
+		CAM = FIXED_CAM
+		HORIZON = FIXED_HORIZON
+		return
+	var want := Vector3(target.x * CHASE_FOLLOW_X, target.y * 0.6, target.z) + CHASE_OFFSET
+	CAM = want if snap else CAM.lerp(want, 1.0 - exp(-delta * CHASE_LAG))
+	HORIZON = CHASE_HORIZON
+
+
+## The nearest depth worth drawing: anything closer is behind or inside the lens.
+static func near_z() -> float:
+	return CAM.z + NEAR + 0.05
 
 
 static func scale_at(z: float) -> float:
