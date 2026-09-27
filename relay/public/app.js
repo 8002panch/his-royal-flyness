@@ -20,12 +20,14 @@ function getClientId() {
 function relayUrl() {
   const override = new URLSearchParams(location.search).get("relay");
   if (override) return override;
-  return `${location.protocol === "https:" ? "wss" : "ws"}://${location.hostname || "localhost"}:8080`;
+  if (window.RELAY_URL) return window.RELAY_URL;                            // config.js: page hosted apart from the relay
+  if (location.protocol === "https:") return `wss://${location.host}/ws`;  // behind Caddy (relay/Caddyfile)
+  return `ws://${location.hostname || "localhost"}:8080`;                   // run_local.py on the local network
 }
 
 function nextMessage(message) { return { ...message, seq: ++state.seq }; }
 function send(message) { if (state.socket?.readyState === WebSocket.OPEN) state.socket.send(JSON.stringify(nextMessage(message))); }
-function saveProfile() { localStorage.setItem(PROFILE_KEY, JSON.stringify({ room: state.room, name: state.name })); }
+function saveProfile() { localStorage.setItem(PROFILE_KEY, JSON.stringify({ room: state.room, name: state.name, role: state.role })); }
 function loadProfile() { try { return JSON.parse(localStorage.getItem(PROFILE_KEY)) || {}; } catch { return {}; } }
 
 function render() {
@@ -114,7 +116,12 @@ function connect(isNewJoin = false) {
   let socket;
   try { socket = new WebSocket(relayUrl()); } catch { scheduleReconnect(); return; }
   state.socket = socket;
-  socket.addEventListener("open", () => { if (state.socket === socket) { reconnectOverlay.hidden = true; state.seq = 0; send({ t: "join", room: state.room, name: state.name, clientId: getClientId() }); } });
+  socket.addEventListener("open", () => {
+    if (state.socket !== socket) return;
+    reconnectOverlay.hidden = true; state.seq = 0;
+    const lastRole = loadProfile().role;  // lets the relay give this phone its role back even after a restart
+    send({ t: "join", room: state.room, name: state.name, clientId: getClientId(), ...(lastRole && isNewJoin === false ? { role: lastRole } : {}) });
+  });
   socket.addEventListener("message", ({ data }) => { if (state.socket === socket) handleMessage(data); });
   socket.addEventListener("close", () => { if (state.socket === socket) { releaseControl(); scheduleReconnect(); } });
   socket.addEventListener("error", () => socket.close());
@@ -125,7 +132,7 @@ function scheduleReconnect() { reconnectOverlay.hidden = false; clearTimeout(sta
 function handleMessage(data) {
   let message; try { message = JSON.parse(data); } catch { return; }
   if (message.t === "joined") { state.availableRoles = message.roles || []; state.role = ""; render(); return; }
-  if (message.t === "assigned") { state.role = message.role; state.availableRoles = []; state.view = {}; render(); return; }
+  if (message.t === "assigned") { state.role = message.role; state.availableRoles = []; state.view = {}; saveProfile(); render(); return; }
   if (message.t === "control_view" && message.role === state.role) { state.view = message; render(); return; }
   if (isPrivateSeerView(message) && state.role === "seer") { state.view = message; render(); return; }
   if (message.t === "error") { state.role ? alert(message.message) : showJoinError(message.message); }

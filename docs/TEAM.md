@@ -30,7 +30,7 @@ table and add an entry to the phase log below instead. The protocol that prompts
 | 4 | Godot first-person 2D graybox driven by live state; one-command local launch | Anshul (launcher: Arnav) | **Launcher done** (`python run_local.py`, Sat 19:25) and it opens a **browser host screen** (lobby with room code, QR and seats; live roster and brain bars), a stand-in until the Godot screen is merged. Godot project + HUD on `anshul/host-seer-hud` (not merged); pixel-art direction chosen |
 | 5 | Playable Garden trial: phases, win by alignment, lose on Giant / timeout / overshoot, real and fake Giant warnings, keyboard fallback, host restart | Arnav | Not started |
 | 6 | Brain-backed Seer in the server, `brainActivity` to Godot, Decree wording | Neil | **Done** (Sat 19:25): the server runs the real brain by default (placeholder if `data/` is missing), sends `brain` and `brainActivity` to Godot, host toggle for the Changeling. Decree already updated |
-| 7 | DigitalOcean + Caddy + domain, polish, demo runbook | Ved, everyone | Not started |
+| 7 | DigitalOcean + Caddy + domain, polish, demo runbook | Ved, everyone | **Code ready** (Sat 20:30): `relay/Caddyfile`, `config.js` for a separately hosted page, online mode in `run_local.py`, automatic relay reconnect; rehearsed locally. Deploying needs the team's approval (TECH.md, "Hosting the join link") |
 | Audio | ElevenLabs voices, sound effects, music (GAME.md) | Anshul | Not started |
 | Agents | Matchmaker, Master of Trials, Jester | Ved (+ Neil `run_trials`) | Not started; first thing to cut |
 
@@ -69,7 +69,15 @@ True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 
   stronger eye (about 10x resting noise) and the Changelings report nothing; (3) the phone showed Giant warnings from level 0.05
   while the evaluation counted from 0.3; both use 0.3 now; (4) the test world never put the Princess behind the fly and let the
   hand pass through it (to 15 cm); fixed; (5) HUD labels now say what's measured. New numbers: True Prince 54/60 found, 53 sides,
-  60/60 Giants, 1.20 s lead; Changelings 0/60 on everything. In the hall: 116/120 sides, Changelings 0. 92 tests pass. Verified in the browser: a 3 s hold stays held on the server for 2.96 s; the Seer's phone shows brain
+  60/60 Giants, 1.20 s lead; Changelings 0/60 on everything. In the hall: 116/120 sides, Changelings 0. 92 tests pass.
+- **Online hosting prep and bug fixes (Neil, Sat 20:30):** GoDaddy's free website hosting can serve the phone page but can't
+  run the relay (a live WebSocket program), so: `relay/public/config.js` points a separately hosted page at a relay;
+  `relay/Caddyfile` serves page + relay with HTTPS on a server; `run_local.py --relay-url wss://<domain>/ws` runs only the game
+  and host screen on the laptop. Bugs fixed: after a relay restart phones had to re-pick roles (now the phone asks for its last
+  role); the game server crashed or stayed disconnected if the relay dropped (now it reconnects within about a second, clearing
+  held inputs and seats meanwhile); the game only knew player names in local mode (the relay now sends a roster);
+  `players` is now `[{name, role}]` (Anshul's format). Rehearsed: relay killed and restarted mid-game, all four phones got their
+  roles back and the server reconnected in under a second; a file-hosted page with `config.js` joined a separate relay. Verified in the browser: a 3 s hold stays held on the server for 2.96 s; the Seer's phone shows brain
   cues (bearing, distance, a Giant warning counting down from 1.4 s).
 
 ## Open requests: who is waiting on whom
@@ -98,7 +106,8 @@ Nothing is blocked on Neil right now. On request: the data files for anyone runn
 | Neil → Arnav, Ved | Heads-up: Neil edited your files to connect the join flow to the game (see the phase log): `server/main.py` (sensing, state fields, fixed-rate loop, `--seer`), `relay/relay.py` (disconnect clear, dropped-phone handling), `relay/public/app.js` (0.4 s resend, readout-only updates, `?room=` links), plus tests. Pull before you change these files | Please pull |
 | Neil → Anshul | Neil added `host/web/index.html` (a browser host screen: lobby with the room code, QR and seats, then a live roster and brain bars) so the game can be run and shown before your Godot screen merges. `host/web/.gdignore` keeps Godot from importing it. Keep it as the lobby, restyle it, or replace it; it reads the same state feed, now with `players` (role to name) | FYI |
 | Neil → Arnav | Movement feels very fast in the graybox: holding a direction crosses from the center to the wall in about 1 s (max speed 1.0 in a [-1, 1] box). Worth tuning with Phase 5's world scale | Your call |
-| Neil → Arnav, Ved | With a remote relay (DigitalOcean), the server doesn't reconnect if the relay connection drops; it needs a retry loop before Phase 7. The in-process relay in `run_local.py` doesn't have this problem | Before deploying |
+| Neil → Ved | Hosting: GoDaddy's free website hosting can hold the phone page, not the relay. Pick an option in TECH.md, "Hosting the join link" (recommended: point the GoDaddy domain at a DigitalOcean Droplet running `relay/Caddyfile`). New in your files: `relay/public/config.js`, `relay/Caddyfile`, role memory on rejoin (`join` may carry `role`), a `roster` message to the host, `RELAY_HOST` | Your call, then deploy with approval |
+| Neil → Anshul | Your Godot court (branch) vs the server on `main`: (1) `players` is now the list `[{name, role}]` you read, so your lobby seats will fill; (2) your nervous-system rows read old keys (`her_L`, `her_R`, `steer`, `song`), which were removed because a left/right bar gives away the Princess's side. The server sends `vision`, `looming`, `escape`: in `court_state.gd` use `["vision"]` for vision and `["looming", "escape"]` for reaction, and drop flight and song (the brain doesn't drive movement in this design); (3) show `joinUrl` (and a QR if you can) in the lobby: it's the link phones need | Before merging |
 | Anshul → everyone | The `brainActivity` example in the planning repo's redesign (`vision`/`looming`/`motor`) doesn't match the code | Resolved: TECH.md has the real keys |
 | Neil → Anshul | When you merge `main` into `anshul/host-seer-hud`, git reports modify/delete conflicts on `host/README.md`, `team/anshul/README.md` and `team/arnav/README.md`. Their content (your status and notes) is now in this file and GAME.md, so resolve with `git rm` on those three. The pixel-art concept is summarized in GAME.md, "Art direction"; please extend that section rather than adding new .md files (the Claude prompt file can live in `team/anshul/`) | Please do at your next merge |
 | Neil → Ved | Codex phase prompts: record status in this file (see "Implementation status"); the protocol is in TECH.md | Please pass to your Codex runs |

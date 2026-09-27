@@ -3,6 +3,7 @@
     python run_local.py                   # new room code, the real MaleCNS brain if data/ is present
     python run_local.py --room BZKT       # pin the room code so phones reconnect on their own after a restart
     python run_local.py --seer placeholder
+    python run_local.py --relay-url wss://royalflyness.club/ws   # phones join through a relay on the internet (relay/Caddyfile)
 
 The host screen opens in this laptop's browser (http://localhost:8001) with the room code, a QR code and the join link; players
 scan it with phones on the same Wi-Fi. Godot can read the same state feed at ws://127.0.0.1:8765.
@@ -12,11 +13,18 @@ On a Mac, allow incoming connections for Python the first time, or the phones ca
 
 from __future__ import annotations
 
+import os
+
+# The brain's heavy step is single-threaded sparse maths; stop NumPy's BLAS from starting a busy thread per core (set before
+# NumPy is imported), which leaves the demo laptop's CPU for Godot and the browser.
+for _var in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
+    os.environ.setdefault(_var, "1")
+
 import argparse
 import asyncio
+import contextlib
 import functools
 import http.server
-import os
 import random
 import re
 import socket
@@ -25,6 +33,7 @@ import threading
 import warnings
 import webbrowser
 from pathlib import Path
+from urllib.parse import urlsplit
 
 warnings.filterwarnings("ignore", category=DeprecationWarning, module=r"websockets(\.|$)")
 warnings.filterwarnings("ignore", category=DeprecationWarning, message=r".*websockets.*")
@@ -122,31 +131,24 @@ def serve_host_screen(port: int, join_url: str) -> http.server.ThreadingHTTPServ
     return httpd
 
 
-def print_banner(room: str, phone_url: str, host_url: str, godot_port: int, seer_source: str) -> None:
-    print("\nHis Royal Flyness: local game")
+def print_banner(room: str, phone_url: str, host_url: str, godot_port: int, seer_source: str, remote_relay: str | None) -> None:
+    print("\nHis Royal Flyness: " + ("online game" if remote_relay else "local game"))
     print(f"  Host screen:  {host_url}   (opens in your browser; press F there for full screen)")
     print(f"  Room code:    {room}")
-    print(f"  Phones:       {phone_url}   (same Wi-Fi as this laptop)")
+    print(f"  Phones:       {phone_url}" + ("" if remote_relay else "   (same Wi-Fi as this laptop)"))
+    if remote_relay:
+        print(f"  Relay:        {remote_relay}")
     print(f"  Godot feed:   ws://127.0.0.1:{godot_port}")
     print(f"  Seer:         {seer_source}")
     print("  Host keys:    c Changeling | t True Prince | p placeholder | s status | q quit   (then Enter)\n", flush=True)
 
 
-def players(state: RelayState, room: str) -> dict[str, str]:
-    """role -> player name for the phones currently holding a role in this room."""
-    room_state = state.rooms.get(room)
-    if room_state is None:
-        return {}
-    return {role: state.clients[cid].name or "?" for role, cid in room_state.role_connections.items() if cid in state.clients}
-
-
-async def watch_players(state: RelayState, room: str, session: GameSession) -> None:
-    """Keep the host screen's player names current and print a line whenever a phone takes or leaves a role."""
+async def watch_players(session: GameSession) -> None:
+    """Print a line whenever a phone takes or leaves a role (from the relay's roster, local or online)."""
     seen: dict[str, str] = {}
     while True:
         await asyncio.sleep(0.25)
-        now = players(state, room)
-        session.players = now
+        now = {p["role"]: p["name"] for p in session.players}
         for role in ROLE_TITLES:
             if now.get(role) != seen.get(role):
                 if role in now:
@@ -156,8 +158,8 @@ async def watch_players(state: RelayState, room: str, session: GameSession) -> N
         seen = now
 
 
-def status_line(session: GameSession, state: RelayState, room: str) -> str:
-    fly, taken = session.state.fly, players(state, room)
+def status_line(session: GameSession, room: str) -> str:
+    fly, taken = session.state.fly, {p["role"]: p["name"] for p in session.players}
     seats = ", ".join(f"{ROLE_TITLES[r]}={taken.get(r, '-')}" for r in ROLE_TITLES)
     held = ", ".join(f"{r}={session.state.inputs[r].value}" for r in ROLE_TITLES)
     return (f"[status] room {room} | Seer {session.seer.source} | {seats}\n"
@@ -180,14 +182,23 @@ async def main(args: argparse.Namespace) -> None:
     if not re.fullmatch(r"[BCDFGHJKLMNPQRSTVWXYZ]{4}", room):
         raise SystemExit("--room must be four consonants, e.g. BZKT")
     secret = os.getenv("ROOM_SECRET", "")
-    ip = lan_ip()
-    phone_url = f"http://{ip}:{args.http_port}/?room={room}"
-    if args.relay_port != 8080:  # the phone page assumes 8080 unless told otherwise
-        phone_url += f"&relay=ws://{ip}:{args.relay_port}"
+    remote = bool(args.relay_url)  # phones reach a relay on the internet; this laptop only runs the game server
+    if remote:
+        relay_url = args.relay_url
+        page = args.join_url or f"https://{urlsplit(relay_url).netloc}/"  # the relay's own site by default (relay/Caddyfile)
+        phone_url = f"{page}{'&' if '?' in page else '?'}room={room}"
+    else:
+        ip = lan_ip()
+        relay_url = f"ws://127.0.0.1:{args.relay_port}"
+        page = args.join_url or f"http://{ip}:{args.http_port}/"
+        phone_url = f"{page}{'&' if '?' in page else '?'}room={room}"
+        if args.relay_port != 8080 and not args.join_url:  # the phone page assumes 8080 unless told otherwise
+            phone_url += f"&relay=ws://{ip}:{args.relay_port}"
     host_url = f"http://localhost:{args.host_port}/"
     if args.godot_port != 8765:
         host_url += f"?feed=ws://127.0.0.1:{args.godot_port}"
-    busy = [port for port in (args.http_port, args.host_port, args.relay_port, args.godot_port) if port_in_use(port)]
+    ports = (args.host_port, args.godot_port) if remote else (args.http_port, args.host_port, args.relay_port, args.godot_port)
+    busy = [port for port in ports if port_in_use(port)]
     if busy:
         ports = f"Ports {', '.join(map(str, busy))} are" if len(busy) > 1 else f"Port {busy[0]} is"
         raise SystemExit(f"{ports} already in use. Is the game already running in another terminal? "
@@ -197,14 +208,19 @@ async def main(args: argparse.Namespace) -> None:
     relay_state = RelayState(room_secret=secret)
     relay = RelayServer(relay_state)
     session = GameSession(room, seer=make_seer(args.seer), join_url=phone_url)
-    serve_phone_page(args.http_port)
+    if not remote:
+        serve_phone_page(args.http_port)
     serve_host_screen(args.host_port, phone_url)
     godot = GodotLink()
 
-    async with serve(relay.handler, "0.0.0.0", args.relay_port), godot.serve(port=args.godot_port):
-        background = [asyncio.create_task(relay.watchdog()), asyncio.create_task(watch_players(relay_state, room, session))]
-        game = asyncio.create_task(GameServer(session, RelayClient(f"ws://127.0.0.1:{args.relay_port}", room, secret), godot).run())
-        print_banner(room, phone_url, host_url, args.godot_port, session.seer.source)
+    async with contextlib.AsyncExitStack() as stack:
+        await stack.enter_async_context(godot.serve(port=args.godot_port))
+        background = [asyncio.create_task(watch_players(session))]
+        if not remote:
+            await stack.enter_async_context(serve(relay.handler, "0.0.0.0", args.relay_port))
+            background.append(asyncio.create_task(relay.watchdog()))
+        game = asyncio.create_task(GameServer(session, RelayClient(relay_url, room, secret), godot).run())
+        print_banner(room, phone_url, host_url, args.godot_port, session.seer.source, relay_url if remote else None)
         if not args.no_browser:
             threading.Thread(target=webbrowser.open, args=(host_url,), daemon=True).start()
 
@@ -214,7 +230,7 @@ async def main(args: argparse.Namespace) -> None:
                 now = session.set_brain(source)
                 print(f"[host]  Seer now: {now}" + ("" if now == source else " (the brain isn't loaded; placeholder only)"), flush=True)
             elif key == "s":
-                print(status_line(session, relay_state, room), flush=True)
+                print(status_line(session, room), flush=True)
             elif key == "q":
                 game.cancel()
 
@@ -237,6 +253,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--godot-port", type=int, default=8765)
     parser.add_argument("--host-port", type=int, default=8001, help="host screen (this laptop only)")
     parser.add_argument("--no-browser", action="store_true", help="don't open the host screen automatically")
+    parser.add_argument("--relay-url", default=os.getenv("RELAY_URL"),
+                        help="use a relay on the internet (e.g. wss://royalflyness.club/ws) instead of running one here")
+    parser.add_argument("--join-url", default=os.getenv("JOIN_URL"),
+                        help="the phone page link to show (default: this laptop's page, or https://<relay host>/ with --relay-url)")
     return parser.parse_args()
 
 

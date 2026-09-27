@@ -57,6 +57,9 @@ python run_local.py --room BZKT
 - The browser host screen (`host/web/index.html`) is a stand-in until Anshul's Godot screen is merged. Both read the same state
   feed and decide nothing. Godot: open `host/project.godot` in Godot 4 (Anshul's branch); it connects to `ws://127.0.0.1:8765`
   and loops an offline sample (clearly labeled "OFFLINE SAMPLE, not brain output") when no server is running.
+- **Online** (relay on the internet, see [Hosting the join link](#hosting-the-join-link-godaddy-domain)):
+  `python run_local.py --room BZKT --relay-url wss://<domain>/ws` runs only the game server and host screen on the laptop; the
+  join link and QR become `https://<domain>/?room=BZKT` (`--join-url` to show a different page).
 - Running the parts separately still works: `python3 relay/relay.py`, `python3 -m http.server 8000 --directory relay/public`,
   `python3 -m server.main --room BZKT --seer true` (`--relay-url` or `RELAY_URL` for a remote relay).
 
@@ -92,7 +95,15 @@ Phone:
 ```
 
 `clientId` is generated once and kept in `localStorage`. If its saved role isn't occupied when it reconnects to the same room,
-the relay restores that role automatically. Rooms are isolated by code; at most four phones per room; each role once.
+the relay restores that role automatically. A phone that reconnects on its own also sends its last role
+(`{"t":"join", ..., "role":"seer"}`), so it gets the role back even from a restarted relay that remembers nobody (granted if
+free; otherwise it sees the role picker). Rooms are isolated by code; at most four phones per room; each role once.
+
+The relay tells the game server who holds which role, on the host's join and on every change:
+
+```json
+{"t":"roster","players":[{"name":"Ava","role":"helmsman"},{"name":"Dee","role":"seer"}]}
+```
 
 ### Phone input
 
@@ -163,6 +174,10 @@ Godot may render this state but never decides outcomes. The whole-map positions 
 exact bearing (GAME.md, "The main screen").
 
 ## The game server (`server/`)
+
+- **Relay connection:** the server keeps retrying until the relay is up and reconnects within about a second if it drops.
+  While disconnected the game keeps running, held inputs are cleared and the host screen's seats empty until the relay's
+  roster arrives again (tested: `test_game_server_survives_a_relay_restart`).
 
 - `GameSession(room, seer=None, join_url=None)` is pure and importable (headless replay and tests). `apply_input()` validates role
   and axis; `step(dt, now)` expires inputs older than 1.2 s, moves the body and **senses once** (stimuli and cues are kept for the
@@ -375,13 +390,28 @@ win rate 30 to 80% and at least 25 points above the Changeling), and the Jester 
 of it runs inside the live game loop. The redesign's cut order drops generated trials first; `run_trials` waits on Arnav's
 answer (TEAM.md).
 
-## Deployment and fallbacks (Phase 7, planned)
+## Hosting the join link (GoDaddy domain)
 
-- Relay and phone page on the smallest DigitalOcean Droplet behind Caddy (automatic HTTPS) at the team's domain; the laptop
-  connects out, so venue Wi-Fi that blocks device-to-device traffic still works. Cloud or DNS changes need credentials and the
-  team's explicit approval.
-- LAN fallback: run the relay on the laptop and join through a phone hotspot.
-- Keyboard fallback: the laptop drives all roles (Phase 5).
+The phone page is plain files, so any web host can serve it. The **relay is a program** that keeps a live WebSocket open to
+every phone and to the game laptop, and static hosting (GoDaddy's free website hosting, Website Builder, basic shared hosting)
+can't run one. So the domain needs one of these, best first:
+
+1. **Domain + a small server (recommended).** Point the GoDaddy domain's A record at a server such as a DigitalOcean Droplet
+   (MLH credits; also the MLH DigitalOcean prize) and run the relay behind Caddy there: steps are at the top of
+   `relay/Caddyfile` (automatic HTTPS). Phones open `https://<domain>/?room=BZKT` (the page connects to `wss://<domain>/ws`); the
+   laptop connects out with `ROOM_SECRET=<secret> python run_local.py --room BZKT --relay-url wss://<domain>/ws`. Works on venue
+   Wi-Fi, cellular, and Wi-Fi that blocks phone-to-laptop traffic.
+2. **Page on GoDaddy hosting, relay on a server.** Upload the contents of `relay/public/` to the GoDaddy hosting and set
+   `window.RELAY_URL = "wss://relay.<domain>/ws"` in its `config.js` (a `relay` subdomain pointed at the server running the relay
+   and Caddy). Laptop: `python run_local.py --room BZKT --relay-url wss://relay.<domain>/ws --join-url https://<domain>/`. Still
+   needs the server; it only moves the page. (Rehearsed locally: a file-host copy with `config.js` joined a separate relay.)
+3. **No server: forward the domain to the laptop.** GoDaddy domain forwarding to `http://<laptop-lan-ip>:8000/?room=BZKT` (plain
+   `http`, since browsers block `ws://` from an `https` page). Only for phones on the laptop's Wi-Fi; it breaks if the venue Wi-Fi
+   isolates devices, and the laptop's IP changes per network, so the forward must be updated at the venue.
+
+- Set the same `ROOM_SECRET` on the relay and the laptop so nobody else can claim your room as its host.
+- Cloud and DNS changes need the team's approval and credentials (Ved owns the Droplet and the domain).
+- Fallbacks at the demo: the local mode (`python run_local.py`) on the venue Wi-Fi or a phone hotspot; the keyboard mode is Phase 5.
 - Secrets only in `.env` (git-ignored); `.env.example` lists the names with blank values.
 
 ## Tests
@@ -394,7 +424,7 @@ python -m pytest brain/tests server/tests relay/tests -q
 npm test --prefix relay/public
 ```
 
-- **92 Python tests** (about 2 minutes): 68 brain, 13 server, 11 relay. `-m "not slow"` skips the slowest brain tests. Brain tests
+- **95 Python tests** (about 2 minutes on a quiet laptop): 68 brain, 14 server, 13 relay. `-m "not slow"` skips the slowest brain tests. Brain tests
   that need `data/` skip with a clear message on a fresh clone.
 - **3 JavaScript tests** for the phone modules (role-owned message shapes, private Seer view detection, room codes); they need Node.
 - What the brain suite covers: the graph matches the data check; signs follow the transmitter rule; the Changelings keep every

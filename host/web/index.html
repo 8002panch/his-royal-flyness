@@ -159,7 +159,8 @@
       const [label, cls] = BADGES[s.brain] || ["…", ""];
       $("badge").textContent = label; $("badge").className = `badge ${cls}`;
 
-      const players = s.players || {}, roles = s.roles || {}, fly = s.fly || {};
+      const players = Object.fromEntries((s.players || []).map((p) => [p.role, p.name]));  // [{name, role}] -> {role: name}
+      const roles = s.roles || {}, fly = s.fly || {};
       const filled = ROLES.filter((r) => players[r.role]).length;
       for (const r of ROLES) {
         const seat = $(`seat-${r.role}`), name = players[r.role];

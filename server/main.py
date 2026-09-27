@@ -58,12 +58,16 @@ class GameSession:
         self.simulator = MovementSimulator()
         self.seer = seer or PlaceholderSeerAdapter()
         self.join_url = join_url
-        self.players: dict[str, str] = {}  # role -> display name, for the host screen (run_local.py fills it from its relay)
+        self.players: list[dict[str, str]] = []  # [{"name", "role"}] for the host screens, from the relay's roster messages
         self.stimuli: dict[str, Any] | None = None
         self.cues: dict[str, Any] | None = None
 
     def apply_input(self, message: dict[str, Any], now: float) -> None:
         kind, role = message.get("t"), message.get("role")
+        if kind == "roster":  # from the relay whenever a phone takes or leaves a role
+            self.players = [{"name": str(p.get("name", "?"))[:32], "role": p["role"]}
+                            for p in message.get("players", []) if isinstance(p, dict) and p.get("role") in self.state.inputs]
+            return
         if kind == "input_cleared" and role in self.state.inputs:
             self.state.inputs[role].value = 0
             self.state.inputs[role].updated_at = now
@@ -130,7 +134,7 @@ class GameSession:
             "fly": {"x": round(fly.x, 4), "y": round(fly.y, 4), "z": round(fly.z, 4), "vx": round(fly.vx, 4), "vy": round(fly.vy, 4), "vz": round(fly.vz, 4)},
             "render": {"princess": stimuli["princess"], "giant": giant},
             "roles": {role: self.state.inputs[role].value != 0 for role in self.state.inputs},
-            "players": dict(self.players),
+            "players": [dict(p) for p in self.players],
         }
 
 
@@ -141,9 +145,31 @@ class GameServer:
     async def accept_input(self, message: dict[str, Any]) -> None:
         self.session.apply_input(message, time.monotonic())
 
+    async def relay_forever(self) -> None:
+        """Stay connected to the relay: retry until it's up, and reconnect if it drops (vital for a relay on the internet)."""
+        delay, announced_down = 0.25, False
+        while True:
+            try:
+                await self.relay.connect()
+                if announced_down:
+                    print("[server] reconnected to the relay", flush=True)
+                announced_down, delay = False, 0.25
+                await self.relay.receive_forever(self.accept_input)
+            except asyncio.CancelledError:
+                raise
+            except Exception as exc:  # refused, dropped, auth failure: keep the game running and try again
+                if not announced_down:
+                    print(f"[server] relay connection lost or refused ({exc.__class__.__name__}); retrying...", flush=True)
+                    announced_down = True
+            await self.relay.close()
+            for input_state in self.session.state.inputs.values():  # nobody's input can be trusted until phones are heard again
+                input_state.value = 0
+            self.session.players = []  # the relay's roster arrives again on reconnect
+            await asyncio.sleep(delay)
+            delay = min(delay * 2, 1.0)  # retry at least once a second, so phones are back quickly
+
     async def run(self) -> None:
-        await self.relay.connect()
-        receiver = asyncio.create_task(self.relay.receive_forever(self.accept_input))
+        receiver = asyncio.create_task(self.relay_forever())
         last = time.monotonic()
         next_tick = next_godot = next_phone = last
         try:

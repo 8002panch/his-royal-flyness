@@ -94,6 +94,7 @@ class RelayState:
             del room.role_connections[session.role]
             session.held_input = 0
             events.append({"to": "host", "room": room.code, "payload": {"t": "input_cleared", "role": session.role}})
+            events.append(self._roster_event(room))
         return events
 
     def handle(self, connection_id: str, payload: dict[str, Any], now: float | None = None) -> tuple[dict[str, Any], list[dict[str, Any]]]:
@@ -103,11 +104,13 @@ class RelayState:
         session.last_seen = now
         message_type = payload.get("t")
         if message_type == "host_join":
-            return self._host_join(session, payload), []
+            response = self._host_join(session, payload)
+            return response, [self._roster_event(self._room(session))]  # a (re)connecting game server learns who is here
         if message_type == "join":
-            return self._join(session, payload), []
+            response = self._join(session, payload)
+            return response, [self._roster_event(self._room(session))] if response["t"] == "assigned" else []
         if message_type == "pick":
-            return self._pick(session, payload), []
+            return self._pick(session, payload), [self._roster_event(self._room(session))]
         if message_type == "heartbeat":
             self._require_phone(session)
             return {"t": "heartbeat_ok"}, []
@@ -176,9 +179,13 @@ class RelayState:
         session.client_id = client_id
         session.name = name.strip()
         restored_role = room.saved_roles.get(client_id)
+        if restored_role is None and payload.get("role") in ROLES:
+            # the phone remembers its last role; after a relay restart the relay has no record, so honor the request if free
+            restored_role = payload["role"]
         if restored_role and restored_role not in room.role_connections:
             session.role = restored_role
             room.role_connections[restored_role] = session.connection_id
+            room.saved_roles[client_id] = restored_role
             return {"t": "assigned", "room": room_code, "role": restored_role, "name": session.name, "restored": True}
         return {"t": "joined", "room": room_code, "name": session.name, "roles": self._available_roles(room)}
 
@@ -231,6 +238,12 @@ class RelayState:
             raise RelayError("INVALID_MESSAGE", "phone_view requires a view object.")
         recipients = self.recipients_for_view(room.code, view)
         return {"t": "view_accepted", "recipients": len(recipients)}, [{"to": recipient, "payload": view} for recipient in recipients]
+
+    def _roster_event(self, room: Room) -> dict[str, Any]:
+        """Who holds which role, for the game server's host screens (names only; sent on every change)."""
+        players = [{"name": self.clients[cid].name or "?", "role": role}
+                   for role, cid in room.role_connections.items() if cid in self.clients]
+        return {"to": "host", "room": room.code, "payload": {"t": "roster", "players": players}}
 
     def _host_event(self, session: ClientSession, payload: dict[str, Any]) -> dict[str, Any]:
         room = self._room(session)
@@ -338,4 +351,5 @@ async def run(host: str = "0.0.0.0", port: int = 8080) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(run(port=int(os.getenv("RELAY_PORT", "8080"))))
+    # Behind Caddy on a server, set RELAY_HOST=127.0.0.1 so only Caddy's wss:// endpoint is public.
+    asyncio.run(run(host=os.getenv("RELAY_HOST", "0.0.0.0"), port=int(os.getenv("RELAY_PORT", "8080"))))

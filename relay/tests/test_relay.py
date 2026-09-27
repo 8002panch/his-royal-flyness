@@ -46,6 +46,27 @@ class RelayStateTests(unittest.TestCase):
         self.assertEqual(response["role"], "wingmaster")
         self.assertTrue(response["restored"])
 
+    def test_phone_gets_its_role_back_after_a_relay_restart(self) -> None:
+        # a fresh RelayState is a restarted relay: it has no saved roles, so the phone's own memory decides
+        self.state.connect("a")
+        response, _ = self.state.handle("a", {"t": "join", "room": "BZKT", "name": "Ava", "clientId": "ava", "role": "seer", "seq": 1})
+        self.assertEqual((response["t"], response["role"], response["restored"]), ("assigned", "seer", True))
+        self.state.connect("b")  # a second phone asking for the same role gets the picker instead
+        response, _ = self.state.handle("b", {"t": "join", "room": "BZKT", "name": "Bo", "clientId": "bo", "role": "seer", "seq": 1})
+        self.assertEqual(response["t"], "joined")
+        self.assertNotIn("seer", response["roles"])
+
+    def test_host_gets_a_roster_on_join_pick_and_leave(self) -> None:
+        self.state.connect("host")
+        _, events = self.state.handle("host", {"t": "host_join", "room": "BZKT", "secret": "secret", "seq": 1})
+        self.assertEqual(events[0]["payload"], {"t": "roster", "players": []})
+        phone(self.state, "a", "a")
+        _, events = self.state.handle("a", {"t": "pick", "role": "liftmaster", "seq": 2})
+        self.assertEqual(events[0]["payload"]["players"], [{"name": "a", "role": "liftmaster"}])
+        self.assertEqual(self.state.rooms[events[0]["room"]].host_connection_id, "host")
+        events = self.state.disconnect("a")
+        self.assertEqual(events[-1]["payload"], {"t": "roster", "players": []})
+
     def test_stale_input_clears_and_notifies_host(self) -> None:
         self.state.connect("host")
         self.state.handle("host", {"t": "host_join", "room": "BZKT", "secret": "secret", "seq": 1}, now=0.0)

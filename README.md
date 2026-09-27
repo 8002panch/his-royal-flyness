@@ -53,7 +53,8 @@ running live in the server (True Prince vs Changeling, tested). In progress: the
 
 `pip install -r requirements.txt`, then `python run_local.py --room BZKT` from the repo folder. It starts the relay, the phone
 page and the game server, and opens the host screen in your browser with the room code and a QR code; phones on the same Wi-Fi
-scan it to join. Details: [docs/TECH.md](docs/TECH.md#run-it-locally). Tests: `python -m pytest brain/tests server/tests relay/tests -q`.
+scan it to join. To host the join link on your domain, see [docs/TECH.md](docs/TECH.md#hosting-the-join-link-godaddy-domain).
+Details: [docs/TECH.md](docs/TECH.md#run-it-locally). Tests: `python -m pytest brain/tests server/tests relay/tests -q`.
 
 ## Rules and honesty
 
