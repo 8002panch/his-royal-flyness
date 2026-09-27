@@ -1,0 +1,29 @@
+id,speaker,text
+H_TITLE,herald,"[fanfare] Hear ye, hear ye! By order of Duke Prospero, the Royal Ball of the Fruit Bowl begins!"
+H_JOIN,herald,"Present your seal at the gate, and take your place on the Prince's Privy Council."
+H_ROLE_HELMSMAN,herald,The Royal Helmsman! Left and right are yours. Steer true.
+H_ROLE_LIFTMASTER,herald,The Royal Liftmaster! Up and down are yours. Mind the ceiling.
+H_ROLE_WINGMASTER,herald,"The Royal Wingmaster! Forward and back are yours. Speed is a virtue, so is braking."
+H_ROLE_SEER,herald,The Royal Seer! Hold to scan. The court sees only what you tell it.
+H_TRIAL_1,herald,The First Trial: the Garden Audience. Her Highness awaits.
+H_TRIAL_2,herald,"The Second Trial: the Banquet. The feast is fragrant. So, alas, is Sir Cheapdate."
+H_TRIAL_3,herald,The Third Trial: the Giant's Shadow. The Giants stir.
+H_WARN_GIANT,herald,[urgent] The Giant stirs!
+H_SPLAT,herald,[solemn] The Giant has claimed another suitor.
+H_WIN,herald,[fanfare] Her Highness is charmed!
+H_TIMEOUT,herald,[sigh] The candle is spent. Her Highness retires to her chambers.
+H_RIVAL_WINS,herald,Alas! The Princess favors another.
+H_TRUE_PRINCE,herald,The true Prince returns.
+H_WEDDING,herald,"[bells] Let it be recorded: Prince Hamlet and Princess Miranda, wed by committee."
+P_GREET,princess,[curious] Another suitor? Very well. Let us hear you sing.
+P_CHARMED,princess,[delighted] Now that is a serenade.
+P_BORED,princess,[sighs] I have seen livelier fruit.
+P_JUMPED,princess,[laughs] Was it something I said?
+P_RIVAL,princess,Sir Indy again? He is simply not dead yet.
+P_WEDDING,princess,"[warmly] By committee, then. I accept."
+J_GENERIC_1,jester,"A fine effort, my lords and ladies. Mostly fine. Partly effort."
+J_GENERIC_2,jester,The court will remember this trial. The court will try to forget it.
+R_INDY,rival,[wheezing] I'm not dead yet!
+R_TINMAN,rival,Courting? I would need a heart for that.
+R_CHEAPDATE,rival,[hiccup] One more grape and I shall be royalty.
+R_RUTABAGA,rival,Have we met? I never remember.
