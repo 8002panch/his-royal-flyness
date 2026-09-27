@@ -199,8 +199,13 @@ function handleMessage(data) {
   if (isPrivateSeerView(message) && state.role === "seer") {
     if (!state.heldValue) return;  // a reading that arrives after letting go
     const danger = message.giant?.direction;
-    if (danger && !state.view?.giant?.direction) navigator.vibrate?.([120, 60, 120]);  // a new danger: buzz the Seer's hand
-    state.view = message; render(); return;
+    const before = state.view?.giant || {};
+    // A new hand: a warning where there was none, or the brain's time-to-impact jumping back up (the next hand of a volley)
+    const fresh = danger && (!before.direction || (typeof message.giant.seconds === "number" && typeof before.seconds === "number"
+      && message.giant.seconds > before.seconds + 0.5));
+    if (fresh) { navigator.vibrate?.([120, 60, 120]); state.againUntil = before.direction ? Date.now() + 1500 : 0; }
+    state.view = { ...message, again: danger && Date.now() < (state.againUntil || 0) };
+    render(); return;
   }
   if (message.t === "error") {
     if (message.code === "ROLE_TAKEN") return showNotice("Someone just took that role. Pick another.");

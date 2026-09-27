@@ -376,3 +376,20 @@ def test_dizzy_flight_sways_and_reacts_late_sober_flight_doesnt():
     g.c.dizzy = 2
     first = g.c.steer({"x": 1.0, "y": 0.0, "z": 0.0}, DT)
     assert abs(first["x"]) < 0.5  # the press hasn't arrived yet
+
+
+def test_the_giant_sends_more_hands_later_each_aimed_where_hamlet_is_and_each_warned():
+    for dodges, most in ((0, 1), (cm.MULTI_HANDS[0], 2), (cm.MULTI_HANDS[1], 3)):
+        g = Game("GIANT")
+        g.run(2.5)
+        g.c.fight.dodges = dodges
+        volley, first, warned = set(), None, 0
+        for _ in range(int(8 / DT)):
+            g.step(dodge_pilot)  # a hit calls the rest of a volley off, so dodge
+            for a in g.c.fight.attacks:
+                first = a.onset if first is None else first
+                if a.onset - first < 3.0:  # the hands of the first volley
+                    volley.add(a.n)
+            warned = max(warned, len(g.c.stimuli()["giants"]))
+        assert len(volley) == most and warned == min(most, 2), (dodges, volley, warned)
+        assert "impact" not in g.s.godot_state() or g.s.godot_state()["impact"]["at"] <= g.c.fight.t  # only landed ones

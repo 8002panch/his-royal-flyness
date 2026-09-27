@@ -47,3 +47,8 @@ test("the Seer's screen says what to shout: steer away from a hand, towards Mira
   assert.doesNotMatch(miranda, /HAND FROM/);
   assert.match(renderSeer({}), /Hold the button to sense/);
 });
+
+test("a second hand of a volley is called out as another hand", async () => {
+  const { renderSeer } = await import("../screens/seer.js");
+  assert.match(renderSeer({ t: "seer_view", again: true, giant: { direction: "LEFT", seconds: 1.9 } }), /ANOTHER HAND! HAND FROM THE LEFT/);
+});

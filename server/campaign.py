@@ -30,6 +30,8 @@ HIT_RADIUS = 0.30       # server units: still this close to the locked target at
 SIDE_OFFSET = 0.12      # the hand lands a little to its own side of Hamlet, so moving away from that side escapes
 GIANT_DODGES, GIANT_HITS = 10, 3
 FATHER_DODGES = 5
+MULTI_HANDS = (4, 7)      # Giant dodges after which a second, then a third hand follows each swing
+VOLLEY_SPACING_S = 1.3    # between the hands of one volley
 STAGE2_SECONDS = 60.0
 STAGE2_SWATS = (14.0, 30.0, 46.0)
 GOAL_Z = 0.9
@@ -117,12 +119,18 @@ class Fight:
     kind: str                     # "giant", "father" or "swat" (Stage 2)
     t: float = 0.0                # active time in this fight
     next_onset: float = 2.5
-    attack: Attack | None = None
+    attacks: list = field(default_factory=list)    # hands in the air (the Giant sends several later in the fight)
+    follow_ups: list = field(default_factory=list)  # launch times of the next hands in this volley
     n: int = 0
     dodges: int = 0
     hits: int = 0
     impact: dict | None = None    # the last impact, shown for a moment after it lands
     rng: random.Random = field(default_factory=lambda: random.Random(7))
+
+    @property
+    def attack(self) -> Attack | None:
+        """The hand that lands first (None when none is in the air)."""
+        return min(self.attacks, key=lambda a: a.impact) if self.attacks else None
 
 
 def _load_beats() -> dict[str, list[Beat]]:
@@ -470,16 +478,27 @@ class Campaign:
             f.impact = None
         if self.scene == "STAGE2":
             clock_t = STAGE2_SECONDS - self.play["clock"]
-            if f.attack is None and f.n < len(STAGE2_SWATS) and clock_t >= STAGE2_SWATS[f.n]:
+            if not f.attacks and f.n < len(STAGE2_SWATS) and clock_t >= STAGE2_SWATS[f.n]:
                 self._launch(fly, f)
-        elif f.attack is None and f.t >= f.next_onset and not self._fight_over(f):
+        elif not f.attacks and not f.follow_ups and f.t >= f.next_onset and not self._fight_over(f):
             self._launch(fly, f)
-        a = f.attack
-        if a is None or f.t < a.impact:
-            return
-        # resolution: hit or dodge, atomically, once per attack
+            # later in the Giant fight a volley follows the first hand: a second hand from 4 dodges, a third from 7,
+            # each aimed where Hamlet is when it starts (so a dodge from the first can fly into the next)
+            extra = 2 if f.kind == "giant" and f.dodges >= MULTI_HANDS[1] else 1 if f.kind == "giant" and f.dodges >= MULTI_HANDS[0] else 0
+            f.follow_ups = [f.t + VOLLEY_SPACING_S * (k + 1) for k in range(extra)]
+        while f.follow_ups and f.t >= f.follow_ups[0] and not self._fight_over(f):
+            f.follow_ups.pop(0)
+            self._launch(fly, f)
+        for a in sorted([a for a in f.attacks if f.t >= a.impact], key=lambda a: a.impact):
+            if a in f.attacks:
+                self._resolve(fly, f, a)
+            if self.scene != "STAGE2" and self._fight_over(f):
+                break
+
+    def _resolve(self, fly: Any, f: Fight, a: Attack) -> None:
+        """One hand lands: hit or dodge, atomically, once."""
         a.resolved = True
-        f.attack = None
+        f.attacks.remove(a)
         hit = _dist(fly, a.target) < HIT_RADIUS
         f.impact = {"x": a.target[0], "y": a.target[1], "z": a.target[2], "hit": hit, "at": f.t, "fight": f.kind}
         fight = "father" if f.kind == "father" else "giant"
@@ -494,10 +513,13 @@ class Campaign:
         else:
             f.dodges += 1
             self.events.append({"t": "event", "kind": "dodge", "fight": fight, "n": f.dodges})
-        if hit:  # back to a safe spot, a moment to recover
+        if hit:  # back to a safe spot, a moment to recover: the rest of the volley is called off
             fly.vx = fly.vy = fly.vz = 0.0
             fly.x, fly.y = 0.0, 0.0
-        f.next_onset = f.t + (3.0 if hit else self._gap(f))
+            f.attacks.clear()
+            f.follow_ups.clear()
+        if not f.attacks and not f.follow_ups:
+            f.next_onset = f.t + (3.0 if hit else self._gap(f))
         if f.kind == "giant" and f.dodges >= GIANT_DODGES:
             self.route |= {"giant_win"}
             self.leave_in = 3.0
@@ -510,6 +532,9 @@ class Campaign:
         elif f.kind == "father" and f.hits >= 1:
             self.route |= {"father_loss"}
             self.leave_in = 3.0
+        if self._fight_over(f):
+            f.attacks.clear()
+            f.follow_ups.clear()
 
     def _fight_over(self, f: Fight) -> bool:
         if f.kind == "giant":
@@ -528,7 +553,7 @@ class Campaign:
         warn = WARN_S + (0.4 if f.kind == "giant" and f.n <= 3 else 0.0)
         off = -SIDE_OFFSET if side == "left" else SIDE_OFFSET
         target = (max(-0.85, min(0.85, fly.x + off)), max(-0.85, min(0.85, fly.y)), fly.z)
-        f.attack = Attack(f.n, side, f.t, f.t + warn, target)
+        f.attacks.append(Attack(f.n, side, f.t, f.t + warn, target))
 
     # ---------------------------------------------------------------- senses and screens
 
@@ -559,10 +584,11 @@ class Campaign:
             princess = _cue(fly, MIRANDA_BY_CHALICE)
         giants = []
         f = self.fight
-        if self.phase == "play" and f is not None and f.attack is not None:
-            remaining = max(0.0, f.attack.impact - f.t)
-            giants.append({"bearing_deg": -60.0 if f.attack.side == "left" else 60.0, "elevation_deg": 15.0,
-                           "distance_cm": 40.0 + remaining * 150.0, "approach_cm_s": 150.0, "size_cm": 40.0})
+        if self.phase == "play" and f is not None:
+            for a in sorted(f.attacks, key=lambda a: a.impact):  # every hand in the air, the nearest first
+                remaining = max(0.0, a.impact - f.t)
+                giants.append({"bearing_deg": -60.0 if a.side == "left" else 60.0, "elevation_deg": 15.0,
+                               "distance_cm": 40.0 + remaining * 150.0, "approach_cm_s": 150.0, "size_cm": 40.0})
         return {"princess": princess, "giants": giants}
 
     def princess_render(self) -> dict | None:

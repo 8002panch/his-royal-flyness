@@ -203,7 +203,9 @@ Arnav's story (GAME.md, "Story campaign"), run by the server: `GameSession(..., 
   0.3 of it when it lands (2 to 2.4 s later). During the warning the attack exists only as a looming hand in the brain's stimuli,
   so the Seer's phone warns from the real brain (the True Prince warned 3 of 3 attacks, on the right side, about 2.2 s ahead; the
   Changeling none: `test_campaign.py`). Godot gets `state.impact` only after it lands, plus `dodge`/`hit` events. Giant: 10 dodges
-  -> C03, 3 hits -> C04. Father: 5 dodges -> E01, 1 hit -> E02.
+  -> C03, 3 hits -> C04; from 4 dodges each swing brings a second hand 1.3 s later, from 7 a third, each aimed where Hamlet
+  is when it starts and each a looming stimulus of its own (the Seer's phone flashes ANOTHER HAND when the brain's time to
+  impact jumps back up); a hit calls the rest of a volley off. Father: 5 dodges -> E01, 1 hit -> E02.
 - **State fields for the screens:** `phase`, `scene`, `backdrop` (Anshul's v4 backdrop id), `objective`, `beat` {id, speaker,
   name, caption, panel, gesture, index, count, cast, prev}, `question` {id, text, a, b, chosen, correct}, `counters`, `props`,
   `walls`, `impact`, `dizzy`, `steadiness`, `ready`, `storyDemo`, and `joinQr` (the join link as QR rows) in the lobby. Phones get

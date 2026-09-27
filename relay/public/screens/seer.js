@@ -24,7 +24,7 @@ export function renderSeer(view = {}) {
         ${danger ? `
         <article class="seer-card danger-card">
           <span class="seer-label">Danger</span>
-          <strong class="seer-big">HAND FROM THE ${escape(danger)}!</strong>
+          <strong class="seer-big">${view.again ? "ANOTHER HAND! " : ""}HAND FROM THE ${escape(danger)}!</strong>
           <p class="seer-call">Shout: <b>“Helmsman, steer ${away}!”</b></p>
           <small>${typeof giant.seconds === "number" ? `About ${formatNumber(giant.seconds)} s` : "Now"}</small>
         </article>` : `
