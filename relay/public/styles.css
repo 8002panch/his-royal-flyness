@@ -33,6 +33,7 @@ input:focus-visible, button:focus-visible { outline: 4px solid #ffdc75; outline-
 .feedback-card, .sense-card, .warning-card { background: #2a2037; border: 2px solid #725b7f; border-radius: 1rem; padding: 1rem; }
 .feedback-card { display: grid; grid-template-columns: 1fr auto; gap: .3rem 1rem; align-items: baseline; }
 .feedback-card strong { font-size: 2rem; color: #fbcf64; }
+.feedback-card .tip { grid-column: 1 / -1; font-size: 1.5rem; color: #fff3c4; background: #5a2d7a; border-radius: .6rem; padding: .4rem .7rem; text-align: center; }
 .feedback-card span:last-child { grid-column: span 2; color: #d5c2df; }
 .control-pair { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; min-height: 42dvh; }
 .hold-button, .scan-button { min-height: 11rem; border: 3px solid transparent; border-radius: 1.25rem; padding: 1rem; display: grid; place-content: center; gap: .4rem; color: #fff; cursor: pointer; user-select: none; -webkit-user-select: none; }

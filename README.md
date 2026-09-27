@@ -53,7 +53,7 @@ running live in the server (True Prince vs Changeling, tested). In progress: the
 
 ## Run it
 
-`pip install -r requirements.txt`, then `python run_local.py --room BZKT` from the repo folder. It starts the relay, the phone
+`pip install -r requirements.txt`, then `python run_local.py` from the repo folder (a fresh room code every game). It starts the relay, the phone
 page and the game server. The main screen is the Godot court: `godot --path host` (Godot 4.3), then **Enter the Court**. It shows
 the room code and a QR code; phones on the same Wi-Fi scan it to join. (A browser backup of the host screen is at
 http://localhost:8001; `--browser` opens it automatically.)

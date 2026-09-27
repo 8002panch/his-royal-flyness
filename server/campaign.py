@@ -33,7 +33,7 @@ FATHER_DODGES = 5
 STAGE2_SECONDS = 60.0
 STAGE2_SWATS = (14.0, 30.0, 46.0)
 GOAL_Z = 0.9
-PICKUP_R, DELIVER_R, PICKUP_SPEED = 0.2, 0.22, 0.8
+PICKUP_R, DELIVER_R, PICKUP_SPEED = 0.3, 0.32, 1.5  # forgiving: three people each steer one axis
 
 # Ved's wall course, with each opening moved off the centre line so flying straight never gets through (his openings all
 # overlapped the middle): (name, z, gap x0, x1, gap y0, y1), server units. Stage 2 is the mirror, in a new order.
@@ -51,9 +51,12 @@ STAGE2_WALLS = (
 )
 
 # Tutorial: one grape at a time, then back to the chalice (docs/GAME.md, "Tutorial")
-CHALICE = (0.0, -0.45, -0.55)
-GRAPES = ((-0.6, 0.1, -0.8), (0.65, 0.25, -0.35), (-0.45, 0.6, -0.15), (0.5, -0.2, 0.05))
-MIRANDA_BY_CHALICE = (0.35, -0.3, -0.45)
+CHALICE = (-0.5, -0.3, -0.65)  # beside the start, clear of Hamlet on screen
+# GAME.md's teaching order: 1 straight ahead at the starting height (Wingmaster), 2 to the side (Helmsman), 3 up high
+# (Liftmaster), 4 everything at once. The fourth sits nearest the camera, so the last return flies towards the chalice and
+# Miranda: the fly faces +z and its eyes need her in front for the Seer's lesson.
+GRAPES = ((0.0, 0.0, 0.1), (0.7, 0.0, -0.3), (-0.15, 0.65, 0.25), (0.45, 0.35, -0.95))
+MIRANDA_BY_CHALICE = (-0.25, -0.15, -0.5)
 
 QUIZZES = {  # docs/GAME.md, "The three drink questions" (NIAAA facts; general human health, not fly results)
     "Q01": {"text": "Alcohol can make balance and coordination...", "a": "Worse", "b": "More precise", "correct": "A"},
@@ -184,7 +187,7 @@ class Campaign:
         if once and line_id in self.said:
             return
         self.said.add(line_id)
-        if line_id.startswith("TUT_GRAPE_"):
+        if line_id.startswith("TUT_GRAPE_") and line_id != "TUT_GRAPE_1":  # the first tip follows the welcome, never drops it
             self.hints = [h for h in self.hints if not (h.startswith("TUT_GRAPE_") or h == "TUT_WELCOME")]
         elif line_id == "TUT_FINISH":
             self.hints = [h for h in self.hints if not h.startswith(("TUT_GRAPE_", "TUT_SEER", "TUT_WELCOME"))]
@@ -220,6 +223,8 @@ class Campaign:
 
     def enter(self, scene: str) -> None:
         self.scene = scene
+        # tips belong to their scene: a chapter jump never carries the tutorial's advice into Stage 1 (titles and UI lines stay)
+        self.hints = [h for h in self.hints if h.startswith(("H_", "UI_"))]
         self.fight = None
         self.play = {}
         self.leave_in = None
@@ -364,7 +369,7 @@ class Campaign:
             self.fight = Fight("swat", next_onset=STAGE2_SWATS[0])
             self._hint("S2_INTRO")
         elif scene in ("GIANT", "FATHER"):
-            fly.z = -0.3
+            fly.z = -0.55  # in the foreground of the fight's hall, where the whole team can see him
             self.fight = Fight("giant" if scene == "GIANT" else "father")
         self.phase, self.ready_left = "ready", READY_S
 
@@ -503,6 +508,25 @@ class Campaign:
 
     # ---------------------------------------------------------------- senses and screens
 
+    def guide(self) -> dict[str, str]:
+        """The tutorial's coaching: which way each mover should push to reach the grape (or the chalice with a grape).
+        Grapes and the chalice are ordinary visible objects. Off during the Seer's lesson (the last return), where the
+        Seer's reading of Miranda guides the council, and everywhere outside the tutorial."""
+        if self.scene != "TUTORIAL" or self.phase != "play" or self.leave_in is not None:
+            return {}
+        p = self.play
+        k = p.get("grape", 0)
+        if k >= len(GRAPES) or (p.get("carrying") and k == len(GRAPES) - 1):
+            return {}
+        target = CHALICE if p.get("carrying") else GRAPES[k]
+        fly = self.session.state.fly
+        near = 0.12
+        def way(d: float, plus: str, minus: str) -> str:
+            return plus if d > near else minus if d < -near else "ok"
+        return {"goal": "chalice" if p.get("carrying") else "grape",
+                "x": way(target[0] - fly.x, "right", "left"), "y": way(target[1] - fly.y, "up", "down"),
+                "z": way(target[2] - fly.z, "forward", "back")}
+
     def stimuli(self) -> dict[str, Any]:
         """What Hamlet's senses get this tick: Miranda where the story puts her, and an approaching attack as a looming hand."""
         fly = self.session.state.fly
@@ -562,6 +586,7 @@ class Campaign:
         if self.fight is not None and self.fight.impact is not None:
             out["impact"] = self.fight.impact  # only after an attack has landed
         out["counters"] = counters
+        out["guide"] = self.guide()
         out["walls"] = [[w.z, w.gap_min_x, w.gap_max_x, w.gap_min_y, w.gap_max_y] for w in self.session.simulator.walls]
         return out
 

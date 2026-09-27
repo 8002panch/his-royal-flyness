@@ -15,6 +15,8 @@ var steadiness := ""
 var dizzy := 0
 var ready_left := -1.0
 var story_demo := false
+var guide: Dictionary = {}
+var _row := 16   # where the next row under the objective goes
 var _t := 0.0
 
 
@@ -34,6 +36,7 @@ func apply(cs: CourtState) -> void:
 	dizzy = cs.dizzy
 	ready_left = cs.ready_left
 	story_demo = cs.story_demo
+	guide = cs.guide
 	queue_redraw()
 
 
@@ -57,21 +60,57 @@ func _draw() -> void:
 	var status := _status()
 	var w := PixelFonts.width(bold, parts[0], PixelFonts.LABEL_SIZE) + 16
 	var ws := PixelFonts.width(bold, status, PixelFonts.LABEL_SIZE) + 16 if status != "" else 0
-	var x := HallCam.W / 2 - (w + ws) / 2
+	# centred, but clear of the Reliquary (left) and the Seer's panel (right); a long objective puts its counters on a
+	# second row instead of running under the Seer's panel
+	var room := 526 - 78
+	var one_row := w + ws <= room
+	var x := clampi(HallCam.W / 2 - ((w + ws) if one_row else w) / 2, 78, maxi(78, 526 - ((w + ws) if one_row else w)))
 	HudDraw.panel(self, Rect2i(x, Y, w, 14), Pal.PARCHMENT, Pal.INK, Pal.GOLD, Pal.PARCHMENT_SHADE)
 	HudDraw.text(self, bold, x + 8, Y + 3, parts[0], Pal.INK, PixelFonts.LABEL_SIZE)
+	_row = 16
 	if status != "":
-		HudDraw.panel(self, Rect2i(x + w, Y, ws, 14), Pal.ROYAL, Pal.INK, Pal.GOLD, Pal.ROYAL_DARK)
-		HudDraw.text(self, bold, x + w + 8, Y + 3, status, Pal.GOLD_LIGHT, PixelFonts.LABEL_SIZE)
+		var sx := x + w if one_row else clampi(HallCam.W / 2 - ws / 2, 78, 526 - ws)
+		var sy := Y if one_row else Y + 16
+		HudDraw.panel(self, Rect2i(sx, sy, ws, 14), Pal.ROYAL, Pal.INK, Pal.GOLD, Pal.ROYAL_DARK)
+		HudDraw.text(self, bold, sx + 8, sy + 3, status, Pal.GOLD_LIGHT, PixelFonts.LABEL_SIZE)
+		if not one_row:
+			_row = 32
 	if dizzy > 0:
 		var s := "STEADINESS: " + steadiness.to_upper()
 		var sw := PixelFonts.width(bold, s, PixelFonts.LABEL_SIZE) + 14
-		HudDraw.panel(self, Rect2i(HallCam.W / 2 - sw / 2, Y + 16, sw, 13), Pal.CRIMSON, Pal.INK, Color(0, 0, 0, 0), Pal.CRIMSON_DARK)
-		HudDraw.text_center(self, bold, HallCam.W / 2, Y + 19, s, Pal.PARCHMENT, PixelFonts.LABEL_SIZE)
+		HudDraw.panel(self, Rect2i(HallCam.W / 2 - sw / 2, Y + _row, sw, 13), Pal.CRIMSON, Pal.INK, Color(0, 0, 0, 0), Pal.CRIMSON_DARK)
+		HudDraw.text_center(self, bold, HallCam.W / 2, Y + _row + 3, s, Pal.PARCHMENT, PixelFonts.LABEL_SIZE)
+		_row += 15
+	if not guide.is_empty():
+		_guide_row(bold)
 	if phase == "ready":
 		var word := "READY..." if ready_left > 0.6 else "FLY!"
 		HudDraw.text_center(self, PixelFonts.title(), HallCam.W / 2 + 1, 151, word, Pal.INK, PixelFonts.TITLE_SIZE * 2)
 		HudDraw.text_center(self, PixelFonts.title(), HallCam.W / 2, 150, word, Pal.GOLD_LIGHT, PixelFonts.TITLE_SIZE * 2)
+
+
+## The tutorial's coaching row: each mover's push towards the grape (or the chalice), a check when lined up.
+func _guide_row(bold: Font) -> void:
+	var goal := str(guide.get("goal", "grape")).to_upper()
+	var words := {"right": "RIGHT", "left": "LEFT", "up": "CLIMB", "down": "DIVE", "forward": "FORWARD", "back": "BRAKE"}
+	var parts := [["HELMSMAN", str(guide.get("x", "ok")), Pal.ROYAL], ["LIFTMASTER", str(guide.get("y", "ok")), Pal.GOLD_DARK],
+		["WINGMASTER", str(guide.get("z", "ok")), Pal.CRIMSON]]
+	var text := "TO THE " + goal + ":"
+	var widths: Array[int] = [PixelFonts.width(bold, text, PixelFonts.LABEL_SIZE)]
+	for p in parts:
+		widths.append(PixelFonts.width(bold, "%s %s" % [p[0], words.get(p[1], "OK")], PixelFonts.LABEL_SIZE))
+	var total := 0
+	for w in widths:
+		total += w + 14
+	var x := clampi(HallCam.W / 2 - total / 2, 78, maxi(78, 526 - total))
+	HudDraw.panel(self, Rect2i(x - 6, Y + _row, total + 4, 13), Pal.PARCHMENT, Pal.INK, Color(0, 0, 0, 0), Pal.PARCHMENT_SHADE)
+	HudDraw.text(self, bold, x, Y + _row + 3, text, Pal.INK, PixelFonts.LABEL_SIZE)
+	x += widths[0] + 14
+	for i in parts.size():
+		var p: Array = parts[i]
+		var ok: bool = p[1] == "ok"
+		HudDraw.text(self, bold, x, Y + _row + 3, "%s %s" % [p[0], words.get(p[1], "OK")], Pal.INK_SOFT if ok else p[2], PixelFonts.LABEL_SIZE)
+		x += widths[i + 1] + 14
 
 
 func _status() -> String:

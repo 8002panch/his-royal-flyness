@@ -1,7 +1,7 @@
 """One command for a local game: the relay, the phone page, the game server and the host screen.
 
     python run_local.py                   # new room code, the real MaleCNS brain if data/ is present
-    python run_local.py --room BZKT       # pin the room code so phones reconnect on their own after a restart
+    python run_local.py --room BZKT       # pin the room code (testing); by default every game gets a fresh one
     python run_local.py --seer placeholder
     python run_local.py --relay-url wss://royalflyness.club/ws   # phones join through a relay on the internet (relay/Caddyfile)
 

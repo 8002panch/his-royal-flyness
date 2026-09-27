@@ -29,6 +29,11 @@ var rig: Node2D = null
 var _facing := 1.0
 var _rig_mode := ""
 var _rig_speed := -1.0
+var _grape := GrapeBunch.new()
+var carrying := false:  # the tutorial's grape, held under him while he carries it
+	set(v):
+		carrying = v
+		_grape.visible = v
 
 func set_motion(velocity: Vector3) -> void:
 	_motion = velocity.limit_length(1.7)
@@ -60,6 +65,8 @@ func _ready() -> void:
 	if rig != null:
 		add_child(rig)
 		move_child(rig, 0)
+	_grape.visible = false
+	add_child(_grape)
 	set_body_px(56)
 	_apply_cosmetics()
 
@@ -81,6 +88,8 @@ func set_body_px(hh: int) -> void:
 		var k := hh * 1.3 / 72.0
 		rig.scale = Vector2(k, k)
 		rig.position = Vector2(0, roundf(30.0 * k))
+	_grape.r = clampf(hh * 0.09, 3.0, 9.0)
+	_grape.position = Vector2(roundf(hh * 0.25), roundf(hh * 0.45))
 
 
 func tick(delta: float, rate: float, fast: bool) -> void:
@@ -142,3 +151,18 @@ func _draw() -> void:
 		draw_rect(Rect2(x, y, 2, 1), Pal.PARCHMENT)
 		draw_rect(Rect2(x + side * 3, y + 2, 2, 1), Pal.PARCHMENT)
 		draw_rect(Rect2(x + side * 1, y - 3, 1, 2), Pal.PARCHMENT)
+
+
+## A small bunch of grapes, drawn in front of the rig.
+class GrapeBunch extends Node2D:
+	var r := 5.0:
+		set(v):
+			r = v
+			queue_redraw()
+
+	func _draw() -> void:
+		draw_line(Vector2(0, -r * 1.6), Vector2(r * 0.4, -r * 2.4), Pal.WOOD, maxf(1.0, r * 0.25))
+		for off in [Vector2(-1, -1), Vector2(1, -1), Vector2(0, 0.2), Vector2(-0.5, 1.1), Vector2(0.5, 1.1)]:
+			draw_circle(off * r, r * 0.95, Pal.INK)
+			draw_circle(off * r, r * 0.8, Color("#5B2A6E"))
+			draw_circle(off * r + Vector2(-r * 0.25, -r * 0.25), maxf(1.0, r * 0.22), Color("#9A6BB0"))

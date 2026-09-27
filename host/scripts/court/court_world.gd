@@ -62,6 +62,7 @@ var story := false
 var _backdrop := Sprite2D.new()
 var _backdrop_id := ""
 var props := StoryProps.new()
+var cast := StoryCast.new()
 var _impact: Dictionary = {}
 var _impact_left := 0.0
 var _impact_target := Vector3.ZERO
@@ -76,6 +77,8 @@ func _ready() -> void:
 	move_child(_backdrop, 0)
 	props.visible = false
 	actors.add_child(props)
+	cast.world = self
+	add_child(cast)
 	HallCam.follow(HallCam.from_server(_fly_shown), 0.0, true)
 
 
@@ -118,8 +121,14 @@ func _apply_story(cs: CourtState) -> void:
 			(l as CanvasItem).visible = true
 		HallBuilder.walls = HallBuilder.COURSE_WALLS
 		props.visible = false
+		hamlet.carrying = false
+		cast.show_set("")
 		return
-	var open := cs.backdrop in OPEN_BACKDROPS
+	# Flying scenes with one of Anshul's backgrounds_v2 sets (garden, great hall, banquet) paint it through the hall layers,
+	# with its cast; other open backdrops (only ever behind a comic) are his v4 paintings.
+	var set_name := StoryCast.set_for(cs.backdrop)
+	cast.show_set(set_name)
+	var open := cs.backdrop in OPEN_BACKDROPS and set_name == ""
 	if open and cs.backdrop != _backdrop_id:
 		_backdrop_id = cs.backdrop
 		_backdrop.texture = StoryArt.backdrop(cs.backdrop)
@@ -129,6 +138,7 @@ func _apply_story(cs: CourtState) -> void:
 	HallBuilder.walls = cs.walls if cs.has_walls else []
 	_princess_visible = not cs.princess.is_empty()
 	props.set_props(cs.props)
+	hamlet.carrying = cs.scene == "TUTORIAL" and bool(cs.counters.get("carrying", false))
 	if not cs.impact.is_empty() and cs.impact.get("at") != _impact.get("at"):
 		_impact = cs.impact
 		_impact_left = 0.9
@@ -156,6 +166,7 @@ func on_event(ev: Dictionary) -> void:
 	var kind := str(ev.get("kind", ""))
 	var id := str(ev.get("id", ""))
 	if kind == "hit":  # an attack landed on him (the story server; only ever after it resolves)
+		cast.startle()
 		hamlet.play_gesture("hit", 0.45)
 		fx.splat(hamlet_screen)
 		shake(0.35, 3)
@@ -191,7 +202,8 @@ func _process(delta: float) -> void:
 	var hp := HallCam.from_server(_fly_shown)
 	HallCam.follow(hp, delta)
 	var proj := HallCam.project(hp)
-	var hh := clampi(roundi(HAMLET_SIZE * proj.z / 2.0) * 2, 16, 96)
+	# the chase camera sits right behind him: smaller there, so he never hides the wall openings ahead
+	var hh := clampi(roundi(HAMLET_SIZE * (1.0 if HallCam.stage else 0.62) * proj.z / 2.0) * 2, 16, 96)
 	hamlet.set_body_px(hh)
 	var speed := state.fly_vel.length() if state.has_fly else 0.0
 	var bob := 0.0 if speed > 0.15 else roundf(sin(_t * 3.2) * 1.2)

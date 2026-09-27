@@ -2,7 +2,7 @@ extends SceneTree
 
 ## Run with: godot --headless --path host --script res://test/story_smoke.gd
 ## The story screens against states shaped like server/campaign.py's: the lobby QR, a cutscene with the cast's rigs, a quiz
-## card, the play banner's counters, the landed fist, and the backdrops loading from Anshul's v4 art.
+## card, the play banner's counters, the landed fist in the v2 Great Hall, and the backdrops loading from Anshul's v4 art.
 
 var _fails: Array[String] = []
 
@@ -60,14 +60,16 @@ func _run() -> void:
 	await process_frame
 	_check(not hud.comic.visible and hud.story.visible, "play banner, no cutscene")
 	_check(hud.story._status() == "DODGES 3/10   HITS 1/3", "fight counters: " + hud.story._status())
-	_check(world._backdrop.visible and world.giant.showing, "arena backdrop and the landed fist")
+	_check(world.cast.current == "great_hall" and HallLayer.theme != null and world.giant.showing,
+		"the Giant fights in Anshul's v2 Great Hall, and the landed fist shows")
 	for r in world.rivals:
 		_check(not (r as Node2D).visible, "no rivals outside the story's cast")
 
 	court.call("_on_state", _state({"phase": "play", "scene": "STAGE1", "backdrop": "basement", "objective": "Walls",
 		"counters": {"gates": 1, "gates_total": 4}, "walls": [[-0.5, -1.0, -0.2, -0.8, 0.8]]}))
 	await process_frame
-	_check(not world._backdrop.visible and HallBuilder.walls.size() == 1, "the course uses the hall and the server's walls")
+	_check(not world._backdrop.visible and HallLayer.theme == null and HallBuilder.walls.size() == 1,
+		"the course uses the hall and the server's walls")
 
 	root.remove_child(court)
 	court.free()

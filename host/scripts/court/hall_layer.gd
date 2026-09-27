@@ -15,6 +15,12 @@ const BANNER_SWAY := [0, 1, 0, -1]
 var anim_step := 0
 var _painter: CanvasPainter
 
+## The story's open scenes swap the hall for one of Anshul's backgrounds_v2 themes (garden, great hall, banquet): a layer
+## script with the same far/floor/columns/feast layers, painted through the same HallCam. null = this hall.
+static var theme: Script = null
+var _themed: Node2D = null
+var _themed_script: Script = null
+
 
 func _ready() -> void:
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
@@ -22,10 +28,23 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	if theme != _themed_script:
+		_themed_script = theme
+		if _themed != null:
+			_themed.queue_free()
+			_themed = null
+		if theme != null:
+			_themed = theme.new()
+			_themed.set("layer", layer)
+			add_child(_themed)
+	if _themed != null:
+		_themed.set("anim_step", anim_step)
 	queue_redraw()
 
 
 func _draw() -> void:
+	if _themed != null:
+		return
 	match layer:
 		"far":
 			HallBuilder.paint_far(_painter)

@@ -18,3 +18,8 @@ export function isPrivateSeerView(message) {
 export function formatNumber(value, digits = 1) {
   return typeof value === "number" && Number.isFinite(value) ? value.toFixed(digits) : "—";
 }
+
+// The tutorial's coaching line from the game server ("Grape: steer right"), inside the readout so it refreshes live.
+export function tipLine(tip) {
+  return typeof tip === "string" && tip ? `<b class="tip">${tip.replace(/[&<>"']/g, "")}</b>` : "";
+}

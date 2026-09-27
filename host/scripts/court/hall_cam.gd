@@ -45,9 +45,9 @@ static var chase := true
 ## camera stands still, matched to the painting's floor, and the server's -1..1 cube maps onto the stage in front of it
 ## (not onto the long course), so everything in the scene stays in view.
 static var stage := false
-const STAGE_CAM := Vector3(0.0, 1.3, -3.2)
-const STAGE_HORIZON := 120.0
-const STAGE_SX := 2.2
+const STAGE_CAM := Vector3(0.0, 2.2, -4.2)
+const STAGE_HORIZON := 64.0
+const STAGE_SX := 1.6   # keeps his -1..1 inside the garden path and the halls' aisles
 const STAGE_DEPTH := 3.0   # hall units per server unit of depth
 static var CAM := FIXED_CAM
 static var HORIZON := FIXED_HORIZON

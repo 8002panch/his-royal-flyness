@@ -37,7 +37,7 @@ Python 3.11+ in a venv: `pip install -r requirements.txt`. Then one command star
 the host screen (from the repo folder, or give the full path to `run_local.py`):
 
 ```bash
-python run_local.py --room BZKT
+python run_local.py
 ```
 
 - The **host screen** opens in the laptop's browser (`http://localhost:8001`, this laptop only): a lobby with the big **room code**,
@@ -48,7 +48,8 @@ python run_local.py --room BZKT
   from the `qrcode` package or OpenCV, whichever is installed.
 - Phones must be on the same Wi-Fi. On a Mac, allow incoming connections for Python the first time, or phones can't reach the laptop.
 - If it says a port is in use, the game is already running in another terminal: quit that one first (`q`, then Enter).
-- `--room BZKT` pins the code (use it for the demo, so phones reconnect on their own after a restart); `--seer true|changeling|placeholder`
+- Without `--room` every game gets a fresh code (Jackbox style). `--room BZKT` pins it (handy for testing; a phone reloading
+  mid-game gets its seat back either way, from the tab's sessionStorage); `--seer true|changeling|placeholder`
   (default `true`, the real brain; it falls back to placeholder cues if `data/` is missing). Ports: `--http-port 8000`,
   `--relay-port 8080`, `--godot-port 8765`, `--host-port 8001`; `--browser` also opens the browser backup host screen (off by default: Godot is the main screen). `ROOM_SECRET` comes
   from the environment; locally it may be blank.
@@ -209,9 +210,19 @@ Arnav's story (GAME.md, "Story campaign"), run by the server: `GameSession(..., 
   `skip`, `restart`, `jump` (+ `scene`; marks the run DEMO and never grants a story result). Godot keys: Enter (start / next), Space,
   Right or Page Down (next), Left or Page Up (back), S (skip), R (restart), Ctrl+1..9 (TUTORIAL, Q01, STAGE1, Q02, STAGE2, Q03,
   C02, GIANT, FATHER), F6 the Royal Decree.
+- **Tutorial:** GAME.md's teaching order (grape 1 straight ahead, 2 to the side, 3 up high, 4 everything); pickup within 0.3 at
+  any speed, delivery within 0.32 of the chalice: forgiving, because three people each steer one axis. `state.guide` and each
+  mover's `control_view.tip` coach the way to the grape or chalice ("Grape: steer right"); off for the Seer's lesson (the last
+  return), which flies towards Miranda so the fly's eyes can see her.
+- **The shared screen in fights:** `brainActivity` is empty while a fight is on. The brain's only input then is the approaching
+  hand, so a moving bar would tell everyone when an attack is coming; that stays on the Seer's phone.
 - **Godot** (`host/scripts/court/`): `hud/comic_overlay.gd` (backdrop, the cast as Anshul's animated rigs, bubbles, the quiz
-  card), `hud/story_banner.gd` (objective, counters, count-in, end card, DEMO), `story_art.gd` (backdrops and rigs),
-  `story_props.gd` (chalice and grape), `court_world.gd` (backdrop or hall, walls, the landed fist), `voice_player.gd`.
+  card), `hud/story_banner.gd` (objective, counters, tutorial coaching row, count-in, end card, DEMO), `story_art.gd`
+  (backdrops and rigs), `story_props.gd` (chalice, grape, goal arrow), `story_cast.gd` (Anshul's backgrounds_v2 sets and their
+  casts: the garden for the tutorial, the Great Hall for the Giant, the Banquet for Prospero), `court_world.gd` (set, hall or
+  backdrop, walls, the landed fist), `voice_player.gd`. The tutorial and fights use a still camera (`HallCam.stage`) with the
+  server's cube mapped onto the set in front of it; the wall courses keep the chase camera in the hall. Hamlet and Miranda in
+  play are the animation_v1 rigs.
   `--state=file.json --shot=out.png` renders a saved server state.
 - **Tests:** `server/tests/test_campaign.py` (Arnav's acceptance checklist with an autopilot, the Seer's secret, the real brain in
   the fight), `relay/tests` (Seer-only answers), `relay/public/tests` (phone story screens), `host/test/story_smoke.gd`.

@@ -164,6 +164,12 @@ class GameSession:
             {"t": "control_view", "role": "liftmaster", "altitude": round(fly.y, 3), "verticalVelocity": round(fly.vy, 3)},
             {"t": "control_view", "role": "wingmaster", "speed": round(fly.vz, 3), "braking": self.state.inputs["wingmaster"].value < 0},
         ]
+        guide = self.campaign.guide() if self.campaign is not None else {}
+        if guide:  # tutorial coaching on each mover's phone: "Grape: steer right", "Chalice: lined up"
+            words = {"x": {"right": "steer right", "left": "steer left"}, "y": {"up": "climb", "down": "descend"},
+                     "z": {"forward": "fly forward", "back": "brake / back up"}}
+            for view, axis in zip(views, ("x", "y", "z")):
+                view["tip"] = f"{guide['goal'].capitalize()}: " + words[axis].get(guide[axis], "lined up")
         if self.state.inputs["seer"].value:
             cues = self.cues if self.cues is not None else (self._sense() if self.sense_in_step else None)
             if cues is not None:
@@ -198,6 +204,10 @@ class GameSession:
         cues = self.cues or {}
         # Brain activity for the HUD: only real brain output (side-free keys from brain/seer.py), never placeholder numbers.
         activity = cues.get("activity", {}) if cues.get("source") in ("true", "changeling") else {}
+        if self.campaign is not None and self.campaign.fight is not None:
+            # In a fight the only thing the brain sees is the approaching hand (or Prospero's throw), so any bar moving on
+            # the shared screen would tell everyone when an attack is coming. The Seer's phone is the only place for that.
+            activity = {}
         return {
             "t": "state", "phase": "play", "time": round(self.state.elapsed_s, 3),
             "room": self.state.room_code, "joinUrl": self.join_url, "locked": self.locked,

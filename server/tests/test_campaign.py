@@ -305,3 +305,37 @@ def test_the_real_brain_warns_the_seer_of_each_attack_and_the_changeling_does_no
                 warned[source][a.n] = (view["giant"]["direction"], a.side.upper(), a.impact - g.c.fight.t)
     assert len(warned["true"]) >= 3 and all(d == s and lead > 0.8 for d, s, lead in warned["true"].values()), warned
     assert warned["changeling"] == {}
+
+
+def test_tutorial_coaching_points_each_mover_at_the_grape_and_stays_off_for_the_seers_lesson():
+    g = Game("TUTORIAL")
+    g.run(2.5)
+    guide = g.c.guide()
+    assert guide["goal"] == "grape" and guide["z"] == "forward"  # grape 1 is straight ahead: only the Wingmaster moves
+    tips = {v["role"]: v.get("tip") for v in g.s.phone_views() if v["t"] == "control_view"}
+    assert tips["wingmaster"] == "Grape: fly forward" and tips["helmsman"] == "Grape: lined up"
+    g.c.play.update(grape=len(cm.GRAPES) - 1, delivered=len(cm.GRAPES) - 1, carrying=True)
+    assert g.c.guide() == {}  # the last return is the Seer's to call
+    assert all("tip" not in v for v in g.s.phone_views() if v["t"] == "control_view")
+
+
+def test_the_last_return_faces_miranda_so_the_brain_can_see_her():
+    """The fly always faces +z; the Seer's lesson needs Miranda in front of it on the way back from the last grape."""
+    fly = type("F", (), {"x": cm.GRAPES[-1][0], "y": cm.GRAPES[-1][1], "z": cm.GRAPES[-1][2]})()
+    assert abs(cm._cue(fly, cm.MIRANDA_BY_CHALICE)["bearing_deg"]) < 80
+    assert cm.GRAPES[-1][2] < cm.CHALICE[2]
+
+
+def test_a_chapter_jump_drops_the_last_scenes_tips():
+    g = Game("TUTORIAL")
+    g.c.hints += ["TUT_GRAPE_2", "TUT_GRAPE_3"]  # tips still waiting their turn when the presenter jumps
+    g.c.jump("STAGE1")
+    assert not any(h.startswith("TUT_") for h in g.c.hints)
+
+
+def test_no_brain_bars_on_the_shared_screen_during_a_fight():
+    g = Game("GIANT")
+    g.s.cues = {"source": "true", "activity": {"vision": 1.0, "looming": 3.0, "escape": 2.0}}
+    assert g.s.godot_state()["brainActivity"] == {}
+    g.c.jump("TUTORIAL")
+    assert g.s.godot_state()["brainActivity"]["looming"] == 3.0

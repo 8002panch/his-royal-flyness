@@ -61,6 +61,7 @@ var beat: Dictionary = {}       # {id, speaker, name, caption, panel, gesture, i
 var question: Dictionary = {}   # {id, text, a, b, chosen, correct}
 var counters: Dictionary = {}
 var props: Dictionary = {}      # {chalice: [x,y,z], grape: [x,y,z] | null}
+var guide: Dictionary = {}      # tutorial coaching {goal, x, y, z}: "right"/"left", "up"/"down", "forward"/"back" or "ok"
 var impact: Dictionary = {}     # {x, y, z, hit, at, fight}: only after an attack has landed
 var walls: Array = []
 var has_walls := false
@@ -138,7 +139,7 @@ static func read(msg: Dictionary) -> CourtState:
 	s.backdrop = str(msg.get("backdrop", ""))
 	s.objective = str(msg.get("objective", ""))
 	s.story_demo = bool(msg.get("storyDemo", false))
-	for key in ["beat", "question", "counters", "props", "impact"]:
+	for key in ["beat", "question", "counters", "props", "impact", "guide"]:
 		if msg.get(key) is Dictionary:
 			s.set(key, msg[key])
 	if msg.get("walls") is Array:

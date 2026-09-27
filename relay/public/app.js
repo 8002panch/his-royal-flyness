@@ -31,8 +31,10 @@ function relayUrl() {
 
 function nextMessage(message) { return { ...message, seq: ++state.seq }; }
 function send(message) { if (state.socket?.readyState === WebSocket.OPEN) state.socket.send(JSON.stringify(nextMessage(message))); }
-function saveProfile() { localStorage.setItem(PROFILE_KEY, JSON.stringify({ room: state.room, name: state.name, role: state.role })); }
-function loadProfile() { try { return JSON.parse(localStorage.getItem(PROFILE_KEY)) || {}; } catch { return {}; } }
+// The room, name and seat live in sessionStorage: a reload (or a dropped connection) in this tab gets the same seat back,
+// but a fresh scan of the QR code always starts at the join form with no name and no role picked for you.
+function saveProfile() { try { sessionStorage.setItem(PROFILE_KEY, JSON.stringify({ room: state.room, name: state.name, role: state.role })); } catch {} }
+function loadProfile() { try { return JSON.parse(sessionStorage.getItem(PROFILE_KEY)) || {}; } catch { return {}; } }
 
 function render() {
   if (!state.role) {
@@ -170,7 +172,7 @@ function connect(isNewJoin = false) {
 function leaveCourt(message) {
   releaseControl();
   state.role = ""; state.joined = false; state.availableRoles = []; state.room = "";
-  localStorage.setItem(PROFILE_KEY, JSON.stringify({ name: state.name }));
+  try { sessionStorage.setItem(PROFILE_KEY, JSON.stringify({ name: state.name })); } catch {}
   const url = new URL(location.href);
   url.searchParams.delete("room");
   history.replaceState(null, "", url);
