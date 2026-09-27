@@ -65,6 +65,8 @@ var props := StoryProps.new()
 ## preloaded, not by class_name: a fresh pull runs before Godot has re-imported and registered new class names
 const STORY_CAST := preload("res://scripts/court/story_cast.gd")
 var cast: Node = STORY_CAST.new()
+const STORY_WEATHER := preload("res://scripts/court/story_weather.gd")
+var weather: Node2D = STORY_WEATHER.new()
 var _impact: Dictionary = {}
 var _impact_left := 0.0
 var _impact_target := Vector3.ZERO
@@ -81,6 +83,11 @@ func _ready() -> void:
 	actors.add_child(props)
 	cast.world = self
 	add_child(cast)
+	var tint := CanvasModulate.new()  # the weather's colour over the whole court (the HUD is its own layer)
+	add_child(tint)
+	weather.tint = tint
+	add_child(weather)
+	move_child(weather, labels.get_index())  # over the actors and effects, under the name tags
 	HallCam.follow(HallCam.from_server(_fly_shown), 0.0, true)
 
 
@@ -125,9 +132,11 @@ func _apply_story(cs: CourtState) -> void:
 		props.visible = false
 		hamlet.carrying = false
 		cast.show_set("")
+		weather.set_mode("")
 		return
 	# Flying scenes with one of Anshul's backgrounds_v2 sets (garden, great hall, banquet) paint it through the hall layers,
 	# with its cast; other open backdrops (only ever behind a comic) are his v4 paintings.
+	weather.set_mode({"GIANT": "storm", "FATHER": "hellfire"}.get(cs.scene, "") if cs.phase in ["ready", "play"] else "")
 	var set_name: String = STORY_CAST.set_for(cs.backdrop)
 	cast.show_set(set_name)
 	var open := cs.backdrop in OPEN_BACKDROPS and set_name == ""

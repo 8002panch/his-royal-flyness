@@ -68,6 +68,7 @@ func _ready() -> void:
 	if ResourceLoader.exists(VOICE_PLAYER):
 		_voice = load(VOICE_PLAYER).new()
 		add_child(_voice)
+		world.weather.thunder.connect(func(id: String) -> void: _voice.play_sound(id))  # each flash's own thunder
 	GameState.state_updated.connect(_on_live_state)
 	GameState.event_received.connect(_on_event)
 	if not GameState.latest_state.is_empty():

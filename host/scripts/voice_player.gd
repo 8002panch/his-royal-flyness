@@ -70,12 +70,15 @@ var _buzz: AudioStreamPlayer
 var _sfx: Array[AudioStreamPlayer] = []
 var _next_sfx := 0
 var _streams := {}
+var _ambience: AudioStreamPlayer
+var _ambience_id := ""
 
 
 func _ready() -> void:
 	rng.randomize()
 	_voice = _player()
 	_buzz = _player()
+	_ambience = _player()
 	for i in 3:
 		_sfx.append(_player())
 	_find_audio()
@@ -86,7 +89,7 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
-	for p in [_voice, _buzz] + _sfx:
+	for p in [_voice, _buzz, _ambience] + _sfx:
 		p.stop()
 		p.stream = null
 	_streams.clear()
@@ -130,22 +133,69 @@ func _load_manifests() -> void:
 	if sfx is Dictionary:
 		for e in sfx.get("sounds", []):
 			sounds[str(e["id"])] = e
+	# the weather (audio/gen_weather.py): rain and thunder for the Giant's storm, the crackle of Prospero's hellfire
+	var weather: Variant = JSON.parse_string(FileAccess.get_file_as_string(audio_dir.path_join("weather/manifest.json")))
+	if weather is Dictionary:
+		for e in weather.get("sounds", []):
+			var entry: Dictionary = e
+			entry["folder"] = "weather"
+			sounds[str(entry["id"])] = entry
 
 
-func _stream(folder: String, entry: Variant) -> AudioStreamMP3:
+func _stream(folder: String, entry: Variant) -> AudioStream:
 	if not entry is Dictionary or entry.get("file") == null or bool(entry.get("stale", false)):
 		return null
-	var path := audio_dir.path_join(folder).path_join(str(entry["file"]))
+	var path := audio_dir.path_join(str(entry.get("folder", folder))).path_join(str(entry["file"]))
 	if _streams.has(path):
 		return _streams[path]
 	var bytes := FileAccess.get_file_as_bytes(path)
 	if bytes.is_empty():
 		return null
-	var s := AudioStreamMP3.new()
-	s.data = bytes
-	s.loop = bool(entry.get("loop", false))
+	var s: AudioStream = _wav(bytes, bool(entry.get("loop", false))) if path.ends_with(".wav") else null
+	if s == null:
+		var mp3 := AudioStreamMP3.new()
+		mp3.data = bytes
+		mp3.loop = bool(entry.get("loop", false))
+		s = mp3
 	_streams[path] = s
 	return s
+
+
+## A 16-bit mono PCM WAV (what audio/gen_weather.py writes) as a stream; loops are seamless.
+static func _wav(bytes: PackedByteArray, loop: bool) -> AudioStreamWAV:
+	if bytes.size() < 44 or bytes.slice(0, 4).get_string_from_ascii() != "RIFF":
+		return null
+	var w := AudioStreamWAV.new()
+	w.format = AudioStreamWAV.FORMAT_16_BITS
+	w.mix_rate = bytes.decode_u32(24)
+	w.stereo = bytes.decode_u16(22) == 2
+	w.data = bytes.slice(44)
+	if loop:
+		w.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		w.loop_end = w.data.size() / 2
+	return w
+
+
+func _is_loop(stream: AudioStream) -> bool:
+	if stream is AudioStreamMP3:
+		return (stream as AudioStreamMP3).loop
+	if stream is AudioStreamWAV:
+		return (stream as AudioStreamWAV).loop_mode != AudioStreamWAV.LOOP_DISABLED
+	return false
+
+
+## The scene's weather bed under everything: rain in the Giant's storm, fire in Prospero's hall, nothing elsewhere.
+func set_ambience(id: String) -> void:
+	if id == _ambience_id:
+		return
+	_ambience_id = id
+	_ambience.stop()
+	var stream := _stream("weather", sounds.get(id)) if id != "" else null
+	if stream != null:
+		_ambience.stream = stream
+		_ambience.volume_db = -4.0
+		_ambience.play()
+		history.append("ambience:" + id)
 
 
 func busy() -> bool:
@@ -189,7 +239,7 @@ func _play_live(bytes: PackedByteArray) -> void:
 func play_sound(id: String) -> bool:
 	var entry: Variant = sounds.get(id)
 	var stream := _stream("sfx", entry)
-	if stream == null or stream.loop:
+	if stream == null or _is_loop(stream):
 		return false
 	var p := _sfx[_next_sfx]
 	_next_sfx = (_next_sfx + 1) % _sfx.size()
@@ -286,8 +336,11 @@ func on_state(msg: Dictionary) -> void:
 		speed = absf(float(fly.get("vx", 0.0))) + absf(float(fly.get("vy", 0.0))) + absf(float(fly.get("vz", 0.0)))
 	if bool(msg.get("offline_sample", false)) or bool(msg.get("sample", false)):
 		_set_buzz(false)
+		set_ambience("")
 		return  # fixture frames: no buzz, no host-side lines
 	_set_buzz(speed > FLYING_SPEED)
+	var flying_scene := str(msg.get("phase", "")) in ["ready", "play"]
+	set_ambience({"GIANT": "RAIN_LOOP", "FATHER": "FIRE_LOOP"}.get(str(msg.get("scene", "")), "") if flying_scene else "")
 	# the take-off whirr when he actually lifts off after resting (not when a tip mentions flying)
 	if speed <= FLYING_SPEED:
 		if _still_since < 0.0:

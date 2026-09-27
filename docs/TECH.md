@@ -218,6 +218,10 @@ Arnav's story (GAME.md, "Story campaign"), run by the server: `GameSession(..., 
   any speed, delivery within 0.32 of the chalice: forgiving, because three people each steer one axis. `state.guide` and each
   mover's `control_view.tip` coach the way to the grape or chalice ("Grape: steer right"); off for the Seer's lesson (the last
   return), which flies towards Miranda so the fly's eyes can see her.
+- **Weather:** the Giant fight is a storm (dark hall, rain, lightning; each flash's thunder follows it, a close crack at once and a
+  distant roll a second or two later) and Prospero's is hellfire (red hall, flames, embers, a fire crackle). Lightning runs on
+  Godot's own random clock: the screen never knows when an attack comes. The rain, thunder and fire sounds are made by
+  `audio/gen_weather.py` from filtered noise (`audio/weather/`).
 - **The shared screen in fights:** `brainActivity` is empty while a fight is on. The brain's only input then is the approaching
   hand, so a moving bar would tell everyone when an attack is coming; that stays on the Seer's phone.
 - **Godot** (`host/scripts/court/`): `hud/comic_overlay.gd` (backdrop, the cast as Anshul's animated rigs, bubbles, the quiz
