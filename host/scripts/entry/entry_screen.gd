@@ -54,18 +54,23 @@ func _gui_input(event: InputEvent) -> void:
 		var index := _button_at(event.position)
 		if index >= 0:
 			_enter_court(index == 1)
-	elif event is InputEventKey and event.pressed and not event.echo:
-		match event.keycode:
-			KEY_ENTER, KEY_KP_ENTER:
-				_enter_court(false)
-			KEY_D:
-				_enter_court(true)
-			KEY_H, KEY_F1:
-				_help = not _help
-				queue_redraw()
-			KEY_ESCAPE:
-				_help = false
-				queue_redraw()
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	var key := event as InputEventKey
+	if _busy or key == null or not key.pressed or key.echo:
+		return
+	match key.keycode:
+		KEY_ENTER, KEY_KP_ENTER:
+			_enter_court(false)
+		KEY_D:
+			_enter_court(true)
+		KEY_H, KEY_F1:
+			_help = not _help
+			queue_redraw()
+		KEY_ESCAPE:
+			_help = false
+			queue_redraw()
 
 
 func _button_at(pos: Vector2) -> int:

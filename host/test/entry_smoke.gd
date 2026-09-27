@@ -16,6 +16,14 @@ func _run() -> void:
 		push_error("Entry scene failed to open")
 		quit(1)
 		return
+	var help_key := InputEventKey.new()
+	help_key.keycode = KEY_H
+	help_key.pressed = true
+	entry.call("_unhandled_key_input", help_key)
+	if not entry.get("_help"):
+		push_error("Help shortcut did not open the control guide")
+		quit(1)
+		return
 	entry.call("_enter_court", true)
 	await process_frame
 	await process_frame
