@@ -55,10 +55,26 @@ var _was_low := false
 var _sparkle_t := 0.0
 var _rng := RandomNumberGenerator.new()
 
+## The story (server/campaign.py). Open scenes use Anshul's v4 backdrops instead of the hall; the wall courses keep the hall.
+const OPEN_BACKDROPS := ["garden", "arena", "father_arena", "banquet", "window_ledge", "gate_outside"]
+var story := false
+var _backdrop := Sprite2D.new()
+var _backdrop_id := ""
+var props := StoryProps.new()
+var _impact: Dictionary = {}
+var _impact_left := 0.0
+var _impact_target := Vector3.ZERO
+
 
 func _ready() -> void:
 	_rng.seed = 5
 	rivals = [$Actors/SirCheapdate, $Actors/SirIndy]
+	_backdrop.centered = false
+	_backdrop.visible = false
+	add_child(_backdrop)
+	move_child(_backdrop, 0)
+	props.visible = false
+	actors.add_child(props)
 	HallCam.follow(HallCam.from_server(_fly_shown), 0.0, true)
 
 
@@ -78,6 +94,42 @@ func apply_state(cs: CourtState) -> void:
 		# (lobby, chronicle) she stays on her dais as part of the backdrop.
 		_princess_visible = cs.phase != "play" or not cs.has_fly
 	_giant_cue = cs.giant
+	_apply_story(cs)
+
+
+## The story's scene: backdrop or hall, the stage's walls, Miranda only where the story puts her, props and impacts.
+func _apply_story(cs: CourtState) -> void:
+	story = cs.scene != ""
+	for r in rivals:  # the hall's decorative rivals aren't in the story's cast (and Sir Indy isn't in it at all)
+		(r as Node2D).visible = not story
+	if not story:
+		_backdrop.visible = false
+		for l in layers:
+			(l as CanvasItem).visible = true
+		HallBuilder.walls = HallBuilder.COURSE_WALLS
+		props.visible = false
+		return
+	var open := cs.backdrop in OPEN_BACKDROPS
+	if open and cs.backdrop != _backdrop_id:
+		_backdrop_id = cs.backdrop
+		_backdrop.texture = StoryArt.backdrop(cs.backdrop)
+	_backdrop.visible = open and _backdrop.texture != null
+	for l in layers:
+		(l as CanvasItem).visible = not _backdrop.visible
+	HallBuilder.walls = cs.walls if cs.has_walls else []
+	_princess_visible = not cs.princess.is_empty()
+	props.set_props(cs.props)
+	if not cs.impact.is_empty() and cs.impact.get("at") != _impact.get("at"):
+		_impact = cs.impact
+		_impact_left = 0.9
+		var hp := HallCam.from_server(Vector3(float(_impact["x"]), float(_impact["y"]), float(_impact["z"])))
+		_impact_target = Vector3(hp.x, _ground_y(hp.x, hp.z), hp.z)
+		var sp := HallCam.project(_impact_target)
+		shake(0.3, 3)
+		if str(_impact.get("fight", "")) == "father":
+			fx.splat(Vector2(sp.x, HallCam.project(hp).y))
+		else:
+			fx.puff(Vector2(sp.x, sp.y), 10)
 
 
 func set_cosmetic(relic: String, on: bool) -> void:
@@ -93,7 +145,13 @@ func shake(duration: float, px: int) -> void:
 func on_event(ev: Dictionary) -> void:
 	var kind := str(ev.get("kind", ""))
 	var id := str(ev.get("id", ""))
-	if kind == "splat" or id == "H_SPLAT":
+	if kind == "hit":  # an attack landed on him (the story server; only ever after it resolves)
+		hamlet.play_gesture("hit", 0.45)
+		fx.splat(hamlet_screen)
+		shake(0.35, 3)
+	elif kind == "dodge":
+		fx.puff(hamlet_screen + Vector2(0, 10), 6)
+	elif kind == "splat" or id == "H_SPLAT":
 		hamlet.play_gesture("hit", 0.45)
 		fx.splat(hamlet_screen)
 		shake(0.35, 3)
@@ -154,6 +212,9 @@ func _process(delta: float) -> void:
 			fx.sparkle(miranda.position + Vector2(_rng.randi_range(-mh / 2, mh / 2), _rng.randi_range(-mh, 0)))
 
 	for r in rivals:
+		if story:  # not in the story's cast: rival.gd would show them again every frame
+			r.visible = false
+			continue
 		r.tick(delta)
 		shadow_items.append({"pos": Vector2i(roundi(r.position.x), roundi(r.position.y)), "rx": 6, "ry": 1})
 
@@ -190,6 +251,14 @@ func _process(delta: float) -> void:
 
 
 func _update_giant(shadow_items: Array) -> void:
+	_impact_left = maxf(0.0, _impact_left - get_process_delta_time())
+	if _giant_cue.is_empty() and _impact_left > 0.0 and str(_impact.get("fight", "")) != "father":
+		# the story's hand, only once it has landed: where it came down, for a moment
+		giant.show_hazard(_impact_target, 1.0)
+		var ip := HallCam.project(_impact_target)
+		shadow_items.append({"pos": Vector2i(roundi(ip.x), roundi(ip.y)), "rx": maxi(4, roundi(ip.z * 0.4)), "ry": 3, "ring": false})
+		giant_in_view = false
+		return
 	if _giant_cue.is_empty():
 		_giant_p = 0.0
 		_giant_tracking = false
@@ -228,7 +297,8 @@ func _ground_y(x: float, z: float) -> float:
 
 
 func _sort_actors(hamlet_z: float) -> void:
-	var order: Array = [[hamlet_z, hamlet], [_princess.z, miranda], [_giant_target.z if giant.showing else -99.0, giant]]
+	var giant_z := _impact_target.z - 0.4 if _impact_left > 0.0 else _giant_target.z  # a landed fist covers whoever it hit
+	var order: Array = [[hamlet_z, hamlet], [_princess.z, miranda], [giant_z if giant.showing else -99.0, giant], [props.depth(), props]]
 	for r in rivals:
 		order.append([r.depth(), r])
 	order.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0])

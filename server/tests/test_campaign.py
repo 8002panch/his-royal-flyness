@@ -266,7 +266,7 @@ def test_the_seers_secret_nothing_about_an_attack_reaches_the_shared_screen_befo
 
 def test_jumps_mark_demo_and_a_new_story_clears_it():
     g = Game()
-    assert g.c.jump("GIANT") and g.c.demo and g.s.godot_state()["demo"] is True
+    assert g.c.jump("GIANT") and g.c.demo and g.s.godot_state()["storyDemo"] is True
     assert not g.c.jump("NOPE")
     g.c.start()
     assert not g.c.demo and g.c.scene == "TUTORIAL" and g.c.answers == {} and g.c.dizzy == 0

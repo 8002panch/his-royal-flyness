@@ -29,13 +29,15 @@ const DAIS_Y1 := -1.18
 const DAIS_Y2 := -1.06
 const CARPET_HALF := 0.45
 ## Part 2 wall gates, in server coordinates: [z, gap x0, x1, gap y0, y1].
-## Keep these values synchronized with server/main.py COURSE_WALLS.
+## Keep these values synchronized with server/main.py COURSE_WALLS (the free-flight world). In the story the server sends
+## each stage's walls in `state.walls`, and court_world.gd sets `walls` from them.
 const COURSE_WALLS := [
 	[-0.50, -1.00, 0.25, -0.80, 0.80],
 	[-0.10, -0.25, 1.00, -0.80, 0.80],
 	[0.35, -0.75, 0.75, -1.00, 0.15],
 	[0.75, -0.75, 0.75, -0.15, 1.00],
 ]
+static var walls: Array = COURSE_WALLS
 
 
 ## First grid line at or before ZN, so patterns are fixed to the hall.
@@ -389,8 +391,8 @@ static func paint_columns(c) -> void:
 ## Four solid course walls: alternating side openings, then low/high openings.
 ## They are drawn far-to-near so their overlap matches the chase camera.
 static func paint_course_walls(c) -> void:
-	for i in range(COURSE_WALLS.size() - 1, -1, -1):
-		var spec: Array = COURSE_WALLS[i]
+	for i in range(walls.size() - 1, -1, -1):
+		var spec: Array = walls[i]
 		var z := HallCam.from_server(Vector3(0.0, 0.0, float(spec[0]))).z
 		if z <= ZN + 0.08:
 			continue

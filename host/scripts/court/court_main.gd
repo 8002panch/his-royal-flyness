@@ -11,6 +11,9 @@ extends Node
 ##       F3 keyboard demo (WASD, no server or phones; see demo_driver.gd),
 ##       F4 chase camera (default) / fixed view from the doors.
 ##       F6 the Royal Decree (the honesty panel): opens, turns the page, closes.
+## Story (server/campaign.py; the presenter's controls, never an answer): Enter starts from the lobby or the end card, and
+##       otherwise moves on, like Space, Right and Page Down (a clicker); Left or Page Up rereads; S skips a comic (it stops at an
+##       unanswered question); R restarts a stage; Ctrl+1..9 jumps to a chapter for judging (marked DEMO).
 ##       `-- --debug` opens with the F1 overlay showing; `-- --demo` starts in the keyboard demo.
 ##
 ## Screenshot mode renders one screen from the host/test fixtures and quits:
@@ -35,6 +38,8 @@ var _sample_events: Array = []
 var _demo: DemoDriver = null
 var _voice: Node = null
 var _last_frame := -1
+var _phase := ""
+const JUMPS := ["TUTORIAL", "Q01", "STAGE1", "Q02", "STAGE2", "Q03", "C02", "GIANT", "FATHER"]
 
 
 func _ready() -> void:
@@ -73,6 +78,7 @@ func _ready() -> void:
 
 func _on_state(msg: Dictionary) -> void:
 	var cs := CourtState.read(msg)
+	_phase = cs.phase
 	world.apply_state(cs)
 	hud.apply_state(cs, world.giant_in_view)
 	world.show_tags = cs.phase != "lobby" and cs.phase != "chronicle"
@@ -127,6 +133,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	var key := event as InputEventKey
 	if key == null or not key.pressed or key.echo:
 		return
+	if _story_key(key):
+		get_viewport().set_input_as_handled()
+		return
 	match key.keycode:
 		KEY_1, KEY_KP_1:
 			hud.reliquary.toggle_index(0)
@@ -150,6 +159,28 @@ func _unhandled_input(event: InputEvent) -> void:
 			win.mode = Window.MODE_WINDOWED if win.mode == Window.MODE_FULLSCREEN else Window.MODE_FULLSCREEN
 
 
+## The presenter's story controls, sent to the game server (it ignores them without a story running).
+func _story_key(key: InputEventKey) -> bool:
+	var cmd := {}
+	if key.ctrl_pressed and key.keycode >= KEY_1 and key.keycode <= KEY_9:
+		cmd = {"command": "jump", "scene": JUMPS[key.keycode - KEY_1]}
+	else:
+		match key.keycode:
+			KEY_ENTER, KEY_KP_ENTER:
+				cmd = {"command": "start" if _phase in ["lobby", "end"] else "next"}
+			KEY_SPACE, KEY_RIGHT, KEY_PAGEDOWN:
+				cmd = {"command": "next"}
+			KEY_LEFT, KEY_PAGEUP:
+				cmd = {"command": "back"}
+			KEY_S:
+				cmd = {"command": "skip"}
+			KEY_R:
+				cmd = {"command": "restart"}
+	if cmd.is_empty() or _demo != null:
+		return false
+	return GameState.send_command(cmd)
+
+
 ## The old dashboard was laid out for an unscaled window, so drop the 640x360
 ## pixel-art stretch before switching to it.
 func _open_dashboard() -> void:
@@ -168,6 +199,16 @@ func _run_shot(args: Dictionary) -> void:
 	for i in 3:
 		if relics.contains(str(i + 1)):
 			hud.reliquary.toggle_index(i)
+	if args.has("state"):  # --state=file.json: one saved server state (the story's cutscenes, props, impacts)
+		var saved: Dictionary = _load_json(str(args["state"]))
+		for i in int(args.get("frames", "45")):
+			_on_state(saved)
+			await get_tree().process_frame
+		for i in int(args.get("decree", "0")):
+			hud.decree.advance()
+			await get_tree().process_frame
+		_save_shot(path, "state")
+		return
 	match screen:
 		"lobby", "chronicle":
 			var msg: Dictionary = _load_json(LOBBY if screen == "lobby" else CHRONICLE)

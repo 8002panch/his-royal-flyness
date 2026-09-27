@@ -51,9 +51,9 @@ STAGE2_WALLS = (
 )
 
 # Tutorial: one grape at a time, then back to the chalice (docs/GAME.md, "Tutorial")
-CHALICE = (0.0, -0.35, -0.55)
-GRAPES = ((0.0, 0.0, 0.05), (0.65, 0.0, -0.1), (0.0, 0.7, -0.2), (-0.6, 0.55, 0.45))
-MIRANDA_BY_CHALICE = (0.25, -0.2, -0.5)
+CHALICE = (0.0, -0.35, -0.72)
+GRAPES = ((0.0, 0.0, -0.35), (0.65, 0.0, -0.45), (0.0, 0.7, -0.5), (-0.6, 0.55, -0.25))
+MIRANDA_BY_CHALICE = (0.3, -0.2, -0.66)
 
 QUIZZES = {  # docs/GAME.md, "The three drink questions" (NIAAA facts; general human health, not fly results)
     "Q01": {"text": "Alcohol can make balance and coordination...", "a": "Worse", "b": "More precise", "correct": "A"},
@@ -71,7 +71,7 @@ BACKDROP = {"TUTORIAL": "garden", "C01": "garden", "Q01": "window_ledge", "STAGE
 PANEL_BACKDROP = {("C01", "p3.7"): "gate_outside", ("C01", "p3.8"): "window_ledge"}
 OBJECTIVE = {
     "TUTORIAL": "Deliver four grapes to the Royal Harvest Chalice",
-    "STAGE1": "Through the basement: fly through each wall's opening",
+    "STAGE1": "Find the way through: fly through each wall's opening",
     "STAGE2": "Reach the banquet doors before the gate closes",
     "GIANT": "Outlast the Giant: dodge ten swats",
     "FATHER": "Prospero's Last Word: dodge five throws without a hit",
@@ -524,7 +524,7 @@ class Campaign:
 
     def state_fields(self) -> dict[str, Any]:
         """The campaign's part of Godot's state message (docs/TECH.md, "Campaign")."""
-        out: dict[str, Any] = {"phase": self.phase, "scene": self.scene, "demo": self.demo,
+        out: dict[str, Any] = {"phase": self.phase, "scene": self.scene, "storyDemo": self.demo,
                                "backdrop": BACKDROP.get(self.scene, ""), "objective": OBJECTIVE.get(self.scene, ""),
                                "dizzy": self.dizzy, "steadiness": STEADINESS[self.dizzy]}
         if self.phase in ("comic", "question") and self.beat_list:
@@ -533,6 +533,10 @@ class Campaign:
             out["beat"] = {"id": b.id, "speaker": b.speaker, "name": b.name, "caption": b.caption, "panel": b.panel,
                            "gesture": b.gesture, "index": self.i + 1, "count": len(self.beat_list),
                            "cast": list(dict.fromkeys(panel_cast))}
+            if b.speaker == "clown":  # the Clown's narration sits over the line it reacts to, as in a comic panel
+                prev = [x for x in self.beat_list[: self.i] if x.panel == b.panel and x.speaker != "clown"]
+                if prev:
+                    out["beat"]["prev"] = {"speaker": prev[-1].speaker, "name": prev[-1].name, "caption": prev[-1].caption}
             out["backdrop"] = PANEL_BACKDROP.get((self.scene, b.panel), out["backdrop"])
         if self.scene in QUIZZES and self.phase in ("comic", "question") and self.i >= self._gate() >= 0:
             q = QUIZZES[self.scene]

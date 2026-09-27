@@ -79,6 +79,16 @@ func _try_connect() -> void:
 		_start_fallback()
 
 
+## A presenter command for the game server (docs/TECH.md, "Campaign"): {"command": "next"} and so on. The server only accepts
+## these from this laptop. Returns false when no live server is connected (the offline sample ignores them).
+func send_command(command: Dictionary) -> bool:
+	if _using_fallback or _socket.get_ready_state() != WebSocketPeer.STATE_OPEN:
+		return false
+	var msg := command.duplicate()
+	msg["t"] = "host_command"
+	return _socket.send_text(JSON.stringify(msg)) == OK
+
+
 func _handle_message(text: String) -> void:
 	var parsed: Variant = JSON.parse_string(text)
 	if typeof(parsed) != TYPE_DICTIONARY:

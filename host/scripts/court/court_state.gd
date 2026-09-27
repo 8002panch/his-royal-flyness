@@ -52,6 +52,23 @@ var room := ""
 var players: Array = []
 var chronicle: Dictionary = {}
 
+## The story campaign (server/campaign.py; docs/TECH.md, "Campaign"). Empty `scene` = no campaign (free flight).
+var scene := ""
+var backdrop := ""
+var objective := ""
+var story_demo := false
+var beat: Dictionary = {}       # {id, speaker, name, caption, panel, gesture, index, count, cast}
+var question: Dictionary = {}   # {id, text, a, b, chosen, correct}
+var counters: Dictionary = {}
+var props: Dictionary = {}      # {chalice: [x,y,z], grape: [x,y,z] | null}
+var impact: Dictionary = {}     # {x, y, z, hit, at, fight}: only after an attack has landed
+var walls: Array = []
+var has_walls := false
+var join_qr: Array = []
+var ready_left := -1.0
+var dizzy := 0
+var steadiness := ""
+
 
 static func read(msg: Dictionary) -> CourtState:
 	var s := CourtState.new()
@@ -117,6 +134,21 @@ static func read(msg: Dictionary) -> CourtState:
 			s.players.append({"role": str(role), "name": str(msg["players"][role])})
 	if msg.get("chronicle") is Dictionary:
 		s.chronicle = msg["chronicle"]
+	s.scene = str(msg.get("scene", ""))
+	s.backdrop = str(msg.get("backdrop", ""))
+	s.objective = str(msg.get("objective", ""))
+	s.story_demo = bool(msg.get("storyDemo", false))
+	for key in ["beat", "question", "counters", "props", "impact"]:
+		if msg.get(key) is Dictionary:
+			s.set(key, msg[key])
+	if msg.get("walls") is Array:
+		s.walls = msg["walls"]
+		s.has_walls = true
+	if msg.get("joinQr") is Array:
+		s.join_qr = msg["joinQr"]
+	s.ready_left = _f(msg.get("ready", -1.0))
+	s.dizzy = int(_f(msg.get("dizzy", 0)))
+	s.steadiness = str(msg.get("steadiness", ""))
 	return s
 
 

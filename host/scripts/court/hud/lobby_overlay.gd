@@ -11,6 +11,8 @@ const HINTS := {"helmsman": "LEFT / RIGHT", "liftmaster": "CLIMB / DIVE", "wingm
 var room := ""
 var seats := {}
 var sample := false
+var qr: Array = []          # the join link as QR rows ("1" = dark), from the story server's lobby state
+var story := false          # the story server is waiting for Enter
 var _dither: ImageTexture
 
 
@@ -28,6 +30,8 @@ func _ready() -> void:
 func apply(cs: CourtState) -> void:
 	room = cs.room
 	sample = cs.sample
+	qr = cs.join_qr
+	story = cs.scene == "LOBBY"
 	seats = {}
 	for p in cs.players:
 		if p is Dictionary:
@@ -52,9 +56,12 @@ func _draw() -> void:
 	HudDraw.text_center(self, PixelFonts.label(), 204, 170, "ROOM CODE", Pal.INK_SOFT, PixelFonts.LABEL_SIZE)
 
 	# how to join
-	var x := 300
+	var x := 280
 	HudDraw.text(self, PixelFonts.bold(), x, 96, "JOIN ON YOUR PHONE", Pal.ROYAL, PixelFonts.LABEL_SIZE)
 	var steps := ["OPEN THE CONTROLLER PAGE", "ENTER THE SEAL  " + code, "PICK A SEAT BELOW"]
+	if not qr.is_empty():
+		steps = ["SCAN THE CODE", "OR ENTER THE SEAL  " + code, "PICK A SEAT BELOW"]
+		_draw_qr(Rect2i(438, 88, 92, 92))
 	for i in steps.size():
 		var y := 112 + i * 16
 		draw_rect(Rect2(x, y - 1, 11, 11), Pal.INK)
@@ -81,8 +88,28 @@ func _draw() -> void:
 
 	HudDraw.text_center(self, PixelFonts.label(), cx, 262, "%d OF 4 SEATS TAKEN" % taken, Pal.INK, PixelFonts.LABEL_SIZE)
 	HudDraw.text_center(self, PixelFonts.label(), cx, 276, "THE SEER'S CUES GO ONLY TO THE SEER'S PHONE", Pal.INK_SOFT, PixelFonts.LABEL_SIZE)
+	if story:
+		var bw := PixelFonts.width(PixelFonts.bold(), "PRESS ENTER TO BEGIN THE STORY", PixelFonts.LABEL_SIZE) + 20
+		HudDraw.panel(self, Rect2i(cx - bw / 2, 290, bw, 16), Pal.ROYAL, Pal.INK, Pal.GOLD, Pal.ROYAL_DARK)
+		HudDraw.text_center(self, PixelFonts.bold(), cx, 294, "PRESS ENTER TO BEGIN THE STORY", Pal.GOLD_LIGHT, PixelFonts.LABEL_SIZE)
 	if sample:
 		_stamp(self, Vector2i(r.position.x + r.size.x - 84, r.position.y + r.size.y - 26))
+
+
+## The join QR, whole modules only (nearest pixels), on white with a quiet border so phone cameras read it.
+func _draw_qr(box: Rect2i) -> void:
+	var n := qr.size()
+	var cell := maxi(1, (box.size.x - 8) / n)
+	var side := cell * n + 8
+	var ox := box.position.x + (box.size.x - side) / 2
+	var oy := box.position.y + (box.size.y - side) / 2
+	draw_rect(Rect2(ox - 1, oy - 1, side + 2, side + 2), Pal.INK)
+	draw_rect(Rect2(ox, oy, side, side), Color.WHITE)
+	for y in n:
+		var row := str(qr[y])
+		for x in row.length():
+			if row[x] == "1":
+				draw_rect(Rect2(ox + 4 + x * cell, oy + 4 + y * cell, cell, cell), Color.BLACK)
 
 
 static func _scroll(ci: CanvasItem, r: Rect2i) -> void:
