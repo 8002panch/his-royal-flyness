@@ -3,7 +3,8 @@ extends Node2D
 
 ## Princess Miranda, the destination. Front view in a royal-blue gown and gold
 ## tiara, standing on a gilded perch (render.princess puts her in mid-air) with
-## a bobbing heart above her. The node's origin is her thorax.
+## a bobbing heart above her. The node's origin is her thorax. She is drawn with Anshul's animated rig
+## (animation_v1/rigs/miranda.scn); the forged sprite is only the fallback if the rig can't load.
 
 const STYLE := {"gown": Pal.ROYAL, "tiara": true, "lashes": true}
 
@@ -14,6 +15,8 @@ var perch_drop := 0   # px from her feet down to the dais/floor
 var heart_anchor := Vector2i.ZERO   # where name tags point, in world space
 
 var _t := 0.0
+var rig: Node2D = null
+var _facing := 0.0
 
 
 func _ready() -> void:
@@ -22,6 +25,10 @@ func _ready() -> void:
 	heart.texture = SpriteForge.heart()
 	add_child(body)
 	add_child(heart)
+	rig = StoryArt.rig("miranda", "")
+	if rig != null:
+		add_child(rig)
+		body.visible = false
 	set_body_px(36)
 
 
@@ -31,6 +38,10 @@ func set_body_px(hh: int) -> void:
 	body_px = hh
 	body.texture = SpriteForge.fly_front(hh, "miranda", STYLE)
 	body.offset = -SpriteForge.front_anchor(hh)
+	if rig != null:
+		var k := hh * 1.3 / 72.0
+		rig.scale = Vector2(k, k)
+		rig.position = Vector2(0, feet_y())
 	queue_redraw()
 
 
@@ -43,9 +54,14 @@ func set_perch(drop: int) -> void:
 func tick(delta: float) -> void:
 	_t += delta
 	var bob := roundi(sin(_t * 3.0) * 1.5)
-	var hy := -roundi(body_px * 0.62) - 10 + bob
+	var hy := -roundi(body_px * (1.0 if rig != null else 0.62)) - 10 + bob  # the rig stands taller than the old sprite
 	heart.position = Vector2(-4, hy)
 	heart_anchor = Vector2i(roundi(position.x), roundi(position.y) + hy - 1)
+	if rig != null:
+		var face := -1.0 if global_position.x > HallCam.W / 2 else 1.0  # she turns towards the middle of the screen
+		if face != _facing:
+			_facing = face
+			rig.set_motion("idle", 0.0, face)
 
 
 func feet_y() -> int:

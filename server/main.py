@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import os
+import sys
 import threading
 import time
 from typing import Any
@@ -343,10 +344,12 @@ class GameServer:
             delay = next_slot - time.monotonic()
             if delay > 0:
                 stop.wait(delay)
-            else:
+            else:  # a slow laptop: leave the game loop a few ms of the GIL before the next step, so movement never stutters
                 next_slot = time.monotonic()
+                stop.wait(0.004)
 
     async def run(self) -> None:
+        sys.setswitchinterval(0.001)  # the brain thread hands the GIL back to the game loop quickly
         receiver = asyncio.create_task(self.relay_forever())
         stop_seer = threading.Event()
         if hasattr(self.session.seer, "swap"):  # the brain-powered Seer; the placeholder is instant and stays in step()

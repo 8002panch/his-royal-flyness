@@ -40,6 +40,15 @@ const CHASE_FOLLOW_X := 0.85
 const CHASE_LAG := 5.0   # 1/s; higher = tighter follow
 
 static var chase := true
+
+## The story's open scenes (the garden and the fight arenas) are Anshul's painted backdrops, which don't move. There the
+## camera stands still, matched to the painting's floor, and the server's -1..1 cube maps onto the stage in front of it
+## (not onto the long course), so everything in the scene stays in view.
+static var stage := false
+const STAGE_CAM := Vector3(0.0, 1.3, -3.2)
+const STAGE_HORIZON := 120.0
+const STAGE_SX := 2.2
+const STAGE_DEPTH := 3.0   # hall units per server unit of depth
 static var CAM := FIXED_CAM
 static var HORIZON := FIXED_HORIZON
 
@@ -72,6 +81,10 @@ static func pt(p: Vector3) -> Vector2:
 ## Move the camera towards its place behind `target` (Hamlet, hall space).
 ## `snap` jumps straight there (first frame, or after a reset).
 static func follow(target: Vector3, delta: float, snap: bool = false) -> void:
+	if stage:
+		CAM = STAGE_CAM
+		HORIZON = STAGE_HORIZON
+		return
 	if not chase:
 		CAM = FIXED_CAM
 		HORIZON = FIXED_HORIZON
@@ -91,6 +104,8 @@ static func scale_at(z: float) -> float:
 
 
 static func from_server(v: Vector3) -> Vector3:
+	if stage:
+		return Vector3(v.x * STAGE_SX, v.y, (v.z + 1.0) * STAGE_DEPTH)
 	return Vector3(v.x * SX, v.y, lerpf(COURSE_START_Z, COURSE_END_Z, (v.z + 1.0) * 0.5))
 
 

@@ -51,9 +51,9 @@ STAGE2_WALLS = (
 )
 
 # Tutorial: one grape at a time, then back to the chalice (docs/GAME.md, "Tutorial")
-CHALICE = (0.0, -0.35, -0.72)
-GRAPES = ((0.0, 0.0, -0.35), (0.65, 0.0, -0.45), (0.0, 0.7, -0.5), (-0.6, 0.55, -0.25))
-MIRANDA_BY_CHALICE = (0.3, -0.2, -0.66)
+CHALICE = (0.0, -0.45, -0.55)
+GRAPES = ((-0.6, 0.1, -0.8), (0.65, 0.25, -0.35), (-0.45, 0.6, -0.15), (0.5, -0.2, 0.05))
+MIRANDA_BY_CHALICE = (0.35, -0.3, -0.45)
 
 QUIZZES = {  # docs/GAME.md, "The three drink questions" (NIAAA facts; general human health, not fly results)
     "Q01": {"text": "Alcohol can make balance and coordination...", "a": "Worse", "b": "More precise", "correct": "A"},

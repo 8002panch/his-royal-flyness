@@ -42,6 +42,7 @@ var _anim_t := 0.0
 var _anim_step := 0
 var _fly_target := IDLE_FLY
 var _fly_shown := IDLE_FLY
+var _since_state := 0.0   # seconds since the last server state: the fly glides on at its velocity until the next one
 var _princess := HallCam.from_server(DEFAULT_PRINCESS)
 var _princess_seen := false
 var _princess_visible := true
@@ -82,10 +83,14 @@ func apply_state(cs: CourtState) -> void:
 	state = cs
 	if cs.has_fly:
 		_fly_target = cs.fly
+		_since_state = 0.0
 	if not cs.princess.is_empty():
 		var off := HallCam.offset_from_cue(cs.princess)
 		if off.z > 0.15:
+			# on the story's stage the cue's offset is in server units, like the fly; the long hall keeps its old placement
 			var est := HallCam.from_server(_fly_target) + off
+			if HallCam.stage:
+				est = HallCam.from_server(_fly_target + Vector3(off.x / HallCam.SX, off.y, off.z / HallCam.COURSE_SCALE))
 			_princess = est if not _princess_seen else _princess.lerp(est, 0.25)
 			_princess_seen = true
 		_princess_visible = true
@@ -100,6 +105,11 @@ func apply_state(cs: CourtState) -> void:
 ## The story's scene: backdrop or hall, the stage's walls, Miranda only where the story puts her, props and impacts.
 func _apply_story(cs: CourtState) -> void:
 	story = cs.scene != ""
+	var was_stage := HallCam.stage
+	HallCam.stage = story and cs.backdrop in OPEN_BACKDROPS
+	if HallCam.stage != was_stage:
+		_fly_shown = _fly_target  # the mapping changed: no glide across the screen
+		HallCam.follow(HallCam.from_server(_fly_shown), 0.0, true)
 	for r in rivals:  # the hall's decorative rivals aren't in the story's cast (and Sir Indy isn't in it at all)
 		(r as Node2D).visible = not story
 	if not story:
@@ -168,7 +178,13 @@ func on_event(ev: Dictionary) -> void:
 
 func _process(delta: float) -> void:
 	_t += delta
-	_fly_shown = _fly_shown.lerp(_fly_target, 1.0 - exp(-delta * 12.0))
+	# Server states come 30 times a second but not evenly (Wi-Fi, a busy laptop). Carry him on at his last velocity for up
+	# to a tenth of a second, then ease onto it, so he glides instead of stepping.
+	_since_state += delta
+	var ahead := _fly_target
+	if state.has_fly and state.phase in ["", "play"]:
+		ahead += state.fly_vel * minf(_since_state, 0.1)
+	_fly_shown = _fly_shown.lerp(ahead, 1.0 - exp(-delta * 20.0))
 	var shadow_items: Array = []
 
 	# --- Hamlet, and the camera chasing him (everything below projects through it)
@@ -288,6 +304,8 @@ func _update_giant(shadow_items: Array) -> void:
 
 
 func _ground_y(x: float, z: float) -> float:
+	if HallCam.stage:  # the painted backdrop's flat floor, no dais
+		return HallCam.FLOOR_Y
 	if absf(x) <= HallBuilder.DAIS_X:
 		if z >= HallBuilder.DAIS_STEP:
 			return HallBuilder.DAIS_Y2
