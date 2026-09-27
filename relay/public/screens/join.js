@@ -5,6 +5,14 @@ export const ROLE_DETAILS = Object.freeze([
   { role: "seer", crest: "◉", title: "Royal Seer", copy: "Scan for private sensory cues." },
 ]);
 
+// Kahoot-style name generator: a quick, safe name for anyone who doesn't want to type one
+const TITLES = ["Sir", "Lady", "Duke", "Duchess", "Baron", "Baroness", "Count", "Countess", "Lord", "Dame"];
+const NAMES = ["Buzzington", "Wingsworth", "Hoverly", "Flutterby", "Buzzby", "Thorax", "Honeydew", "Larvington", "Zumzum", "Swatless", "Nectarine", "Proboscis"];
+
+export function randomRoyalName(random = Math.random) {
+  return `${TITLES[Math.floor(random() * TITLES.length)]} ${NAMES[Math.floor(random() * NAMES.length)]}`;
+}
+
 export function normalizeRoom(value) {
   return value.trim().toUpperCase();
 }
@@ -22,6 +30,7 @@ export function joinScreen({ room = "", name = "", error = "" } = {}) {
         <label>Your name
           <input id="name" name="name" autocomplete="name" maxlength="32" value="${escapeHtml(name)}" placeholder="Ava" required>
         </label>
+        <button class="secondary" type="button" id="random-name">Random royal name</button>
         <button class="primary" type="submit">Enter the court</button>
       </form>
       <p class="form-error" id="form-error" role="alert">${escapeHtml(error)}</p>

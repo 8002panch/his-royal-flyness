@@ -25,7 +25,7 @@ import asyncio
 import contextlib
 import functools
 import http.server
-import random
+import secrets
 import re
 import socket
 import sys
@@ -49,7 +49,15 @@ from server.relay_client import RelayClient  # noqa: E402
 ROOT = Path(__file__).resolve().parent
 PHONE_PAGE = ROOT / "relay" / "public"
 HOST_PAGE = ROOT / "host" / "web"
-CONSONANTS = "BCDFGHJKLMNPQRSTVWXZ"  # no vowels (or Y), so a room code never spells a word
+CONSONANTS = "BCDFGHJKLMNPQRSTVWXZ"  # no vowels (or Y), so a room code never spells a word (Jackbox filters bad words instead)
+
+
+def new_room_code(avoid: str = "") -> str:
+    """A fresh four-consonant code (20^4 = 160,000 possibilities) from a cryptographic random source, never the one just used."""
+    while True:
+        code = "".join(secrets.choice(CONSONANTS) for _ in range(4))
+        if code != avoid:
+            return code
 ROLE_TITLES = {"helmsman": "Helmsman", "liftmaster": "Liftmaster", "wingmaster": "Wingmaster", "seer": "Seer"}
 
 
@@ -108,13 +116,19 @@ def qr_svg(text: str) -> str | None:
             f'<rect width="{n}" height="{n}" fill="#fff"/><path d="{dark}" fill="#000"/></svg>')
 
 
-def serve_host_screen(port: int, join_url: str) -> http.server.ThreadingHTTPServer:
-    """The host screen, on this laptop only (127.0.0.1), so phones can't open the game view."""
-    svg = qr_svg(join_url)
+def serve_host_screen(port: int, current_join_url) -> http.server.ThreadingHTTPServer:
+    """The host screen, on this laptop only (127.0.0.1), so phones can't open the game view. /qr.svg always encodes the
+    current join link, so the QR changes with the room code."""
+    cache: dict[str, str | None] = {}
 
     class HostPageHandler(PhonePageHandler):
         def do_GET(self) -> None:
             if self.path.split("?")[0] == "/qr.svg":
+                url = current_join_url() or ""
+                if url not in cache:
+                    cache.clear()
+                    cache[url] = qr_svg(url) if url else None
+                svg = cache[url]
                 if svg is None:
                     self.send_error(404, "No QR library (pip install qrcode)")
                     return
@@ -132,16 +146,18 @@ def serve_host_screen(port: int, join_url: str) -> http.server.ThreadingHTTPServ
     return httpd
 
 
-def print_banner(room: str, phone_url: str, host_url: str, godot_port: int, seer_source: str, remote_relay: str | None) -> None:
+def print_banner(room: str, phone_url: str, host_url: str, godot_port: int, seer_source: str, remote_relay: str | None,
+                 pinned: bool = False) -> None:
     print("\nHis Royal Flyness: " + ("online game" if remote_relay else "local game"))
     print(f"  Host screen:  {host_url}   (opens in your browser; press F there for full screen)")
-    print(f"  Room code:    {room}")
+    print(f"  Room code:    {room}" + ("   (pinned with --room)" if pinned else "   (a fresh code every game: n = new code)"))
     print(f"  Phones:       {phone_url}" + ("" if remote_relay else "   (same Wi-Fi as this laptop)"))
     if remote_relay:
         print(f"  Relay:        {remote_relay}")
     print(f"  Godot feed:   ws://127.0.0.1:{godot_port}")
     print(f"  Seer:         {seer_source}")
-    print("  Host keys:    c Changeling | t True Prince | p placeholder | s status | q quit   (then Enter)\n", flush=True)
+    print("  Host keys:    n new code | l lock/unlock | c Changeling | t True Prince | p placeholder | s status | q quit"
+          "   (then Enter)\n", flush=True)
 
 
 async def watch_players(session: GameSession) -> None:
@@ -186,7 +202,8 @@ def start_host_keys(loop: asyncio.AbstractEventLoop, on_key) -> None:
 
 
 async def main(args: argparse.Namespace) -> None:
-    room = (args.room or "".join(random.choice(CONSONANTS) for _ in range(4))).upper()
+    pinned = bool(args.room)  # a fixed code only for testing; normally every launch and every new game gets a fresh one
+    room = (args.room or new_room_code()).upper()
     if not re.fullmatch(r"[BCDFGHJKLMNPQRSTVWXYZ]{4}", room):
         raise SystemExit("--room must be four consonants, e.g. BZKT")
     secret = os.getenv("ROOM_SECRET", "")
@@ -194,12 +211,12 @@ async def main(args: argparse.Namespace) -> None:
     if remote:
         relay_url = args.relay_url
         page = args.join_url or f"https://{urlsplit(relay_url).netloc}/"  # the relay's own site by default (relay/Caddyfile)
-        phone_url = f"{page}{'&' if '?' in page else '?'}room={room}"
+        phone_url = f"{page}{'&' if '?' in page else '?'}room={{room}}"
     else:
         ip = lan_ip()
         relay_url = f"ws://127.0.0.1:{args.relay_port}"
         page = args.join_url or f"http://{ip}:{args.http_port}/"
-        phone_url = f"{page}{'&' if '?' in page else '?'}room={room}"
+        phone_url = f"{page}{'&' if '?' in page else '?'}room={{room}}"
         if args.relay_port != 8080 and not args.join_url:  # the phone page assumes 8080 unless told otherwise
             phone_url += f"&relay=ws://{ip}:{args.relay_port}"
     host_url = f"http://localhost:{args.host_port}/"
@@ -213,12 +230,12 @@ async def main(args: argparse.Namespace) -> None:
                          "Quit it there (q, then Enter, or Ctrl+C) and run this again.")
 
     print("Starting His Royal Flyness" + (": loading the MaleCNS brain (about 5 s)..." if args.seer != "placeholder" else "..."), flush=True)
-    relay_state = RelayState(room_secret=secret)
+    relay_state = RelayState(room_secret=secret, require_host=True)  # a code only works while this game hosts it
     relay = RelayServer(relay_state)
-    session = GameSession(room, seer=make_seer(args.seer), join_url=phone_url)
+    session = GameSession(room, seer=make_seer(args.seer), join_url=phone_url)  # phone_url has {room}: it follows new codes
     if not remote:
         serve_phone_page(args.http_port)
-    serve_host_screen(args.host_port, phone_url)
+    serve_host_screen(args.host_port, lambda: session.join_url)
     godot = GodotLink()
 
     async with contextlib.AsyncExitStack() as stack:
@@ -227,8 +244,11 @@ async def main(args: argparse.Namespace) -> None:
         if not remote:
             await stack.enter_async_context(serve(relay.handler, "0.0.0.0", args.relay_port, **SERVE_OPTIONS))
             background.append(asyncio.create_task(relay.watchdog()))
-        game = asyncio.create_task(GameServer(session, RelayClient(relay_url, room, secret), godot).run())
-        print_banner(room, phone_url, host_url, args.godot_port, session.seer.source, relay_url if remote else None)
+        server = GameServer(session, RelayClient(relay_url, room, secret), godot,
+                            new_code=None if pinned else (lambda: new_room_code(avoid=session.state.room_code)))
+        godot.on_command = server.handle_host_command  # New code / Lock / Remove from the host screen
+        game = asyncio.create_task(server.run())
+        print_banner(room, session.join_url, host_url, args.godot_port, session.seer.source, relay_url if remote else None, pinned)
         if not args.no_browser:
             threading.Thread(target=webbrowser.open, args=(host_url,), daemon=True).start()
 
@@ -238,7 +258,14 @@ async def main(args: argparse.Namespace) -> None:
                 now = session.set_brain(source)
                 print(f"[host]  Seer now: {now}" + ("" if now == source else " (the brain isn't loaded; placeholder only)"), flush=True)
             elif key == "s":
-                print(status_line(session, room), flush=True)
+                print(status_line(session, session.state.room_code), flush=True)
+            elif key == "n":
+                if pinned:
+                    print("[host]  The room code is pinned with --room; restart without it for fresh codes", flush=True)
+                else:
+                    asyncio.ensure_future(server.handle_host_command({"command": "new_room"}))
+            elif key == "l":
+                asyncio.ensure_future(server.handle_host_command({"command": "lock"}))
             elif key == "q":
                 game.cancel()
 
@@ -254,7 +281,8 @@ async def main(args: argparse.Namespace) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run His Royal Flyness locally: relay, phone page and game server")
-    parser.add_argument("--room", default=os.getenv("ROOM_CODE"), help="four consonants; default: a new random code")
+    parser.add_argument("--room", default=os.getenv("ROOM_CODE"),
+                        help="pin the code (testing only); by default every launch and every new game gets a fresh random code")
     parser.add_argument("--seer", choices=SEER_SOURCES, default=os.getenv("SEER_SOURCE", "true"))
     parser.add_argument("--http-port", type=int, default=8000, help="phone page")
     parser.add_argument("--relay-port", type=int, default=8080, help="WebSocket relay (the phone page expects 8080)")

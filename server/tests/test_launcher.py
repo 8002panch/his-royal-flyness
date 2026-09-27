@@ -101,5 +101,66 @@ class RelayReconnectTests(unittest.IsolatedAsyncioTestCase):
             await relay.wait_closed()
 
 
+
+class JoinCodeTests(unittest.IsolatedAsyncioTestCase):
+    def test_codes_are_four_consonants_and_never_repeat_back_to_back(self) -> None:
+        from run_local import new_room_code
+
+        codes = [new_room_code(avoid="BZKT") for _ in range(500)]
+        self.assertTrue(all(re.fullmatch(r"[BCDFGHJKLMNPQRSTVWXZ]{4}", code) for code in codes))
+        self.assertNotIn("BZKT", codes)
+        self.assertGreater(len(set(codes)), 490, "codes should be spread over the 160,000 possibilities")
+
+    async def test_new_code_closes_the_old_room_and_opens_the_new_one(self) -> None:
+        import asyncio
+        import json
+
+        from websockets.client import connect
+        from websockets.server import serve
+
+        from relay.relay import RelayServer, RelayState
+        from server.main import GameServer
+        from server.relay_client import RelayClient
+
+        class NoGodot:
+            async def publish(self, state) -> None:
+                pass
+
+        relay_server = await serve(RelayServer(RelayState(require_host=True)).handler, "127.0.0.1", 0)
+        url = f"ws://127.0.0.1:{relay_server.sockets[0].getsockname()[1]}"
+        codes = iter(["QWRT"])
+        session = GameSession("BZKT", join_url="http://laptop:8000/?room={room}")
+        server = GameServer(session, RelayClient(url, "BZKT"), NoGodot(), new_code=lambda: next(codes))
+        game = asyncio.create_task(server.run())
+
+        async def join(code: str, client: str):
+            ws = await connect(url)
+            await ws.send(json.dumps({"t": "join", "room": code, "name": client, "clientId": client, "seq": 1}))
+            return ws, json.loads(await ws.recv())
+
+        try:
+            for _ in range(40):
+                if server.relay.connected:
+                    break
+                await asyncio.sleep(0.05)
+            phone, reply = await join("BZKT", "ava")
+            self.assertEqual(reply["t"], "joined")
+            await server.handle_host_command({"command": "new_room"})
+            self.assertEqual(json.loads(await asyncio.wait_for(phone.recv(), 2))["t"], "room_closed")
+            self.assertEqual((session.state.room_code, session.join_url), ("QWRT", "http://laptop:8000/?room=QWRT"))
+            for _ in range(40):
+                if server.relay.connected and server.relay.room == "QWRT":
+                    break
+                await asyncio.sleep(0.05)
+            await asyncio.sleep(0.1)
+            _, old = await join("BZKT", "bo")
+            _, new = await join("QWRT", "cy")
+            self.assertEqual((old.get("code"), new["t"]), ("ROOM_NOT_FOUND", "joined"))
+        finally:
+            game.cancel()
+            relay_server.close()
+            await relay_server.wait_closed()
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -10,6 +10,14 @@ from websockets.client import connect
 from websockets.exceptions import ConnectionClosed
 
 
+class HostJoinError(RuntimeError):
+    """The relay refused this game server as the room's host (e.g. HOST_EXISTS: that code is taken on a shared relay)."""
+
+    def __init__(self, code: str, message: str) -> None:
+        super().__init__(f"{code}: {message}")
+        self.code = code
+
+
 class RelayClient:
     def __init__(self, url: str, room: str, secret: str = "") -> None:
         self.url, self.room, self.secret = url, room, secret
@@ -31,7 +39,7 @@ class RelayClient:
         reply = json.loads(await websocket.recv())
         if reply.get("t") != "host_joined":
             await websocket.close()
-            raise RuntimeError(f"Relay host join failed: {reply}")
+            raise HostJoinError(str(reply.get("code", "UNKNOWN")), str(reply.get("message", reply)))
         self.websocket = websocket
 
     async def receive_forever(self, on_input: Callable[[dict[str, Any]], Awaitable[None]]) -> None:
@@ -41,6 +49,17 @@ class RelayClient:
             message = json.loads(raw)
             if message.get("t") in {"move", "sense", "input_cleared", "roster"}:
                 await on_input(message)
+
+    async def send_host(self, payload: dict[str, Any]) -> bool:
+        """A host command for the relay (close_room, lock, kick). False if not connected right now."""
+        if self.websocket is None:
+            return False
+        try:
+            await self.websocket.send(self._message(payload))
+            return True
+        except ConnectionClosed:
+            self.websocket = None
+            return False
 
     async def send_phone_view(self, view: dict[str, Any]) -> None:
         if self.websocket is None:

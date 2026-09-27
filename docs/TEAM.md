@@ -87,7 +87,13 @@ True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 
   ~10 s when its connection timed out (the relay waited on each send), and the brain step shared the game loop; now no send ever
   waits and the brain has its own thread. Measured before/after with four players under load: slowest inputs 30 ms to 10 ms,
   host-screen freezes 5 to 1; with a sleeping phone: longest feedback gap 9.9 s to 0.1 s, host screen steady at 30 frames/s.
-  Also: a stray test tab of Neil's in the in-app browser had been connected to the team's game as "Neil" (closed). Verified in the browser: a 3 s hold stays held on the server for 2.96 s; the Seer's phone shows brain
+  Also: a stray test tab of Neil's in the in-app browser had been connected to the team's game as "Neil" (closed).
+- **Jackbox/Kahoot-style joining (Neil, Sat 22:30):** a fresh random code every launch (`secrets`, four consonants) and every
+  new game (`n` in the terminal or **New code** on the host screen: the old room closes and its phones are told to scan the new
+  code; the QR follows the code); codes work only while the game hosts them (`ROOM_NOT_FOUND` otherwise, 30 s grace for a
+  reconnecting server); **Lock** (`l`) keeps new phones out; click a seat on the host screen to remove a player; names are unique
+  per room; a "Random royal name" button on the phone. Relay bug fixed on the way: a sender whose connection was closing could
+  cancel everyone else's updates. New relay messages: `close_room`, `lock`, `kick` (host), `room_closed`, `kicked` (phones). Verified in the browser: a 3 s hold stays held on the server for 2.96 s; the Seer's phone shows brain
   cues (bearing, distance, a Giant warning counting down from 1.4 s).
 
 ## Open requests: who is waiting on whom
