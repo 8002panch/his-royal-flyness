@@ -317,6 +317,9 @@ def test_tutorial_coaching_points_each_mover_at_the_grape_and_stays_off_for_the_
     g.c.play.update(grape=len(cm.GRAPES) - 1, delivered=len(cm.GRAPES) - 1, carrying=True)
     assert g.c.guide() == {}  # the last return is the Seer's to call
     assert all("tip" not in v for v in g.s.phone_views() if v["t"] == "control_view")
+    g.s.state.fly.x, g.s.state.fly.y, g.s.state.fly.z = cm.GRAPES[-1]
+    g.run(cm.LESSON_HELP_S + 0.5)
+    assert g.c.guide()["goal"] == "chalice"  # a council stuck in the lesson gets the coaching back
 
 
 def test_the_last_return_faces_miranda_so_the_brain_can_see_her():

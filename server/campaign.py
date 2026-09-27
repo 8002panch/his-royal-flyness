@@ -33,7 +33,8 @@ FATHER_DODGES = 5
 STAGE2_SECONDS = 60.0
 STAGE2_SWATS = (14.0, 30.0, 46.0)
 GOAL_Z = 0.9
-PICKUP_R, DELIVER_R, PICKUP_SPEED = 0.3, 0.32, 1.5  # forgiving: three people each steer one axis
+PICKUP_R, DELIVER_R, PICKUP_SPEED = 0.38, 0.38, 1.5
+LESSON_HELP_S = 8.0  # the Seer's lesson: seconds before the movers' coaching comes back  # forgiving: three people each steer one axis
 
 # Ved's wall course, with each opening moved off the centre line so flying straight never gets through (his openings all
 # overlapped the middle): (name, z, gap x0, x1, gap y0, y1), server units. Stage 2 is the mirror, in a new order.
@@ -55,7 +56,7 @@ CHALICE = (-0.5, -0.3, -0.65)  # beside the start, clear of Hamlet on screen
 # GAME.md's teaching order: 1 straight ahead at the starting height (Wingmaster), 2 to the side (Helmsman), 3 up high
 # (Liftmaster), 4 everything at once. The fourth sits nearest the camera, so the last return flies towards the chalice and
 # Miranda: the fly faces +z and its eyes need her in front for the Seer's lesson.
-GRAPES = ((0.0, 0.0, 0.1), (0.7, 0.0, -0.3), (-0.15, 0.65, 0.25), (0.45, 0.35, -0.95))
+GRAPES = ((0.0, 0.0, 0.1), (0.7, 0.0, -0.3), (-0.3, 0.4, -0.2), (0.45, 0.25, -0.85))
 MIRANDA_BY_CHALICE = (-0.25, -0.15, -0.5)
 
 QUIZZES = {  # docs/GAME.md, "The three drink questions" (NIAAA facts; general human health, not fly results)
@@ -395,13 +396,13 @@ class Campaign:
             return
         fly = self.session.state.fly
         if self.scene == "TUTORIAL":
-            self._tutorial(fly)
+            self._tutorial(fly, dt)
         elif self.scene in ("STAGE1", "STAGE2"):
             self._course(fly, dt)
         if self.fight is not None and self.phase == "play":
             self._fight(fly, dt)
 
-    def _tutorial(self, fly: Any) -> None:
+    def _tutorial(self, fly: Any, dt: float) -> None:
         p = self.play
         k = p["grape"]
         if k >= len(GRAPES):
@@ -414,7 +415,9 @@ class Campaign:
                 if k == len(GRAPES) - 1:  # the Seer's lesson: Miranda waits by the chalice for the last return
                     self._hint("TUT_SEER")
                     self._hint("TUT_SEER_MIRANDA")
-        elif _dist(fly, CHALICE) < DELIVER_R:
+        elif k == len(GRAPES) - 1 and _dist(fly, CHALICE) >= DELIVER_R:
+            p["lesson_t"] = p.get("lesson_t", 0.0) + dt
+        if p["carrying"] and _dist(fly, CHALICE) < DELIVER_R:
             p["carrying"] = False
             p["grape"] = k + 1
             p["delivered"] = k + 1
@@ -516,8 +519,8 @@ class Campaign:
             return {}
         p = self.play
         k = p.get("grape", 0)
-        if k >= len(GRAPES) or (p.get("carrying") and k == len(GRAPES) - 1):
-            return {}
+        if k >= len(GRAPES) or (p.get("carrying") and k == len(GRAPES) - 1 and p.get("lesson_t", 0.0) < LESSON_HELP_S):
+            return {}  # the Seer's lesson: their call first; the coaching comes back if the council is stuck
         target = CHALICE if p.get("carrying") else GRAPES[k]
         fly = self.session.state.fly
         near = 0.12
