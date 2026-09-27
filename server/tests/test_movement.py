@@ -19,12 +19,13 @@ class GameSessionTests(unittest.TestCase):
         for role, axis, changed in cases:
             with self.subTest(role=role):
                 session = self.make_session()
+                initial = {axis: getattr(session.state.fly, axis) for axis in ("x", "y", "z")}
                 session.apply_input({"t": "move", "role": role, "axis": axis, "value": 1}, now=0.0)
                 session.step(0.5, now=0.5)
                 fly = session.state.fly
-                self.assertNotEqual(getattr(fly, changed), 0.0)
+                self.assertNotEqual(getattr(fly, changed), initial[changed])
                 for other_axis in {"x", "y", "z"} - {changed}:
-                    self.assertEqual(getattr(fly, other_axis), 0.0)
+                    self.assertEqual(getattr(fly, other_axis), initial[other_axis])
 
     def test_release_and_stale_input_stop_acceleration(self) -> None:
         session = self.make_session()
