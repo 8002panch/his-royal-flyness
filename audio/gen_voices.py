@@ -7,6 +7,7 @@
     python audio/gen_voices.py --only C01 Q01     # just these scenes, speakers or line ids (e.g. --only clown H_TITLE)
     python audio/gen_voices.py --force --only miranda
     python audio/gen_voices.py --manifest-only    # rewrites the manifest from the mp3s already on disk
+    python audio/gen_voices.py --adopt --only H_TITLE   # an mp3 made in the ElevenLabs app counts as up to date
 
 The API key comes from ELEVENLABS_API_KEY in the environment or in .env at the repo root (never commit it). Voice IDs are not
 secret and live in voices.json, so the whole team generates the same cast. A speaker without a voice ID is skipped.
@@ -239,6 +240,27 @@ def cmd_check(cast: dict, lines: list[Line]) -> None:
                   "elevenlabs.io and add it to My Voices, then check again.")
 
 
+def cmd_adopt(lines: list[Line], cast: dict, args: argparse.Namespace) -> int:
+    """Records mp3s made elsewhere (the ElevenLabs app or connector, same voice and model) as current, so they aren't paid
+    for again. Without --only it adopts only files that have no record yet; with --only it re-adopts those lines."""
+    model = args.model or cast.get("model", "eleven_v3")
+    fmt = cast.get("output_format", "mp3_44100_128")
+    old = read_manifest(args.out)
+    hashes = {k: v["hash"] for k, v in old.items() if v.get("hash")}
+    adopted = []
+    for ln in _select(lines, args.only):
+        sp = cast["speakers"][ln.speaker]
+        if not (args.out / f"{ln.id}.mp3").exists() or not voice_id_from(sp.get("voice_id", "")):
+            continue
+        if not args.only and ln.id in hashes:
+            continue
+        hashes[ln.id] = line_hash(ln, sp, model, fmt)
+        adopted.append(ln.id)
+    write_manifest(lines, cast, args.out, hashes)
+    print(f"Adopted {len(adopted)} line(s): {' '.join(adopted) or '-'}")
+    return 0
+
+
 def cmd_generate(lines: list[Line], cast: dict, args: argparse.Namespace) -> int:
     model = args.model or cast.get("model", "eleven_v3")
     fmt = cast.get("output_format", "mp3_44100_128")
@@ -327,6 +349,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--check", action="store_true", help="check the key, the cast voices and the characters left")
     p.add_argument("--my-voices", action="store_true", help="list the voices in your ElevenLabs account")
     p.add_argument("--manifest-only", action="store_true", help="rewrite voice/manifest.json and .js from the files on disk")
+    p.add_argument("--adopt", action="store_true", help="count mp3s made in the ElevenLabs app or connector as up to date")
     p.add_argument("--only", nargs="+", default=[], metavar="WHAT", help="scene, speaker or line id (any mix)")
     p.add_argument("--force", action="store_true", help="regenerate even if a line is up to date")
     p.add_argument("--model", default="", help="override the model in voices.json (e.g. eleven_multilingual_v2)")
@@ -347,6 +370,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.check:
         cmd_check(cast, lines)
         return 0
+    if args.adopt:
+        return cmd_adopt(lines, cast, args)
     if args.manifest_only:
         old = read_manifest(args.out)
         write_manifest(lines, cast, args.out, {k: v["hash"] for k, v in old.items() if v.get("hash")})

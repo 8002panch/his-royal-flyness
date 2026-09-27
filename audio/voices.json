@@ -1,48 +1,48 @@
 {
-  "_help": "Casting sheet for audio/gen_voices.py. Paste an ElevenLabs library voice ID (or its voice-library link) into voice_id. Voice IDs are not secrets; the API key goes in .env. Library voices only, no clones of real people. stability for the v3 model: 0.0 creative, 0.5 natural, 1.0 robust.",
+  "_help": "Casting sheet for audio/gen_voices.py. Paste an ElevenLabs library voice ID (or its voice-library link) into voice_id. Voice IDs are not secrets; the API key goes in .env. Library voices only, no clones of real people. stability: null uses the voice's own saved setting (what the ElevenLabs app and connector use); for the v3 model 0.0 is creative, 0.5 natural, 1.0 robust.",
   "model": "eleven_v3",
   "output_format": "mp3_44100_128",
   "speakers": {
     "clown": {
       "name": "Clown",
-      "voice_id": "",
-      "stability": 0.5,
+      "voice_id": "7rQX8r6PVq3gfJ8rZzyE",
+      "stability": null,
       "brief": "Clown, the Court Jester. Narrates every scene and reads the question cards (about half of all lines). Playful and a little pompous, like a costume drama narrated by someone who's had one glass of wine. Never mean to the players."
     },
     "hamlet": {
       "name": "Hamlet",
-      "voice_id": "",
-      "stability": 0.5,
+      "voice_id": "yhf80q1381zd2JJQ4tM7",
+      "stability": null,
       "brief": "Prince Hamlet. Earnest young royal, flustered but game, with a dry joke under pressure ('An extremely purple one')."
     },
     "miranda": {
       "name": "Miranda",
-      "voice_id": "",
-      "stability": 0.5,
+      "voice_id": "fgDJOgmENIR82PueQrVs",
+      "stability": null,
       "brief": "Princess Miranda. Warm but firm; she speaks for herself and gets the last word in both endings."
     },
     "prospero": {
       "name": "Prospero",
-      "voice_id": "",
-      "stability": 0.5,
-      "brief": "Duke Prospero, Miranda's father. Older, stern, proud and quick to judge; softens in the reconciliation ending."
+      "voice_id": "LvmvHEBEmMJBJw9UuhwO",
+      "stability": null,
+      "brief": "Duke Prospero, Miranda's father. Older, stern, proud and quick to judge; softens in the reconciliation ending. One voice for both moods: nice after the Giant is beaten (C03, E01), mad after it wins (C04); the mood comes from the audio tags."
     },
     "tinman": {
       "name": "Lord Tinman",
-      "voice_id": "",
-      "stability": 0.5,
+      "voice_id": "1aPDmPEYltTp3yDMQLiT",
+      "stability": null,
       "brief": "Lord Tinman, the heartless rival. Impeccably polite, composed, faintly smug."
     },
     "cheapdate": {
       "name": "Sir Cheapdate",
-      "voice_id": "",
-      "stability": 0.5,
+      "voice_id": "eadgjmk4R4uojdsheG9t",
+      "stability": null,
       "brief": "Sir Cheapdate, the tipsy rival. Jolly and sloppy, cheerfully aware of his own 'extensive, regrettable research'."
     },
     "rutabaga": {
       "name": "Count Rutabaga",
-      "voice_id": "",
-      "stability": 0.5,
+      "voice_id": "GsfuR3Wo2BACoxELWyEF",
+      "stability": null,
       "brief": "Count Rutabaga, the forgetful rival. Nervous, scattered and friendly; loses his train of thought mid-sentence."
     }
   }

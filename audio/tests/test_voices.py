@@ -86,6 +86,8 @@ class GenerateTests(unittest.TestCase):
         self.tmp = Path(tempfile.mkdtemp())
         self.lines = [ln for ln in gv.load_lines() if ln.scene == "C01"]
         self.cast = gv.load_cast()
+        for sp in self.cast["speakers"].values():  # only the fake voices below are cast
+            sp["voice_id"] = ""
         for name, vid in VID.items():
             self.cast["speakers"][name]["voice_id"] = vid
         self.tts = FakeTTS()
@@ -129,6 +131,16 @@ class GenerateTests(unittest.TestCase):
         m = self.manifest()
         self.assertTrue(all(m[ln.id]["file"] for ln in self.lines if ln.speaker == "clown"))
         self.assertFalse(any(m[ln.id]["file"] for ln in self.lines if ln.speaker == "hamlet"))
+
+    def test_adopted_files_are_not_generated_again(self) -> None:
+        clown = [ln for ln in self.lines if ln.speaker == "clown"]
+        self.tmp.mkdir(exist_ok=True)
+        (self.tmp / f"{clown[0].id}.mp3").write_bytes(b"ID3made-in-the-app")
+        gv.cmd_adopt(self.lines, self.cast, argparse.Namespace(only=[], model="", out=self.tmp))
+        self.assertEqual(self.manifest()[clown[0].id]["file"], f"{clown[0].id}.mp3")
+        self.run_gen()
+        self.assertNotIn(gv.spoken_text(clown[0], "eleven_v3"), [t for _, t in self.tts.calls])
+        self.assertEqual((self.tmp / f"{clown[0].id}.mp3").read_bytes(), b"ID3made-in-the-app")
 
     def test_dry_run_sends_and_writes_nothing(self) -> None:
         self.assertEqual(self.run_gen(dry_run=True), 0)

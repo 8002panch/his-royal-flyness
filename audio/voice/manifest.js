@@ -2,7 +2,7 @@
 window.VOICE_MANIFEST = {"model": "eleven_v3",
  "speakers": {"clown": "Clown", "hamlet": "Hamlet", "miranda": "Miranda", "prospero": "Prospero", "tinman": "Lord Tinman", "cheapdate": "Sir Cheapdate", "rutabaga": "Count Rutabaga"},
  "lines": [
-  {"id": "H_TITLE", "scene": "LOBBY", "panel": "", "branch": "", "speaker": "clown", "name": "Clown", "caption": "Hear ye, hear ye! By order of Duke Prospero, the Royal Ball of the Fruit Bowl begins!", "file": null, "hash": null},
+  {"id": "H_TITLE", "scene": "LOBBY", "panel": "", "branch": "", "speaker": "clown", "name": "Clown", "caption": "Hear ye, hear ye! By order of Duke Prospero, the Royal Ball of the Fruit Bowl begins!", "file": "H_TITLE.mp3", "hash": "c9c67627bfe0fbf1"},
   {"id": "H_JOIN", "scene": "LOBBY", "panel": "", "branch": "", "speaker": "clown", "name": "Clown", "caption": "Present your seal at the gate, and take your place on the Prince's Privy Council.", "file": null, "hash": null},
   {"id": "H_PRINCE", "scene": "LOBBY", "panel": "", "branch": "", "speaker": "clown", "name": "Clown", "caption": "Behold Prince Hamlet, the first prince whose entire mind has been mapped. Every one of his hundred and sixty-six thousand neurons.", "file": null, "hash": null},
   {"id": "H_ROLE_HELMSMAN", "scene": "LOBBY", "panel": "", "branch": "", "speaker": "clown", "name": "Clown", "caption": "The Royal Helmsman! Left and right are yours.", "file": null, "hash": null},
