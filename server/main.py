@@ -195,6 +195,7 @@ class GameSession:
             kind, seed = self._map_swap
             self._map_swap = None
             bm.swap(kind, seed)
+            bm.drink_table()  # the new wiring's quiz numbers now, not as a pause in the middle of a question
         campaign = self.campaign
         bm.set_drinks(campaign.dizzy if campaign is not None else 0)
         fly = self.state.fly

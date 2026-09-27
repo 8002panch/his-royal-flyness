@@ -41,5 +41,6 @@ func _draw() -> void:
 			for k in BUILDER.LAYER_PROF:
 				s += "| %s=%.1f " % [k, BUILDER.LAYER_PROF[k] / 20000.0]
 			BUILDER.LAYER_PROF.clear()
-			print("PROF ", s)
+			if OS.is_debug_build() and OS.get_cmdline_user_args().has("--prof"):  # opt-in: it floods the console otherwise
+				print("PROF ", s)
 			prof.clear()

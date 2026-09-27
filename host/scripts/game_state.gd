@@ -28,7 +28,9 @@ signal state_updated(state: Dictionary)
 signal event_received(event: Dictionary)
 signal connection_status_changed(connected: bool, using_fallback: bool)
 
-const SERVER_URL := "ws://127.0.0.1:8765"
+const DEFAULT_SERVER_URL := "ws://127.0.0.1:8765"
+## `-- --server=ws://127.0.0.1:8865` points the screen at another game server (testing beside a running game).
+var SERVER_URL := DEFAULT_SERVER_URL
 const FALLBACK_SEQUENCE := "res://test/sample_sequence.json"
 const TICK_HZ := 30.0
 const RECONNECT_INTERVAL_S := 3.0
@@ -46,6 +48,9 @@ var _fallback_timer := 0.0
 
 
 func _ready() -> void:
+	for arg in OS.get_cmdline_user_args():
+		if str(arg).begins_with("--server="):
+			SERVER_URL = str(arg).trim_prefix("--server=")
 	_try_connect()
 
 

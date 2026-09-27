@@ -40,6 +40,13 @@ True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 
 
 ### Phase log
 
+- **Sun 27 Sept, ~09:40 (Neil, with Claude): submission polish.** A bot (four phones on the real relay, flying from the
+  host feed, dodging from the Seer phone's brain cues) played the whole story on spare ports with a headless main screen
+  auto-playing the cutscenes: cast, tutorial, every comic, three questions (one wrong), both courses, the Giant (10 dodges,
+  2 hits), Prospero (5 dodges) and the wedding in about 10 minutes, with no script errors; Home and a new story after it
+  worked. Fixes: the garden's per-second `PROF` console print is now opt-in (`-- --prof`); a Changeling swap computes the
+  new wiring's quiz numbers at once (it was a 4 s pause in the first question after a swap); `godot --path host --
+  --server=ws://127.0.0.1:8865` points the main screen at another game server (testing beside a running game).
 - **Sun 27 Sept, ~09:15 (Neil, with Claude):** three new, researched drink questions (NIAAA, NHTSA; GAME.md), each linked
   to a part of his brain and of yours; the full-size brain view (B, `hud/brain_full_overlay.gd`); Home on the end card (H,
   the server's `lobby` command). Voices for the nine rewritten quiz lines generated (1,519 characters).
