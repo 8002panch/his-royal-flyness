@@ -39,6 +39,17 @@ Cosmetic and local only: nothing goes to the relay or the server. The choice is 
 Keys: `1`/`2`/`3` relics, `F1` debug overlay (raw state + brain-activity waveforms, which are debug-only),
 `F2` the old dashboard, `F3` keyboard demo, `F4` chase / fixed camera, `F11` fullscreen.
 
+## Screenshots (1280x720, 26 Sept evening)
+
+Rendered with `--shot` / `--live_shot` from the fixtures and the keyboard demo; the numbers on them are sample data, not brain output.
+
+| | |
+|---|---|
+| ![Trial](screenshots/01-trial.png) Trial II, chase camera behind Hamlet | ![Giant alert](screenshots/02-giant-alert.png) The Giant's hand drops; objective turns crimson |
+| ![Keyboard demo](screenshots/03-keyboard-demo.png) WASD keyboard demo (Royal Mantle on) | ![Reaching Miranda](screenshots/04-reaching-miranda.png) Reaching Miranda: hearts |
+| ![Reliquary](screenshots/05-reliquary.png) Hamlet's Reliquary: mantle, halo, filigree | ![Lobby](screenshots/06-lobby.png) Lobby: wax-seal room code and the four seats |
+| ![Chronicle](screenshots/07-chronicle.png) The Chronicle: credit, Knight of the Realm, Blunder | |
+
 ## Movement
 
 Three players split Hamlet's flight, one axis each, and each can only push -1, 0 or +1 (`relay/PROTOCOL.md`):
