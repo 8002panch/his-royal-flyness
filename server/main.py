@@ -16,7 +16,7 @@ import time
 from typing import Any
 
 from .godot_link import GodotLink
-from .movement import MovementSimulator
+from .movement import MovementSimulator, WallGate
 from .relay_client import HostJoinError, RelayClient
 from .seer_adapter import PlaceholderSeerAdapter, projected_stimuli
 from .state import MOVEMENT_ROLES, RoomState
@@ -30,6 +30,15 @@ SEER_SOURCES = ("true", "changeling", "placeholder")
 # Distance at which the Princess fully drives the Seer's Princess detectors, set to this hall's scale (world units x 220 cm, so
 # she is 10 to 540 cm away): NEAR within ~170 cm, MID to ~330 cm, FAR to ~530 cm (detection limit ~5x this). Retune for Phase 5's hall.
 SEER_PRINCESS_FULL_CM = 100.0
+
+# Part 2 Banquet Hall wall course. Godot mirrors these openings in
+# host/scripts/court/hall_builder.gd.
+COURSE_WALLS = (
+    WallGate("left_gate", -0.50, -1.00, 0.25, -0.80, 0.80),
+    WallGate("right_gate", -0.10, -0.25, 1.00, -0.80, 0.80),
+    WallGate("low_gate", 0.35, -0.75, 0.75, -1.00, 0.15),
+    WallGate("high_gate", 0.75, -0.75, 0.75, -0.15, 1.00),
+)
 
 
 def make_seer(source: str = "true") -> Any:
@@ -57,7 +66,7 @@ class GameSession:
     def __init__(self, room_code: str, seer: Any = None, join_url: str | None = None) -> None:
         """`join_url` is the phone link shown with the room code; put `{room}` where the code goes so it follows a new code."""
         self.state = RoomState(room_code=room_code)
-        self.simulator = MovementSimulator()
+        self.simulator = MovementSimulator(walls=COURSE_WALLS)
         self.seer = seer or PlaceholderSeerAdapter()
         self.join_url_template = join_url
         self.locked = False  # from the relay's roster
@@ -146,7 +155,6 @@ class GameSession:
     def godot_state(self) -> dict[str, Any]:
         fly = self.state.fly
         stimuli = self.stimuli or projected_stimuli(fly.x, fly.y, fly.z, self.state.elapsed_s)
-        giant = (stimuli["giants"] or [None])[0]
         cues = self.cues or {}
         # Brain activity for the HUD: only real brain output (side-free keys from brain/seer.py), never placeholder numbers.
         activity = cues.get("activity", {}) if cues.get("source") in ("true", "changeling") else {}
@@ -155,7 +163,7 @@ class GameSession:
             "room": self.state.room_code, "joinUrl": self.join_url, "locked": self.locked,
             "brain": self.seer.source, "brainActivity": activity,
             "fly": {"x": round(fly.x, 4), "y": round(fly.y, 4), "z": round(fly.z, 4), "vx": round(fly.vx, 4), "vy": round(fly.vy, 4), "vz": round(fly.vz, 4)},
-            "render": {"princess": stimuli["princess"], "giant": giant},
+            "render": {"princess": stimuli["princess"]},
             "roles": {role: self.state.inputs[role].value != 0 for role in self.state.inputs},
             "players": [dict(p) for p in self.players],
         }

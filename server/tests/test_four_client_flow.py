@@ -66,7 +66,7 @@ class FourClientFlowTests(unittest.IsolatedAsyncioTestCase):
             fly = self.session.state.fly
             self.assertGreater(fly.x, 0.0)
             self.assertGreater(fly.y, 0.0)
-            self.assertGreater(fly.z, 0.0)
+            self.assertGreater(fly.z, -0.95)
 
             seer_view = self.session.phone_views()[-1]
             await self.host.send_phone_view(seer_view)

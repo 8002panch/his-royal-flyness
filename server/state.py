@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 
 MOVEMENT_ROLES = {"helmsman": "x", "liftmaster": "y", "wingmaster": "z"}
 ALL_ROLES = (*MOVEMENT_ROLES, "seer")
+COURSE_START_Z = -0.95
 
 
 @dataclass
@@ -19,7 +20,7 @@ class AxisInput:
 class FlyState:
     x: float = 0.0
     y: float = 0.0
-    z: float = 0.0
+    z: float = COURSE_START_Z
     vx: float = 0.0
     vy: float = 0.0
     vz: float = 0.0

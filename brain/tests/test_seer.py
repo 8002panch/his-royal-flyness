@@ -338,13 +338,13 @@ def test_plugs_into_the_server_game_session():
         view = views[-1]
         assert view["t"] == "seer_view" and view["source"] == source
         assert set(view["giant"]) == {"direction", "seconds", "confidence"}
-    # the True Prince should see the Princess the server places ahead-right of the start position
+    # the True Prince should see the Princess the server places ahead-right of the start (the course entrance, so she's FAR)
     session = GameSession("BZKT", seer=S("true"))
     session.apply_input({"t": "sense", "role": "seer", "scan": 1}, now=0.0)
     for k in range(25):
         session.step(0.02, now=0.02 * (k + 1))
         view = session.phone_views()[-1]
-    assert view["bearing"] in ("N", "NE") and view["confidence"] > 0.3
+    assert view["bearing"] in ("N", "NE") and view["confidence"] > 0.15
     # Godot gets the brain's side-free activity and which brain is running; the host toggle swaps it
     state = session.godot_state()
     assert state["brain"] == "true" and set(state["brainActivity"]) == ACTIVITY_KEYS
@@ -368,6 +368,15 @@ def test_server_uses_the_real_brain_and_falls_back_without_it(monkeypatch):
 
     monkeypatch.setattr(brain.seer, "SeerAdapter", broken)
     assert isinstance(make_seer("true"), PlaceholderSeerAdapter)  # no data files: the game still runs
+
+
+def _with_test_hand(stimuli: dict, t: float) -> dict:
+    """The old test hand: seconds 4 to 6 of an 8 s cycle, from the left, reaching the fly at 6.0 (distance = its 40 cm size)."""
+    phase = t % 8.0
+    if 4.0 <= phase < 6.0:
+        stimuli["giants"] = [{"bearing_deg": -60.0, "elevation_deg": 15.0, "distance_cm": 40.0 + (6.0 - phase) * 150.0,
+                              "approach_cm_s": 150.0, "size_cm": 40.0}]
+    return stimuli
 
 
 @needs_data
@@ -400,7 +409,7 @@ def test_in_the_game_world_the_cues_make_sense():
         seer.reset()
         first = None
         for k in range(int(6.0 / 0.02)):  # the test Giant: seconds 4 to 6 of the server's 8 s cycle, contact at 6.0
-            cues = seer.sense(projected_stimuli(0.0, 0.0, 0.0, k * 0.02))
+            cues = seer.sense(_with_test_hand(projected_stimuli(0.0, 0.0, 0.0, k * 0.02), k * 0.02))
             if first is None and cues["giant"]["side"] is not None:
                 first = k * 0.02
                 assert cues["giant"]["side"] == "left"

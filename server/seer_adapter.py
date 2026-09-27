@@ -53,9 +53,5 @@ def projected_stimuli(fly_x: float, fly_y: float, fly_z: float, elapsed_s: float
     bearing = math.degrees(math.atan2(dx, dz))  # 0 = straight ahead; up to +/-180 once the fly has flown past her
     elevation = math.degrees(math.atan2(dy, math.hypot(dx, dz)))
     distance = max(1.0, math.sqrt(dx * dx + dy * dy + dz * dz) * 220.0)
-    phase = elapsed_s % 8.0
-    giants: list[dict[str, float]] = []
-    if 4.0 <= phase < 6.0:
-        remaining = 6.0 - phase  # the hand (40 cm across) reaches the fly at phase 6.0: contact at distance = its size
-        giants.append({"bearing_deg": -60.0, "elevation_deg": 15.0, "distance_cm": 40.0 + remaining * 150.0, "approach_cm_s": 150.0, "size_cm": 40.0})
-    return {"princess": {"bearing_deg": bearing, "elevation_deg": elevation, "distance_cm": distance}, "giants": giants}
+    # No test hand any more (Ved removed it with the wall course): the campaign's attacks supply the giants.
+    return {"princess": {"bearing_deg": bearing, "elevation_deg": elevation, "distance_cm": distance}, "giants": []}
