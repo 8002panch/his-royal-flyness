@@ -53,6 +53,7 @@ const SIDE_TO_DEG := {"left": -60.0, "ahead": 0.0, "right": 60.0}
 
 
 func _ready() -> void:
+	add_child(preload("res://scripts/voice_player.gd").new())
 	GameState.state_updated.connect(_on_state_updated)
 	GameState.event_received.connect(_on_event_received)
 	_show_lobby()

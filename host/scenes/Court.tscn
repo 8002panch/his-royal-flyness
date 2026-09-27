@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=12 format=3 uid="uid://bdgul4ymqmnq4"]
 
 [ext_resource type="Script" path="res://scripts/court/court_main.gd" id="1_main"]
 [ext_resource type="Script" path="res://scripts/court/court_world.gd" id="2_world"]
@@ -20,7 +20,6 @@ script = ExtResource("2_world")
 
 [node name="FarBackground" type="Node2D" parent="World"]
 script = ExtResource("11_layer")
-layer = "far"
 
 [node name="FloorCarpet" type="Node2D" parent="World"]
 script = ExtResource("11_layer")
@@ -47,7 +46,6 @@ script = ExtResource("5_miranda")
 
 [node name="SirCheapdate" type="Node2D" parent="World/Actors"]
 script = ExtResource("6_rival")
-style_name = "cheapdate"
 hall_pos = Vector3(-1.56, -0.88, -0.55)
 
 [node name="SirIndy" type="Node2D" parent="World/Actors"]

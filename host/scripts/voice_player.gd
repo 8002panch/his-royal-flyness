@@ -14,6 +14,7 @@ extends Node
 ##                                                  fight's pool (the GIANT / FATHER scenes in audio/lines.csv; a milestone
 ##                                                  such as dodge 5 always speaks). Without `n` the dodges and hits are counted.
 ##   {"kind": "splat"} (the keyboard demo's hit) counts as a Giant hit; {"kind": "win"} is a cheer.
+##   {"kind": "voice_live", "mp3_b64": "..."}      a live line (the Chronicle), decoded from base64; cuts off the line playing.
 ## The Seer's secret: nothing here plays on a warning ({"kind": "giant"} and the H_WARN_GIANT caption stay silent), a shout
 ## never starts or stops because a warning began, and every sound file is mono.
 ##
@@ -167,6 +168,18 @@ func play_line(id: String, skip_cue: String = "") -> bool:
 	return true
 
 
+func _play_live(bytes: PackedByteArray) -> void:
+	if bytes.is_empty():
+		return
+	var s := AudioStreamMP3.new()
+	s.data = bytes
+	_speak_id = ""
+	_voice.stream = s
+	_voice.play()
+	_busy_until = _t + s.get_length() + GAP_S
+	history.append("line:live")
+
+
 func play_sound(id: String) -> bool:
 	var entry: Variant = sounds.get(id)
 	var stream := _stream("sfx", entry)
@@ -223,6 +236,8 @@ func _on_event(ev: Dictionary) -> void:
 	match kind:
 		"voice":
 			play_line(str(ev.get("id", "")))
+		"voice_live":
+			_play_live(Marshalls.base64_to_raw(str(ev.get("mp3_b64", ""))))
 		"sfx":
 			play_sound(str(ev.get("id", "")))
 		"dodge", "hit", "splat":
