@@ -5,8 +5,9 @@
     python run_local.py --seer placeholder
     python run_local.py --relay-url wss://royalflyness.club/ws   # phones join through a relay on the internet (relay/Caddyfile)
 
-The host screen opens in this laptop's browser (http://localhost:8001) with the room code, a QR code and the join link; players
-scan it with phones on the same Wi-Fi. Godot can read the same state feed at ws://127.0.0.1:8765.
+The main screen is the Godot court (godot --path host, then Enter the Court): it reads the state feed at ws://127.0.0.1:8765 and
+shows the room code and QR code; players scan it with phones on the same Wi-Fi. A browser backup of the host screen is served at
+http://localhost:8001 (add --browser to open it automatically, for a laptop without Godot).
 Host keys (type a letter, then Enter): c = Changeling, t = True Prince, p = placeholder cues, s = status, q = quit.
 Story keys: g = start the story, Enter = next bubble, b = back, k = skip the comic, r = restart the stage,
 j GIANT = jump to a chapter (TUTORIAL C01 Q01 STAGE1 Q02 STAGE2 Q03 C02 GIANT C03 C04 FATHER E01 E02; marks DEMO).
@@ -152,7 +153,7 @@ def serve_host_screen(port: int, current_join_url) -> http.server.ThreadingHTTPS
 def print_banner(room: str, phone_url: str, host_url: str, godot_port: int, seer_source: str, remote_relay: str | None,
                  pinned: bool = False) -> None:
     print("\nHis Royal Flyness: " + ("online game" if remote_relay else "local game"))
-    print(f"  Host screen:  {host_url}   (opens in your browser; press F there for full screen)")
+    print(f"  Main screen:  Godot: godot --path host, then Enter the Court   (browser backup: {host_url})")
     print(f"  Room code:    {room}" + ("   (pinned with --room)" if pinned else "   (a fresh code every game: n = new code)"))
     print(f"  Phones:       {phone_url}" + ("" if remote_relay else "   (same Wi-Fi as this laptop)"))
     if remote_relay:
@@ -252,7 +253,7 @@ async def main(args: argparse.Namespace) -> None:
         godot.on_command = server.handle_host_command  # New code / Lock / Remove from the host screen
         game = asyncio.create_task(server.run())
         print_banner(room, session.join_url, host_url, args.godot_port, session.seer.source, relay_url if remote else None, pinned)
-        if not args.no_browser:
+        if args.browser and not args.no_browser:
             threading.Thread(target=webbrowser.open, args=(host_url,), daemon=True).start()
 
         def on_key(key: str) -> None:
@@ -297,7 +298,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--relay-port", type=int, default=8080, help="WebSocket relay (the phone page expects 8080)")
     parser.add_argument("--godot-port", type=int, default=8765)
     parser.add_argument("--host-port", type=int, default=8001, help="host screen (this laptop only)")
-    parser.add_argument("--no-browser", action="store_true", help="don't open the host screen automatically")
+    parser.add_argument("--browser", action="store_true", help="also open the browser backup host screen (Godot is the main screen)")
+    parser.add_argument("--no-browser", action="store_true", help=argparse.SUPPRESS)  # the old opt-out; the tab is off by default now
     parser.add_argument("--relay-url", default=os.getenv("RELAY_URL"),
                         help="use a relay on the internet (e.g. wss://royalflyness.club/ws) instead of running one here")
     parser.add_argument("--join-url", default=os.getenv("JOIN_URL"),

@@ -50,7 +50,7 @@ python run_local.py --room BZKT
 - If it says a port is in use, the game is already running in another terminal: quit that one first (`q`, then Enter).
 - `--room BZKT` pins the code (use it for the demo, so phones reconnect on their own after a restart); `--seer true|changeling|placeholder`
   (default `true`, the real brain; it falls back to placeholder cues if `data/` is missing). Ports: `--http-port 8000`,
-  `--relay-port 8080`, `--godot-port 8765`, `--host-port 8001`; `--no-browser` skips opening the host screen. `ROOM_SECRET` comes
+  `--relay-port 8080`, `--godot-port 8765`, `--host-port 8001`; `--browser` also opens the browser backup host screen (off by default: Godot is the main screen). `ROOM_SECRET` comes
   from the environment; locally it may be blank.
 - **Host keys** in that terminal (letter, then Enter): `c` Changeling, `t` True Prince, `p` placeholder cues, `s` status (who holds
   which role, live inputs, fly position), `q` quit. It also prints a line whenever a phone takes or leaves a role.

@@ -2,6 +2,8 @@ extends Control
 
 ## The 640x360 title screen. Everything is drawn on native pixels and the
 ## project scales it with nearest filtering. No server message is invented here.
+## The stage on the right is Anshul's art: the v4 banquet backdrop with the animated
+## Hamlet and Miranda cast rigs (animation_v1), the same ones the game uses.
 
 const COURT := "res://scenes/Court.tscn"
 const BUTTONS := [Rect2i(36, 220, 240, 30), Rect2i(36, 258, 240, 28)]
@@ -12,10 +14,31 @@ var _busy := false
 var _wing_frame := 0
 var _wing_clock := 0.0
 var _help := false
+var _stage: ImageTexture
+var _hamlet: Node2D
+var _miranda: Node2D
+var _t := 0.0
+var _wave_t := 2.5
+
+const STAGE := Rect2i(309, 7, 324, 346)
+const HAMLET_AT := Vector2(440, 246)
 
 
 func _ready() -> void:
 	_backdrop = _build_backdrop().texture()
+	_stage = StoryArt.backdrop("banquet")
+	_hamlet = StoryArt.rig("hamlet", "")
+	_miranda = StoryArt.rig("miranda", "")
+	if _hamlet != null:
+		add_child(_hamlet)
+		_hamlet.scale = Vector2(1.9, 1.9)
+		_hamlet.position = HAMLET_AT
+		_hamlet.set_motion("fly", 0.6, 1.0)
+	if _miranda != null:
+		add_child(_miranda)
+		_miranda.scale = Vector2(1.6, 1.6)
+		_miranda.position = Vector2(566, 300)
+		_miranda.set_motion("idle", 0.0, -1.0)
 	mouse_default_cursor_shape = Control.CURSOR_ARROW
 	# Preserve existing screenshot, dashboard and keyboard-demo CLI entry points.
 	var args := OS.get_cmdline_user_args()
@@ -30,6 +53,19 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	_t += delta
+	for rig in [_hamlet, _miranda]:  # the How to Play card covers the stage
+		if rig != null:
+			(rig as Node2D).visible = not _help
+	if _hamlet != null:  # he hovers in place, drifting a little
+		_hamlet.position = HAMLET_AT + Vector2(roundf(sin(_t * 0.9) * 6.0), roundf(sin(_t * 2.2) * 4.0))
+	_wave_t -= delta
+	if _wave_t <= 0.0:
+		_wave_t = 5.0
+		if _miranda != null:
+			_miranda.play_gesture("wave", 1.4)
+		if _hamlet != null:
+			_hamlet.play_gesture("bow", 1.2)
 	_wing_clock += delta
 	if _wing_clock >= 0.075:
 		_wing_clock = 0.0
@@ -109,16 +145,27 @@ func _draw() -> void:
 	HudDraw.text_center(self, PixelFonts.label(), 156, 308, "ENTER LIVE   D DEMO   H HOW TO PLAY", Pal.INK_SOFT, 7)
 	HudDraw.text_center(self, PixelFonts.label(), 156, 325, "HACKUMBC 2026", Pal.GOLD_DARK, 7)
 
-	# The hero is a real court sprite, using its eight-frame flight cycle.
+	# The stage: the banquet backdrop, cropped to the frame at native pixels, under the gold margin.
+	if _stage != null:
+		draw_texture_rect_region(_stage, Rect2(STAGE), Rect2(158, 7, STAGE.size.x, STAGE.size.y))
+	else:
+		_draw_old_hero()
+	HudDraw.frame(self, Rect2i(309, 7, 324, 346), Pal.GOLD)
+	HudDraw.frame(self, Rect2i(312, 10, 318, 340), Pal.GOLD_DARK)
+	HudDraw.panel(self, Rect2i(394, 318, 154, 28), Pal.PARCHMENT, Pal.INK, Pal.GOLD, Pal.PARCHMENT_DARK)
+	HudDraw.text_center(self, PixelFonts.bold(), 471, 322, "PRINCE HAMLET", Pal.INK, 8)
+	HudDraw.text_center(self, PixelFonts.label(), 471, 334, "THE COURT AWAITS", Pal.CRIMSON, 8)
+	if _help:
+		_draw_help()
+
+
+## Only if the backdrop is missing: the old drawn hall stage and rear-view sprite.
+func _draw_old_hero() -> void:
 	var body := SpriteForge.hamlet_body(82)
 	var wings := SpriteForge.hamlet_wings(82, _wing_frame)
 	var at := Vector2i(460 - body.get_width() / 2, 144 - body.get_height() / 2)
 	HudDraw.tex(self, wings, at)
 	HudDraw.tex(self, body, at)
-	HudDraw.text_center(self, PixelFonts.bold(), 464, 251, "PRINCE HAMLET", Pal.PARCHMENT, 8)
-	HudDraw.text_center(self, PixelFonts.label(), 464, 269, "THE COURT AWAITS", Pal.GOLD, 8)
-	if _help:
-		_draw_help()
 
 
 func _button(index: int, title: String, suffix: String) -> void:
