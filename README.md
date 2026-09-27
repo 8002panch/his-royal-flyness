@@ -65,7 +65,7 @@ To be written by Arnav once it runs (target Sun 09:00). Planned: `./run.sh` star
 
 - Planning documents were drafted with help from Claude (Anthropic).
 - In the game: Gemini designs and checks trials and writes the Jester's lines; ElevenLabs generates voices, sound effects and music.
-- **Asset provenance:** the `host/assets/pixelart/v2` and `v3` folders are earlier prototype studies and are not the final demo art. The approved final demo uses team-created hand-drawn assets; the canonical handoff location is `host/assets/final/`.
+- **Asset provenance:** the final assets in `host/assets/final/` were created by the team by hand; no AI image-generation tool was used to create the final art. The earlier `host/assets/pixelart/v2`, `v3`, and `v4` visual studies were non-shipping placeholder assets used during initial concept testing. They are retained as development history only: the team always planned to replace those placeholders with its own final assets, and the final demo uses the team-created art.
 - Everyone on the team can explain the code they committed.
 
 ## Credits
