@@ -183,6 +183,7 @@ class Campaign:
         self.hint_wait = 0.0
         self.leave_in: float | None = None    # a finished play scene lingers so its last line or shout can play
         self._dizzy_told = 0
+        self.ending = "wedding"  # the end scene: E01's garden wedding, or E02's "own_path" (Miranda chooses for herself)
         self._sway_t = 0.0
         self._lag: list[dict[str, float]] = []
         self._apply_dizziness()
@@ -351,6 +352,7 @@ class Campaign:
         elif s == "FATHER":
             self.enter("E01" if "father_win" in self.route else "E02")
         elif s in ("E01", "E02"):
+            self.ending = "wedding" if s == "E01" else "own_path"
             self.enter("END")
         else:
             nxt = ORDER[ORDER.index(s) + 1] if s in ORDER and ORDER.index(s) + 1 < len(ORDER) else "END"
@@ -615,6 +617,8 @@ class Campaign:
         out: dict[str, Any] = {"phase": self.phase, "scene": self.scene, "storyDemo": self.demo,
                                "backdrop": BACKDROP.get(self.scene, ""), "objective": OBJECTIVE.get(self.scene, ""),
                                "dizzy": self.dizzy, "steadiness": STEADINESS[self.dizzy]}
+        if self.phase == "end":
+            out["ending"] = self.ending
         if self.phase in ("comic", "question") and self.beat_list:
             b = self.beat_list[self.i]
             panel_cast = self._panel_cast(b.panel)

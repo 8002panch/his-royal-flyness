@@ -19,6 +19,8 @@ var debug := DebugOverlay.new()
 var decree := DecreeOverlay.new()
 var story := StoryBanner.new()
 var comic := ComicOverlay.new()
+const END_SCENE := preload("res://scripts/court/hud/end_scene.gd")
+var end_scene: Control = END_SCENE.new()
 
 var _play_nodes: Array = []
 
@@ -41,6 +43,7 @@ func _ready() -> void:
 	add_child(chronicle)
 	debug.visible = false
 	add_child(debug)
+	add_child(end_scene)  # the last picture, under the end card
 	add_child(story)
 	comic.visible = false
 	add_child(comic)
@@ -66,6 +69,7 @@ func apply_state(cs: CourtState, hazard_in_view: bool) -> void:
 	objective.set_hazard(hazard_in_view)
 	objective.set_demo(cs.demo)
 	objective.visible = objective.visible and cs.scene == ""  # the story has its own banner
+	end_scene.apply(cs)
 	story.apply(cs)
 	comic.apply(cs)
 	seer.apply(cs, hazard_in_view)

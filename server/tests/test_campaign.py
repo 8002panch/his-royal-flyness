@@ -393,3 +393,11 @@ def test_the_giant_sends_more_hands_later_each_aimed_where_hamlet_is_and_each_wa
             warned = max(warned, len(g.c.stimuli()["giants"]))
         assert len(volley) == most and warned == min(most, 2), (dodges, volley, warned)
         assert "impact" not in g.s.godot_state() or g.s.godot_state()["impact"]["at"] <= g.c.fight.t  # only landed ones
+
+
+def test_the_end_scene_follows_the_ending():
+    for scene, ending in (("E01", "wedding"), ("E02", "own_path")):
+        g = Game(scene)
+        g.c._finish_scene()
+        state = g.s.godot_state()
+        assert state["phase"] == "end" and state["ending"] == ending

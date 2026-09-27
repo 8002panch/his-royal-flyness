@@ -16,6 +16,7 @@ var dizzy := 0
 var ready_left := -1.0
 var story_demo := false
 var guide: Dictionary = {}
+var ending := ""
 var _row := 16   # where the next row under the objective goes
 var _t := 0.0
 
@@ -37,6 +38,7 @@ func apply(cs: CourtState) -> void:
 	ready_left = cs.ready_left
 	story_demo = cs.story_demo
 	guide = cs.guide
+	ending = cs.ending
 	queue_redraw()
 
 
@@ -130,10 +132,13 @@ func _status() -> String:
 
 
 func _end_card() -> void:
-	var r := Rect2i(170, 110, 300, 120)
+	# over the top of the last picture (hud/end_scene.gd), leaving the couple, or Miranda's walk, in view
+	var r := Rect2i(170, 14, 300, 92)
 	HudDraw.panel(self, r, Pal.PARCHMENT, Pal.INK, Pal.GOLD, Pal.PARCHMENT_SHADE)
-	HudDraw.text_center(self, PixelFonts.title(), 320, r.position.y + 14, "The End", Pal.INK, PixelFonts.TITLE_SIZE * 2)
-	LobbyOverlay._flourish(self, 320, r.position.y + 58, 110)
-	HudDraw.text_center(self, PixelFonts.bold(), 320, r.position.y + 72, "THANK YOU FOR PLAYING", Pal.CRIMSON, PixelFonts.LABEL_SIZE)
-	HudDraw.text_center(self, PixelFonts.label(), 320, r.position.y + 88, "F6: THE ROYAL DECREE   ENTER: A NEW STORY", Pal.INK_SOFT,
+	HudDraw.text_center(self, PixelFonts.title(), 320, r.position.y + 6, "The End", Pal.INK, PixelFonts.TITLE_SIZE * 2)
+	LobbyOverlay._flourish(self, 320, r.position.y + 47, 110)
+	var line := "MIRANDA CHOOSES HER OWN PATH" if ending == "own_path" else "HAMLET AND MIRANDA, HAPPILY WED"
+	HudDraw.text_center(self, PixelFonts.bold(), 320, r.position.y + 55, line, Pal.CRIMSON, PixelFonts.LABEL_SIZE)
+	HudDraw.text_center(self, PixelFonts.label(), 320, r.position.y + 67, "THANK YOU FOR PLAYING", Pal.ROYAL, PixelFonts.LABEL_SIZE)
+	HudDraw.text_center(self, PixelFonts.label(), 320, r.position.y + 79, "F6: THE ROYAL DECREE   ENTER: A NEW STORY", Pal.INK_SOFT,
 		PixelFonts.LABEL_SIZE)

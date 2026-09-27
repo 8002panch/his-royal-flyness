@@ -69,6 +69,7 @@ var join_qr: Array = []
 var ready_left := -1.0
 var dizzy := 0
 var steadiness := ""
+var ending := ""                # at the end: "wedding" (E01) or "own_path" (E02)
 
 
 static func read(msg: Dictionary) -> CourtState:
@@ -148,6 +149,7 @@ static func read(msg: Dictionary) -> CourtState:
 	if msg.get("joinQr") is Array:
 		s.join_qr = msg["joinQr"]
 	s.ready_left = _f(msg.get("ready", -1.0))
+	s.ending = str(msg.get("ending", ""))
 	s.dizzy = int(_f(msg.get("dizzy", 0)))
 	s.steadiness = str(msg.get("steadiness", ""))
 	return s

@@ -222,6 +222,9 @@ Arnav's story (GAME.md, "Story campaign"), run by the server: `GameSession(..., 
   distant roll a second or two later) and Prospero's is hellfire (red hall, flames, embers, a fire crackle). Lightning runs on
   Godot's own random clock: the screen never knows when an attack comes. The rain, thunder and fire sounds are made by
   `audio/gen_weather.py` from filtered noise (`audio/weather/`).
+- **Endings:** `state.ending` at the end is `wedding` (E01: Hamlet and Miranda wed under a flower arch in the Royal Garden,
+  the whole court and Privy Council cheering) or `own_path` (E02: Miranda walks to the castle gate on her own path while Hamlet
+  bows and the suitors stand confused); `hud/end_scene.gd` stages it under the end card with Anshul's backdrops and rigs.
 - **The shared screen in fights:** `brainActivity` is empty while a fight is on. The brain's only input then is the approaching
   hand, so a moving bar would tell everyone when an attack is coming; that stays on the Seer's phone.
 - **Godot** (`host/scripts/court/`): `hud/comic_overlay.gd` (backdrop, the cast as Anshul's animated rigs, bubbles, the quiz
