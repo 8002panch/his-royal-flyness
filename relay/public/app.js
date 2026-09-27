@@ -4,12 +4,14 @@ import { renderHelmsman } from "./screens/helmsman.js";
 import { renderLiftmaster } from "./screens/liftmaster.js";
 import { renderWingmaster } from "./screens/wingmaster.js";
 import { renderSeer } from "./screens/seer.js";
+import { answerMessage, renderStory, showsStoryScreen, storyKey } from "./screens/phase.js";
 
 const app = document.querySelector("#app");
 const reconnectOverlay = document.querySelector("#reconnect-overlay");
 const CLIENT_ID_KEY = "his-royal-flyness-client-id";
 const PROFILE_KEY = "his-royal-flyness-profile";
-const state = { socket: null, seq: 0, room: "", name: "", role: "", joined: false, availableRoles: [], heldValue: 0, latchMode: false, view: {}, reconnectTimer: null };
+const state = { socket: null, seq: 0, room: "", name: "", role: "", joined: false, availableRoles: [], heldValue: 0, latchMode: false, view: {}, reconnectTimer: null,
+  phase: null, selected: "", sent: {} };
 const toast = document.querySelector("#toast");
 let toastTimer = null;
 
@@ -41,12 +43,32 @@ function render() {
     if (state.joined) bindRolePicker(); else bindJoin();
     return;
   }
+  if (showsStoryScreen(state.phase)) return renderStoryScreen();
   const views = { helmsman: renderHelmsman, liftmaster: renderLiftmaster, wingmaster: renderWingmaster, seer: renderSeer };
   const html = views[state.role](state.view);
   if (app.dataset.screen === state.role && patchReadouts(html)) return;
   app.innerHTML = html;
   app.dataset.screen = state.role;
   bindControls();
+}
+
+// Comics, questions, the lobby and the end: the story screen replaces the controls (a held control is released first).
+function renderStoryScreen() {
+  releaseControl();
+  const quiz = state.phase.question?.id || "";
+  const sent = state.sent[quiz] || "";
+  const key = storyKey(state.phase, state.role, state.selected, sent);
+  if (app.dataset.screen === key) return;
+  app.dataset.screen = key;
+  app.innerHTML = renderStory(state.phase, state.role, state.selected, sent);
+  app.querySelectorAll("[data-answer]").forEach((button) => button.addEventListener("click", () => { state.selected = button.dataset.answer; render(); }));
+  app.querySelector("#confirm-answer")?.addEventListener("click", () => {
+    if (!state.selected || !quiz) return;
+    send(answerMessage(state.selected));
+    state.sent[quiz] = state.selected;
+    state.selected = "";
+    render();
+  });
 }
 
 // Feedback arrives 10 times a second: update only the readouts, so the button under a player's finger is never
@@ -166,6 +188,10 @@ function handleMessage(data) {
   if (message.t === "seat_moved") { releaseControl(); state.role = ""; state.joined = true; render(); showNotice("Your seat moved to your newer page."); return; }
   if (message.t === "roles") { state.availableRoles = message.roles || []; if (!state.role && state.joined) render(); return; }
   if (message.t === "assigned") { state.joined = true; state.role = message.role; state.availableRoles = []; state.view = {}; saveProfile(); render(); return; }
+  if (message.t === "phase") {
+    if (message.question?.id !== state.phase?.question?.id) state.selected = "";
+    state.phase = message; if (state.role) render(); return;
+  }
   if (message.t === "control_view" && message.role === state.role) { state.view = message; render(); return; }
   if (isPrivateSeerView(message) && state.role === "seer") { state.view = message; render(); return; }
   if (message.t === "error") {

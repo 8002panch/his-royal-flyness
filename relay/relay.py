@@ -134,6 +134,9 @@ class RelayState:
             return self._move(session, payload), [self._host_event(session, payload)]
         if message_type == "sense":
             return self._sense(session, payload), [self._host_event(session, payload)]
+        if message_type == "answer":
+            response = self._answer(session, payload)
+            return response, [self._host_event(session, {"t": "answer", "role": "seer", "choice": response["choice"]})]
         if message_type == "phone_view":
             return self._host_phone_view(session, payload)
         if message_type in {"close_room", "lock", "kick"}:
@@ -314,6 +317,16 @@ class RelayState:
             raise RelayError("INVALID_INPUT", "scan must be 0 or 1.")
         session.held_input = scan
         return {"t": "input_ok", "role": "seer", "scan": scan}
+
+    def _answer(self, session: ClientSession, payload: dict[str, Any]) -> dict[str, Any]:
+        """A quiz answer (docs/GAME.md: only the current Seer answers, after the council discusses it)."""
+        self._require_phone(session)
+        if session.role != "seer":
+            raise RelayError("FORBIDDEN_CONTROL", "Only the Royal Seer may answer.")
+        choice = payload.get("choice")
+        if choice not in {"A", "B"}:
+            raise RelayError("INVALID_INPUT", "choice must be A or B.")
+        return {"t": "answer_ok", "choice": choice}
 
     def _host_phone_view(self, session: ClientSession, payload: dict[str, Any]) -> tuple[dict[str, Any], list[dict[str, Any]]]:
         if not session.is_host:

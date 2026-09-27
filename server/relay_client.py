@@ -47,7 +47,7 @@ class RelayClient:
             raise RuntimeError("connect before receiving")
         async for raw in self.websocket:
             message = json.loads(raw)
-            if message.get("t") in {"move", "sense", "input_cleared", "roster"}:
+            if message.get("t") in {"move", "sense", "answer", "input_cleared", "roster"}:
                 await on_input(message)
 
     async def send_host(self, payload: dict[str, Any]) -> bool:

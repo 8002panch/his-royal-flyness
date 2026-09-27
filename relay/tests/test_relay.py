@@ -147,6 +147,30 @@ class RelayStateTests(unittest.TestCase):
         self.assertEqual(response["recipients"], 1)
         self.assertEqual(events[0]["to"], "seer")
 
+    def test_only_the_seer_can_answer_and_the_answer_goes_to_the_host(self) -> None:
+        self.state.connect("host")
+        self.state.handle("host", {"t": "host_join", "room": "BZKT", "secret": "secret", "seq": 1})
+        phone(self.state, "seer", "seer")
+        phone(self.state, "helm", "helm")
+        self.state.handle("seer", {"t": "pick", "role": "seer", "seq": 2})
+        self.state.handle("helm", {"t": "pick", "role": "helmsman", "seq": 2})
+        with self.assertRaisesRegex(RelayError, "Only the Royal Seer"):
+            self.state.handle("helm", {"t": "answer", "choice": "A", "seq": 3})
+        with self.assertRaisesRegex(RelayError, "A or B"):
+            self.state.handle("seer", {"t": "answer", "choice": "C", "seq": 3})
+        response, events = self.state.handle("seer", {"t": "answer", "choice": "B", "role": "helmsman", "seq": 4})
+        self.assertEqual(response, {"t": "answer_ok", "choice": "B"})
+        self.assertEqual(events, [{"to": "host", "room": "BZKT", "payload": {"t": "answer", "role": "seer", "choice": "B"}}])
+
+    def test_phase_views_reach_every_phone(self) -> None:
+        self.state.connect("host")
+        self.state.handle("host", {"t": "host_join", "room": "BZKT", "secret": "secret", "seq": 1})
+        for name, role in (("seer", "seer"), ("helm", "helmsman")):
+            phone(self.state, name, name)
+            self.state.handle(name, {"t": "pick", "role": role, "seq": 2})
+        response, events = self.state.handle("host", {"t": "phone_view", "seq": 2, "view": {"t": "phase", "phase": "question"}})
+        self.assertEqual(response["recipients"], 2)
+
     def test_each_role_can_only_control_its_assigned_axis(self) -> None:
         phone(self.state, "a", "a")
         self.state.handle("a", {"t": "pick", "role": "helmsman", "seq": 2})
