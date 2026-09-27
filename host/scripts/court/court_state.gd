@@ -109,6 +109,10 @@ static func read(msg: Dictionary) -> CourtState:
 	s.room = str(msg.get("room", ""))
 	if msg.get("players") is Array:
 		s.players = msg["players"]
+	elif msg.get("players") is Dictionary:
+		# docs/TECH.md's example shows {role: name}; server/main.py sends [{name, role}]. Accept both.
+		for role in msg["players"]:
+			s.players.append({"role": str(role), "name": str(msg["players"][role])})
 	if msg.get("chronicle") is Dictionary:
 		s.chronicle = msg["chronicle"]
 	return s

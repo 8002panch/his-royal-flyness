@@ -18,6 +18,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any
 
+from websockets.exceptions import ConnectionClosed
 from websockets.server import WebSocketServerProtocol, serve
 
 
@@ -25,6 +26,11 @@ ROLES = ("helmsman", "liftmaster", "wingmaster", "seer")
 ROLE_AXES = {"helmsman": "x", "liftmaster": "y", "wingmaster": "z"}
 ROOM_RE = re.compile(r"^[BCDFGHJKLMNPQRSTVWXYZ]{4}$")
 STALE_AFTER_SECONDS = 1.2
+MAX_ROOM_CONNECTIONS = 16  # phones in one room, seated or waiting; only a guard against abuse, never the seat limit
+SEND_TIMEOUT_S = 2.0       # a message a phone can't take within this is dropped (it's 10 Hz feedback; the next one follows)
+# Keepalive: a phone that went to sleep or lost Wi-Fi stops answering pings; notice it within ~10 s (not ~40 s) so its seat
+# frees up, and don't wait long for a close handshake it will never finish. Used by run() and run_local.py.
+SERVE_OPTIONS = {"ping_interval": 5, "ping_timeout": 5, "close_timeout": 2}
 
 
 class RelayError(ValueError):
@@ -68,6 +74,7 @@ class RelayState:
         self.room_secret = room_secret
         self.clients: dict[str, ClientSession] = {}
         self.rooms: dict[str, Room] = {}
+        self._moved_seats: list[dict[str, Any]] = []
 
     def connect(self, connection_id: str | None = None) -> ClientSession:
         connection_id = connection_id or str(uuid.uuid4())
@@ -92,7 +99,8 @@ class RelayState:
         if session.role and room.role_connections.get(session.role) == connection_id:
             del room.role_connections[session.role]
             session.held_input = 0
-            events.append({"to": "host", "payload": {"t": "input_cleared", "role": session.role}})
+            events.append({"to": "host", "room": room.code, "payload": {"t": "input_cleared", "role": session.role}})
+            events.extend(self._seat_events(room))
         return events
 
     def handle(self, connection_id: str, payload: dict[str, Any], now: float | None = None) -> tuple[dict[str, Any], list[dict[str, Any]]]:
@@ -102,11 +110,14 @@ class RelayState:
         session.last_seen = now
         message_type = payload.get("t")
         if message_type == "host_join":
-            return self._host_join(session, payload), []
+            response = self._host_join(session, payload)
+            return response, [self._roster_event(self._room(session))]  # a (re)connecting game server learns who is here
         if message_type == "join":
-            return self._join(session, payload), []
+            response = self._join(session, payload)
+            moved, self._moved_seats = self._moved_seats, []
+            return response, moved + (self._seat_events(self._room(session)) if response["t"] == "assigned" else [])
         if message_type == "pick":
-            return self._pick(session, payload), []
+            return self._pick(session, payload), self._seat_events(self._room(session))
         if message_type == "heartbeat":
             self._require_phone(session)
             return {"t": "heartbeat_ok"}, []
@@ -169,17 +180,37 @@ class RelayState:
         if not isinstance(name, str) or not 1 <= len(name.strip()) <= 32:
             raise RelayError("INVALID_NAME", "Name must contain 1 to 32 characters.")
         room = self.rooms.setdefault(room_code, Room(code=room_code))
-        if session.room_code is None and self._phone_count(room_code) >= len(ROLES):
-            raise RelayError("ROOM_FULL", "This royal court is full.")
+        # Seats, not connections, decide who can play: phones waiting on the picker, a second tab, or a dead connection from a
+        # phone that went to sleep must never make the court look full while a role is free.
+        if session.room_code is None and self._phone_count(room_code) >= MAX_ROOM_CONNECTIONS:
+            raise RelayError("ROOM_FULL", "Too many phones in this room.")
         session.room_code = room_code
         session.client_id = client_id
         session.name = name.strip()
         restored_role = room.saved_roles.get(client_id)
+        if restored_role is None and payload.get("role") in ROLES:
+            # the phone remembers its last role; after a relay restart the relay has no record, so honor the request if free
+            restored_role = payload["role"]
+        if restored_role:
+            self._release_stale_seat(room, restored_role, client_id, session.connection_id)
         if restored_role and restored_role not in room.role_connections:
             session.role = restored_role
             room.role_connections[restored_role] = session.connection_id
+            room.saved_roles[client_id] = restored_role
             return {"t": "assigned", "room": room_code, "role": restored_role, "name": session.name, "restored": True}
         return {"t": "joined", "room": room_code, "name": session.name, "roles": self._available_roles(room)}
+
+    def _release_stale_seat(self, room: Room, role: str, client_id: str, new_connection_id: str) -> None:
+        """If this same phone (clientId) still holds the role on an older connection (a page it reloaded, or a socket that died
+        when the phone slept and hasn't timed out yet), hand the role to the new connection."""
+        holder_id = room.role_connections.get(role)
+        holder = self.clients.get(holder_id) if holder_id else None
+        if holder is not None and holder_id != new_connection_id and holder.client_id == client_id:
+            del room.role_connections[role]
+            holder.role = None
+            holder.held_input = 0
+            # if that older page is actually still open (a second tab), tell it, so it doesn't keep showing controls
+            self._moved_seats.append({"to": holder_id, "payload": {"t": "seat_moved", "role": role}})
 
     def _pick(self, session: ClientSession, payload: dict[str, Any]) -> dict[str, Any]:
         self._require_phone(session)
@@ -230,6 +261,21 @@ class RelayState:
             raise RelayError("INVALID_MESSAGE", "phone_view requires a view object.")
         recipients = self.recipients_for_view(room.code, view)
         return {"t": "view_accepted", "recipients": len(recipients)}, [{"to": recipient, "payload": view} for recipient in recipients]
+
+    def _seat_events(self, room: Room) -> list[dict[str, Any]]:
+        """After any seat change: the roster for the game server, and the open roles for every phone still choosing."""
+        events = [self._roster_event(room)]
+        open_roles = self._available_roles(room)
+        for cid, client in self.clients.items():
+            if client.room_code == room.code and not client.is_host and client.role is None and client.client_id is not None:
+                events.append({"to": cid, "payload": {"t": "roles", "roles": open_roles}})
+        return events
+
+    def _roster_event(self, room: Room) -> dict[str, Any]:
+        """Who holds which role, for the game server's host screens (names only; sent on every change)."""
+        players = [{"name": self.clients[cid].name or "?", "role": role}
+                   for role, cid in room.role_connections.items() if cid in self.clients]
+        return {"to": "host", "room": room.code, "payload": {"t": "roster", "players": players}}
 
     def _host_event(self, session: ClientSession, payload: dict[str, Any]) -> dict[str, Any]:
         room = self._room(session)
@@ -285,6 +331,7 @@ class RelayServer:
     def __init__(self, state: RelayState) -> None:
         self.state = state
         self.sockets: dict[str, WebSocketServerProtocol] = {}
+        self._sends: set[asyncio.Task] = set()
 
     async def handler(self, websocket: WebSocketServerProtocol) -> None:
         session = self.state.connect()
@@ -301,6 +348,8 @@ class RelayServer:
                 except (json.JSONDecodeError, RelayError) as exc:
                     error = exc.payload() if isinstance(exc, RelayError) else {"t": "error", "code": "INVALID_JSON", "message": "Message must be valid JSON."}
                     await websocket.send(json.dumps(error))
+        except ConnectionClosed:
+            pass  # phones vanish without a close frame all the time (lock screen, Wi-Fi); cleanup below handles it
         finally:
             events = self.state.disconnect(session.connection_id)
             self.sockets.pop(session.connection_id, None)
@@ -320,16 +369,28 @@ class RelayServer:
             else:
                 connection_id = target
             websocket = self.sockets.get(connection_id) if connection_id else None
-            if websocket is not None:
-                await websocket.send(json.dumps(event["payload"]))
+            if websocket is not None and websocket.open:
+                # Never wait on one recipient: a phone that just went to sleep can make a send hang for ~10 s while its
+                # connection closes, and that used to stall everyone's feedback and the game server behind it.
+                task = asyncio.create_task(self._send_quietly(websocket, json.dumps(event["payload"])))
+                self._sends.add(task)
+                task.add_done_callback(self._sends.discard)
+
+    @staticmethod
+    async def _send_quietly(websocket: WebSocketServerProtocol, data: str) -> None:
+        try:
+            await asyncio.wait_for(websocket.send(data), SEND_TIMEOUT_S)
+        except (ConnectionClosed, asyncio.TimeoutError):
+            pass  # closing or too slow: its own handler cleans up; feedback is sent again next tick
 
 
 async def run(host: str = "0.0.0.0", port: int = 8080) -> None:
     state = RelayState(room_secret=os.getenv("ROOM_SECRET", ""))
     relay = RelayServer(state)
-    async with serve(relay.handler, host, port):
+    async with serve(relay.handler, host, port, **SERVE_OPTIONS):
         await relay.watchdog()
 
 
 if __name__ == "__main__":
-    asyncio.run(run(port=int(os.getenv("RELAY_PORT", "8080"))))
+    # Behind Caddy on a server, set RELAY_HOST=127.0.0.1 so only Caddy's wss:// endpoint is public.
+    asyncio.run(run(host=os.getenv("RELAY_HOST", "0.0.0.0"), port=int(os.getenv("RELAY_PORT", "8080"))))

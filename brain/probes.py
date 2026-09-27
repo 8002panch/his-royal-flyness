@@ -5,7 +5,7 @@ Owner: Neil. Run:  python -m brain.probes [--level 0.6] [--runs 3] [--csv team/n
 For each button (brain.INPUT_GROUPS) held at `level` for 0.8 s, reads the mean z-score of every output over the last 0.4 s,
 on the True Prince and each Changeling. Prints the button x output grid (the "controls matrix") and a pass/fail per button:
 pass = the target output's z is above MIN_Z and at least 2x the largest Changeling value for that target.
-This is the 20:00 gate (docs/BUILD_PLAN.md#gates) for v2.
+This is the brain gate (docs/TEAM.md, "Gates") for the button channels.
 """
 
 from __future__ import annotations

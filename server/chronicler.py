@@ -11,7 +11,7 @@ Usage from the server:
     result = chron.finish(events=[{"tick": 812, "kind": "splat", "severity": 3}])        # waits for shadows, returns JSON
     chron.close()
 
-Result JSON (docs/GAME_FLOW.md, "The Chronicle"):
+Result JSON (docs/TECH.md, "The Chronicler"):
     {"chapter": id, "brain": "true"|"changeling", "ticks": n,
      "players": {name: {"roles": [...], "share": {"thrust", "brake", "turn", "altitude", "escape", "song", "overall"},
                         "events": ["..."]}},
@@ -48,8 +48,8 @@ def _shadow(without: str, kind: str, seed: int, inbox: mp.Queue, outbox: mp.Queu
         elif cmd == "tick":
             out = model.step(combine(payload, None if without == FULL else without))
             rows.append([out[o] for o in OUTPUT_NAMES])
-        elif cmd == "finish":
-            outbox.put(("result", without, np.array(rows, dtype=np.float32)))
+        elif cmd == "finish":  # always 2-D, even for an empty chapter
+            outbox.put(("result", without, np.array(rows, dtype=np.float32).reshape(-1, len(OUTPUT_NAMES))))
         elif cmd == "swap":
             model.load(*payload)
         elif cmd == "stop":

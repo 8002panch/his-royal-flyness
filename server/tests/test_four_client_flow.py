@@ -58,7 +58,9 @@ class FourClientFlowTests(unittest.IsolatedAsyncioTestCase):
                 await socket.send(json.dumps(message))
                 self.assertEqual(json.loads(await socket.recv())["t"], "input_ok")
             await asyncio.sleep(0.03)
-            self.assertEqual({message["role"] for message in self.host_inputs}, {"helmsman", "liftmaster", "wingmaster", "seer"})
+            controls = [message for message in self.host_inputs if message["t"] in {"move", "sense"}]
+            self.assertEqual({message["role"] for message in controls}, {"helmsman", "liftmaster", "wingmaster", "seer"})
+            self.assertEqual(len(self.session.players), 4, "the relay's roster tells the game who holds each role")
 
             self.session.step(0.25, now=0.25)
             fly = self.session.state.fly

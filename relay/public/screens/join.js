@@ -35,11 +35,12 @@ function escapeHtml(value) {
 
 export function roleScreen(roles = []) {
   const available = new Set(roles);
+  const full = available.size === 0;
   return `
     <section class="screen" aria-labelledby="role-title">
       <p class="eyebrow">Choose your station</p>
-      <h1 id="role-title">The court awaits</h1>
-      <p class="lede">Each role owns one control. A crest marked occupied is unavailable.</p>
+      <h1 id="role-title">${full ? "The court is full" : "The court awaits"}</h1>
+      <p class="lede">${full ? "All four roles are taken. Stay on this page: you can grab a seat the moment one opens." : "Each role owns one control. A crest marked occupied is unavailable."}</p>
       <div class="role-grid">
         ${ROLE_DETAILS.map(({ role, crest, title, copy }) => `
           <button class="role-card" data-role="${role}" ${available.has(role) ? "" : "disabled"}>

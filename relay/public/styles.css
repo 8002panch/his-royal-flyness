@@ -55,6 +55,8 @@ input:focus-visible, button:focus-visible { outline: 4px solid #ffdc75; outline-
 .compass { text-align: center; color: #fbcf64; font-weight: 900; line-height: 1.1; }
 .warning-card { grid-column: span 2; border-color: #ff9b82; background: #4a2730; }
 meter { width: 100%; accent-color: #fbcf64; }
+.toast { position: fixed; left: 1rem; right: 1rem; bottom: 1rem; margin: 0; padding: .8rem 1rem; border-radius: .8rem; background: #3a1f2b; border: 2px solid #ffb6b6; color: #fff; font-weight: 700; z-index: 4; }
+.toast[hidden] { display: none; }
 .overlay { position: fixed; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgb(12 8 18 / .86); z-index: 3; }
 .overlay[hidden] { display: none; }
 .overlay-card { width: min(100%, 28rem); padding: 1.5rem; border: 2px solid #fbcf64; border-radius: 1rem; background: #271b35; }

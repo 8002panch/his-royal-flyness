@@ -85,8 +85,10 @@ and counts reaching within about 0.22 units of Miranda as a win. The screen is s
   `fly{x,y,z,vx,vy,vz}`, `render.princess{bearing_deg, elevation_deg, distance_cm}`, `render.giant{…, approach_cm_s, size_cm}`,
   `roles{helmsman, liftmaster, wingmaster, seer}`. Render cues are turned back into hall positions with the 220 cm per body
   unit that `server/seer_adapter.py` uses (`HallCam.UNIT_CM`).
+- **Also on `main` now** (`docs/TECH.md`, `run_local.py`): `room`, `players` (`[{name, role}]`; a `{role: name}` map is accepted too),
+  `brain` and `brainActivity`. `joinUrl` (for a lobby QR) is not drawn by the court yet.
 - **Provisional, nobody has defined them yet**; each one shows as neutral until a server sends it: `trial`,
-  `brain` / `cues.source`, `meters.candle`, `activity` (or `cues.activity`), `controls`, `room`, `players`, `chronicle`.
+  `meters.candle`, `controls`, `chronicle`.
 - **Private, never on this screen:** the Seer's cues (Princess bearing, Giant direction and countdown) go only to the
   Seer's phone. The Seer panel shows scanning/resting (its compass sweeps, it never points), a Giant lamp that lights only
   once the hand is already visible in the hall, and four brain-activity rows (vision, flight, reaction, song, the grouping

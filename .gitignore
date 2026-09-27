@@ -8,9 +8,8 @@
 __pycache__/
 *.pyc
 
-# data: large public MaleCNS files and built graphs (see data/README.md)
+# data: large public MaleCNS files and built graphs (see docs/TECH.md, "Setup")
 data/*
-!data/README.md
 *.npz
 *.feather
 *.parquet

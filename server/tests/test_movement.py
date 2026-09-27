@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import unittest
 
-from server.main import GameSession, STALE_INPUT_SECONDS
+from server.main import GODOT_S, GameSession, STALE_INPUT_SECONDS, _next_time
+from server.seer_adapter import PlaceholderSeerAdapter
 
 
 class GameSessionTests(unittest.TestCase):
@@ -71,6 +72,59 @@ class GameSessionTests(unittest.TestCase):
         self.assertEqual(views[-1]["t"], "seer_view")
         self.assertNotIn("bearing", movement_views[0])
         self.assertNotIn("giant", movement_views[1])
+
+    def test_godot_state_carries_the_room_join_link_and_brain_fields(self) -> None:
+        session = GameSession("BZKT", join_url="http://10.0.0.2:8000/?room=BZKT")
+        session.step(0.02, now=0.02)
+        state = session.godot_state()
+        self.assertEqual((state["room"], state["joinUrl"], state["brain"]), ("BZKT", "http://10.0.0.2:8000/?room=BZKT", "placeholder"))
+        self.assertEqual(state["brainActivity"], {}, "placeholder cues must never show up as brain activity")
+
+    def test_senses_once_per_tick_and_reuses_the_cues(self) -> None:
+        class CountingSeer(PlaceholderSeerAdapter):
+            calls = 0
+
+            def sense(self, stimuli):
+                CountingSeer.calls += 1
+                return super().sense(stimuli)
+
+        session = GameSession("BZKT", seer=CountingSeer())
+        session.apply_input({"t": "sense", "role": "seer", "scan": 1}, now=0.0)
+        session.step(0.02, now=0.02)
+        session.phone_views()
+        session.godot_state()
+        self.assertEqual(CountingSeer.calls, 1)
+
+    def test_held_input_refreshed_by_the_phone_never_goes_stale(self) -> None:
+        """Phones resend a held control every 0.4 s; the server must keep it for as long as the player holds it."""
+        session = self.make_session()
+        now = 0.0
+        for tick in range(150):  # 3 s at 50 Hz
+            if tick % 20 == 0:
+                session.apply_input({"t": "move", "role": "wingmaster", "axis": "z", "value": 1}, now=now)
+            now += 0.02
+            session.step(0.02, now=now)
+            self.assertEqual(session.state.inputs["wingmaster"].value, 1, f"dropped at {now:.2f}s")
+
+    def test_fixed_rate_schedule_keeps_its_average_and_does_not_burst_after_a_stall(self) -> None:
+        scheduled, now, sent = 0.0, 0.0, 0
+        for _ in range(500):  # 10 s of 20 ms ticks, sending whenever the slot has come up
+            now += 0.02
+            if now >= scheduled:
+                sent += 1
+                scheduled = _next_time(scheduled, GODOT_S, now)
+        self.assertAlmostEqual(sent / 10.0, 30.0, delta=1.0)
+        self.assertGreater(_next_time(0.0, GODOT_S, now=5.0), 5.0, "after a 5 s stall the next frame is in the future")
+
+    def test_world_geometry_puts_the_princess_behind_and_stops_the_hand_at_contact(self) -> None:
+        from server.seer_adapter import projected_stimuli
+
+        ahead = projected_stimuli(0.25, 0.18, 0.0, 0.0)["princess"]
+        behind = projected_stimuli(0.0, 0.18, 1.0, 0.0)["princess"]  # the fly has flown past her
+        self.assertAlmostEqual(ahead["bearing_deg"], 0.0)
+        self.assertGreater(behind["bearing_deg"], 90.0)
+        distances = [g["distance_cm"] - g["size_cm"] for t in range(400) for g in projected_stimuli(0, 0, 0, t * 0.02)["giants"]]
+        self.assertTrue(distances and min(distances) >= 0.0, "the hand must never pass through the fly")
 
 
 if __name__ == "__main__":

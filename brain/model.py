@@ -5,7 +5,7 @@
 Weights (Params.weights):
   "fractions" (default)  W[i, j] = sign[j] * count[i, j] / in_total[i]   each input as its share of all input synapses
   "counts"               W[i, j] = w_syn * sign[j] * count[i, j]           raw synapse counts, as in Shiu et al. 2024
-Chosen Sat 26 Sept after probes (team/neil/README.md): "fractions" at gain 4 gives clean, side-specific visual channels
+Chosen Sat 26 Sept after probes (docs/TECH.md, "The brain"): "fractions" at gain 4 gives clean, side-specific visual channels
 that vanish in every Changeling; "counts" rescues foreleg taste -> song only at settings that break right-eye steering. Built from data/graph_<kind>.npz by brain/build_graph.py or
 brain/changeling.py. Outputs are z-scores of each output group's mean rate against its own resting activity.
 """
@@ -30,7 +30,8 @@ PAIRS = (("left", "right"), ("lock_L", "lock_R"), ("her_L", "her_R"), ("loom_L",
 
 @dataclass
 class Params:
-    dt: float = 0.010        # s per step (two steps per 20 ms tick)
+    dt: float = 0.020        # s per step: one step per 20 ms tick. Sustained 2.5-minute test on the M2 (Sat 17:45):
+                             # 1 x 20 ms step = median 5.7-6.3 ms/tick, p99 mostly 6.4-8 ms (one window 18); 2 x 10 ms = median ~12, p99 up to 20.7
     tau: float = 0.020       # s
     weights: str = "fractions"  # "fractions" or "counts" (see module docstring)
     w_syn: float = 0.003        # weight per synapse when weights == "counts"
@@ -47,7 +48,19 @@ def graph_path(kind: str, seed: int) -> Path:
     return DATA / ("graph_true.npz" if kind == "true" else f"graph_changeling_{seed}.npz")
 
 
+_WEIGHT_CACHE: dict[tuple, sp.csr_matrix] = {}
+_BASELINE_CACHE: dict[tuple, tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
+
+
 def load_weights(path: Path, weights: str = "fractions", w_syn: float = 0.003) -> sp.csr_matrix:
+    """Signed weight matrix (rows = receiving neuron). Cached per process: every Brain shares one read-only copy."""
+    key = (str(path), weights, w_syn, path.stat().st_mtime if path.exists() else None)
+    if key not in _WEIGHT_CACHE:
+        _WEIGHT_CACHE[key] = _build_weights(path, weights, w_syn)
+    return _WEIGHT_CACHE[key]
+
+
+def _build_weights(path: Path, weights: str, w_syn: float) -> sp.csr_matrix:
     g = np.load(path)
     n = int(g["n"])
     post, pre, count = g["post"], g["pre"], g["count"]
@@ -81,17 +94,16 @@ class RateModel:
                 self.input_scale[a] = mean / len(self.inputs[a])
                 self.input_scale[b] = mean / len(self.inputs[b])
         self.rng = np.random.default_rng(seed)
-        self._baselines: dict[tuple[str, int], tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
         self.load(kind, seed)
 
     # --- wiring -------------------------------------------------------------------------------------------
     def load(self, kind: str, seed: int = 0) -> None:
         self.kind, self.seed = kind, seed
         self.W = load_weights(graph_path(kind, seed), self.p.weights, self.p.w_syn)
-        key = (kind, seed)
-        if key not in self._baselines:
-            self._baselines[key] = self._calibrate()
-        self.r0, self.mu, self.sd = self._baselines[key]
+        key = (kind, seed, tuple(sorted(vars(self.p).items())), graph_path(kind, seed).stat().st_mtime)
+        if key not in _BASELINE_CACHE:
+            _BASELINE_CACHE[key] = self._calibrate()
+        self.r0, self.mu, self.sd = _BASELINE_CACHE[key]
         self.reset()
 
     # --- dynamics -----------------------------------------------------------------------------------------
@@ -132,6 +144,8 @@ class RateModel:
 
     # --- baseline -----------------------------------------------------------------------------------------
     def _calibrate(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        saved_rng = self.rng
+        self.rng = np.random.default_rng(12345)  # the baseline is the same every time for a given brain
         self.r = np.zeros(self.n, dtype=np.float32)
         for _ in range(self.p.settle_ticks):
             self._tick({})
@@ -141,4 +155,5 @@ class RateModel:
             self._tick({})
             samples.append(self._readout())
         samples = np.array(samples)
+        self.rng = saved_rng
         return r0, samples.mean(axis=0), np.maximum(samples.std(axis=0), self.p.sd_floor)

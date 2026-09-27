@@ -38,9 +38,13 @@ def combine(tick: dict[str, dict[str, float]], without: str | None = None) -> di
 
 
 def replay(model: RateModel, recording: Recording, without: str | None = None) -> np.ndarray:
-    """Outputs (ticks x OUTPUT_NAMES) for the recording, optionally with one player's inputs removed."""
+    """Outputs (ticks x OUTPUT_NAMES) for the recording, optionally with one player's inputs removed. Always 2-D."""
     model.reset()
-    return np.array([[model.step(combine(tick, without))[o] for o in OUTPUT_NAMES] for tick in recording])
+    rows = []
+    for tick in recording:
+        out = model.step(combine(tick, without))  # exactly one brain step per recorded tick
+        rows.append([out[o] for o in OUTPUT_NAMES])
+    return np.array(rows, dtype=np.float64).reshape(-1, len(OUTPUT_NAMES))
 
 
 def metrics(outputs: np.ndarray) -> dict[str, np.ndarray]:
