@@ -56,6 +56,11 @@ var _reply := {}         # setup line id -> reply id (a pool line without a cue 
 var _counts := {}        # "giant|dodge" -> n, when the server doesn't send n
 var _last_shout := ""
 var _roles := {}
+var _welcomed := {}      # seats already welcomed in this room
+var _gone_since := {}    # seat -> when it emptied (announced only if it stays empty)
+var _fainted_at := {}    # seat -> when its fainted line last played
+const DROP_GRACE_S := 10.0
+const FAINT_REPEAT_S := 90.0
 var _brain := ""
 var _room := ""
 var _live_seen := false
@@ -292,15 +297,32 @@ func on_state(msg: Dictionary) -> void:
 		# one phone at a time is a person joining or dropping; several at once is a new room or a relay reconnect: stay quiet
 		var joined := filled.keys().filter(func(r): return not _roles.has(r))
 		var dropped := _roles.keys().filter(func(r): return not filled.has(r))
-		if joined.size() == 1:
+		# A phone screen turning off drops its seat and gets it back a moment later. So: welcome each seat once per room,
+		# and only call a seat fainted once it has stayed empty for a while (and not again for a minute and a half).
+		if joined.size() == 1 and not _welcomed.has(joined[0]):
+			_welcomed[joined[0]] = true
 			say("H_ROLE_" + str(joined[0]).to_upper())
-		if dropped.size() == 1:
-			say("H_FAINTED_" + str(dropped[0]).to_upper())
+		if dropped.size() <= 1:
+			for r in dropped:
+				_gone_since[r] = _t
+		for r in filled:
+			_gone_since.erase(r)
+		for r in _gone_since.keys():
+			if _t - float(_gone_since[r]) >= DROP_GRACE_S and _t - float(_fainted_at.get(r, -999.0)) >= FAINT_REPEAT_S:
+				_gone_since.erase(r)
+				_fainted_at[r] = _t
+				say("H_FAINTED_" + str(r).to_upper())
 		if brain != _brain:
 			if brain == "changeling":
 				say("H_CHANGELING")
 			elif brain == "true" and _brain == "changeling":
 				say("H_TRUE_PRINCE")
+	if room != _room:
+		_welcomed = {}
+		_gone_since = {}
+		_fainted_at = {}
+		for r in filled:  # seats already taken when this screen started (or a new room): nothing to announce
+			_welcomed[r] = true
 	_live_seen = true
 	_roles = filled
 	_brain = brain
