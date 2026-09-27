@@ -48,7 +48,7 @@ class LineBankTests(unittest.TestCase):
         self.assertGreaterEqual(sum(ln.speaker == "miranda" for ln in barks), 8)
 
     def test_giant_sounds_are_never_directional_or_early(self) -> None:
-        giant = [s for s in self.sounds if s.id.startswith(("GIANT_", "ACID_", "COURT_"))]
+        giant = [s for s in self.sounds if s.id.startswith(("GIANT_", "FATHER_", "COURT_"))]
         self.assertTrue(giant)
         self.assertTrue(all(gv.sound_post(s).startswith("mono") for s in self.sounds))
         for s in giant:
@@ -94,6 +94,14 @@ class TextTests(unittest.TestCase):
         loud = gv.Line("X", "S", "", "", "miranda", "Hi.", "", stability="0.5")
         self.assertEqual((gv.stability_for(plain, sp), gv.stability_for(loud, sp)), (1.0, 0.5))
         self.assertNotEqual(gv.line_hash(plain, sp, "eleven_v3", "mp3"), gv.line_hash(loud, sp, "eleven_v3", "mp3"))
+
+    def test_volume_and_level_changes_need_no_new_take(self) -> None:
+        self.assertEqual(gv.in_place("mono,volume_db=0", "mono,volume_db=-6"), {"volume_db": -6.0, "level": None})
+        self.assertEqual(gv.in_place("tempo=1.15,max_pause=0.4", "tempo=1.15,max_pause=0.4,level=-16"),
+                         {"volume_db": 0.0, "level": -16.0})
+        self.assertIsNone(gv.in_place("tempo=1.1,max_pause=0.4", "tempo=1.2,max_pause=0.4"))  # tempo can't be undone
+        self.assertIsNone(gv.in_place("level=-16", ""))
+        self.assertIsNone(gv.in_place("", "level=-16"))  # a raw take is simply polished
 
     def test_voice_id_from_ids_and_links(self) -> None:
         vid = "JBFqnCBsd6RMkjVDRZzb"
@@ -154,7 +162,7 @@ class GenerateTests(unittest.TestCase):
         for name, vid in VID.items():
             self.cast["speakers"][name]["voice_id"] = vid
         for sp in self.cast["speakers"].values():  # polish is tested on real audio below
-            sp.pop("tempo", None), sp.pop("max_pause", None)
+            sp.pop("tempo", None), sp.pop("max_pause", None), sp.pop("level", None)
         self.tts, self.sfx = FakeTTS(), FakeSFX()
         self.sounds = gv.load_sounds()[:2]
         self._orig = gv._client
@@ -268,6 +276,40 @@ class PolishTests(unittest.TestCase):
         after = self.seconds(self.src)
         self.assertAlmostEqual(before, 4.0, delta=0.15)
         self.assertAlmostEqual(after, (2.0 + 0.4) / 1.25, delta=0.2)
+
+    def test_level_evens_out_speech_loudness(self) -> None:
+        gv.polish(self.src, level=-20.0)
+        raw = __import__("subprocess").run([gv._ffmpeg(), "-v", "error", "-i", str(self.src), "-ac", "1", "-ar", str(gv.SR),
+                                            "-f", "f32le", "-"], capture_output=True, check=True).stdout
+        self.assertAlmostEqual(gv.speech_db(self.np.frombuffer(raw, self.np.float32)), -20.0, delta=0.7)
+
+    def test_a_new_tempo_reuses_this_machines_raw_take(self) -> None:
+        try:
+            import elevenlabs  # noqa: F401
+        except ImportError:
+            self.skipTest("elevenlabs is not installed")
+        audio, calls = self.src.read_bytes(), []
+
+        class TTS:
+            def convert(self, voice_id: str, *, text: str, **_: object):
+                calls.append(text)
+                yield audio
+
+        line = gv.Line("C01_P2_CLOWN", "C01", "", "", "clown", "And not a drop tasted.", "")
+        cast = gv.load_cast()
+        orig, gv._client = gv._client, lambda: FakeClient(TTS())
+        try:
+            args = argparse.Namespace(only=[], force=False, dry_run=False, model="", workers=1, out=self.tmp,
+                                      sfx_out=self.tmp / "sfx", no_sfx=True)
+            self.assertEqual(gv.cmd_generate([line], [], cast, args), 0)
+            first = self.seconds(self.tmp / "C01_P2_CLOWN.mp3")
+            cast["speakers"]["clown"]["tempo"] = 1.5
+            self.assertEqual(gv.cmd_generate([line], [], cast, args), 0)
+        finally:
+            gv._client = orig
+        self.assertEqual(len(calls), 1)  # the second run polished the kept raw take instead of paying again
+        self.assertLess(self.seconds(self.tmp / "C01_P2_CLOWN.mp3"), first * 0.9)
+        self.assertEqual(gv.read_manifest(self.tmp)["C01_P2_CLOWN"]["post"], gv.voice_post(cast["speakers"]["clown"]))
 
     def test_a_polished_take_is_not_polished_again(self) -> None:
         line = gv.Line("C01_P2_CLOWN", "C01", "", "", "clown", "And not a drop tasted.", "")

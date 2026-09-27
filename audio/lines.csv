@@ -108,18 +108,18 @@ C04_P2_PROSPERO,C04,p1.2,giant_loss,prospero,"[out of breath, furious] There. I 
 C04_P2_MIRANDA,C04,p1.2,giant_loss,miranda,"[upset] Father, he took three hits keeping that thing away from us.",,,
 C04_P3_PROSPERO,C04,p2.3,giant_loss,prospero,You expect my blessing after this? You will not pass me.,,,
 C04_P3_HAMLET,C04,p2.3,giant_loss,hamlet,Then let Miranda speak for herself.,,,
-C04_P4_CLOWN,C04,p2.4,giant_loss,clown,[wincing] His Grace's next argument was regrettably acidic.,,,"The objective text is on screen only, not voiced"
-F_DODGE_MIRANDA_1,FATHER,after a dodge,giant_loss,miranda,[scolding] Father! We do not spit at guests!,,ACID_SIZZLE,"Plays after the attack resolves, never at warning onset; the game picks one line from the pool"
-F_DODGE_MIRANDA_2,FATHER,after a dodge,giant_loss,miranda,"[exasperated] Father! You are a duke, not a fountain!",,ACID_SIZZLE,
-F_DODGE_PROSPERO_1,FATHER,after a dodge,giant_loss,prospero,[muttering] Missed. How does something so small dodge so much?,,ACID_SIZZLE,
-F_DODGE_PROSPERO_2,FATHER,after a dodge,giant_loss,prospero,[out of breath] I have... plenty more... where that came from.,,ACID_SIZZLE,
-F_DODGE_HAMLET,FATHER,after a dodge,giant_loss,hamlet,"[breathless] Your Grace, I'd much rather talk this out!",,ACID_SIZZLE,
-F_DODGE_CLOWN,FATHER,after a dodge,giant_loss,clown,[wryly] The floor has never been so thoroughly argued with.,,ACID_SIZZLE,
-F_FOUR_MIRANDA,FATHER,after dodge 4,giant_loss,miranda,"[hopeful] One more, Hamlet! Father, you're running out of spit.",,COURT_CHEER,Plays instead of an after-a-dodge line
-F_FOUR_PROSPERO,FATHER,after dodge 4,giant_loss,prospero,[wheezing] I am... not... running out.,,,Prospero's reply to F_FOUR_MIRANDA; play them as a pair
-F_HIT_MIRANDA,FATHER,after the hit,giant_loss,miranda,[gasps] Father! How could you?,,ACID_HIT,The one hit ends the fight; E02 follows
+C04_P4_CLOWN,C04,p2.4,giant_loss,clown,[wincing] His Grace decided to settle this personally.,,,"The objective text is on screen only, not voiced"
+F_DODGE_MIRANDA_1,FATHER,after a dodge,giant_loss,miranda,[scolding] Father! We do not throw things at guests!,,FATHER_MISS,"Plays after the attack resolves, never at warning onset; the game picks one line from the pool"
+F_DODGE_MIRANDA_2,FATHER,after a dodge,giant_loss,miranda,"[exasperated] Father! You are a duke, not a catapult!",,FATHER_MISS,
+F_DODGE_PROSPERO_1,FATHER,after a dodge,giant_loss,prospero,[muttering] Missed. How does something so small dodge so much?,,FATHER_MISS,
+F_DODGE_PROSPERO_2,FATHER,after a dodge,giant_loss,prospero,[out of breath] I have... plenty more... where that came from.,,FATHER_MISS,
+F_DODGE_HAMLET,FATHER,after a dodge,giant_loss,hamlet,"[breathless] Your Grace, I'd much rather talk this out!",,FATHER_MISS,
+F_DODGE_CLOWN,FATHER,after a dodge,giant_loss,clown,[wryly] The floor has never been so thoroughly argued with.,,FATHER_MISS,
+F_FOUR_MIRANDA,FATHER,after dodge 4,giant_loss,miranda,"[hopeful] One more, Hamlet! Father, you're out of breath.",,COURT_CHEER,Plays instead of an after-a-dodge line
+F_FOUR_PROSPERO,FATHER,after dodge 4,giant_loss,prospero,[wheezing] I am... not... out of breath.,,,Prospero's reply to F_FOUR_MIRANDA; play them as a pair
+F_HIT_MIRANDA,FATHER,after the hit,giant_loss,miranda,[gasps] Father! How could you?,,FATHER_HIT,The one hit ends the fight; E02 follows
 E01_P1A_MIRANDA,E01,p1.1A,giant_win,miranda,"[gently] Father, thank him. Then listen to him.",,,
-E01_P1B_MIRANDA,E01,p1.1B,father_win,miranda,"[softly, but firm] Enough, Father. I love Hamlet. You do not get to spit at the person I choose.",,,
+E01_P1B_MIRANDA,E01,p1.1B,father_win,miranda,"[softly, but firm] Enough, Father. I love Hamlet. You do not get to throw things at the person I choose.",,,
 E01_P2_CLOWN,E01,p1.2,,clown,[cheerfully] For the record: he was delivering my grapes. The chalice splashed him. I was there.,,,
 E01_P3_PROSPERO,E01,p2.3,,prospero,[softly] Then I judged before I listened. Miranda—do you still wish the announcement to go ahead?,,,
 E01_P3_MIRANDA,E01,p2.3,,miranda,[softly] Yes. Because I choose it.,,,

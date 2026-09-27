@@ -28,5 +28,7 @@ host/export/
 team/*/scratch/
 *.log
 
-# half-written voice files if gen_voices.py is interrupted
-audio/voice/.*.part
+# gen_voices.py: half-written files if interrupted, and each machine's raw takes (kept so polish changes are free)
+audio/*/.*.part
+audio/*/.*.polish.mp3
+audio/*/.raw/

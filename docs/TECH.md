@@ -452,7 +452,7 @@ no clones of real people.
 
 **`audio/sfx.csv`** is the sound bank (ElevenLabs sound effects): the Giant's grunts, growls, huffs, swats and crashes, the
 comic-panel noises, three quiet fly sounds (`FLY_BUZZ_LOOP` for under flight, `FLY_TAKEOFF`, `FLY_ZIP`), a courtiers' gasp
-and cheer, and Prospero's acid spitball missing or hitting (there's no sound when he fires, which would give away the timing). Each has a prompt,
+and cheer, and something Prospero throws missing or hitting Hamlet (there's no sound when he throws, which would give away the timing). Each has a prompt,
 a length, whether it loops, a `volume_db` baked into the file and a `when` column saying where it plays. Every sound is made mono.
 
 ```bash
@@ -461,6 +461,7 @@ python audio/gen_voices.py --my-voices    # the voices in your account, with IDs
 python audio/gen_voices.py --check        # the key works, each cast voice is found, characters left this month
 python audio/gen_voices.py                # generates what changed; --only C01 hamlet H_TITLE sfx, --force to redo
 python audio/gen_voices.py --prune        # also deletes mp3s whose line or sound was removed from a bank
+python audio/gen_voices.py --polish-only  # no key needed: applies polish changes that need no new take
 ```
 
 - The key: `ELEVENLABS_API_KEY` in `.env` at the repo root (git-ignored) or the environment. Never in a commit.
@@ -469,10 +470,13 @@ python audio/gen_voices.py --prune        # also deletes mp3s whose line or soun
   `manifest.js` (the same, for the table read). A line is regenerated only when its text, voice, model or stability changes, and
   a sound only when its prompt, length or loop changes, so rerunning costs nothing for work that's done. The mp3s are committed so
   the demo laptop needs no key. `--no-sfx` skips the sounds.
-- **Polish** (after generation, free): `tempo` (pitch kept) and `max_pause` in voices.json speed up the Clown (1.15, 0.4 s) and
-  Miranda (1.08, 0.45 s), and each sound gets its `volume_db`. It needs ffmpeg, which `pip install -r requirements.txt` brings
-  (`imageio-ffmpeg`). The manifest records the polish, so a take is never polished twice. The raw take isn't kept, so changing
-  a speaker's polish settings later regenerates that speaker's lines.
+- **Polish** (after generation, free): `level` in voices.json brings every speaker's speech to -16 dB so the cast sits at
+  one loudness (a gentle limiter keeps peaks such as hiccups below -1 dBFS); `tempo` (pitch kept) and `max_pause` speed up the
+  Clown (1.15, 0.4 s) and trim Miranda's long pauses (0.45 s); each sound gets its `volume_db`. It needs ffmpeg, which
+  `pip install -r requirements.txt` brings (`imageio-ffmpeg`). The manifest records the polish, so a take is never polished
+  twice. A new `level` or `volume_db` is applied to the polished take in place, for free, anywhere. The machine that generated
+  a take also keeps its raw version in a git-ignored `.raw/` folder, so a new `tempo` or `max_pause` is free there; on another
+  machine it means new takes.
 - A voice-library voice the API can't find has to be added to "My Voices" on elevenlabs.io first; `--check` says which.
 - Takes made in the ElevenLabs app or through Claude's ElevenLabs connector: save them as `audio/voice/<id>.mp3` and run
   `--adopt` (or `--adopt --only <id>`) so the script treats them as up to date and polishes them on the next run.
@@ -488,7 +492,7 @@ python audio/gen_voices.py --prune        # also deletes mp3s whose line or soun
 - **In the game** (to wire up): the server sends `{"t":"event","kind":"voice","id":"C01_P4_PROSPERO","speaker":"Prospero",
   "caption":"..."}` (the shape Anshul's `caption_scroll.gd` already reads) and the host plays `audio/voice/<id>.mp3`, with the
   line's `sfx` cue from the manifest just before it. Only play lines on the route the server chose.
-- **The Seer's secret:** no voice line or sound may reveal a hidden hazard's side or timing (GAME.md). Giant, acid and crowd
+- **The Seer's secret:** no voice line or sound may reveal a hidden hazard's side or timing (GAME.md). Giant, father-fight and crowd
   sounds and the fight shouts are mono and centred, and they play only once an attack resolves (hit or miss), never when the
   warning starts. `FLY_BUZZ_LOOP` sits 18 dB down
   and stops during comics and questions.

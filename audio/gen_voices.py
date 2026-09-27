@@ -12,6 +12,7 @@ audio/voice/ and audio/sfx/.
     python audio/gen_voices.py --manifest-only    # rewrites the manifests from the files already on disk
     python audio/gen_voices.py --adopt --only H_TITLE   # an mp3 made in the ElevenLabs app counts as up to date
     python audio/gen_voices.py --prune            # deletes mp3s whose line or sound is no longer in the bank
+    python audio/gen_voices.py --polish-only      # no key: applies polish changes that need no new take, skips the rest
 
 The API key comes from ELEVENLABS_API_KEY in the environment or in .env at the repo root (never commit it). Voice IDs are not
 secret and live in voices.json, so the whole team generates the same cast. A speaker without a voice ID is skipped.
@@ -21,8 +22,11 @@ stripped from the text too if a non-v3 model is chosen (older models would read 
 overrides its speaker's (v3: 0.0 creative, 0.5 natural, 1.0 robust); its `sfx` column names a sound to play just before it.
 
 Polish (needs ffmpeg: `pip install imageio-ffmpeg`, or ffmpeg on the PATH): a speaker's `tempo` speeds the take up without
-changing pitch and `max_pause` shortens long silences, and a sound's `volume_db` sets its level; sounds are made mono so none
-can hint at a side. Polish is applied once to the raw take and recorded, so it never compounds and never costs credits.
+changing pitch, `max_pause` shortens long silences and `level` evens out loudness (the speech's level in dB, peaks kept below
+-1 dBFS); a sound's `volume_db` sets its level, and sounds are made mono so none can hint at a side. Polish is applied once to
+the raw take and recorded, so it never compounds. A change of `level` or `volume_db` is applied to the polished take in place,
+for free. The raw takes this machine generated are kept in a git-ignored `.raw/` folder, so a new `tempo` or `max_pause` is
+free here too; anywhere else it means a new take.
 
 Output: voice/<id>.mp3 and sfx/<id>.mp3, plus manifest.json in each folder (voice: story order with id, scene, panel, branch,
 speaker, caption, sfx cue and file; sfx: id, when to play, loop) for Godot and the server, and manifest.js (the same data)
@@ -64,6 +68,7 @@ RETRY_STATUS = {429, 500, 502, 503, 504}
 RETRIES = 4
 SR = 44100
 SILENCE_DB = -42.0  # quieter than this counts as a pause when max_pause trims them
+MAX_LIMIT_DB = 8.0  # how far `level` may push a sharp peak into the limiter to bring the rest of a line up
 
 
 @dataclass(frozen=True)
@@ -134,12 +139,37 @@ def stability_for(line: Line, speaker: dict) -> float | None:
 
 def voice_post(speaker: dict) -> str:
     """The polish a speaker's takes get, as a short key recorded in the manifest ('' = none)."""
-    tempo, pause = float(speaker.get("tempo") or 1.0), speaker.get("max_pause")
-    return "" if tempo == 1.0 and not pause else f"tempo={tempo:g},max_pause={float(pause or 0):g}"
+    tempo, pause, level = float(speaker.get("tempo") or 1.0), speaker.get("max_pause"), speaker.get("level")
+    parts = [] if tempo == 1.0 and not pause else [f"tempo={tempo:g},max_pause={float(pause or 0):g}"]
+    return ",".join(parts + ([f"level={float(level):g}"] if level is not None else []))
 
 
 def sound_post(sound: Sound) -> str:
     return f"mono,volume_db={float(sound.volume_db or 0):g}"
+
+
+IN_PLACE = {"volume_db", "level"}  # re-applied to a polished take, these give the same result as polishing the raw take
+
+
+def _post_items(post: str) -> dict[str, str]:
+    return dict(p.partition("=")[::2] for p in post.split(",") if p)
+
+
+def in_place(have: str, want: str) -> dict | None:
+    """How to turn a take polished as `have` into one polished as `want` without its raw take: a volume step or a new
+    speech level. None when that isn't possible (nothing was polished yet, or tempo or pauses changed)."""
+    a, b = _post_items(have), _post_items(want)
+    if not have or a == b or ("level" in a and "level" not in b):
+        return None
+    if {k: v for k, v in a.items() if k not in IN_PLACE} != {k: v for k, v in b.items() if k not in IN_PLACE}:
+        return None
+    return {"volume_db": float(b.get("volume_db") or 0) - float(a.get("volume_db") or 0),
+            "level": float(b["level"]) if "level" in b else None}
+
+
+def raw_path(path: Path, h: str) -> Path:
+    """Where this machine keeps the unpolished take (git-ignored), so later polish changes need no new take."""
+    return path.parent / ".raw" / f"{path.stem}-{h}.mp3"
 
 
 def problems(lines: list[Line], cast: dict, sounds: list[Sound] | None = None) -> list[str]:
@@ -263,8 +293,27 @@ def _ffmpeg() -> str | None:
         return shutil.which("ffmpeg")
 
 
-def polish(path: Path, tempo: float = 1.0, max_pause: float | None = None, volume_db: float = 0.0) -> None:
-    """Rewrites an mp3 in place: mono, long pauses shortened to max_pause, tempo without a pitch change, volume."""
+def _window_db(x, n: int = SR // 100):
+    """Level of each 10 ms window, in dB."""
+    import numpy as np
+
+    frames = len(x) // n
+    return 20 * np.log10(np.sqrt((x[:frames * n].reshape(frames, n) ** 2).mean(1)) + 1e-9)
+
+
+def speech_db(x) -> float | None:
+    """Loudness of the speech in a take (pauses left out), in dB. None for silence."""
+    import numpy as np
+
+    db = _window_db(x)
+    active = db[db >= SILENCE_DB]
+    return float(10 * np.log10((10 ** (active / 10)).mean())) if len(active) else None
+
+
+def polish(path: Path, tempo: float = 1.0, max_pause: float | None = None, volume_db: float = 0.0,
+           level: float | None = None) -> None:
+    """Rewrites an mp3 in place: mono, long pauses shortened to max_pause, speech brought to `level` dB (peaks kept below
+    -1 dBFS), tempo without a pitch change, volume."""
     import numpy as np
 
     ff = _ffmpeg()
@@ -276,7 +325,7 @@ def polish(path: Path, tempo: float = 1.0, max_pause: float | None = None, volum
     if max_pause:
         n = SR // 100  # 10 ms windows
         frames = len(x) // n
-        loud = 20 * np.log10(np.sqrt((x[:frames * n].reshape(frames, n) ** 2).mean(1)) + 1e-9) >= SILENCE_DB
+        loud = _window_db(x, n) >= SILENCE_DB
         keep, half, i = np.ones(len(x), bool), int(SR * max_pause / 2), 0
         while i < frames:
             j = i
@@ -286,7 +335,14 @@ def polish(path: Path, tempo: float = 1.0, max_pause: float | None = None, volum
                 keep[i * n + half:j * n - half] = False  # keep half the allowed pause on each side of the cut
             i = j + 1 if j == i else j
         x = x[keep]
-    filters = [f"atempo={tempo:g}"] if tempo != 1.0 else []
+    filters = []
+    if level is not None and (now := speech_db(x)) is not None:
+        peak = 20 * np.log10(float(np.abs(x).max()) + 1e-9)
+        gain = min(level - now, -1.0 - peak + MAX_LIMIT_DB)  # a hiccup or a shout may be limited, by at most MAX_LIMIT_DB
+        x = x * np.float32(10 ** (gain / 20))
+        if peak + gain > -1.0:
+            filters.append("alimiter=limit=0.891:attack=2:release=50:level=0")  # peaks stay below -1 dBFS
+    filters += [f"atempo={tempo:g}"] if tempo != 1.0 else []
     if volume_db:
         filters.append(f"volume={volume_db:g}dB")
     tmp = path.with_name(f".{path.name}.polish.mp3")
@@ -297,7 +353,9 @@ def polish(path: Path, tempo: float = 1.0, max_pause: float | None = None, volum
 
 
 def polish_line(path: Path, speaker: dict) -> None:
-    polish(path, float(speaker.get("tempo") or 1.0), speaker.get("max_pause"))
+    level = speaker.get("level")
+    polish(path, float(speaker.get("tempo") or 1.0), speaker.get("max_pause"),
+           level=float(level) if level is not None else None)
 
 
 def polish_sound(path: Path, sound: Sound) -> None:
@@ -437,6 +495,9 @@ class Job:
     hash: str
     post: str       # polish to apply ('' = none)
     call: bool      # True: generate with the API; False: only polish the raw file already on disk
+    have: str = ""  # polish the file on disk already has
+    adjust: dict | None = None  # a volume or level step applied to the polished take in place
+    from_raw: bool = False      # restore this machine's raw take from .raw/ and polish it
 
 
 def plan(lines: list[Line], sounds: list[Sound], cast: dict, args: argparse.Namespace, voice_old: dict,
@@ -450,10 +511,15 @@ def plan(lines: list[Line], sounds: list[Sound], cast: dict, args: argparse.Name
         nonlocal cached
         have = old.get(item.id, {})
         fresh = not args.force and have.get("hash") == h and path.exists()
-        if fresh and have.get("post", "") == want:
+        done = have.get("post", "") if fresh else ""
+        if fresh and done == want:
             cached += 1
-        elif fresh and not have.get("post"):
+        elif fresh and not done:
             jobs.append(Job(kind, item, h, want, call=False))  # raw take: polish it, no credits
+        elif not args.force and raw_path(path, h).exists():
+            jobs.append(Job(kind, item, h, want, call=False, have=done, from_raw=True))  # repolish this machine's raw take
+        elif fresh and (step := in_place(done, want)) is not None:
+            jobs.append(Job(kind, item, h, want, call=False, have=done, adjust=step))  # louder or quieter, no credits
         else:
             jobs.append(Job(kind, item, h, want, call=True))   # new, changed, or polished differently: regenerate
 
@@ -480,6 +546,11 @@ def cmd_generate(lines: list[Line], sounds: list[Sound], cast: dict, args: argpa
     s_posts = {k: v.get("post", "") for k, v in sfx_old.items()}
 
     jobs, cached, uncast = plan(lines, sounds, cast, args, voice_old, sfx_old)
+    if getattr(args, "polish_only", False):
+        left = [j for j in jobs if j.call]
+        jobs = [j for j in jobs if not j.call]
+        if left:
+            print(f"--polish-only: leaving {len(left)} item(s) that need a new take: {' '.join(j.item.id for j in left)}")
     calls = [j for j in jobs if j.call]
     chars = sum(len(spoken_text(j.item, model)) for j in calls if j.kind == "line")
     n_lines, n_sounds = sum(j.kind == "line" for j in calls), sum(j.kind == "sound" for j in calls)
@@ -539,12 +610,20 @@ def cmd_generate(lines: list[Line], sounds: list[Sound], cast: dict, args: argpa
             tmp = out_dir / f".{item.id}.mp3.part"
             tmp.write_bytes(audio)
             os.replace(tmp, path)
-        done_post = ""
+            if j.post:  # keep the raw take on this machine, so a later polish change needs no new take
+                raw_path(path, j.hash).parent.mkdir(exist_ok=True)
+                raw_path(path, j.hash).write_bytes(audio)
+        elif j.from_raw:
+            shutil.copyfile(raw_path(path, j.hash), path)
+        done_post = j.have if j.adjust else ""
         if j.post and _ffmpeg():
             try:
-                polish_line(path, speakers[item.speaker]) if j.kind == "line" else polish_sound(path, item)
+                if j.adjust:
+                    polish(path, volume_db=j.adjust["volume_db"], level=j.adjust["level"])
+                else:
+                    polish_line(path, speakers[item.speaker]) if j.kind == "line" else polish_sound(path, item)
                 done_post = j.post
-            except Exception as err:  # keep the raw take; the next run tries the polish again
+            except Exception as err:  # keep the take as it was; the next run tries the polish again
                 print(f"  polish failed for {item.id}: {err}")
         with lock:
             if j.kind == "line":
@@ -586,6 +665,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--only", nargs="+", default=[], metavar="WHAT", help="scene, speaker, line or sound id, or 'sfx'")
     p.add_argument("--force", action="store_true", help="regenerate even if up to date")
     p.add_argument("--no-sfx", action="store_true", help="skip the sound effects")
+    p.add_argument("--polish-only", action="store_true", help="no key needed: apply polish changes, skip anything that "
+                   "needs a new take")
     p.add_argument("--model", default="", help="override the model in voices.json (e.g. eleven_multilingual_v2)")
     p.add_argument("--workers", type=int, default=2, help="parallel requests (keep within your plan's concurrency)")
     p.add_argument("--out", type=Path, default=OUT_DIR, help="voice output folder (default audio/voice)")
