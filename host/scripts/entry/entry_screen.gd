@@ -6,7 +6,8 @@ extends Control
 ## Hamlet and Miranda cast rigs (animation_v1), the same ones the game uses.
 
 const COURT := "res://scenes/Court.tscn"
-const BUTTONS := [Rect2i(36, 220, 240, 30), Rect2i(36, 258, 240, 28)]
+const BUTTONS := [Rect2i(36, 214, 240, 28), Rect2i(36, 248, 240, 26), Rect2i(36, 280, 240, 22)]
+const DEVELOPERS := ["NEIL", "ARNAV", "VED", "ANSHUL"]
 
 var _backdrop: ImageTexture
 var _hover := -1
@@ -14,6 +15,7 @@ var _busy := false
 var _wing_frame := 0
 var _wing_clock := 0.0
 var _help := false
+var _credits := false
 var _stage: ImageTexture
 var _hamlet: Node2D
 var _miranda: Node2D
@@ -47,6 +49,7 @@ func _ready() -> void:
 			get_tree().change_scene_to_file.call_deferred(COURT)
 			return
 	queue_redraw()
+	_credits = "--credits" in args  # screenshots of the Credits card
 	for arg in args:
 		if str(arg).begins_with("--entry-shot="):
 			_save_shot.call_deferred(str(arg).trim_prefix("--entry-shot="))
@@ -54,9 +57,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_t += delta
-	for rig in [_hamlet, _miranda]:  # the How to Play card covers the stage
+	for rig in [_hamlet, _miranda]:  # the How to Play and Credits cards cover the stage
 		if rig != null:
-			(rig as Node2D).visible = not _help
+			(rig as Node2D).visible = not (_help or _credits)
 	if _hamlet != null:  # he hovers in place, drifting a little
 		_hamlet.position = HAMLET_AT + Vector2(roundf(sin(_t * 0.9) * 6.0), roundf(sin(_t * 2.2) * 4.0))
 	_wave_t -= delta
@@ -83,12 +86,16 @@ func _gui_input(event: InputEvent) -> void:
 			mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND if next >= 0 else Control.CURSOR_ARROW
 			queue_redraw()
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		if _help:
+		if _help or _credits:
 			_help = false
+			_credits = false
 			queue_redraw()
 			return
 		var index := _button_at(event.position)
-		if index >= 0:
+		if index == 2:
+			_credits = true
+			queue_redraw()
+		elif index >= 0:
 			_enter_court(index == 1)
 
 
@@ -103,9 +110,15 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			_enter_court(true)
 		KEY_H, KEY_F1:
 			_help = not _help
+			_credits = false
+			queue_redraw()
+		KEY_C:
+			_credits = not _credits
+			_help = false
 			queue_redraw()
 		KEY_ESCAPE:
 			_help = false
+			_credits = false
 			queue_redraw()
 
 
@@ -142,8 +155,9 @@ func _draw() -> void:
 	HudDraw.text_center(self, PixelFonts.label(), 156, 201, "REACH PRINCESS MIRANDA", Pal.ROYAL, 8)
 	_button(0, "ENTER THE COURT", "LIVE / LOBBY")
 	_button(1, "PLAY KEYBOARD DEMO", "SOLO")
-	HudDraw.text_center(self, PixelFonts.label(), 156, 308, "ENTER LIVE   D DEMO   H HOW TO PLAY", Pal.INK_SOFT, 7)
-	HudDraw.text_center(self, PixelFonts.label(), 156, 325, "HACKUMBC 2026", Pal.GOLD_DARK, 7)
+	_button(2, "CREDITS", "C")
+	HudDraw.text_center(self, PixelFonts.label(), 156, 311, "ENTER LIVE   D DEMO   H HOW TO PLAY   C CREDITS", Pal.INK_SOFT, 7)
+	HudDraw.text_center(self, PixelFonts.label(), 156, 326, "HACKUMBC 2026", Pal.GOLD_DARK, 7)
 
 	# The stage: the banquet backdrop, cropped to the frame at native pixels, under the gold margin.
 	if _stage != null:
@@ -157,6 +171,8 @@ func _draw() -> void:
 	HudDraw.text_center(self, PixelFonts.label(), 471, 334, "THE COURT AWAITS", Pal.CRIMSON, 8)
 	if _help:
 		_draw_help()
+	elif _credits:
+		_draw_credits()
 
 
 ## Only if the backdrop is missing: the old drawn hall stage and rear-view sprite.
@@ -172,8 +188,8 @@ func _button(index: int, title: String, suffix: String) -> void:
 	var r: Rect2i = BUTTONS[index]
 	var active := _hover == index
 	HudDraw.panel(self, r, Pal.GOLD if active else Pal.ROYAL_DARK, Pal.INK, Pal.GOLD, Pal.GOLD_DARK if active else Pal.ROYAL)
-	HudDraw.text(self, PixelFonts.bold(), r.position.x + 12, r.position.y + 9, title, Pal.INK if active else Pal.PARCHMENT, 8)
-	HudDraw.text_right(self, PixelFonts.label(), r.end.x - 10, r.position.y + 9, suffix, Pal.INK_SOFT if active else Pal.GOLD, 7)
+	HudDraw.text(self, PixelFonts.bold(), r.position.x + 12, r.position.y + (r.size.y - 9) / 2, title, Pal.INK if active else Pal.PARCHMENT, 8)
+	HudDraw.text_right(self, PixelFonts.label(), r.end.x - 10, r.position.y + (r.size.y - 9) / 2, suffix, Pal.INK_SOFT if active else Pal.GOLD, 7)
 
 
 func _flourish(cx: int, y: int) -> void:
@@ -182,6 +198,19 @@ func _flourish(cx: int, y: int) -> void:
 	draw_rect(Rect2(cx - 2, y - 2, 5, 5), Pal.CRIMSON)
 	for x in [cx - 83, cx + 80]:
 		draw_rect(Rect2(x, y - 2, 4, 5), Pal.GOLD)
+
+
+## The team, on a parchment card over the stage (C or the Credits button; click or Esc closes it).
+func _draw_credits() -> void:
+	HudDraw.panel(self, Rect2i(319, 26, 302, 308), Pal.PARCHMENT, Pal.INK, Pal.GOLD, Pal.PARCHMENT_DARK)
+	HudDraw.text_center(self, PixelFonts.title(), 470, 40, "Credits", Pal.INK, 22)
+	HudDraw.text_center(self, PixelFonts.label(), 470, 77, "HIS ROYAL FLYNESS WAS MADE BY", Pal.CRIMSON, 8)
+	for i in DEVELOPERS.size():
+		var y := 100 + i * 42
+		HudDraw.frame(self, Rect2i(336, y, 268, 35), Pal.GOLD_DARK)
+		HudDraw.text_center(self, PixelFonts.bold(), 470, y + 10, DEVELOPERS[i], Pal.ROYAL, 16)
+	HudDraw.text_center(self, PixelFonts.label(), 470, 284, "HACKUMBC 2026", Pal.INK, 8)
+	HudDraw.text_center(self, PixelFonts.label(), 470, 308, "CLICK OR ESC TO CLOSE", Pal.GOLD_DARK, 8)
 
 
 func _draw_help() -> void:
