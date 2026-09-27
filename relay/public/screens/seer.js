@@ -1,7 +1,6 @@
 import { formatNumber } from "./common.js";
 
 export function renderSeer(view = {}) {
-  const giant = view.giant || {};
   return `
     <section class="screen controller-screen seer-screen" aria-labelledby="controller-title">
       <header class="controller-header"><span class="crest" aria-hidden="true">◉</span><div><p class="eyebrow">Royal Seer</p><h1 id="controller-title">Read the court</h1></div></header>
@@ -10,7 +9,6 @@ export function renderSeer(view = {}) {
       <div class="seer-grid" aria-live="polite">
         <article class="sense-card"><span class="sense-label">Bearing</span><strong>${safeText(view.bearing, "Awaiting scan")}</strong><div class="compass" aria-hidden="true">N<br><span>◈</span><br>S</div></article>
         <article class="sense-card"><span class="sense-label">Distance</span><strong>${safeText(view.distance, "—")}</strong><meter min="0" max="1" value="${clamp(view.confidence)}">${formatNumber(view.confidence, 2)}</meter><small>Confidence ${formatNumber(view.confidence, 2)}</small></article>
-        <article class="warning-card"><span class="sense-label">Giant warning</span><strong>${safeText(giant.direction, "No warning")}</strong><small>${typeof giant.seconds === "number" ? `${formatNumber(giant.seconds)} seconds` : "Stay watchful"}</small></article>
       </div>
       ${accessibilityToggle()}
     </section>`;

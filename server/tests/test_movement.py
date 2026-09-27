@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from server.main import GODOT_S, GameSession, STALE_INPUT_SECONDS, _next_time
+from server.main import COURSE_WALLS, GODOT_S, GameSession, STALE_INPUT_SECONDS, _next_time
 from server.seer_adapter import PlaceholderSeerAdapter
 
 
@@ -26,6 +26,41 @@ class GameSessionTests(unittest.TestCase):
                 self.assertNotEqual(getattr(fly, changed), initial[changed])
                 for other_axis in {"x", "y", "z"} - {changed}:
                     self.assertEqual(getattr(fly, other_axis), initial[other_axis])
+
+    def test_every_wall_blocks_a_closed_section_and_allows_its_opening(self) -> None:
+        for wall in COURSE_WALLS:
+            with self.subTest(wall=wall.name, route="blocked"):
+                session = self.make_session()
+                session.state.fly.z = wall.z - 0.05
+                session.state.fly.x = -0.95 if wall.gap_min_x > -0.9 else 0.95
+                session.state.fly.y = 0.95 if wall.gap_max_y < 0.9 else -0.95
+                session.state.fly.vz = 1.0
+                session.simulator.step(session.state.fly, {"z": 1.0}, 0.2)
+                self.assertLess(session.state.fly.z, wall.z)
+                self.assertEqual(session.state.fly.vz, 0.0)
+
+            with self.subTest(wall=wall.name, route="opening"):
+                session = self.make_session()
+                session.state.fly.z = wall.z - 0.05
+                session.state.fly.x = (wall.gap_min_x + wall.gap_max_x) / 2.0
+                session.state.fly.y = (wall.gap_min_y + wall.gap_max_y) / 2.0
+                session.state.fly.vz = 1.0
+                session.simulator.step(session.state.fly, {"z": 1.0}, 0.2)
+                self.assertGreater(session.state.fly.z, wall.z)
+
+    def test_wall_collision_cannot_be_tunnelled_in_either_direction(self) -> None:
+        wall = COURSE_WALLS[0]
+        for start_z, velocity, intent, comparison in [
+            (wall.z - 0.4, 1.0, 1.0, lambda z: z < wall.z),
+            (wall.z + 0.4, -1.0, -1.0, lambda z: z > wall.z),
+        ]:
+            session = self.make_session()
+            session.state.fly.z = start_z
+            session.state.fly.x = 0.9
+            session.state.fly.vz = velocity
+            session.simulator.step(session.state.fly, {"z": intent}, 0.8)
+            self.assertTrue(comparison(session.state.fly.z))
+            self.assertEqual(session.state.fly.vz, 0.0)
 
     def test_release_and_stale_input_stop_acceleration(self) -> None:
         session = self.make_session()
@@ -117,15 +152,15 @@ class GameSessionTests(unittest.TestCase):
         self.assertAlmostEqual(sent / 10.0, 30.0, delta=1.0)
         self.assertGreater(_next_time(0.0, GODOT_S, now=5.0), 5.0, "after a 5 s stall the next frame is in the future")
 
-    def test_world_geometry_puts_the_princess_behind_and_stops_the_hand_at_contact(self) -> None:
+    def test_world_geometry_puts_the_princess_behind_and_has_no_hand_hazard(self) -> None:
         from server.seer_adapter import projected_stimuli
 
         ahead = projected_stimuli(0.25, 0.18, 0.0, 0.0)["princess"]
         behind = projected_stimuli(0.0, 0.18, 1.0, 0.0)["princess"]  # the fly has flown past her
         self.assertAlmostEqual(ahead["bearing_deg"], 0.0)
         self.assertGreater(behind["bearing_deg"], 90.0)
-        distances = [g["distance_cm"] - g["size_cm"] for t in range(400) for g in projected_stimuli(0, 0, 0, t * 0.02)["giants"]]
-        self.assertTrue(distances and min(distances) >= 0.0, "the hand must never pass through the fly")
+        self.assertEqual(projected_stimuli(0, 0, 0, 5.0)["giants"], [])
+        self.assertNotIn("giant", GameSession("BZKT").godot_state()["render"])
 
 
 if __name__ == "__main__":
