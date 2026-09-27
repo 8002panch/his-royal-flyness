@@ -454,9 +454,9 @@ python audio/gen_voices.py                # generates what changed; --only C01 h
 - Takes made in the ElevenLabs app or through Claude's ElevenLabs connector: save them as `audio/voice/<id>.mp3` and run
   `--adopt` (or `--adopt --only <id>`) so the script treats them as up to date. `stability: null` in voices.json means the
   voice's own saved setting, which is what the app and the connector use, so both routes give the same take settings.
-- Plan limits we hit (Sat night): the account on the connector allows 2 generations at once, and the Miranda, Prospero
-  and Lord Tinman library voices need the Creator tier or above. 80 of 104 lines are generated (Clown, Hamlet, Rutabaga,
-  Cheapdate); the other 24 wait on a Creator-tier account or different voices. `--dry-run` lists exactly what's left.
+- All 104 lines are generated and committed (Sat 23:20). Plan limits to know: the free account allows 2 generations at
+  once, and the Miranda, Prospero and Lord Tinman library voices need the Creator tier or above. An API key must be the
+  secret that starts with `sk_` (shown once when created), not the key's ID. `--dry-run` lists anything left to do.
 - **Table read:** open `audio/table_read.html` from disk. Pick the quiz answers and the Giant and father outcomes, then play the
   story route, one scene or one line, with captions. Lines without audio show for reading time, so it works as a script read
   before any voice exists. Filter by speaker to audition one voice.
