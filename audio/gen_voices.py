@@ -308,7 +308,7 @@ def cmd_generate(lines: list[Line], cast: dict, args: argparse.Namespace) -> int
             audio = synthesize(client, ln, speakers[ln.speaker], model, fmt)
         except Exception as err:
             status, code, msg = _api_detail(err)
-            if status == 401 or code in {"quota_exceeded", "invalid_api_key", "missing_permissions"}:
+            if status in (401, 403) or "api_key" in code or code in {"quota_exceeded", "missing_permissions"}:
                 stop.set()
                 failed.append(f"{ln.id}: {code or status} {msg} (stopping)")
             elif code == "voice_not_found" or status == 404:

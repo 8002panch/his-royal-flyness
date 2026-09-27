@@ -61,8 +61,15 @@ class FakeTTS:
     def __init__(self, missing: set[str] = frozenset()) -> None:
         self.calls: list[tuple[str, str]] = []
         self.missing = missing
+        self.bad_key = False
+        self.attempts = 0
 
     def convert(self, voice_id: str, *, text: str, **_: object):
+        self.attempts += 1
+        if self.bad_key:
+            from elevenlabs.core.api_error import ApiError
+
+            raise ApiError(status_code=400, body={"detail": {"status": "api_key_id_used_as_api_key", "message": "no"}})
         if voice_id in self.missing:
             from elevenlabs.core.api_error import ApiError
 
@@ -141,6 +148,11 @@ class GenerateTests(unittest.TestCase):
         self.run_gen()
         self.assertNotIn(gv.spoken_text(clown[0], "eleven_v3"), [t for _, t in self.tts.calls])
         self.assertEqual((self.tmp / f"{clown[0].id}.mp3").read_bytes(), b"ID3made-in-the-app")
+
+    def test_a_bad_key_stops_the_run_instead_of_failing_every_line(self) -> None:
+        self.tts.bad_key = True
+        self.assertEqual(self.run_gen(workers=1), 1)
+        self.assertEqual(self.tts.attempts, 1)
 
     def test_dry_run_sends_and_writes_nothing(self) -> None:
         self.assertEqual(self.run_gen(dry_run=True), 0)
