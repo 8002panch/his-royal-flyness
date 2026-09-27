@@ -5,8 +5,8 @@ so the script lives in one place. Everything here is scripted story logic: the b
 the attacks only reach it as looming stimuli while they approach. Nothing about an attack reaches the shared screen before it
 lands (the Seer's secret).
 
-Flow: lobby -> TUTORIAL -> C01 -> Q01 -> STAGE1 -> Q02 -> STAGE2 -> Q03 -> C02 -> GIANT -> C03 | C04 -> [FATHER] -> E01 | E02
--> END. Phases: lobby, comic, question (a comic beat waiting for the Seer's answer), ready (a short count-in), play, end.
+Flow: lobby -> INTRO (the cast, one card at a time) -> TUTORIAL -> C01 -> Q01 -> STAGE1 -> Q02 -> STAGE2 -> Q03 -> C02 -> GIANT -> C03 | C04 -> [FATHER] -> E01 | E02
+-> END. Phases: lobby, intro, comic, question (a comic beat waiting for the Seer's answer), ready (a short count-in), play, end.
 """
 
 from __future__ import annotations
@@ -25,13 +25,21 @@ except Exception:  # pragma: no cover
 
 UNIT_CM = 220.0
 READY_S = 2.0
-WARN_S = 2.0            # an attack's warning window: target locked at onset, impact WARN_S later
+WARN_S = 2.0            # an attack's warning window: target locked at onset, impact WARN_S later (Stage 2, Prospero)
 HIT_RADIUS = 0.30       # server units: still this close to the locked target at impact = hit
 SIDE_OFFSET = 0.12      # the hand lands a little to its own side of Hamlet, so moving away from that side escapes
 GIANT_DODGES, GIANT_HITS = 10, 3
 FATHER_DODGES = 5
-MULTI_HANDS = (4, 7)      # Giant dodges after which a second, then a third hand follows each swing
-VOLLEY_SPACING_S = 1.3    # between the hands of one volley
+# The Giant fight is the hard one (playtest Sun 07:00: dodging was too easy). Its warnings shrink as the fight goes on,
+# the hand is wider, lands almost on Hamlet and aims where he is heading (locked at onset, so it never chases him), and
+# the second and third hands of a volley come sooner and closer together.
+GIANT_WARN_S = (1.9, 1.6, 1.4)   # dodges 0-2, 3-6, 7+ (was 2.4, then 2.0)
+GIANT_HIT_RADIUS = 0.34
+GIANT_SIDE_OFFSET = 0.05
+GIANT_LEAD_S = 0.35       # the hand aims at where Hamlet will be this long after onset, at his current velocity
+MULTI_HANDS = (3, 6)      # Giant dodges after which a second, then a third hand follows each swing
+VOLLEY_SPACING_S = 1.0    # between the hands of one volley
+COURSE_Z_SCALE = 0.45     # the wall courses: forward/back at 45% of the other axes' acceleration and top speed
 STAGE2_SECONDS = 60.0
 STAGE2_SWATS = (14.0, 30.0, 46.0)
 GOAL_Z = 0.9
@@ -62,16 +70,20 @@ GRAPES = ((0.0, 0.0, 0.1), (0.7, 0.0, -0.3), (-0.3, 0.4, -0.2), (0.45, 0.25, -0.
 MIRANDA_BY_CHALICE = (-0.25, -0.15, -0.5)
 
 QUIZZES = {  # docs/GAME.md, "The three drink questions" (NIAAA facts; general human health, not fly results)
-    "Q01": {"text": "Alcohol can make balance and coordination...", "a": "Worse", "b": "More precise", "correct": "A"},
-    "Q02": {"text": "Can heavy drinking interfere with forming new memories?", "a": "No", "b": "Yes", "correct": "B"},
-    "Q03": {"text": "Does coffee remove alcohol's effects on judgment and coordination?", "a": "Yes", "b": "No", "correct": "B"},
+    # focus: the brain-map regions (brain/brain_map.py) the question is about, highlighted on the main screen's map
+    "Q01": {"text": "Alcohol can make balance and coordination...", "a": "Worse", "b": "More precise", "correct": "A",
+            "focus": ["balance", "commands", "muscles"]},
+    "Q02": {"text": "Can heavy drinking interfere with forming new memories?", "a": "No", "b": "Yes", "correct": "B",
+            "focus": ["memory"]},
+    "Q03": {"text": "Does coffee remove alcohol's effects on judgment and coordination?", "a": "Yes", "b": "No", "correct": "B",
+            "focus": ["memory", "balance", "commands"]},
 }
 STEADINESS = ("steady", "wobbly", "very wobbly", "extremely wobbly")
 
 # (scene, kind, backdrop); C03/C04 and E01/E02 are chosen by the fights
-ORDER = ("TUTORIAL", "C01", "Q01", "STAGE1", "Q02", "STAGE2", "Q03", "C02", "GIANT", "C03", "C04", "FATHER", "E01", "E02", "END")
-KIND = {"TUTORIAL": "play", "STAGE1": "play", "STAGE2": "play", "GIANT": "play", "FATHER": "play", "END": "end"}
-BACKDROP = {"TUTORIAL": "garden", "C01": "garden", "Q01": "window_ledge", "STAGE1": "basement", "Q02": "basement",
+ORDER = ("INTRO", "TUTORIAL", "C01", "Q01", "STAGE1", "Q02", "STAGE2", "Q03", "C02", "GIANT", "C03", "C04", "FATHER", "E01", "E02", "END")
+KIND = {"INTRO": "intro", "TUTORIAL": "play", "STAGE1": "play", "STAGE2": "play", "GIANT": "play", "FATHER": "play", "END": "end"}
+BACKDROP = {"INTRO": "banquet", "TUTORIAL": "garden", "C01": "garden", "Q01": "window_ledge", "STAGE1": "basement", "Q02": "basement",
             "STAGE2": "inner_passage", "Q03": "banquet", "C02": "banquet", "GIANT": "arena", "C03": "banquet",
             "C04": "father_arena", "FATHER": "father_arena", "E01": "banquet", "E02": "banquet", "END": "banquet"}
 PANEL_BACKDROP = {("C01", "p3.7"): "gate_outside", ("C01", "p3.8"): "window_ledge"}
@@ -82,6 +94,30 @@ OBJECTIVE = {
     "GIANT": "Outlast the Giant: dodge ten swats",
     "FATHER": "Prospero's Last Word: dodge five throws without a hit",
 }
+# The character introduction before the tutorial: who's who, and the real gene behind each name (docs/GAME.md, "Lore").
+# rig = the cast rig in host/assets/pixelart/animation_v1/rigs; voice = a line to play with the card (if it has one).
+INTRO_CARDS = (
+    {"rig": "hamlet", "name": "Prince Hamlet", "title": "Our hero. The council flies him.",
+     "fact": "hamlet is a real fly gene: it decides what kind of neuron a cell becomes. IIB or not IIB.", "voice": "H_PRINCE"},
+    {"rig": "miranda", "name": "Princess Miranda", "title": "His intended. She speaks for herself.",
+     "fact": "miranda carries the Prospero protein into the daughter cell when a neural stem cell divides."},
+    {"rig": "prospero_mad", "name": "Duke Prospero", "title": "Her father, and very hard to impress.",
+     "fact": "prospero controls the fate of the cells a neural stem cell makes. Both are named for The Tempest."},
+    {"rig": "clown_jester", "name": "Clown, the Court Jester", "title": "Your narrator. Mostly helpful.",
+     "fact": "clown mutant flies have red-and-white eyes."},
+    {"rig": "lord_tinman", "name": "Lord Tinman", "title": "A polished rival with no heart.",
+     "fact": "tinman flies grow no heart."},
+    {"rig": "count_rutabaga", "name": "Count Rutabaga", "title": "A rival who forgets whom he is courting.",
+     "fact": "rutabaga flies are bad at learning and memory."},
+    {"rig": "sir_cheapdate", "name": "Sir Cheapdate", "title": "The tipsy rival.",
+     "fact": "cheapdate flies get drunk on less alcohol."},
+    {"rig": "giant", "name": "The Giant", "title": "A human with a swatter. Do not be there when it lands.",
+     "fact": "From a fly's point of view, humans are giants. His escape neuron is really called the Giant Fiber."},
+    {"rig": "council", "name": "Your Privy Council", "title": "Four phones, one fly.",
+     "fact": "Helmsman: left and right. Liftmaster: up and down. Wingmaster: forward and back. Royal Seer: senses Miranda "
+             "and the Giant through his real neurons, and tells the others."},
+)
+
 GESTURES = {  # the line's first audio tag -> a cast-rig gesture (host/assets/pixelart/animation_v1)
     "angry": "angry", "furious": "angry", "indignant": "angry", "out of breath, furious": "angry", "scoffs": "angry",
     "delighted": "celebrate", "triumphantly": "celebrate", "excited": "celebrate", "excitedly": "celebrate",
@@ -189,10 +225,12 @@ class Campaign:
         self._apply_dizziness()
 
     def _apply_dizziness(self) -> None:
-        """Each wrong answer: more stopping distance (docs/GAME.md). A scripted movement change, not alcohol in the nervous
-        system; `steer` adds the sway and the slow reactions."""
+        """Each wrong answer: more stopping distance (docs/GAME.md). A scripted movement change (the brain map shows the
+        disclosed alcohol model separately); `steer` adds the sway and the slow reactions. The wall courses also slow
+        forward/back flight, so the walls come at the council at a pace they can steer through."""
         drag = self.base_tuning.drag_per_second / (1.0 + 0.25 * self.dizzy)
-        self.session.simulator.tuning = replace(self.base_tuning, drag_per_second=drag)
+        z_scale = COURSE_Z_SCALE if self.scene in ("STAGE1", "STAGE2") else self.base_tuning.z_scale
+        self.session.simulator.tuning = replace(self.base_tuning, drag_per_second=drag, z_scale=z_scale)
 
     def steer(self, intents: dict[str, float], dt: float) -> dict[str, float]:
         """Dizzy flight is hard to control: the council's presses take effect late (0.1 s more per level) and a slow,
@@ -246,11 +284,10 @@ class Campaign:
     # ---------------------------------------------------------------- flow
 
     def start(self) -> None:
-        """Lobby -> the tutorial. A new campaign also clears the DEMO stamp."""
+        """Lobby -> the cast introduction, then the tutorial. A new campaign also clears the DEMO stamp."""
         self._reset_run()
         self.demo = False
-        self._hint("H_TITLE")
-        self.enter("TUTORIAL")
+        self.enter("INTRO")
 
     def enter(self, scene: str) -> None:
         self.scene = scene
@@ -264,6 +301,10 @@ class Campaign:
         self._clear_inputs()
         if kind == "end":
             self.phase = "end"
+            return
+        if kind == "intro":
+            self.phase, self.i = "intro", 0
+            self._intro_voice()
             return
         if kind == "play":
             self._start_play(scene)
@@ -291,10 +332,25 @@ class Campaign:
         self.phase = "question" if self.scene in QUIZZES and self.i == self._gate() and self.scene not in self.answers else "comic"
         self._voice(self.beat_list[self.i])
 
+    def _intro_voice(self) -> None:
+        card = INTRO_CARDS[self.i]
+        if card.get("voice"):
+            b = self._beat(card["voice"])
+            self.events.append({"t": "event", "kind": "voice", "id": card["voice"], "speaker": "Clown",
+                                "caption": b.caption if b is not None else card["title"]})
+
     def next(self) -> None:
-        """Presenter: the next bubble. Never past an unanswered question."""
+        """Presenter: the next bubble (or cast card). Never past an unanswered question."""
         if self.phase == "lobby":
             self.start()
+            return
+        if self.phase == "intro":
+            if self.i + 1 < len(INTRO_CARDS):
+                self.i += 1
+                self._intro_voice()
+            else:
+                self._hint("H_TITLE")
+                self.enter("TUTORIAL")
             return
         if self.phase not in ("comic", "question"):
             return
@@ -307,7 +363,10 @@ class Campaign:
             self._finish_scene()
 
     def back(self) -> None:
-        """Presenter: reread the previous bubble of this comic. It can't undo an answer."""
+        """Presenter: reread the previous bubble of this comic (or cast card). It can't undo an answer."""
+        if self.phase == "intro" and self.i > 0:
+            self.i -= 1
+            return
         if self.phase in ("comic", "question") and self.i > 0:
             self.i -= 1
             self.phase = "comic"
@@ -315,6 +374,10 @@ class Campaign:
 
     def skip(self) -> None:
         """Presenter: to the end of this comic, stopping at an unanswered question; never answers or wins anything."""
+        if self.phase == "intro":
+            self._hint("H_TITLE")
+            self.enter("TUTORIAL")
+            return
         if self.phase not in ("comic", "question"):
             return
         gate = self._gate()
@@ -386,6 +449,7 @@ class Campaign:
         fly = self.session.state.fly
         fly.vx = fly.vy = fly.vz = 0.0
         fly.x, fly.y, fly.z = 0.0, 0.0, -0.95
+        self._apply_dizziness()  # this scene's movement (the wall courses fly slower forward and back)
         if self.dizzy > self._dizzy_told:  # a wrong answer since the last flight: say so once, before flying
             self._dizzy_told = self.dizzy
             self._hint("UI_DIZZY", once=False)
@@ -501,7 +565,7 @@ class Campaign:
         """One hand lands: hit or dodge, atomically, once."""
         a.resolved = True
         f.attacks.remove(a)
-        hit = _dist(fly, a.target) < HIT_RADIUS
+        hit = _dist(fly, a.target) < (GIANT_HIT_RADIUS if f.kind == "giant" else HIT_RADIUS)
         f.impact = {"x": a.target[0], "y": a.target[1], "z": a.target[2], "hit": hit, "at": f.t, "fight": f.kind}
         fight = "father" if f.kind == "father" else "giant"
         if f.kind == "swat":  # Stage 2's swats: sounds only (the Giant fight's shouts and counts come later)
@@ -547,14 +611,22 @@ class Campaign:
         """Recovery between attacks: slower first, shorter at the end (docs/GAME.md progression)."""
         if f.kind == "father":
             return 2.6
+        if f.kind == "giant":
+            return 2.0 if f.dodges < 3 else (1.6 if f.dodges < 7 else 1.2)
         return 2.6 if f.n <= 3 else (2.2 if f.n <= 7 else 1.6)
 
     def _launch(self, fly: Any, f: Fight) -> None:
         f.n += 1
         side = f.rng.choice(("left", "right"))
-        warn = WARN_S + (0.4 if f.kind == "giant" and f.n <= 3 else 0.0)
-        off = -SIDE_OFFSET if side == "left" else SIDE_OFFSET
-        target = (max(-0.85, min(0.85, fly.x + off)), max(-0.85, min(0.85, fly.y)), fly.z)
+        if f.kind == "giant":
+            warn = GIANT_WARN_S[0 if f.dodges < 3 else (1 if f.dodges < 7 else 2)]
+            off = -GIANT_SIDE_OFFSET if side == "left" else GIANT_SIDE_OFFSET
+            aim = (fly.x + fly.vx * GIANT_LEAD_S, fly.y + fly.vy * GIANT_LEAD_S)
+        else:
+            warn = WARN_S
+            off = -SIDE_OFFSET if side == "left" else SIDE_OFFSET
+            aim = (fly.x, fly.y)
+        target = (max(-0.85, min(0.85, aim[0] + off)), max(-0.85, min(0.85, aim[1])), fly.z)
         f.attacks.append(Attack(f.n, side, f.t, f.t + warn, target))
 
     # ---------------------------------------------------------------- senses and screens
@@ -619,6 +691,9 @@ class Campaign:
                                "dizzy": self.dizzy, "steadiness": STEADINESS[self.dizzy]}
         if self.phase == "end":
             out["ending"] = self.ending
+        if self.phase == "intro":
+            out["intro"] = {"index": self.i, "count": len(INTRO_CARDS), "card": dict(INTRO_CARDS[self.i]),
+                            "cast": [c["rig"] for c in INTRO_CARDS]}
         if self.phase in ("comic", "question") and self.beat_list:
             b = self.beat_list[self.i]
             panel_cast = self._panel_cast(b.panel)
@@ -660,7 +735,8 @@ class Campaign:
 
     def phone_phase(self) -> dict[str, Any]:
         """Every phone's screen mode ({"t": "phase"} goes to all phones; the question text isn't secret)."""
-        view: dict[str, Any] = {"t": "phase", "phase": self.phase, "scene": self.scene}
+        # the cast introduction is story time on the phones, like a comic
+        view: dict[str, Any] = {"t": "phase", "phase": "comic" if self.phase == "intro" else self.phase, "scene": self.scene}
         if self.phase == "question":
             q = QUIZZES[self.scene]
             view["question"] = {"id": self.scene, "text": q["text"], "a": q["a"], "b": q["b"]}

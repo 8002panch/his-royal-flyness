@@ -26,7 +26,7 @@ and those senses run through the real wiring of a male fruit fly's nervous syste
 
 ## How the planned campaign plays
 
-Join → garden grape tutorial → opening comic → Tinman's drink question → basement Stage 1 →
+Join → the cast introduction (Dramatis Personae) → garden grape tutorial → opening comic → Tinman's drink question → basement Stage 1 →
 Rutabaga's drink question → sixty-second Stage 2 → Cheapdate's drink question → banquet comic →
 ten Giant dodges → reconciliation, or a father encounter requiring five untouched dodges →
 one of two endings. Full layouts, questions and panel script are in [the story plan](#story-campaign-and-comic-cutscenes--approved-team-plan).
@@ -112,14 +112,24 @@ certification claim is required. Display delivery/dodge/time counts computed by 
 |          Hamlet and atmospheric royal surroundings             |
 |          no live hidden hazard locations or route map          |
 |                                                                |
-| x/y/z motion indicators              Royal Nervous System HUD   |
+| x/y/z motion indicators                Hamlet's brain map (top right) |
 |                                                                |
 | Helmsman   Liftmaster   Wingmaster   Seer        team status    |
 +----------------------------------------------------------------+
 ```
 
 - During hidden-navigation/hazard play, the shared screen reveals no actionable wall/spike layout, hand landing zone or throw path. No shadows or directional sounds can leak those secrets. Authored comic panels are separate from live sensing.
-- The **Royal Nervous System HUD** draws one bar per brain-activity value (`vision`, `looming`, `escape`, as z-scores). With the
+- **Hamlet's brain map** (top right; built Sun 27 Sept, replacing the Seer panel): a labelled drawing of the fly's CNS
+  (eyes, smell, memory, balance, instinct, courting, taste, commands, escape, nerve cord, muscles). Each region is a group of
+  real neurons picked by MaleCNS annotation; its colour is log2 of its mean rate against sober rest (dark = quieter, gold then
+  crimson = busier). It runs a second copy of the whole-CNS model (`brain/brain_map.py`) driven only by Hamlet's movement
+  (each direction stimulates the brain-v2 visual group for that direction), so it never carries the Seer's secret. Each
+  wrong quiz answer (a grape cordial) adds one step of the disclosed alcohol assumption: GABA neurons' output +20%, excitatory
+  neurons' output -8%, per cordial. During the three drink questions the panel grows down the right side, pulses the regions
+  the question is about, flips the map between before and after one cordial, and shows the model's computed change per
+  region (for one cordial from sober in forward flight: balance -10%, commands -27%, muscles -30%, memory -32%). These are
+  model outputs under our assumption, not measured fly or human results. The Seer's brain is never given alcohol.
+- *(Older, replaced by the brain map:)* The **Royal Nervous System HUD** draws one bar per brain-activity value (`vision`, `looming`, `escape`, as z-scores). With the
   Changeling the bars stay low (its looming readout never reaches the warning level), which is the demo's clearest picture of
   "the wiring matters."
 - Captions for every voice line; a badge for TRUE PRINCE or CHANGELING.
@@ -445,11 +455,19 @@ Seer phone. Detect Miranda with Neil's existing system; do not relabel a grape a
 input or claim the brain can recognize grapes. Repeat hints on inactivity; do not secretly
 auto-complete. A replay tutorial option belongs in the testing menu.
 
+**The cast introduction (built Sun 27 Sept):** Enter in the lobby opens *Dramatis Personae* before the tutorial: one card
+per character (Hamlet, Miranda, Prospero, Clown, Tinman, Rutabaga, Cheapdate, the Giant, then the council's four roles), each
+with the character large and animated, their part in the story and the real gene behind the name. Space/Right moves on,
+Left goes back, S skips to the garden. Phones show "story time".
+
 #### Stage 1 — The Journey to the Court
 
 **Arrival:** the low side window leads to a storage landing and down into the crowded basement.
 This fixes the geography: the window does not inexplicably open directly into the throne room.
 **Objective:** traverse the basement and reach the staircase. The timer is not the challenge.
+
+**Speed (Sun 27 Sept):** in both wall courses forward/back flight has 45% of the other axes' acceleration and top speed
+(`COURSE_Z_SCALE`), because the walls came at the council too fast to steer through.
 
 Proposed course has three readable sections: a wide sideways bend between stacked objects;
 an up/down passage with a safe resting pocket; a final narrow section with spikes on alternating
@@ -503,6 +521,12 @@ Passing the final doorway starts Cheapdate's comic, not another timed section.
 #### Giant encounter — Outlast the Giant
 
 **Objective fixed by Arnav:** survive **10 successful dodges**; the Giant tires and leaves.
+
+**Tuning (Sun 27 Sept, Neil: "the hand is too easy to dodge"):** warnings of 1.9 s for the first three dodges, 1.6 s up to
+seven, then 1.4 s (was 2.4 / 2.0 s); the hand is wider (hit radius 0.34, was 0.30), lands almost on Hamlet and aims where
+he's heading at onset (still locked, never chasing); second hands from 3 dodges and third from 6 (was 4 and 7), 1.0 s apart
+(was 1.3 s); shorter gaps (2.0 / 1.6 / 1.2 s). In simulation the old tuning was won with no hits even by a pilot reacting
+0.9 s after the Seer's cue; the new one costs slow teams hits and sometimes the fight.
 No player attack, enemy health bar, weapons or combat button. Use normal flight controls.
 
 Arena: a broad clear space where sideways, height and forward/back movement can avoid a hand.
@@ -723,7 +747,7 @@ inputs and movement settings; scripted wall/throw guidance remains explicitly la
 | Exact wall/spike/opening guidance | New scripted navigation aid proposed for the Seer only. Existing brain output does not provide wall maps or up/down safe paths. Label it as game-authored guidance. |
 | Exact hand landing zone | Server knows it for collision; current neural cue is coarse direction/time. Do not present an exact coordinate as measured brain output. For first implementation, use large readable attack sectors that coarse cues can distinguish; exact private assistance needs explicit disclosure. |
 | Father projectile cues | New hazard type. Reuse delivery/privacy/avoidance rules, but do not silently label thrown-object detection as an already validated neural feature. Neil reviews any looming-input reuse; scripted guidance is disclosed. |
-| Dizziness | Scripted movement modifier, not alcohol simulated in the nervous system. No alteration of neural evidence. |
+| Dizziness | Scripted movement modifier. Separately, the brain map shows a disclosed alcohol assumption on a second copy of the model; the Seer's brain and cues are never altered. |
 | 2/3-player combined jobs and requested behind/above view | Requested product direction; current technical baseline is four phone roles and 2D presentation. Owner integration remains necessary; no new 3D engine implied. |
 
 **Confirmed in this review:** strict cast substitutions; fermented grape cordial/pear nectar;

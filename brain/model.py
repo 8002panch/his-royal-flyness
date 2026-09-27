@@ -94,6 +94,7 @@ class RateModel:
                 self.input_scale[a] = mean / len(self.inputs[a])
                 self.input_scale[b] = mean / len(self.inputs[b])
         self.rng = np.random.default_rng(seed)
+        self.pre_scale: np.ndarray | None = None
         self.load(kind, seed)
 
     # --- wiring -------------------------------------------------------------------------------------------
@@ -121,7 +122,9 @@ class RateModel:
         p = self.p
         noisy = current.copy()
         noisy[self.input_neurons] += self.rng.normal(0.0, p.noise_sd, len(self.input_neurons)).astype(np.float32)
-        target = np.clip(p.gain * (self.W @ self.r) + noisy - p.theta, 0.0, 1.0)
+        # pre_scale: an optional per-sender output strength (brain/brain_map.py's alcohol assumption); None for the Seer
+        sent = self.r if self.pre_scale is None else self.r * self.pre_scale
+        target = np.clip(p.gain * (self.W @ sent) + noisy - p.theta, 0.0, 1.0)
         self.r += (p.dt / p.tau) * (target - self.r)
 
     def _tick(self, drives: dict[str, float]) -> None:

@@ -62,16 +62,16 @@ func _draw() -> void:
 	var status := _status()
 	var w := PixelFonts.width(bold, parts[0], PixelFonts.LABEL_SIZE) + 16
 	var ws := PixelFonts.width(bold, status, PixelFonts.LABEL_SIZE) + 16 if status != "" else 0
-	# centred, but clear of the Reliquary (left) and the Seer's panel (right); a long objective puts its counters on a
-	# second row instead of running under the Seer's panel
-	var room := 526 - 78
+	# centred, but clear of the Reliquary (left) and the brain map (right); a long objective puts its counters on a
+	# second row instead of running under the brain map
+	var room := 480 - 78
 	var one_row := w + ws <= room
-	var x := clampi(HallCam.W / 2 - ((w + ws) if one_row else w) / 2, 78, maxi(78, 526 - ((w + ws) if one_row else w)))
+	var x := clampi(HallCam.W / 2 - ((w + ws) if one_row else w) / 2, 78, maxi(78, 480 - ((w + ws) if one_row else w)))
 	HudDraw.panel(self, Rect2i(x, Y, w, 14), Pal.PARCHMENT, Pal.INK, Pal.GOLD, Pal.PARCHMENT_SHADE)
 	HudDraw.text(self, bold, x + 8, Y + 3, parts[0], Pal.INK, PixelFonts.LABEL_SIZE)
 	_row = 16
 	if status != "":
-		var sx := x + w if one_row else clampi(HallCam.W / 2 - ws / 2, 78, 526 - ws)
+		var sx := x + w if one_row else clampi(HallCam.W / 2 - ws / 2, 78, 480 - ws)
 		var sy := Y if one_row else Y + 16
 		HudDraw.panel(self, Rect2i(sx, sy, ws, 14), Pal.ROYAL, Pal.INK, Pal.GOLD, Pal.ROYAL_DARK)
 		HudDraw.text(self, bold, sx + 8, sy + 3, status, Pal.GOLD_LIGHT, PixelFonts.LABEL_SIZE)
@@ -104,7 +104,7 @@ func _guide_row(bold: Font) -> void:
 	var total := 0
 	for w in widths:
 		total += w + 14
-	var x := clampi(HallCam.W / 2 - total / 2, 78, maxi(78, 526 - total))
+	var x := clampi(HallCam.W / 2 - total / 2, 78, maxi(78, 480 - total))
 	HudDraw.panel(self, Rect2i(x - 6, Y + _row, total + 4, 13), Pal.PARCHMENT, Pal.INK, Color(0, 0, 0, 0), Pal.PARCHMENT_SHADE)
 	HudDraw.text(self, bold, x, Y + _row + 3, text, Pal.INK, PixelFonts.LABEL_SIZE)
 	x += widths[0] + 14

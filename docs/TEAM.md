@@ -40,6 +40,12 @@ True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 
 
 ### Phase log
 
+- **Sun 27 Sept, ~07:30 (Neil, with Claude):** Hamlet's live brain map replaces the Seer panel top right (`brain/brain_map.py`,
+  `host/scripts/court/hud/brain_map_panel.gd`; `brainMap` in TECH.md), with the disclosed alcohol assumption and a
+  before/after comparison during the three drink questions (the comic moves left to make room). A *Dramatis Personae* cast
+  introduction before the tutorial (`INTRO` in `server/campaign.py`, `hud/intro_overlay.gd`). Wall courses: forward/back at
+  45% speed. Giant fight harder (GAME.md, "Giant encounter"). Decree updated. Heads-up Arnav and Anshul: this touched
+  `server/main.py`, `server/campaign.py`, `server/movement.py`, `run_local.py` and `host/scripts/court/hud/`.
 - **Phase 0 (Ved):** architecture boundary and secret template; no runtime code.
 - **Phase 1 (Ved):** `relay/relay.py` with isolated four-letter rooms, one host per room, at most four phones, unique roles,
   reconnect restore, monotonic `seq`, 1.2 s stale-input clearing; state and two-client network tests.

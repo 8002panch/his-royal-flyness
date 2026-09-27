@@ -16,7 +16,7 @@ import threading
 import time
 from typing import Any
 
-from .campaign import Campaign
+from .campaign import QUIZZES, Campaign
 from .godot_link import GodotLink
 from .movement import MovementSimulator, WallGate
 from .relay_client import HostJoinError, RelayClient
@@ -28,6 +28,7 @@ STALE_INPUT_SECONDS = 1.2
 TICK_S = 1 / 50
 GODOT_S = 1 / 30
 PHONE_S = 1 / 10
+MAP_S = 1 / 25   # brain-map steps per second (each is one 20 ms model step, ~6 ms of compute)
 SEER_SOURCES = ("true", "changeling", "placeholder")
 # Distance at which the Princess fully drives the Seer's Princess detectors, set to this hall's scale (world units x 220 cm, so
 # she is 10 to 540 cm away): NEAR within ~170 cm, MID to ~330 cm, FAR to ~530 cm (detection limit ~5x this). Retune for Phase 5's hall.
@@ -62,6 +63,20 @@ def make_seer(source: str = "true") -> Any:
         return PlaceholderSeerAdapter()
 
 
+def make_brain_map(source: str = "true") -> Any:
+    """The live brain map for the main screen (brain/brain_map.py): a second copy of the model driven by Hamlet's movement.
+    None without the brain's data files (or with placeholder cues): the screen then shows no map."""
+    if source not in ("true", "changeling"):
+        return None
+    try:
+        from brain.brain_map import BrainMap
+
+        return BrainMap(source)
+    except Exception as exc:
+        print(f"[server] brain map unavailable ({exc!r})")
+        return None
+
+
 class GameSession:
     """Pure authoritative game state; importable for headless replay and tests."""
 
@@ -82,6 +97,12 @@ class GameSession:
         self.players: list[dict[str, str]] = []  # [{"name", "role"}] for the host screens, from the relay's roster messages
         self.stimuli: dict[str, Any] | None = None
         self.cues: dict[str, Any] | None = None
+        # The brain map (brain/brain_map.py): movement and drinks in, region activity out. Stepped on its own thread by
+        # GameServer.map_forever (or by step_map in tests); it never sees the Princess or the Giant.
+        self.brain_map: Any = None
+        self.map_view: dict[str, Any] | None = None
+        self.map_compare: dict[str, Any] | None = None
+        self._map_swap: tuple[str, int] | None = None
         self.campaign = Campaign(self) if campaign else None
         self._phase_sent: dict[str, Any] | None = None
         self._phase_sent_at = -10.0
@@ -161,7 +182,42 @@ class GameSession:
             with self.seer_lock:
                 swap(source, seed)
                 self.cues = None
+        if self.brain_map is not None and source in ("true", "changeling"):
+            self._map_swap = (source, seed)  # done on the map's thread (it recalibrates for about a second)
         return self.seer.source
+
+    def step_map(self) -> None:
+        """One brain-map step: the swap if one is waiting, the drinks drunk so far, his velocity, and the quiz comparison."""
+        bm = self.brain_map
+        if bm is None:
+            return
+        if self._map_swap is not None:
+            kind, seed = self._map_swap
+            self._map_swap = None
+            bm.swap(kind, seed)
+        campaign = self.campaign
+        bm.set_drinks(campaign.dizzy if campaign is not None else 0)
+        fly = self.state.fly
+        bm.step({"x": fly.vx, "y": fly.vy, "z": fly.vz})
+        self.map_view = bm.view()
+        self.map_compare = self._quiz_compare(bm)
+
+    def _quiz_compare(self, bm: Any) -> dict[str, Any] | None:
+        """During a drink question: what one more cordial does to the model brain, for the regions the question is about.
+        Before the answer it's the cordial on offer; after a wrong answer, the one just drunk; after a right one, the one avoided."""
+        c = self.campaign
+        if c is None or c.scene not in QUIZZES or c.phase not in ("comic", "question"):
+            return None
+        q = QUIZZES[c.scene]
+        chosen = c.answers.get(c.scene)
+        if chosen is None:
+            status, before = "offer", c.dizzy
+        elif chosen != q["correct"]:
+            status, before = "drunk", max(0, c.dizzy - 1)
+        else:
+            status, before = "avoided", c.dizzy
+        after = min(3, before + 1)
+        return {**bm.compare(before, after), "status": status, "focus": list(q["focus"]), "maxed": before >= 3}
 
     def phone_views(self) -> list[dict[str, Any]]:
         fly = self.state.fly
@@ -218,11 +274,21 @@ class GameSession:
             "t": "state", "phase": "play", "time": round(self.state.elapsed_s, 3),
             "room": self.state.room_code, "joinUrl": self.join_url, "locked": self.locked,
             "brain": self.seer.source, "brainActivity": activity,
+            "brainMap": self._map_fields(),
             "fly": {"x": round(fly.x, 4), "y": round(fly.y, 4), "z": round(fly.z, 4), "vx": round(fly.vx, 4), "vy": round(fly.vy, 4), "vz": round(fly.vz, 4)},
             "render": {"princess": stimuli["princess"]},
             "roles": {role: self.state.inputs[role].value != 0 for role in self.state.inputs},
             "players": [dict(p) for p in self.players],
         } | self._campaign_fields()
+
+    def _map_fields(self) -> dict[str, Any] | None:
+        """The brain map for the corner panel: movement-driven, so it's safe on the shared screen in every phase."""
+        if self.map_view is None:
+            return None
+        out = dict(self.map_view)
+        if self.map_compare is not None:
+            out["quiz"] = self.map_compare
+        return out
 
     def _campaign_fields(self) -> dict[str, Any]:
         if self.campaign is None:
@@ -364,10 +430,34 @@ class GameServer:
                 next_slot = time.monotonic()
                 stop.wait(0.004)
 
+    def map_forever(self, stop: threading.Event) -> None:
+        """The brain map on its own thread at MAP_S (half the game's tick rate keeps the laptop's load down)."""
+        session = self.session
+        try:
+            session.brain_map.drink_table()  # the quiz comparison's numbers, ready before the first question
+        except Exception as exc:
+            print(f"[server] brain map table failed: {exc!r}", flush=True)
+        next_slot = time.monotonic()
+        while not stop.is_set():
+            try:
+                session.step_map()
+            except Exception as exc:  # never let the map take the game down
+                print(f"[server] brain map error: {exc!r}", flush=True)
+                stop.wait(1.0)
+            next_slot += MAP_S
+            delay = next_slot - time.monotonic()
+            if delay > 0:
+                stop.wait(delay)
+            else:
+                next_slot = time.monotonic()
+                stop.wait(0.004)
+
     async def run(self) -> None:
         sys.setswitchinterval(0.001)  # the brain thread hands the GIL back to the game loop quickly
         receiver = asyncio.create_task(self.relay_forever())
         stop_seer = threading.Event()
+        if self.session.brain_map is not None:
+            threading.Thread(target=self.map_forever, args=(stop_seer,), name="brain-map", daemon=True).start()
         if hasattr(self.session.seer, "swap"):  # the brain-powered Seer; the placeholder is instant and stays in step()
             self.session.sense_in_step = False
             threading.Thread(target=self.seer_forever, args=(stop_seer,), name="seer-brain", daemon=True).start()
@@ -408,6 +498,7 @@ def _next_time(scheduled: float, period: float, now: float) -> float:
 
 async def run(room: str, relay_url: str, secret: str, godot_port: int, seer: str = "true", join_url: str | None = None) -> None:
     session = GameSession(room, seer=make_seer(seer), join_url=join_url, campaign=True)
+    session.brain_map = make_brain_map(session.seer.source)
     print(f"[server] room {room}, Seer source: {session.seer.source}")
     godot = GodotLink()
     async with godot.serve(port=godot_port):

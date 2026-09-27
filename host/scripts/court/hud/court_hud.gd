@@ -2,15 +2,20 @@ class_name CourtHud
 extends CanvasLayer
 
 ## Parchment-and-gold UI over the hall. Kept to the edges so the hall stays
-## the hero: ribbon on top, one objective line, the Reliquary (top-left), the
-## Seer's panel (top-right), a caption scroll and the four role cards along the bottom.
+## the hero: ribbon on top, one objective line, the Reliquary (top-left), Hamlet's
+## live brain map (top-right; it grows down the side during the drink questions),
+## a caption scroll and the four role cards along the bottom.
 
 const CARD_Y := 318
 
 var ribbon := TopRibbon.new()
 var objective := ObjectiveBanner.new()
 var reliquary := Reliquary.new()
-var seer := SeerPanel.new()
+## preloaded, not by class_name, so a fresh pull runs before Godot has registered the new class
+const BRAIN_MAP := preload("res://scripts/court/hud/brain_map_panel.gd")
+var brain_map: Control = BRAIN_MAP.new()
+const INTRO := preload("res://scripts/court/hud/intro_overlay.gd")
+var intro: Control = INTRO.new()
 var caption := CaptionScroll.new()
 var cards: Array = []
 var lobby := LobbyOverlay.new()
@@ -31,8 +36,7 @@ func _ready() -> void:
 	add_child(objective)
 	reliquary.position = Vector2(4, 27)
 	add_child(reliquary)
-	seer.position = Vector2(HallCam.W - SeerPanel.PANEL.x - 4, 27)
-	add_child(seer)
+	add_child(brain_map)
 	add_child(caption)
 	for i in Pal.ROLE_ORDER.size():
 		var card := RoleCard.new()
@@ -47,10 +51,13 @@ func _ready() -> void:
 	add_child(story)
 	comic.visible = false
 	add_child(comic)
+	intro.visible = false
+	add_child(intro)
+	move_child(brain_map, -1)  # over the comic, so it stays in view through the drink questions
 	move_child(ribbon, -1)
 	decree.visible = false
 	add_child(decree)  # over everything, the ribbon included
-	_play_nodes = [objective, reliquary, seer, caption]
+	_play_nodes = [objective, reliquary, brain_map, caption]
 	_play_nodes.append_array(cards)
 	set_phase("play")
 
@@ -72,7 +79,10 @@ func apply_state(cs: CourtState, hazard_in_view: bool) -> void:
 	end_scene.apply(cs)
 	story.apply(cs)
 	comic.apply(cs)
-	seer.apply(cs, hazard_in_view)
+	intro.apply(cs)
+	brain_map.visible = brain_map.visible and cs.phase != "intro"
+	brain_map.apply(cs)
+	comic.narrow = brain_map.quiz_mode()  # the comic makes room for the map during the drink questions
 	for c in cards:
 		(c as RoleCard).apply(cs)
 	if lobby.visible:

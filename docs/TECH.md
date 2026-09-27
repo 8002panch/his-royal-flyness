@@ -175,6 +175,19 @@ or null, `seconds` may be null.
   number is ever shown as brain output. The HUD draws one bar per key, whatever the keys are. The keys are **side-free on purpose**:
   a left/right or "straight ahead" bar on the shared screen would give away the Seer's secret (tested:
   `test_hud_activity_does_not_give_away_where_the_princess_is`).
+- `brainMap` (Sun 27 Sept, Neil; `null` without the brain's data files): Hamlet's brain map for the top-right panel,
+  `{"regions": {key: log2 of mean rate vs sober rest}, "drinks": 0-3, "kind", "neurons", "gabaPct", "excitePct"}`, plus
+  `"quiz": {"status": "offer"|"drunk"|"avoided", "focus": [keys], "before", "after", "from", "to", "pct", "maxed"}` during
+  a drink question. Region keys: `eye_L eye_R smell memory balance instinct courtship taste commands escape cord muscles`.
+  It comes from `brain/brain_map.py`: a second `RateModel` stepped at 25 Hz on its own thread (`GameServer.map_forever`,
+  `GameSession.step_map`), driven only by the fly's velocity (each axis direction drives the brain-v2 input group for that
+  direction, 0.8 at full speed) and the campaign's wrong answers (`dizzy`) as drinks. Alcohol is `RateModel.pre_scale`, a
+  per-sender output multiplier: GABA neurons x(1 + 0.20 n), excitatory (sign +1) neurons x(1 - 0.08 n) for n cordials; the
+  Seer's model always has `pre_scale = None`. `pct` compares steady forward flight at `before` and `after` drinks (the
+  drink table, computed once per wiring in about 2 s when the thread starts). Because it never sees the Princess or the
+  Giant, it's safe on the shared screen in fights too. Its left/right eyes light only with his own (public) movement.
+- `intro` (phase `"intro"`, before the tutorial): `{"index", "count", "card": {"rig", "name", "title", "fact"}, "cast": [rigs]}`
+  from `server/campaign.py` `INTRO_CARDS`; next/back/skip move through it (phones get phase `"comic"`).
 - `roles`: whether each role's input is currently non-zero.
 - `players`: role to display name for the phones holding a role (filled by `run_local.py` from its relay; `{}` otherwise).
 - Still to define (Arnav, Anshul's request): `"controls"`, each movement axis's live value for the HUD's axis indicators.

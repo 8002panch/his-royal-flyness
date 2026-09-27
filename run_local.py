@@ -47,7 +47,7 @@ from websockets.server import serve  # noqa: E402
 
 from relay.relay import SERVE_OPTIONS, RelayServer, RelayState  # noqa: E402
 from server.godot_link import GodotLink  # noqa: E402
-from server.main import SEER_SOURCES, GameServer, GameSession, make_seer  # noqa: E402
+from server.main import SEER_SOURCES, GameServer, GameSession, make_brain_map, make_seer  # noqa: E402
 from server.relay_client import RelayClient  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent
@@ -237,6 +237,7 @@ async def main(args: argparse.Namespace) -> None:
     relay_state = RelayState(room_secret=secret, require_host=True)  # a code only works while this game hosts it
     relay = RelayServer(relay_state)
     session = GameSession(room, seer=make_seer(args.seer), join_url=phone_url, campaign=True)  # phone_url has {room}
+    session.brain_map = make_brain_map(session.seer.source)  # the main screen's live brain map (brain/brain_map.py)
     if not remote:
         serve_phone_page(args.http_port)
     serve_host_screen(args.host_port, lambda: session.join_url)

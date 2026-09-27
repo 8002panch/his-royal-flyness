@@ -110,7 +110,15 @@ def test_lobby_shows_the_qr_then_start_reaches_flight():
     state = g.s.godot_state()
     assert state["phase"] == "lobby" and len(state["joinQr"]) >= 21 and set("".join(state["joinQr"])) <= {"0", "1"}
     g.s.godot_state()  # the QR is cached
-    g.c.next()  # Enter in the lobby starts the story
+    g.c.next()  # Enter in the lobby starts the story: the cast, one card at a time, then the garden
+    assert (g.c.scene, g.c.phase) == ("INTRO", "intro") and not g.c.demo
+    assert g.s.godot_state()["intro"]["card"]["name"] == "Prince Hamlet"
+    assert g.s.phone_views()[-1]["phase"] == "comic", "phones show story time during the cast"
+    g.c.next()
+    g.c.back()
+    assert g.s.godot_state()["intro"]["index"] == 0
+    for _ in range(len(cm.INTRO_CARDS)):
+        g.c.next()
     assert (g.c.scene, g.c.phase) == ("TUTORIAL", "ready") and not g.c.demo
     g.hold(z=1)
     g.run(1.0, pilot=lambda g: (0, 0, 1))
@@ -217,7 +225,8 @@ def test_ten_dodges_choose_c03_then_e01_with_no_extra_attack():
     g.run(2.1)
     assert g.run(90, pilot=dodge_pilot, until=lambda g: g.c.scene != "GIANT")
     assert g.c.scene == "C03" and [r for r in g.results if r[0] == "dodge"] == [("dodge", "giant", n) for n in range(1, 11)]
-    assert not [r for r in g.results if r[0] == "hit"]
+    # the Giant is meant to be hard (volleys, short warnings): even this instant, all-knowing pilot may take a hit or two
+    assert len([r for r in g.results if r[0] == "hit"]) < cm.GIANT_HITS
     g.read_comic()
     assert g.c.scene == "E01" and "E01_P1A_MIRANDA" in [b.id for b in g.c.beat_list]
     g.read_comic()
@@ -269,7 +278,9 @@ def test_jumps_mark_demo_and_a_new_story_clears_it():
     assert g.c.jump("GIANT") and g.c.demo and g.s.godot_state()["storyDemo"] is True
     assert not g.c.jump("NOPE")
     g.c.start()
-    assert not g.c.demo and g.c.scene == "TUTORIAL" and g.c.answers == {} and g.c.dizzy == 0
+    assert not g.c.demo and g.c.scene == "INTRO" and g.c.answers == {} and g.c.dizzy == 0
+    g.c.skip()  # S skips the cast straight to the garden
+    assert g.c.scene == "TUTORIAL"
 
 
 def test_the_free_flight_world_is_unchanged_without_a_campaign():

@@ -6,9 +6,24 @@ extends Control
 ## animated rigs (the speaker gestures from the line's audio tag), and a speech bubble (the Clown narrates in a caption box).
 ## The presenter moves on with Space / Page Down / Right, back with Left, and S skips; the Seer answers on their phone.
 
-const PANEL := Rect2i(26, 28, 588, 306)
-const ART := Rect2i(34, 36, 572, 206)
-const BUBBLE := Rect2i(38, 256, 564, 58)
+const WIDE_PANEL := Rect2i(26, 28, 588, 306)
+const WIDE_ART := Rect2i(34, 36, 572, 206)
+const WIDE_BUBBLE := Rect2i(38, 256, 564, 58)
+## During the drink questions the brain map takes the right-hand column (hud/brain_map_panel.gd), so the comic moves left.
+const NARROW_PANEL := Rect2i(4, 28, 474, 306)
+const NARROW_ART := Rect2i(12, 36, 458, 206)
+const NARROW_BUBBLE := Rect2i(16, 256, 450, 58)
+var PANEL := WIDE_PANEL
+var ART := WIDE_ART
+var BUBBLE := WIDE_BUBBLE
+var narrow := false:
+	set(v):
+		if v != narrow:
+			narrow = v
+			PANEL = NARROW_PANEL if v else WIDE_PANEL
+			ART = NARROW_ART if v else WIDE_ART
+			BUBBLE = NARROW_BUBBLE if v else WIDE_BUBBLE
+			_cast_key = ""  # re-place the rigs across the new width
 const FEET_Y := 238
 const RIG_SCALE := 1.6
 const INK_FOR := {"hamlet": Pal.ROYAL, "miranda": Pal.ROYAL_LIGHT, "prospero": Pal.CRIMSON_DARK, "tinman": Pal.STONE,

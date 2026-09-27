@@ -14,6 +14,7 @@ class MovementTuning:
     max_speed: float = 1.0
     dead_zone: float = 0.05
     bounds: float = 1.0
+    z_scale: float = 1.0  # forward/back acceleration and top speed, relative to the other axes (the wall courses slow it)
 
 
 @dataclass(frozen=True)
@@ -59,13 +60,15 @@ class MovementSimulator:
                 intent = 0.0
             velocity_name = f"v{axis}"
             velocity = getattr(fly, velocity_name)
+            scale = self.tuning.z_scale if axis == "z" else 1.0
             if intent:
-                velocity += intent * self.tuning.acceleration * dt
+                velocity += intent * self.tuning.acceleration * scale * dt
             else:
                 velocity *= max(0.0, 1.0 - self.tuning.drag_per_second * dt)
-                if abs(velocity) < self.tuning.dead_zone:
+                if abs(velocity) < self.tuning.dead_zone * scale:
                     velocity = 0.0
-            velocity = max(-self.tuning.max_speed, min(self.tuning.max_speed, velocity))
+            top = self.tuning.max_speed * scale
+            velocity = max(-top, min(top, velocity))
             previous_position = getattr(fly, axis)
             position = previous_position + velocity * dt
             if position <= -self.tuning.bounds or position >= self.tuning.bounds:
