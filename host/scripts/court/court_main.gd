@@ -61,6 +61,9 @@ func _ready() -> void:
 		_on_state(GameState.latest_state)
 	if args.has("demo"):
 		_toggle_demo()
+	elif GameState.has_meta("entry_keyboard_demo"):
+		GameState.remove_meta("entry_keyboard_demo")
+		_toggle_demo()
 	if args.has("live_shot"):
 		# the normal GameState pipeline, captured after a few seconds
 		await get_tree().create_timer(float(args.get("after", "6"))).timeout
