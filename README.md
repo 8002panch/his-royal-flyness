@@ -29,6 +29,8 @@ running live in the server (True Prince vs Changeling, tested). In progress: the
 | [docs/TECH.md](docs/TECH.md) | How it works: architecture, protocol, server, brain and Seer, how to run and test |
 | [docs/TEAM.md](docs/TEAM.md) | Who does what, status, open requests, schedule, decisions, rules compliance, submission |
 
+**Approved campaign plan:** [comic script and levels](docs/GAME.md#story-campaign-and-comic-cutscenes--approved-team-plan), [implementation handoff](docs/TECH.md#arnavs-comic-campaign--implementation-planning-not-a-protocol-change), and [remaining tasks](docs/TEAM.md#arnavs-approved-story-plan-and-remaining-implementation-work). This is the plan for upcoming gameplay, not a claim that the campaign already runs. It adds a grape tutorial, three rival questions, two stages, Giant/father dodge encounters and branching comic endings. No keyboard player mode.
+
 ## Team
 
 | Person | GitHub | Role |

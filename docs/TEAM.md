@@ -28,7 +28,7 @@ table and add an entry to the phase log below instead. The protocol that prompts
 | 2 | Four phone controller screens, tap-to-latch, reconnect overlay | Ved | **Done** (PR #3, fix PR #5), 3 JS tests. Not yet tried on physical phones |
 | 3 | Authoritative x/y/z movement graybox; placeholder Seer; 50 / 30 / 10 Hz loops | Arnav (built with Ved's playbook) | **Done** (PR #4), 6 tests |
 | 4 | Godot first-person 2D graybox driven by live state; one-command local launch | Anshul (launcher: Arnav) | **Launcher done** (`python run_local.py`, Sat 19:25) and it opens a **browser host screen** (lobby with room code, QR and seats; live roster and brain bars), a stand-in until the Godot screen is merged. Godot project + HUD on `anshul/host-seer-hud` (not merged); pixel-art direction chosen |
-| 5 | Playable Garden trial: phases, win by alignment, lose on Giant / timeout / overshoot, real and fake Giant warnings, keyboard fallback, host restart | Arnav | Not started |
+| 5 | Arnav comic campaign: grapes, questions, two courses, Giant/father dodge branches and host scene controls | Arnav | Story approved for team sharing; implementation checklist below; gameplay not implemented |
 | 6 | Brain-backed Seer in the server, `brainActivity` to Godot, Decree wording | Neil | **Done** (Sat 19:25): the server runs the real brain by default (placeholder if `data/` is missing), sends `brain` and `brainActivity` to Godot, host toggle for the Changeling. Decree already updated |
 | 7 | DigitalOcean + Caddy + domain, polish, demo runbook | Ved, everyone | **Code ready** (Sat 21:30): `relay/Caddyfile`, `config.js` for a separately hosted page, online mode in `run_local.py`, automatic relay reconnect; rehearsed locally. Deploying needs the team's approval (TECH.md, "Hosting the join link") |
 | Audio | ElevenLabs voices, sound effects, music (GAME.md) | Anshul | Not started |
@@ -111,7 +111,7 @@ Nothing is blocked on Neil right now. On request: the data files for anyone runn
 |---|---|---|---|
 | **Arnav** | Are `run_trials` and bots still wanted now that players move the fly directly? If yes: a headless trial step to import | 21:00 | Paused; Neil works on the demo-laptop speed test and Phase 6 support instead |
 | **Everyone** | Keep the Chronicler? With direct movement it can only credit the Seer | 20:00 check-in | Drop it from the demo; keep the code |
-| **Everyone** | Whose laptop runs the demo (for the full-stack speed test) | 20:00 | Neil's M2 |
+| **Everyone** | Which Windows laptop runs the demo (Arnav confirmed Windows); arrange neural data and full-stack timing on that machine | Before rehearsal | Confirm the actual device; do not assume Neil's M2 |
 
 ### Between others (seen in branches and notes)
 
@@ -143,10 +143,9 @@ From the redesign's ownership table and Ved's phase playbook. Owners, edit freel
 
 **Arnav**
 - [x] Phase 4 launcher and Phase 6 wiring (done by Neil: `run_local.py`, the real Seer, `brain` and `brainActivity`, host toggle).
-- [ ] Phase 5: the Garden trial (phases, alignment win, Giant / timeout / overshoot losses, real and fake warnings, keyboard
-      fallback, host start and restart), plus `controls` in the state message; tune the movement speed.
-- [ ] A reconnect loop for the relay connection (needed before a remote relay).
-- [ ] README "Run it" check from a clean checkout on the demo laptop; test the LAN and keyboard fallbacks.
+- [ ] Phase 5: the comic campaign described in GAME.md (tutorial, questions, courses, dodge encounters, endings), plus `controls` in the state message; tune movement. See the revised story checklist below.
+- [x] Relay reconnect loop (completed by Neil in the shared code, Sat 21:30). Recheck it during full campaign integration.
+- [ ] README "Run it" check from a clean checkout on the demo laptop; test the phone-hotspot backup and planned 2/3/4-player phone configurations. No keyboard player mode.
 
 **Ved**
 - [ ] Four physical phones on venue Wi-Fi with `python run_local.py` (TECH.md, manual check).
@@ -186,11 +185,12 @@ Sleep shifts: Neil + Ved 05:15-07:00; Arnav + Anshul 03:30-05:15. If a task runs
 | Playable | A blind team reaches Miranda using only the Seer's calls | Needs Phases 4-5 |
 | Brain | True Prince sensing measurably more accurate or timely than the Changeling; otherwise the disclosed hybrid | **Passed** (Princess side 59/60 vs 1-10/60; Giant warned 60/60 vs 0/60). No hybrid needed |
 | Stranger test | Role understood within 20 s; Trial I finished without help | 23:30 |
-| Feature freeze | Movement, sensing, one Giant hazard, win/lose, reconnect and keyboard fallback stable | 09:00 |
+| Feature freeze | Movement, sensing, one Giant hazard, win/lose, reconnect and phone-hotspot backup stable; keyboard gameplay removed by Arnav | 09:00 |
 
 **Cut order if behind:** generated trials (agents), live Jester voice, advanced Chronicle, decorative HUD animation, extra rivals,
 Trials II and III. Never cut: the four-role controller loop, the Seer's information asymmetry, the Giant warning, reconnect, the
-keyboard fallback.
+phone-hotspot backup. Keyboard gameplay is no longer in scope. The new campaign's cut order
+must be reviewed with Arnav before dropping a required story branch.
 
 ## Decisions
 
@@ -258,3 +258,48 @@ Not started on purpose; the team decides when. When it starts:
   (only if agents ship); Best First Time Hack (only if all four are first-timers). Overall prizes need no box.
 - **Impact angle:** more than 100 fly-connectome projects appeared in three weeks, nearly all a fly playing an existing game. This
   one puts players inside the fly's senses with a scientific control you can play, on any phone with no install (classroom-ready).
+
+## Arnav's approved story plan and remaining implementation work
+
+Arnav supplied the complete comic-campaign story. The panel script and level rules are in
+GAME.md; the implementation handoff is in TECH.md. This is documentation only.
+No new cutscene, level, quiz, collision rule or ending is implemented by this update.
+Arnav approved sharing the full plan and updating tasks on September 26. This approval covers
+the planning handoff, not a claim that its gameplay is finished. Share via arnav/story-comic-draft.
+
+Confirmed: only the listed cast; Clown narrates; Royal Harvest Chalice and four grapes;
+three rival questions; fermented grape cordial versus pear nectar; sixty-second Stage 2;
+Giant loses after ten dodges, Hamlet loses after three hits; optional father requires five
+spitball dodges without a hit; branching endings. The existing sober garden misunderstanding
+and one-grape-per-trip tutorial are retained. Other tuning values remain starting candidates to verify during playtesting.
+
+### Arnav's revised story work (replaces his older Garden-only Phase 5 scope)
+
+- [ ] Campaign transitions, comic/question pause, one-time quiz outcomes and branch persistence.
+- [ ] Four-grape pickup/delivery tutorial; scripted dizziness with bounded, testable tuning.
+- [ ] Basement checkpoints; 60-second inner passage; private obstacle/hazard guidance.
+- [ ] Ten-dodge/three-hit Giant; five-dodge/no-hit father projectile variant; both endings.
+- [ ] Demo scene selection/reset, isolated from campaign history; all paths and retry tests.
+- [ ] Agree `controls`, comic state, answer submission and private guidance fields with Ved/Anshul before changing the shared messages.
+- [ ] Tune movement and three dizziness levels; ensure every course remains passable at the highest level.
+- [ ] Verify Windows clean-copy launch, real brain data, reconnect behavior and actual phone/hotspot play.
+- [ ] Integrate Anshul's display/audio and Ved's phone additions; run all three outcome routes and separate Demo presets.
+- [ ] Validate 2-, 3-, and 4-player job combinations with Ved; no keyboard mode.
+- [x] Complete the story, panel dialogue, level rules and owner handoff; Arnav approved team sharing.
+
+No keyboard player mode. The requested smaller-group phone modes still require combining jobs;
+the latest four-role implementation stays the baseline until that work is agreed and tested.
+Keep automated replay/bots a separate decision: they are testing tools, not a one-player mode.
+
+### Teammate handoffs for the approved plan
+
+| From → to | Requested work / decision | Current status |
+|---|---|---|
+| Arnav → Anshul | Reusable comic overlay with readable panels/bubbles/captions, Next/Back/Skip; listed-cast-only art; behind/slightly-above view request; shared scene art must not reveal live hidden hazards | Planning handoff, not an edit to host/audio code |
+| Arnav → Ved | Seer-only question choice/confirmation; answer reconnect safety; frozen/latching controls across scenes; private wall/spike/spit guidance; review 2/3-player combined roles | Proposed new capabilities; current protocol unchanged |
+| Arnav → Neil | Review quiz facts and exact limits of neural hazard cues. Walls/spikes and projectile assistance cannot be called existing brain output; scripted guidance must be separate. Agree Seer pause/resume behavior | No request to simulate alcohol or alter neuron weights |
+| Arnav → everyone | Use the approved script in GAME.md for story prototypes. Only the final cast; no guards, extra girls, unnamed crowd characters, additional narrator or removed rivals | Approved strict-cast substitutions |
+
+Previously recorded implementation results above remain historical results for existing code.
+They are not tests of this story. Before release, update stale keyboard/Garden-only descriptions
+across the project with their owners; do not report this planning update as a shipped campaign.
