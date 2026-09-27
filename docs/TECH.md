@@ -210,7 +210,7 @@ exact bearing (GAME.md, "The main screen").
 
 ## The brain (`brain/`)
 
-### Graph (`brain/build_graph.py`, about 30 s, under 600 MB)
+### Graph (`brain/build_graph.py`, about 35 s, peak memory about 700 MB)
 
 - MaleCNS v1.0 (Berg et al., *Cell* 2026; CC-BY 4.0). Neurons with a superclass not containing "tbc": **166,606**.
 - Connections with 5 or more synapses: **6,240,402** (72.4% of all synapses). Output: `data/graph_true.npz`, `data/neurons.parquet`.
@@ -257,7 +257,7 @@ Groups live in `brain/io_sets.json` (built by `brain/io_sets.py`; left and right
 | `down` | LPLC4 | `DNp07_10` landing 43.3 / 4.1 |
 | `duck` | LC4 + LPLC2 | `DNp01` Giant Fiber 99.2 / 2.1 |
 | `serenade` | LC10a + LC10d, both eyes | `pIP10` song 8.7 / 1.3 |
-| `lock_L`, `lock_R` | LC10a + LC10d, one eye | `DNa02` same side 18.2 / 17.3 |
+| `lock_L`, `lock_R` | LC10a + LC10d, one eye | `DNa02` same side: left 18.1 / 2.0, right 17.3 / 1.0 |
 
 The button groups (forward to lock) are from the earlier brain-driven movement plan. Movement is direct now, so the game only
 uses the Seer groups; the button channels stay available and tested. All pass the gate (target z above 3 and at least 2x every
@@ -552,6 +552,10 @@ The three MaleCNS v1.0 Feather files go in `data/` (git-ignored; public CC-BY 4.
 ```bash
 python -m brain.build_graph && python -m brain.changeling
 ```
+
+The same files are in Janelia's public bucket, which also works where the download page is blocked:
+`https://storage.googleapis.com/flyem-male-cns/v1.0/connectome-data/flat-connectome/<file name>`. A fresh build on Sun 27
+Sept reproduced every number here, all 68 brain tests, the probes gate and `team/neil/seer_eval.csv`.
 
 Teammates can skip this: ask Neil to AirDrop `data/graph_true.npz`, `data/graph_changeling_{0,1,2}.npz` and
 `data/neurons.parquet` (about 90 MB). Check it with `python -m brain.probes --level 1.0` (about 1 minute).

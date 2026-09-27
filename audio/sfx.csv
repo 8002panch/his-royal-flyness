@@ -15,4 +15,4 @@ FLY_ZIP,"A tiny fly zipping quickly past: a short, soft buzzing whoosh.",0.8,no,
 COURT_GASP,"A small crowd of royal courtiers gasping together in shock, short and sharp, in a stone banquet hall. No words.",1.5,no,-6,"After a hit resolves, and after the Giant's second hit",Mono; never before the hit lands
 COURT_CHEER,A small crowd of royal courtiers giving a quick cheer and a few claps in a stone banquet hall. No words.,2,no,-6,"Dodge milestones only (5 and 9 against the Giant, 4 against Prospero), so it stays special",
 FATHER_MISS,A small round object thudding onto a wooden banquet table and rolling away. Cartoonish.,1.5,no,-4,"Something Prospero throws misses Hamlet, on resolution; never when he throws it",No sound when he throws: that would give away the timing
-FATHER_HIT,A soft cartoon bonk with a tiny comic wobble.,1,no,-3,"Something Prospero throws hits Hamlet, on resolution",
+FATHER_HIT,A soft cartoon bonk with a tiny comic wobble.,1,no,3,"Something Prospero throws hits Hamlet, on resolution",

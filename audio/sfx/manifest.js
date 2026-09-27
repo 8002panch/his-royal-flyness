@@ -17,5 +17,5 @@ window.SFX_MANIFEST = {"model": "eleven_text_to_sound_v2",
   {"id": "COURT_GASP", "when": "After a hit resolves, and after the Giant's second hit", "loop": false, "file": "COURT_GASP.mp3", "hash": "76453dc04a3649cf", "post": "mono,volume_db=-6", "stale": false},
   {"id": "COURT_CHEER", "when": "Dodge milestones only (5 and 9 against the Giant, 4 against Prospero), so it stays special", "loop": false, "file": "COURT_CHEER.mp3", "hash": "a7acd578757bcaf9", "post": "mono,volume_db=-6", "stale": false},
   {"id": "FATHER_MISS", "when": "Something Prospero throws misses Hamlet, on resolution; never when he throws it", "loop": false, "file": "FATHER_MISS.mp3", "hash": "74eba01f19ee49a8", "post": "mono,volume_db=-4", "stale": false},
-  {"id": "FATHER_HIT", "when": "Something Prospero throws hits Hamlet, on resolution", "loop": false, "file": "FATHER_HIT.mp3", "hash": "ae5f300b6d0a8a13", "post": "mono,volume_db=-3", "stale": false}
+  {"id": "FATHER_HIT", "when": "Something Prospero throws hits Hamlet, on resolution", "loop": false, "file": "FATHER_HIT.mp3", "hash": "ae5f300b6d0a8a13", "post": "mono,volume_db=3", "stale": false}
  ]};
