@@ -614,7 +614,7 @@ Seer only: hidden obstacle guidance, hazard direction/landing/path assistance an
 Movement phones get controls and public scene/choice status, never hidden hazard data.
 
 The current coarse neural outputs cannot supply an exact wall map, safe altitude corridor
-or validated acid-projectile detector. First-version obstacle guidance is scripted and
+or validated thrown-object detector. First-version obstacle guidance is scripted and
 labeled as such. Keep that separate from measured brain cues. Large hand-attack sectors can
 use coarse neural side warnings; if exact help is added, disclose its source. Neil owns
 neural changes. No encoding of every object as a Princess merely to make the interface fit.

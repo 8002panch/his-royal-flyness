@@ -275,7 +275,7 @@ the planning handoff, not a claim that its gameplay is finished. Share via arnav
 Confirmed: only the listed cast; Clown narrates; Royal Harvest Chalice and four grapes;
 three rival questions; fermented grape cordial versus pear nectar; sixty-second Stage 2;
 Giant loses after ten dodges, Hamlet loses after three hits; optional father requires five
-spitball dodges without a hit; branching endings. The existing sober garden misunderstanding
+throw dodges without a hit; branching endings. The existing sober garden misunderstanding
 and one-grape-per-trip tutorial are retained. Other tuning values remain starting candidates to verify during playtesting.
 
 ### Arnav's revised story work (replaces his older Garden-only Phase 5 scope)
@@ -301,7 +301,7 @@ Keep automated replay/bots a separate decision: they are testing tools, not a on
 | From → to | Requested work / decision | Current status |
 |---|---|---|
 | Arnav → Anshul | Reusable comic overlay with readable panels/bubbles/captions, Next/Back/Skip; listed-cast-only art; behind/slightly-above view request; shared scene art must not reveal live hidden hazards | Planning handoff, not an edit to host/audio code |
-| Arnav → Ved | Seer-only question choice/confirmation; answer reconnect safety; frozen/latching controls across scenes; private wall/spike/spit guidance; review 2/3-player combined roles | Proposed new capabilities; current protocol unchanged |
+| Arnav → Ved | Seer-only question choice/confirmation; answer reconnect safety; frozen/latching controls across scenes; private wall/spike/throw guidance; review 2/3-player combined roles | Proposed new capabilities; current protocol unchanged |
 | Arnav → Neil | Review quiz facts and exact limits of neural hazard cues. Walls/spikes and projectile assistance cannot be called existing brain output; scripted guidance must be separate. Agree Seer pause/resume behavior | No request to simulate alcohol or alter neuron weights |
 | Arnav → everyone | Use the approved script in GAME.md for story prototypes. Only the final cast; no guards, extra girls, unnamed crowd characters, additional narrator or removed rivals | Approved strict-cast substitutions |
 

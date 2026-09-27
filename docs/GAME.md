@@ -31,7 +31,7 @@ Rutabaga's drink question → sixty-second Stage 2 → Cheapdate's drink questio
 ten Giant dodges → reconciliation, or a father encounter requiring five untouched dodges →
 one of two endings. Full layouts, questions and panel script are in [the story plan](#story-campaign-and-comic-cutscenes--approved-team-plan).
 
-Players move directly; the brain powers the Seer's Princess/Giant cues. New wall/spike/spitball
+Players move directly; the brain powers the Seer's Princess/Giant cues. New wall/spike/throw
 guidance must be implemented and honestly labeled; it is not already a neural capability.
 Only the Seer receives actionable hidden-course and hazard information. Comic questions pause
 play, and only the Seer submits the council's answer. Retry rules are specified per level.
@@ -96,7 +96,7 @@ there's no 3D engine.
 | Stage 1: The Journey to the Court | Use the Seer's private obstacle guidance through the dim basement to the stairs | Rutabaga quiz |
 | Stage 2: Prove Yourselves | Reach banquet doors within 60 active seconds; avoid hidden swats and obstacles | Cheapdate quiz, then banquet comic |
 | Giant: Outlast the Giant | 10 genuine successful dodges before taking 3 hits | Success comic and happy ending, or failure comic and father encounter |
-| Father: Prospero's Last Word | Dodge 5 spitballs without a hit | Reconciliation ending or Miranda chooses herself |
+| Father: Prospero's Last Word | Dodge 5 grapes Prospero throws, without a hit | Reconciliation ending or Miranda chooses herself |
 | Demo/testing | Inspect and reset any feature/scene independently | No effect on campaign progress |
 
 The full [story plan](#story-campaign-and-comic-cutscenes--approved-team-plan) distinguishes
@@ -118,7 +118,7 @@ certification claim is required. Display delivery/dodge/time counts computed by 
 +----------------------------------------------------------------+
 ```
 
-- During hidden-navigation/hazard play, the shared screen reveals no actionable wall/spike layout, hand landing zone or spitball path. No shadows or directional sounds can leak those secrets. Authored comic panels are separate from live sensing.
+- During hidden-navigation/hazard play, the shared screen reveals no actionable wall/spike layout, hand landing zone or throw path. No shadows or directional sounds can leak those secrets. Authored comic panels are separate from live sensing.
 - The **Royal Nervous System HUD** draws one bar per brain-activity value (`vision`, `looming`, `escape`, as z-scores). With the
   Changeling the bars stay low (its looming readout never reaches the warning level), which is the demo's clearest picture of
   "the wiring matters."
@@ -520,18 +520,18 @@ survival timer; Arnav replaced it with a dodge count.
 
 #### Father encounter — Prospero's Last Word
 
-**Objective fixed by Arnav:** dodge **five acid spitballs without being hit**. One hit → E02;
+**Objective fixed by Arnav:** dodge **five grapes Prospero throws, without being hit**. One hit → E02;
 five successful dodges → E01's second-chance version. This encounter appears only after losing
 to the Giant. No repeat quiz, new penalty stack or replay of Prospero's rescue on entry.
 
-Prospero stays at one side of a small arena. Each spitball is a simple moving hazard, one at
+Prospero stays at one side of a small arena. Each thrown grape is a simple moving hazard, one at
 a time, with a locked path and a recovery gap. Reuse warning → dodge → collision → result logic
 from the Giant. The player still only flies; this adds a projectile hazard, not player combat.
-The Seer alone sees its direction/path cue. No shared visible projectile, trail, acid puddle,
+The Seer alone sees its direction/path cue. No shared visible projectile, trail, splat mark,
 aiming animation or directional audio giving away its route. Shared counter: **Dodges 0/5**.
 
-The comic may show Prospero spitting; live play must preserve private hazard information.
-Do not claim that real fruit flies naturally fire these acid balls: it is a cartoon story device.
+The comic may show Prospero winding up a throw; live play must preserve private hazard information.
+Throwing grapes is a cartoon story device, not fly behavior.
 Fast projectiles require checking the space they traveled through between updates, so they
 cannot pass through Hamlet without registering a hit. Proposed slow speed first; tune later.
 
@@ -663,7 +663,7 @@ Continue to E01's direct-success opening, not to the father encounter.
 | Page 1, 1 | Hamlet retreats disheveled, alive; Prospero furious. | **Prospero:** "First the garden. Now this. Stand back." |
 | 1, 2 | Three still silhouettes show Prospero avoiding swats; the hand finally withdraws. | **Clown:** "Prospero finished the task himself—and returned with considerably less patience than he left with." |
 | Page 2, 3 | Prospero bars Hamlet's path toward Miranda. | **Prospero:** "You expect my blessing after this? You will not pass me." **Hamlet:** "Then let Miranda speak for herself." |
-| 2, 4 | Prospero bristles; a cartoon spitball winds up in a static panel. | **Clown:** "His Grace's next argument was regrettably acidic." **Objective:** "Dodge five spitballs. Do not get hit." |
+| 2, 4 | Prospero bristles and picks up a grape in a static panel. | **Clown:** "His Grace decided to settle this personally." **Objective:** "Dodge five throws. Do not get hit." |
 
 The Duke's rescue is a comic, not an NPC battle simulation or a new playable stage. Reset
 hazard count and motion for the father encounter; retain the already-earned dizziness level.
@@ -673,7 +673,7 @@ hazard count and motion for the father encounter; retain the already-earned dizz
 | Panel | Still picture | Dialogue / caption |
 |---|---|---|
 | Page 1, 1A — after Giant win | Miranda stands with Hamlet before a calmer Prospero. | **Miranda:** "Father, thank him. Then listen to him." |
-| 1, 1B — after father win | Miranda steps between them after the fifth dodge; no sixth spitball launches. | **Miranda:** "Enough, Father! I love Hamlet. You do not get to spit at the person I choose." |
+| 1, 1B — after father win | Miranda steps between them after the fifth dodge; no sixth throw comes. | **Miranda:** "Enough, Father. I love Hamlet. You do not get to throw things at the person I choose." |
 | 1, 2 — shared | Clown gestures at his own grape-stained cuff. | **Clown:** "For the record: he was delivering my grapes. The chalice splashed him. I was there." |
 | Page 2, 3 | Prospero lowers his head; Miranda keeps Hamlet's hand. | **Prospero:** "Then I judged before I listened. Miranda—do you still wish the announcement to go ahead?" **Miranda:** "Yes. Because I choose it." |
 | 2, 4 | Small royal banner; Hamlet, Miranda and Prospero; council crests below. | **Prospero:** "Then let the banquet begin again." **Clown:** "A royal announcement, approved by Miranda. The grapes abstained." |
@@ -696,7 +696,7 @@ replaces Hamlet automatically. End with Replay / Demo / Lobby controls and compu
 ### 7. Separate Demo and testing area
 
 Selectable scenes: movement practice; grape pickup/delivery; any comic page; each drink question
-with correct/wrong outcome; basement obstacle; one hand attack; full Giant counter; one spitball;
+with correct/wrong outcome; basement obstacle; one hand attack; full Giant counter; one throw;
 full father counter; either final ending; real-brain/Changeling comparison.
 
 Presenter controls: reset chosen scene, pause/resume, choose fixed attack example, set a test
@@ -706,7 +706,7 @@ controls, not hidden changes to a campaign. Test state never carries into a new 
 Any option exposing true hazard positions uses a large **DEBUG — POSITIONS REVEALED** label.
 Normal presentation keeps Seer-only privacy. Do not compare a revealed/debug scene with a
 hidden/neural scene as if only the wiring changed. Brain comparisons use identical scene
-inputs and movement settings; scripted wall/spit guidance remains explicitly labeled.
+inputs and movement settings; scripted wall/throw guidance remains explicitly labeled.
 
 ### 8. What is real, what is new, and what still needs review
 
@@ -716,13 +716,13 @@ inputs and movement settings; scripted wall/spit guidance remains explicitly lab
 | Comic overlay, quiz choice, campaign branches, grapes | New planned game features. Not implemented by this document. |
 | Exact wall/spike/opening guidance | New scripted navigation aid proposed for the Seer only. Existing brain output does not provide wall maps or up/down safe paths. Label it as game-authored guidance. |
 | Exact hand landing zone | Server knows it for collision; current neural cue is coarse direction/time. Do not present an exact coordinate as measured brain output. For first implementation, use large readable attack sectors that coarse cues can distinguish; exact private assistance needs explicit disclosure. |
-| Father projectile cues | New hazard type. Reuse delivery/privacy/avoidance rules, but do not silently label acid detection as an already validated neural feature. Neil reviews any looming-input reuse; scripted guidance is disclosed. |
+| Father projectile cues | New hazard type. Reuse delivery/privacy/avoidance rules, but do not silently label thrown-object detection as an already validated neural feature. Neil reviews any looming-input reuse; scripted guidance is disclosed. |
 | Dizziness | Scripted movement modifier, not alcohol simulated in the nervous system. No alteration of neural evidence. |
 | 2/3-player combined jobs and requested behind/above view | Requested product direction; current technical baseline is four phone roles and 2D presentation. Owner integration remains necessary; no new 3D engine implied. |
 
 **Confirmed in this review:** strict cast substitutions; fermented grape cordial/pear nectar;
 three-hit Giant limit. **Approved starting plan:** checkpoint/restart defaults, stacked gliding penalty, branching
-endings and disclosed scripted wall/spit guidance. Tune difficulty after playtests; coordinate
+endings and disclosed scripted wall/throw guidance. Tune difficulty after playtests; coordinate
 new phone/renderer fields with their owners. Dialogue can be polished without changing the
 cast or agreed story branches.
 
