@@ -12,7 +12,9 @@ TUT_GRAPE_2,TUTORIAL,grape 2,,clown,"[briskly] Helmsman: left and right. Small c
 TUT_GRAPE_3,TUTORIAL,grape 3,,clown,"[briskly] Liftmaster: up for the grape, down for the chalice. Keep the crown attached.",,,
 TUT_GRAPE_4,TUTORIAL,grape 4,,clown,[encouragingly] Together now. Slow before the turn; the chalice has suffered enough.,,,
 TUT_SEER,TUTORIAL,Seer return lesson,,clown,[conspiratorially] Seer: find Miranda beside the chalice. Tell your council which way to fly.,,,
+TUT_SEER_MIRANDA,TUTORIAL,Seer return lesson,,miranda,"[warmly] Hello, Hamlet. Your Seer can find me. Everyone else, do listen to them.",,,"Plays when the lesson starts, never by distance, so it can't hint where she is"
 TUT_FINISH,TUTORIAL,finish,,clown,[delighted] Four delivered! Responsibility has never looked so purple.,,,
+TUT_FINISH_MIRANDA,TUTORIAL,finish,,miranda,"[warmly] Four grapes, and not one bruised. Father will be impressed. Eventually.",,,
 C01_P1_CLOWN,C01,p1.1,,clown,"[upbeat] Tonight, Prospero would announce Hamlet and Miranda's intended marriage. First: one tiny royal errand.",,,
 C01_P2_HAMLET,C01,p1.2,,hamlet,Four grapes. Delivered with princely precision.,,,
 C01_P2_CLOWN,C01,p1.2,,clown,[wryly] And not a drop tasted.,,,
@@ -23,6 +25,7 @@ C01_P4_HAMLET,C01,p2.4,,hamlet,"A landing accident, Your Grace. An extremely pur
 C01_P5_PROSPERO,C01,p2.5,,prospero,[angry] Tonight I must trust you beside my daughter. You cannot even arrive at breakfast with your judgment intact?,,,
 C01_P6_HAMLET,C01,p2.6,,hamlet,[desperately] I haven't drunk anything! Ask the council!,,,
 C01_P6_PROSPERO,C01,p2.6,,prospero,Then show me the judgment your appearance has failed to demonstrate. The announcement is suspended.,,,
+C01_P6_MIRANDA,C01,p2.6,,miranda,"[gently] Father, please. Let him explain before you decide.",,,Nobody listens to her either; E01_P3 pays it off
 C01_P7_PROSPERO,C01,p3.7,,prospero,Stay outside until you can conduct yourself.,,,
 C01_P7_CLOWN,C01,p3.7,,clown,"[sighs] A royal misunderstanding. Naturally, nobody listened to the useful witnesses.",,,
 C01_P8_HAMLET,C01,p3.8,,hamlet,"A window. Council, we can still explain.",,,
@@ -68,25 +71,60 @@ Q03_P5_HAMLET,Q03,p2.5,,hamlet,At last—,,,Cut off by the crash
 Q03_P5_CLOWN,Q03,p2.5,,clown,[wryly] A sentence the evening declined to let him finish.,,GIANT_CRASH,
 C02_P1_CLOWN,C02,p1.1,,clown,[dramatically] The Giant had arrived. It had neither invitation nor table manners.,,GIANT_GROWL,
 C02_P2_PROSPERO,C02,p1.2,,prospero,[alarmed] You? I told you to stay outside!,,,
+C02_P2_MIRANDA,C02,p1.2,,miranda,[surprised] Hamlet! Did you come in through the window?,,,
 C02_P2_HAMLET,C02,p1.2,,hamlet,"The garden wasn't what it looked like. Please, let me explain.",,,
 C02_P3_PROSPERO,C02,p1.3,,prospero,Then show me. Keep its attention. Outlast its swats until it abandons this hall.,,GIANT_SLAM,
 C02_P4_HAMLET,C02,p2.4,,hamlet,"Council, together. We don't have to hurt it. We have to stay out of reach.",,,
+C02_P4_MIRANDA,C02,p2.4,,miranda,"[worried] Then stay out of reach, Hamlet. And listen to your Seer.",,,
 C02_P5_CLOWN,C02,p2.5,,clown,[excited] Ten dodges. One very large temper. Let us test which lasts longer.,,,"The objective text is on screen only, not voiced"
+G_DODGE_MIRANDA_1,GIANT,after a dodge,,miranda,"[relieved] Oh, well flown, Hamlet!",,GIANT_SWAT,"Plays after the attack resolves, never at warning onset; the game picks one line from the pool"
+G_DODGE_MIRANDA_2,GIANT,after a dodge,,miranda,[excitedly] Yes! It missed you completely!,,GIANT_SWAT,
+G_DODGE_HAMLET,GIANT,after a dodge,,hamlet,"[breathless] Missed me! Council, that was beautiful.",,GIANT_SWAT,
+G_DODGE_CLOWN,GIANT,after a dodge,,clown,[delighted] Missed! The table takes another beating.,,GIANT_SWAT,
+G_DODGE_PROSPERO,GIANT,after a dodge,,prospero,[grudgingly] Hm. Not entirely hopeless.,,GIANT_SWAT,
+G_DODGE_TINMAN,GIANT,after a dodge,,tinman,[unimpressed] Luck. Remarkably consistent luck.,,GIANT_SWAT,
+G_DODGE_CHEAPDATE,GIANT,after a dodge,,cheapdate,"[hiccups] Bravo! Do it again, I blinked!",,GIANT_SWAT,
+G_DODGE_RUTABAGA,GIANT,after a dodge,,rutabaga,"[confused] Wait, which one is Hamlet? The one still flying? Good.",,GIANT_SWAT,
+G_HIT_MIRANDA_1,GIANT,after a hit,,miranda,[gasps] Hamlet! Are you hurt?,,GIANT_SPLAT,"Plays after the attack resolves, never at warning onset; the game picks one line from the pool"
+G_HIT_MIRANDA_2,GIANT,after a hit,,miranda,[worried] Hamlet? Say something! Anything princely!,,GIANT_SPLAT,
+G_HIT_HAMLET,GIANT,after a hit,,hamlet,[dazed] Still here. Mostly crown.,,GIANT_SPLAT,
+G_HIT_CLOWN,GIANT,after a hit,,clown,[wincing] Ooh. That one goes in the chronicle.,,GIANT_SPLAT,
+G_HIT_PROSPERO,GIANT,after a hit,,prospero,[scoffs] And this is why I said stay outside.,,GIANT_SPLAT,
+G_HIT_TINMAN,GIANT,after a hit,,tinman,"[delighted] Splendid! Could you do that again, slower?",,GIANT_SPLAT,
+G_HIT_CHEAPDATE,GIANT,after a hit,,cheapdate,"[hiccups] Ooh, I felt that one. Sympathetically.",,GIANT_SPLAT,
+G_HALF_MIRANDA,GIANT,after dodge 5,,miranda,"[hopeful] Five! Hamlet, it's getting tired!",,COURT_CHEER,Plays instead of an after-a-dodge line
+G_HALF_CLOWN,GIANT,after dodge 5,,clown,[encouragingly] Halfway! The Giant is visibly reconsidering.,,COURT_CHEER,
+G_LAST_HIT_MIRANDA,GIANT,after hit 2,,miranda,[pleading] One more hit and Father steps in. Please be careful!,,COURT_GASP,Plays instead of an after-a-hit line
+G_LAST_HIT_CLOWN,GIANT,after hit 2,,clown,"[urgently] Careful, council. The next hit ends this. Trust your Seer.",,COURT_GASP,
+G_NINE_MIRANDA,GIANT,after dodge 9,,miranda,"[excited] One more, Hamlet! Just one more!",,COURT_CHEER,Plays instead of an after-a-dodge line
+G_NINE_CLOWN,GIANT,after dodge 9,,clown,[dramatically] Nine! The Giant's temper hangs by a thread.,,COURT_CHEER,
 C03_P1_CLOWN,C03,p1.1,giant_win,clown,[triumphantly] Ten swats survived. The Giant departed to find something less organized to squash.,,GIANT_LEAVES,
 C03_P2_PROSPERO,C03,p1.2,giant_win,prospero,"You stood your ground by refusing to stay in one place. Well flown, Hamlet.",,,
 C03_P3_MIRANDA,C03,p1.3,giant_win,miranda,"[softly] You're safe. Next time, find me before volunteering for the hand.",,,
 C03_P3_HAMLET,C03,p1.3,giant_win,hamlet,"Next time, I'm delivering flowers.",,,
+C03_P4_MIRANDA,C03,p1.3,giant_win,miranda,"[laughs softly] Flowers are lovely. Deliver them, though. Don't wear them.",,,
 C04_P1_PROSPERO,C04,p1.1,giant_loss,prospero,[furious] First the garden. Now this. Stand back.,,,
 C04_P2_PROSPERO,C04,p1.2,giant_loss,prospero,"[out of breath, furious] There. I finished your task myself. My patience did not survive it.",,GIANT_HUFF,Was Clown narration; Prospero now says it himself
+C04_P2_MIRANDA,C04,p1.2,giant_loss,miranda,"[upset] Father, he took three hits keeping that thing away from us.",,,
 C04_P3_PROSPERO,C04,p2.3,giant_loss,prospero,You expect my blessing after this? You will not pass me.,,,
 C04_P3_HAMLET,C04,p2.3,giant_loss,hamlet,Then let Miranda speak for herself.,,,
 C04_P4_CLOWN,C04,p2.4,giant_loss,clown,[wincing] His Grace's next argument was regrettably acidic.,,,"The objective text is on screen only, not voiced"
+F_DODGE_MIRANDA_1,FATHER,after a dodge,giant_loss,miranda,[scolding] Father! We do not spit at guests!,,ACID_SIZZLE,"Plays after the attack resolves, never at warning onset; the game picks one line from the pool"
+F_DODGE_MIRANDA_2,FATHER,after a dodge,giant_loss,miranda,"[exasperated] Father! You are a duke, not a fountain!",,ACID_SIZZLE,
+F_DODGE_PROSPERO_1,FATHER,after a dodge,giant_loss,prospero,[muttering] Missed. How does something so small dodge so much?,,ACID_SIZZLE,
+F_DODGE_PROSPERO_2,FATHER,after a dodge,giant_loss,prospero,[out of breath] I have... plenty more... where that came from.,,ACID_SIZZLE,
+F_DODGE_HAMLET,FATHER,after a dodge,giant_loss,hamlet,"[breathless] Your Grace, I'd much rather talk this out!",,ACID_SIZZLE,
+F_DODGE_CLOWN,FATHER,after a dodge,giant_loss,clown,[wryly] The floor has never been so thoroughly argued with.,,ACID_SIZZLE,
+F_FOUR_MIRANDA,FATHER,after dodge 4,giant_loss,miranda,"[hopeful] One more, Hamlet! Father, you're running out of spit.",,COURT_CHEER,Plays instead of an after-a-dodge line
+F_FOUR_PROSPERO,FATHER,after dodge 4,giant_loss,prospero,[wheezing] I am... not... running out.,,,Prospero's reply to F_FOUR_MIRANDA; play them as a pair
+F_HIT_MIRANDA,FATHER,after the hit,giant_loss,miranda,[gasps] Father! How could you?,,ACID_HIT,The one hit ends the fight; E02 follows
 E01_P1A_MIRANDA,E01,p1.1A,giant_win,miranda,"[gently] Father, thank him. Then listen to him.",,,
 E01_P1B_MIRANDA,E01,p1.1B,father_win,miranda,"[softly, but firm] Enough, Father. I love Hamlet. You do not get to spit at the person I choose.",,,
 E01_P2_CLOWN,E01,p1.2,,clown,[cheerfully] For the record: he was delivering my grapes. The chalice splashed him. I was there.,,,
 E01_P3_PROSPERO,E01,p2.3,,prospero,[softly] Then I judged before I listened. Miranda—do you still wish the announcement to go ahead?,,,
 E01_P3_MIRANDA,E01,p2.3,,miranda,[softly] Yes. Because I choose it.,,,
 E01_P4_PROSPERO,E01,p2.4,,prospero,Then let the banquet begin again.,,,
+E01_P4_MIRANDA,E01,p2.4,,miranda,"[warmly] And this time, Hamlet, use the door.",,,
 E01_P4_CLOWN,E01,p2.4,,clown,"[delighted] A royal announcement, approved by Miranda. The grapes abstained.",,,
 E02_P1_CLOWN,E02,p1.1,father_loss,clown,[wryly] Hamlet's evening had reached the floor. The competition mistook this for a promotion.,,,
 E02_P2_TINMAN,E02,p1.2,father_loss,tinman,"[smugly] A more composed candidate stands before you, Your Grace. Unlike that fly-bitten princeling on the floor.",,,"Insult: 'fly-bitten', Henry IV Part 2, 2.1"

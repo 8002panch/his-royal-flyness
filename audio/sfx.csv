@@ -12,3 +12,7 @@ GIANT_LEAVES,"A giant's heavy footsteps walking away across a wooden floor, grum
 FLY_BUZZ_LOOP,"Soft, gentle housefly wing buzz, steady and low, quiet background ambience, seamless loop.",5,yes,-18,Quietly under flight; stop it during comics and questions,Baked in 18 dB quieter so it sits under the voices
 FLY_TAKEOFF,"A tiny fly taking off: a short, soft, rising wing buzz.",1,no,-10,"The Ready, Fly cue; the first tutorial flight",
 FLY_ZIP,"A tiny fly zipping quickly past: a short, soft buzzing whoosh.",0.8,no,-10,After a successful dodge,
+COURT_GASP,"A small crowd of royal courtiers gasping together in shock, short and sharp, in a stone banquet hall. No words.",1.5,no,-6,"After a hit resolves, and after the Giant's second hit",Mono; never before the hit lands
+COURT_CHEER,"A small crowd of royal courtiers giving a quick cheer and a few claps in a stone banquet hall. No words.",2,no,-6,"Dodge milestones only (5 and 9 against the Giant, 4 against Prospero), so it stays special",
+ACID_SIZZLE,"A small glob of green acid splatting onto a stone floor and fizzing briefly. Cartoonish, not gross.",1.5,no,-4,"A spitball misses, on resolution; never when Prospero fires it","No spit sound at launch: that would give away the timing"
+ACID_HIT,"A cartoon wet splat with a quick fizzy hiss, comic and not gross.",1,no,0,"A spitball hits Hamlet, on resolution",

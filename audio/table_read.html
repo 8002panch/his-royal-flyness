@@ -81,10 +81,31 @@ const TITLES = {
   LOBBY: "Lobby and roles", TUTORIAL: "Tutorial: A Small Favor in the Royal Garden", C01: "C01: A Royal Misunderstanding",
   Q01: "Q01: Tinman's Courtesy", STAGE1: "Stage 1: The Journey to the Court", Q02: "Q02: Rutabaga on the Stairs",
   STAGE2: "Stage 2: Prove Yourselves", Q03: "Q03: Cheapdate's Welcome", C02: "C02: A Much Larger Problem",
-  C03: "C03: The Giant Gives Up", C04: "C04: Prospero's Patience Ends", E01: "E01: An Announcement by Choice",
+  GIANT: "Outlast the Giant: shouts after each swat", C03: "C03: The Giant Gives Up", C04: "C04: Prospero's Patience Ends", FATHER: "Prospero's Last Word: shouts after each spitball",
+  E01: "E01: An Announcement by Choice",
   E02: "E02: Miranda Writes Her Own Ending", ANYTIME: "Any time: notices, the Changeling, the Decree",
 };
 const NOT_STORY = new Set(["ANYTIME"]);  // played on events, not in the story run
+// The fights are pools the game picks from after each attack resolves. The story run plays a short sample of each, by outcome.
+const FIGHT_SAMPLE = {
+  GIANT: { key: "giant", win: ["G_DODGE_MIRANDA_1", "G_DODGE_TINMAN", "G_HIT_MIRANDA_1", "G_DODGE_CLOWN", "G_HALF_MIRANDA",
+                               "G_DODGE_CHEAPDATE", "G_NINE_MIRANDA"],
+           loss: ["G_DODGE_MIRANDA_2", "G_HIT_HAMLET", "G_DODGE_RUTABAGA", "G_LAST_HIT_MIRANDA", "G_HIT_PROSPERO"] },
+  FATHER: { key: "father", win: ["F_DODGE_MIRANDA_1", "F_DODGE_PROSPERO_1", "F_DODGE_MIRANDA_2", "F_FOUR_MIRANDA", "F_FOUR_PROSPERO"],
+            loss: ["F_DODGE_MIRANDA_1", "F_DODGE_HAMLET", "F_HIT_MIRANDA"] },
+};
+
+function storyQueue(r, who) {
+  const out = [];
+  for (const sc of scenes()) {
+    if (NOT_STORY.has(sc.key)) continue;
+    const sample = FIGHT_SAMPLE[sc.key];
+    const lines = sample ? (sample[r[sample.key]] || []).map((id) => sc.lines.find((l) => l.id === id)).filter(Boolean)
+                         : sc.lines;
+    out.push(...lines.filter((l) => onRoute(l, r) && (!who || l.speaker === who)));
+  }
+  return out;
+}
 const COLORS = { clown: "#9B1C1C", hamlet: "#1F3A8A", miranda: "#6E4FA3", prospero: "#5A3A1A",
                  tinman: "#4F5B66", cheapdate: "#7A2E5A", rutabaga: "#5E6B1F" };
 const M = window.VOICE_MANIFEST;
@@ -292,7 +313,7 @@ function init() {
   document.querySelectorAll("header select").forEach((s) => s.addEventListener("change", () => { stop(); render(); }));
   $("#playAll").onclick = () => {
     const r = route(), who = $("#speaker").value;
-    play(M.lines.filter((l) => !NOT_STORY.has(l.scene) && onRoute(l, r) && (!who || l.speaker === who)));
+    play(storyQueue(r, who));
   };
   $("#stop").onclick = stop;
   $("#script").addEventListener("click", (e) => {

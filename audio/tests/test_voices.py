@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import dataclasses
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -32,8 +33,22 @@ class LineBankTests(unittest.TestCase):
         self.assertEqual([ln.id for ln in miranda if "passionate" in ln.line], ["E02_P3_MIRANDA"])
         self.assertEqual(self.cast["speakers"]["miranda"]["stability"], 1.0)
 
+    def test_fight_shouts_never_give_away_the_attack(self) -> None:
+        # The Seer alone knows where and when: a shout names no direction or timing and plays only once an attack resolves.
+        hints = re.compile(r"\b(left|right|up|down|above|below|behind|ahead|overhead|beneath|duck|dive|climb|now|soon|"
+                           r"incoming|coming|look out|watch out|here it comes)\b", re.I)
+        barks = [ln for ln in self.lines if ln.scene in ("GIANT", "FATHER")]
+        self.assertGreaterEqual(len(barks), 20)
+        for ln in barks:
+            self.assertIsNone(hints.search(ln.caption), ln.id)
+            self.assertTrue(ln.panel.startswith("after"), ln.id)
+            self.assertLessEqual(len(ln.caption.split()), 12, ln.id)
+            self.assertTrue(ln.sfx or "reply" in ln.note.lower(), ln.id)  # a reply follows its cue
+        self.assertTrue(all(ln.branch == "giant_loss" for ln in barks if ln.scene == "FATHER"))
+        self.assertGreaterEqual(sum(ln.speaker == "miranda" for ln in barks), 8)
+
     def test_giant_sounds_are_never_directional_or_early(self) -> None:
-        giant = [s for s in self.sounds if s.id.startswith("GIANT_")]
+        giant = [s for s in self.sounds if s.id.startswith(("GIANT_", "ACID_", "COURT_"))]
         self.assertTrue(giant)
         self.assertTrue(all(gv.sound_post(s).startswith("mono") for s in self.sounds))
         for s in giant:

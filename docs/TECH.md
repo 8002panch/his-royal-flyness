@@ -429,12 +429,20 @@ can't run one. So the domain needs one of these, best first:
 ## Voices (ElevenLabs)
 
 Every voiced line of Arnav's story script (GAME.md, "Panel-by-panel story script", on `arnav/story-comic-draft` until it merges), the tutorial and stage popups, and the lobby,
-Changeling and Decree lines are in **`audio/lines.csv`**: 107 lines in story order, one row per speech bubble, with an `id`, the
+Changeling and Decree lines are in **`audio/lines.csv`**: 145 lines in story order, one row per speech bubble, with an `id`, the
 `scene` and `panel`, a `branch` (`correct` / `wrong` for the quizzes, `giant_win` / `giant_loss`, `father_win` / `father_loss`),
 the `speaker`, an optional `stability` override and an optional `sfx` cue. Square brackets are ElevenLabs v3 audio tags
 (`[hiccups]`, `[softly]`): they direct the voice and are stripped from captions. Delete a tag if a take sounds wrong. The bank
 started as Arnav's words and the voice pass changed some of them (TEAM.md, Neil to Arnav): each suitor now asks and explains
-their own quiz question, each quiz opens with a short suitor line (`Q0x_P1B`), and C04 panel 2 is Prospero's own line.
+their own quiz question, each quiz opens with a short suitor line (`Q0x_P1B`), C04 panel 2 is Prospero's own line, and
+Miranda has eight more bubbles (tutorial, C01, C02, C03, C04, E01).
+
+**Fight shouts.** The `GIANT` and `FATHER` scenes are pools of short shouts (Miranda, Hamlet, the Clown, Prospero and the
+rivals) for the two dodge fights, grouped by the event in `panel`: `after a dodge`, `after a hit`, and milestones (`after dodge
+5`, `after hit 2`, `after dodge 9`; `after dodge 4` and `after the hit` against Prospero). After an attack resolves, the game
+plays that event's sound (the shout's `sfx`) and may add one shout from the pool (a milestone line replaces the ordinary one).
+A shout never starts, stops or changes because a warning began, and none names a direction or a timing word (a test checks);
+that keeps the Seer's secret. Skip a shout if one is still playing.
 
 **`audio/voices.json`** is the cast: one ElevenLabs voice per speaker (Clown, Hamlet, Miranda, Prospero, Lord Tinman,
 Sir Cheapdate, Count Rutabaga), a short casting brief and the v3 `stability` (0.0 creative, 0.5 natural, 1.0 robust, closest to
@@ -443,7 +451,8 @@ so they're committed and everyone generates the same cast; a voice-library link 
 no clones of real people.
 
 **`audio/sfx.csv`** is the sound bank (ElevenLabs sound effects): the Giant's grunts, growls, huffs, swats and crashes, the
-comic-panel noises, and three quiet fly sounds (`FLY_BUZZ_LOOP` for under flight, `FLY_TAKEOFF`, `FLY_ZIP`). Each has a prompt,
+comic-panel noises, three quiet fly sounds (`FLY_BUZZ_LOOP` for under flight, `FLY_TAKEOFF`, `FLY_ZIP`), a courtiers' gasp
+and cheer, and Prospero's acid spitball missing or hitting (there's no sound when he fires, which would give away the timing). Each has a prompt,
 a length, whether it loops, a `volume_db` baked into the file and a `when` column saying where it plays. Every sound is made mono.
 
 ```bash
@@ -460,8 +469,8 @@ python audio/gen_voices.py --prune        # also deletes mp3s whose line or soun
   `manifest.js` (the same, for the table read). A line is regenerated only when its text, voice, model or stability changes, and
   a sound only when its prompt, length or loop changes, so rerunning costs nothing for work that's done. The mp3s are committed so
   the demo laptop needs no key. `--no-sfx` skips the sounds.
-- **Polish** (after generation, free): the Clown's `tempo` (1.15, pitch kept) and `max_pause` (0.4 s) in voices.json speed up his
-  narration, and each sound gets its `volume_db`. It needs ffmpeg, which `pip install -r requirements.txt` brings
+- **Polish** (after generation, free): `tempo` (pitch kept) and `max_pause` in voices.json speed up the Clown (1.15, 0.4 s) and
+  Miranda (1.08, 0.45 s), and each sound gets its `volume_db`. It needs ffmpeg, which `pip install -r requirements.txt` brings
   (`imageio-ffmpeg`). The manifest records the polish, so a take is never polished twice. The raw take isn't kept, so changing
   a speaker's polish settings later regenerates that speaker's lines.
 - A voice-library voice the API can't find has to be added to "My Voices" on elevenlabs.io first; `--check` says which.
@@ -472,16 +481,19 @@ python audio/gen_voices.py --prune        # also deletes mp3s whose line or soun
   need the Creator tier or above. An API key must be the secret that starts with `sk_` (shown once when created), not the key's
   ID. The first bad-key or quota error stops the run. `--dry-run` lists anything left to do.
 - **Table read:** open `audio/table_read.html` from disk. Pick the quiz answers and the Giant and father outcomes, then play the
-  story route, one scene or one line, with captions and sound cues (a line starts 0.9 s after its cue). Lines without a current
+  story route, one scene or one line, with captions and sound cues (a line starts 0.9 s after its cue). The story run plays a
+  short sample of each fight's shouts for the chosen outcome; a fight's ▶ Scene plays the whole pool. Lines without a current
   take show for reading time, so it works as a script read before any voice exists. Filter by speaker to audition one voice;
   the Fly buzz box loops the flight ambience to judge its level; every sound is listed at the bottom.
 - **In the game** (to wire up): the server sends `{"t":"event","kind":"voice","id":"C01_P4_PROSPERO","speaker":"Prospero",
   "caption":"..."}` (the shape Anshul's `caption_scroll.gd` already reads) and the host plays `audio/voice/<id>.mp3`, with the
   line's `sfx` cue from the manifest just before it. Only play lines on the route the server chose.
-- **The Seer's secret:** no voice line or sound may reveal a hidden hazard's side or timing (GAME.md). Giant sounds are mono and
-  centred, and they play only once a swat resolves (hit or miss), never when the warning starts. `FLY_BUZZ_LOOP` sits 18 dB down
+- **The Seer's secret:** no voice line or sound may reveal a hidden hazard's side or timing (GAME.md). Giant, acid and crowd
+  sounds and the fight shouts are mono and centred, and they play only once an attack resolves (hit or miss), never when the
+  warning starts. `FLY_BUZZ_LOOP` sits 18 dB down
   and stops during comics and questions.
 - Tests: `python -m pytest audio/tests -q` (both banks are sound, only the final cast speaks, the suitors ask their own questions,
+  fight shouts hold no direction or timing word,
   every quiz has both outcomes, generation against a fake ElevenLabs client caches, recasts and survives a missing voice, and
   polishing shortens pauses and runs once).
 
