@@ -6,7 +6,7 @@ extends Node2D
 ## frames and the Reliquary cosmetics swap without redrawing him. The node's
 ## origin is his thorax.
 
-const WING_CYCLE := [0, 1, 2, 1]
+const WING_CYCLE := [0, 1, 2, 3, 4, 5, 6, 7]
 
 var halo := Sprite2D.new()
 var wings := Sprite2D.new()
@@ -20,6 +20,19 @@ var buzzing := false
 
 var _wing_t := 0.0
 var _frame := 0
+var _motion := Vector3.ZERO
+var _t := 0.0
+var _cue := ""
+var _cue_left := 0.0
+var _cue_duration := 1.0
+
+func set_motion(velocity: Vector3) -> void:
+	_motion = velocity.limit_length(1.7)
+
+func play_gesture(cue: String, seconds := 1.2) -> void:
+	_cue = cue
+	_cue_duration = maxf(0.15, seconds)
+	_cue_left = _cue_duration
 
 
 func _ready() -> void:
@@ -46,13 +59,28 @@ func set_body_px(hh: int) -> void:
 
 
 func tick(delta: float, rate: float, fast: bool) -> void:
-	_wing_t += delta * rate
+	_t += delta
+	# Cap at 40 frame changes/s: five complete beats, legible on a 60 Hz laptop.
+	_wing_t += delta * clampf(rate * 1.7, 24.0, 40.0)
 	var f: int = WING_CYCLE[int(_wing_t) % WING_CYCLE.size()]
 	if f != _frame:
 		_frame = f
 		_update_wings()
 	if fast != buzzing:
 		buzzing = fast
+	var target_bank := clampf(_motion.x * 0.09, -0.10, 0.10)
+	rotation = lerpf(rotation, target_bank, 1.0 - exp(-delta * 7.0))
+	var pitch := clampf(_motion.y * 0.035, -0.04, 0.04)
+	body.scale.y = 1.0 - pitch
+	mantle.scale.y = body.scale.y
+	mantle.position.x = roundf(sin(_t * 4.0 - 0.8) * (1.0 if fast else 0.5))
+	if _cue_left > 0.0:
+		_cue_left = maxf(0.0, _cue_left - delta)
+		var u := 1.0 - _cue_left / _cue_duration
+		var envelope := sin(u * PI)
+		if _cue == "hit": rotation += sin(_t * 32.0) * 0.06 * envelope
+		elif _cue == "celebrate": rotation += sin(_t * 5.0) * 0.09 * envelope
+		elif _cue == "bow": body.scale.y *= 1.0 - 0.10 * envelope
 	queue_redraw()
 
 

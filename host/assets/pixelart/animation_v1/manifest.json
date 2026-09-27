@@ -1,0 +1,99 @@
+{
+	"characters": [
+		{
+			"id": "hamlet",
+			"parts": 7,
+			"scene": "rigs/hamlet.scn",
+			"source": "characters/hamlet.png",
+			"vertices": 8000
+		},
+		{
+			"id": "miranda",
+			"parts": 7,
+			"scene": "rigs/miranda.scn",
+			"source": "characters/miranda.png",
+			"vertices": 6632
+		},
+		{
+			"id": "prospero_nice",
+			"parts": 7,
+			"scene": "rigs/prospero_nice.scn",
+			"source": "characters/prospero_nice.png",
+			"vertices": 9268
+		},
+		{
+			"id": "prospero_mad",
+			"parts": 7,
+			"scene": "rigs/prospero_mad.scn",
+			"source": "characters/prospero_mad.png",
+			"vertices": 9260
+		},
+		{
+			"id": "helmsman",
+			"parts": 7,
+			"scene": "rigs/helmsman.scn",
+			"source": "council/helmsman.png",
+			"vertices": 7332
+		},
+		{
+			"id": "liftmaster",
+			"parts": 7,
+			"scene": "rigs/liftmaster.scn",
+			"source": "council/liftmaster.png",
+			"vertices": 9040
+		},
+		{
+			"id": "wingmaster",
+			"parts": 7,
+			"scene": "rigs/wingmaster.scn",
+			"source": "council/wingmaster.png",
+			"vertices": 9312
+		},
+		{
+			"id": "royal_seer",
+			"parts": 7,
+			"scene": "rigs/royal_seer.scn",
+			"source": "council/royal_seer.png",
+			"vertices": 8616
+		},
+		{
+			"id": "lord_tinman",
+			"parts": 7,
+			"scene": "rigs/lord_tinman.scn",
+			"source": "npcs/lord_tinman.png",
+			"vertices": 7928
+		},
+		{
+			"id": "sir_cheapdate",
+			"parts": 7,
+			"scene": "rigs/sir_cheapdate.scn",
+			"source": "npcs/sir_cheapdate.png",
+			"vertices": 7656
+		},
+		{
+			"id": "count_rutabaga",
+			"parts": 7,
+			"scene": "rigs/count_rutabaga.scn",
+			"source": "npcs/count_rutabaga.png",
+			"vertices": 8312
+		},
+		{
+			"id": "clown_jester",
+			"parts": 7,
+			"scene": "rigs/clown_jester.scn",
+			"source": "npcs/clown_jester.png",
+			"vertices": 9456
+		},
+		{
+			"id": "giant",
+			"parts": 1,
+			"scene": "rigs/giant.scn",
+			"source": "hazards/giant_hand.png",
+			"vertices": 12560
+		}
+	],
+	"method": "baked colored cutout meshes; source PNGs unchanged",
+	"native_height": 72,
+	"source": "../v3",
+	"version": "1.0.0"
+}

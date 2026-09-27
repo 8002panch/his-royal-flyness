@@ -94,12 +94,14 @@ func on_event(ev: Dictionary) -> void:
 	var kind := str(ev.get("kind", ""))
 	var id := str(ev.get("id", ""))
 	if kind == "splat" or id == "H_SPLAT":
+		hamlet.play_gesture("hit", 0.45)
 		fx.splat(hamlet_screen)
 		shake(0.35, 3)
 	elif kind in ["jump", "escape"] or id == "H_JUMP":
 		fx.puff(hamlet_screen + Vector2(0, 10), 8)
 		shake(0.15, 1)
 	elif kind in ["win", "charmed", "hearts"] or id in ["H_WIN", "P_CHARMED", "H_WEDDING", "P_WEDDING"]:
+		hamlet.play_gesture("celebrate", 1.8)
 		fx.hearts((hamlet_screen + miranda.position) / 2.0, 6)
 		fx.hearts(miranda.position + Vector2(0, -10), 4)
 	elif kind == "giant" or id == "H_WARN_GIANT":
@@ -121,6 +123,7 @@ func _process(delta: float) -> void:
 	var bob := 0.0 if speed > 0.15 else roundf(sin(_t * 3.2) * 1.2)
 	hamlet.position = Vector2(roundf(proj.x), roundf(proj.y + bob))
 	hamlet_screen = hamlet.position
+	hamlet.set_motion(state.fly_vel if state.has_fly else Vector3.ZERO)
 	hamlet.tick(delta, 14.0 + speed * 16.0, speed > 0.35)
 	var ground := _ground_y(hp.x, hp.z)
 	var gp := HallCam.project(Vector3(hp.x, ground, hp.z))
