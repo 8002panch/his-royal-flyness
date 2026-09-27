@@ -7,7 +7,7 @@ H_ROLE_LIFTMASTER,LOBBY,,,clown,[playfully] The Royal Liftmaster! You hold the h
 H_ROLE_WINGMASTER,LOBBY,,,clown,"[playfully] The Royal Wingmaster! Forward, and mind the brakes.",,,
 H_ROLE_SEER,LOBBY,,,clown,"[dramatically] The Royal Seer! You alone can sense the Princess, and the Giant. Speak up.",,,
 TUT_WELCOME,TUTORIAL,welcome,,clown,[cheerfully] Four grapes for the royal banquet. Surely an entire council can manage breakfast.,,,
-TUT_GRAPE_1,TUTORIAL,grape 1,,clown,[briskly] Wingmaster: forward gently. Release to slow. The grape is not fleeing.,,FLY_TAKEOFF,
+TUT_GRAPE_1,TUTORIAL,grape 1,,clown,[briskly] Wingmaster: forward gently. Release to slow. The grape is not fleeing.,,,
 TUT_GRAPE_2,TUTORIAL,grape 2,,clown,"[briskly] Helmsman: left and right. Small corrections; we are gardening, not invading.",,,
 TUT_GRAPE_3,TUTORIAL,grape 3,,clown,"[briskly] Liftmaster: up for the grape, down for the chalice. Keep the crown attached.",,,
 TUT_GRAPE_4,TUTORIAL,grape 4,,clown,[encouragingly] Together now. Slow before the turn; the chalice has suffered enough.,,,

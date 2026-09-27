@@ -48,3 +48,35 @@ static func rig(speaker: String, scene: String) -> Node2D:
 		_rigs[name] = load(RIGS % name) if ResourceLoader.exists(RIGS % name) else null
 	var packed: PackedScene = _rigs[name]
 	return packed.instantiate() as Node2D if packed != null else null
+
+
+const CLOWN_ART := "res://assets/pixelart/v3/npcs/clown_jester.png"
+static var _clown_head: ImageTexture = null
+
+
+## The Clown's head from Anshul's v3 jester (hat, bells and grin), for his captions: 64x52, nearest.
+static func clown_head() -> ImageTexture:
+	if _clown_head != null:
+		return _clown_head
+	var bytes := FileAccess.get_file_as_bytes(CLOWN_ART)
+	if bytes.is_empty():
+		return null
+	var img := Image.new()
+	if img.load_png_from_buffer(bytes) != OK:
+		return null
+	img = img.get_region(Rect2i(230, 320, 640, 520))
+	img.resize(64, 52, Image.INTERPOLATE_NEAREST)
+	_clown_head = ImageTexture.create_from_image(img)
+	return _clown_head
+
+
+## Load every cast rig, backdrop and the Clown's head up front (the court's first frames), so no character pops in late
+## or stalls the screen the first time a scene needs it.
+static func warm() -> void:
+	for name in ["hamlet", "miranda", "prospero_nice", "prospero_mad", "lord_tinman", "sir_cheapdate", "count_rutabaga",
+			"clown_jester", "royal_seer", "helmsman", "liftmaster", "wingmaster", "giant"]:
+		if not _rigs.has(name) and ResourceLoader.exists(RIGS % name):
+			_rigs[name] = load(RIGS % name)
+	for id in ["garden", "banquet", "basement", "inner_passage", "arena", "father_arena", "window_ledge", "gate_outside"]:
+		backdrop(id)
+	clown_head()

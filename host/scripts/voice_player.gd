@@ -56,6 +56,7 @@ var _reply := {}         # setup line id -> reply id (a pool line without a cue 
 var _counts := {}        # "giant|dodge" -> n, when the server doesn't send n
 var _last_shout := ""
 var _roles := {}
+var _still_since := 0.0   # when he last came to rest (-1 = flying)
 var _welcomed := {}      # seats already welcomed in this room
 var _gone_since := {}    # seat -> when it emptied (announced only if it stays empty)
 var _fainted_at := {}    # seat -> when its fainted line last played
@@ -287,6 +288,14 @@ func on_state(msg: Dictionary) -> void:
 		_set_buzz(false)
 		return  # fixture frames: no buzz, no host-side lines
 	_set_buzz(speed > FLYING_SPEED)
+	# the take-off whirr when he actually lifts off after resting (not when a tip mentions flying)
+	if speed <= FLYING_SPEED:
+		if _still_since < 0.0:
+			_still_since = _t
+	elif speed > 0.15 and _still_since >= 0.0:
+		if _t - _still_since >= 1.0 and str(msg.get("phase", "play")) == "play":
+			play_sound("FLY_TAKEOFF")
+		_still_since = -1.0
 	var filled := {}
 	var players: Variant = msg.get("players", [])
 	if players is Array:

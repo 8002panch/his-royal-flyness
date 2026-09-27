@@ -30,6 +30,8 @@ func show_caption(who: String, text: String) -> void:
 
 func _process(delta: float) -> void:
 	if _left > 0.0:
+		if speaker == "CLOWN: ":
+			queue_redraw()  # his head bobs while he talks
 		_left -= delta
 		if _left <= 0.0:
 			rows = []
@@ -75,6 +77,11 @@ func _draw() -> void:
 		draw_rect(Rect2(ex + 1, y - 1, 3, h + 2), Pal.PARCHMENT_DARK)
 		draw_rect(Rect2(ex + 1, y - 1, 1, h + 2), Pal.PARCHMENT)
 	var cx := x + 10
+	if speaker == "CLOWN: ":
+		var head := StoryArt.clown_head()
+		if head != null:
+			var bob := roundf(sin(Time.get_ticks_msec() / 90.0) * 1.0)
+			draw_texture(head, Vector2(maxf(2.0, x - 58), y + h - 50 + bob))
 	if speaker != "":
 		HudDraw.text(self, PixelFonts.bold(), cx, y + 6, speaker, Pal.CRIMSON, PixelFonts.LABEL_SIZE)
 	for i in rows.size():

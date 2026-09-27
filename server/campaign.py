@@ -570,6 +570,20 @@ class Campaign:
         s = self.stimuli()
         return s["princess"]
 
+    def _panel_cast(self, panel: str) -> list[str]:
+        """Who stands in a comic panel: its speakers (the Clown narrates from his caption box, not the stage). A panel
+        the Clown narrates alone keeps the characters from the panel before it (or after it, at a scene's start), so
+        the stage is never empty."""
+        panels = list(dict.fromkeys(x.panel for x in self.beat_list))
+        def speakers(p: str) -> list[str]:
+            return list(dict.fromkeys(x.speaker for x in self.beat_list if x.panel == p and x.speaker != "clown"))
+        k = panels.index(panel) if panel in panels else 0
+        for j in list(range(k, -1, -1)) + list(range(k + 1, len(panels))):
+            cast = speakers(panels[j])
+            if cast:
+                return cast
+        return []
+
     def state_fields(self) -> dict[str, Any]:
         """The campaign's part of Godot's state message (docs/TECH.md, "Campaign")."""
         out: dict[str, Any] = {"phase": self.phase, "scene": self.scene, "storyDemo": self.demo,
@@ -577,10 +591,10 @@ class Campaign:
                                "dizzy": self.dizzy, "steadiness": STEADINESS[self.dizzy]}
         if self.phase in ("comic", "question") and self.beat_list:
             b = self.beat_list[self.i]
-            panel_cast = [x.speaker for x in self.beat_list if x.panel == b.panel and x.speaker != "clown"]
+            panel_cast = self._panel_cast(b.panel)
             out["beat"] = {"id": b.id, "speaker": b.speaker, "name": b.name, "caption": b.caption, "panel": b.panel,
                            "gesture": b.gesture, "index": self.i + 1, "count": len(self.beat_list),
-                           "cast": list(dict.fromkeys(panel_cast))}
+                           "cast": panel_cast}
             if b.speaker == "clown":  # the Clown's narration sits over the line it reacts to, as in a comic panel
                 prev = [x for x in self.beat_list[: self.i] if x.panel == b.panel and x.speaker != "clown"]
                 if prev:

@@ -121,8 +121,16 @@ func _caption_box(name: String, caption: String, at_bottom: bool, on_top: bool =
 	if on_top:
 		r = Rect2i(ART.position.x + 8, ART.position.y + 8, ART.size.x - 16, 50)
 	HudDraw.panel(self, r, Pal.GOLD_LIGHT, Pal.INK, Pal.GOLD, Pal.GOLD)
-	HudDraw.text(self, PixelFonts.bold(), r.position.x + 8, r.position.y + 5, name, Pal.CRIMSON, PixelFonts.LABEL_SIZE)
-	_wrapped(caption, r.position.x + 8, r.position.y + 16, r.size.x - 16, 2)
+	# his head beside his words, bobbing as he talks
+	var head := StoryArt.clown_head()
+	var indent := 8
+	if head != null:
+		var hs := Vector2(48, 39)
+		var bob := roundf(sin(Time.get_ticks_msec() / 90.0) * 1.0)
+		draw_texture_rect(head, Rect2(r.position.x + 4, r.position.y + r.size.y - hs.y - 2 + bob, hs.x, hs.y), false)
+		indent = 56
+	HudDraw.text(self, PixelFonts.bold(), r.position.x + indent, r.position.y + 5, name, Pal.CRIMSON, PixelFonts.LABEL_SIZE)
+	_wrapped(caption, r.position.x + indent, r.position.y + 16, r.size.x - indent - 8, 2)
 
 
 func _bubble(name: String, caption: String, ink: Color, empty: bool = false, speaker: String = "") -> void:

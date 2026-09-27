@@ -53,6 +53,7 @@ func _ready() -> void:
 		return
 	hud.reliquary.toggled.connect(world.set_cosmetic)
 	hud.reliquary.announce()
+	StoryArt.warm.call_deferred()  # every rig and backdrop loaded now, not mid-scene
 	# the dizzy swirl sits between the world and the HUD
 	_wobble = DIZZY_WOBBLE.new()
 	add_child(_wobble)
