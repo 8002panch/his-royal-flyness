@@ -14,6 +14,7 @@ const RIGS := "res://assets/pixelart/animation_v1/rigs/%s.scn"
 const COUNCIL := ["helmsman", "liftmaster", "wingmaster", "royal_seer"]
 const COUNCIL_NAMES := ["HELMSMAN", "LIFTMASTER", "WINGMASTER", "ROYAL SEER"]
 
+var auto := true          # auto play (court_main.gd): the cards move on by themselves
 var card: Dictionary = {}
 var index := 0
 var count := 0
@@ -88,6 +89,8 @@ func _clear(list: Array) -> void:
 
 func _build_stage(key: String) -> void:
 	_clear(_stage_rigs)
+	if key == "giant":
+		return  # the Giant is drawn as the fights draw its hand (SpriteForge.giant_hand), in _draw
 	var names: Array = COUNCIL if key == "council" else [key]
 	var n := names.size()
 	var sc := 0.8 if n > 1 else 1.55
@@ -110,7 +113,7 @@ func _build_strip() -> void:
 	var n := cast.size()
 	for i in n:
 		var name := str(cast[i])
-		var r := _rig("royal_seer" if name == "council" else name)
+		var r: Node2D = null if name == "giant" else _rig("royal_seer" if name == "council" else name)
 		if r != null:
 			add_child(r)
 			r.position = Vector2(PANEL.position.x + 20 + (PANEL.size.x - 40) * (i + 0.5) / n, STRIP_Y)
@@ -134,6 +137,8 @@ func _draw() -> void:
 		draw_texture_rect_region(tex, Rect2(STAGE), Rect2((HallCam.W - src_w) * 0.5, 0, src_w, HallCam.H))
 	else:
 		draw_rect(Rect2(STAGE), Pal.PARCHMENT_DARK)
+	if str(card.get("rig", "")) == "giant":
+		_hand(Vector2(STAGE.position.x + STAGE.size.x / 2, STAGE.position.y + STAGE.size.y - 30), 56, STAGE.position.y)
 	HudDraw.frame(self, STAGE.grow(1), Pal.INK)
 	HudDraw.frame(self, STAGE.grow(2), Pal.GOLD)
 
@@ -157,8 +162,12 @@ func _draw() -> void:
 	_wrapped(str(card.get("fact", "")), TEXT_X, y, TEXT_W, Pal.INK_SOFT, 8, 11 if str(card.get("rig", "")) == "council" else 10,
 		PixelFonts.label())
 
-	# the cast row: the current one lit, a gold marker under them
+	# the cast row: the current one lit, a gold marker under them (the Giant is its hand, as in the fights)
 	var n := cast.size()
+	var gi := cast.find("giant")
+	if gi >= 0:
+		var gx := PANEL.position.x + 20 + (PANEL.size.x - 40) * (gi + 0.5) / n
+		_hand(Vector2(gx, STRIP_Y - 4), 20, STRIP_Y - 44, gi != index)
 	if n > 0:
 		var cx := PANEL.position.x + 20 + (PANEL.size.x - 40) * (index + 0.5) / n
 		var bob := roundf(sin(_t * 6.0))
@@ -170,6 +179,8 @@ func _draw() -> void:
 	HudDraw.text(self, PixelFonts.label(), PANEL.position.x + 10, fy, "CARD %d OF %d" % [index + 1, count], Pal.INK_SOFT,
 		PixelFonts.LABEL_SIZE)
 	var right := "SPACE: NEXT   LEFT: BACK   S: SKIP TO THE GARDEN" if index + 1 < count else "SPACE: TO THE GARDEN"
+	if auto:
+		right = "AUTO PLAY   A: MANUAL   S: SKIP TO THE GARDEN"
 	HudDraw.text_right(self, PixelFonts.bold(), PANEL.position.x + PANEL.size.x - 10, fy, right, Pal.CRIMSON, PixelFonts.LABEL_SIZE)
 
 
@@ -191,3 +202,21 @@ func _wrapped(text: String, x: int, top: int, width: int, col: Color, size: int,
 	for i in lines.size():
 		HudDraw.text(self, font, x, top + i * step, lines[i], col, size)
 	return top + lines.size() * step
+
+
+## The Giant's hand exactly as the fights draw it (SpriteForge.giant_hand and GiantHand's sleeve): fingertips at `tip`, the
+## sleeve running up to `top`.
+func _hand(tip: Vector2, palm: int, top: float, dim: bool = false) -> void:
+	var tex := SpriteForge.giant_hand(palm)
+	var sz := SpriteForge.hand_size(palm)
+	var at := Vector2(roundf(tip.x - sz.x / 2), roundf(tip.y - sz.y + 2))
+	var ox := at.x + 2 + roundi(0.2 * palm) - roundi(0.08 * palm)
+	var w := roundi(1.16 * palm)
+	var h := at.y - top
+	var mod := Color(0.45, 0.42, 0.4, 1) if dim else Color(1, 1, 1, 1)
+	if h > 0:
+		draw_rect(Rect2(ox - 1, top, w + 2, h + 1), Pal.INK * mod)
+		draw_rect(Rect2(ox, top, w, h + 1), Pal.ROYAL_DARK * mod)
+		for k in 3:
+			draw_rect(Rect2(ox + roundi((0.28 + 0.3 * k) * palm), top, 1, h + 1), Pal.ROYAL * mod)
+	draw_texture(tex, at, mod)

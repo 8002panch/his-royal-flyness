@@ -28,8 +28,8 @@ and those senses run through the real wiring of a male fruit fly's nervous syste
 
 Join → the cast introduction (Dramatis Personae) → garden grape tutorial → opening comic → Tinman's drink question → basement Stage 1 →
 Rutabaga's drink question → sixty-second Stage 2 → Cheapdate's drink question → banquet comic →
-ten Giant dodges → reconciliation, or a father encounter requiring five untouched dodges →
-one of two endings. Full layouts, questions and panel script are in [the story plan](#story-campaign-and-comic-cutscenes--approved-team-plan).
+ten Giant dodges → Prospero's own test either way (five untouched dodges; built Sun 27 Sept: a Giant win
+no longer skips him) → one of two endings. Full layouts, questions and panel script are in [the story plan](#story-campaign-and-comic-cutscenes--approved-team-plan).
 
 Players move directly; the brain powers the Seer's Princess/Giant cues. New wall/spike/throw
 guidance must be implemented and honestly labeled; it is not already a neural capability.
@@ -119,19 +119,20 @@ certification claim is required. Display delivery/dodge/time counts computed by 
 ```
 
 - During hidden-navigation/hazard play, the shared screen reveals no actionable wall/spike layout, hand landing zone or throw path. No shadows or directional sounds can leak those secrets. Authored comic panels are separate from live sensing.
-- **Hamlet's brain map** (top right; built Sun 27 Sept, replacing the Seer panel; redrawn at 07:40 for first-time
-  players): a labelled drawing of the fly's CNS with six plain-English regions (eyes, memory, balance, smell, flight
-  orders = the descending neurons, wings & legs = the nerve cord and motor neurons), a line saying in words what his brain
-  is doing ("EYES TRACKING MOTION", "MEMORY FOGGED"), a warm glow on busy regions, dozing "z z" on sluggish ones,
-  signals running from the eyes to the body while he flies, a DOZY-to-BUSY key and a row of goblets for cordials drunk.
-  The server computes twelve finer regions too (instinct, courting, taste, escape...). Each region is a group of
+- **Hamlet's brain map** (top right; built Sun 27 Sept, replacing the Seer panel; simplified at 08:30 because the
+  labelled drawing was too busy to read): a small picture of his brain with four parts (eyes, memory, balance, body =
+  nerve cord and motor neurons) and one big row per part saying in a word how it's doing (VERY BUSY, BUSY, NORMAL, SLOW,
+  VERY SLOW) in the colour it has in the picture, plus goblets for cordials drunk. It shows while flying and in the drink
+  questions only; other cutscenes and the cast introduction have the whole screen. The server still computes twelve finer
+  regions (instinct, courting, taste, escape...). Each region is a group of
   real neurons picked by MaleCNS annotation; its colour is log2 of its mean rate against sober rest (dark = quieter, gold then
   crimson = busier). It runs a second copy of the whole-CNS model (`brain/brain_map.py`) driven only by Hamlet's movement
   (each direction stimulates the brain-v2 visual group for that direction), so it never carries the Seer's secret. Each
   wrong quiz answer (a grape cordial) adds one step of the disclosed alcohol assumption: GABA neurons' output +20%, excitatory
-  neurons' output -8%, per cordial. During the three drink questions the panel grows down the right side, pulses the regions
-  the question is about, flips the map between before and after one cordial, and shows the model's computed change per
-  region (for one cordial from sober in forward flight: balance -10%, flight orders -27%, wings & legs -30%, memory -32%). These are
+  neurons' output -8%, per cordial. During the three drink questions the panel grows down the right side (the comic moves
+  left), rings the parts the question is about (Q01 balance and body, Q02 memory, Q03 memory and balance) and shows, big,
+  the model's computed change for one cordial (from sober in forward flight: memory -32%, balance -10%, body -30%; the
+  drink table uses fixed noise, so every game shows the same numbers). These are
   model outputs under our assumption, not measured fly or human results. The Seer's brain is never given alcohol.
 - *(Older, replaced by the brain map:)* The **Royal Nervous System HUD** draws one bar per brain-activity value (`vision`, `looming`, `escape`, as z-scores). With the
   Changeling the bars stay low (its looming readout never reaches the warning level), which is the demo's clearest picture of
@@ -465,8 +466,17 @@ auto-complete. A replay tutorial option belongs in the testing menu.
 
 **The cast introduction (built Sun 27 Sept):** Enter in the lobby opens *Dramatis Personae* before the tutorial: one card
 per character (Hamlet, Miranda, Prospero, Clown, Tinman, Rutabaga, Cheapdate, the Giant, then the council's four roles), each
-with the character large and animated, their part in the story and the real gene behind the name. Space/Right moves on,
-Left goes back, S skips to the garden. Phones show "story time".
+with the character large and animated, a spoken introduction by the Clown (`INTRO_*` lines), their part in the story and
+the real gene behind the name. The Giant is drawn as the fights draw its hand. Space/Right moves on, Left goes back, S skips
+to the garden. Phones show "story time".
+
+**Cutscenes play by themselves (built Sun 27 Sept):** comics and cast cards move on once each line has been spoken and
+there's been time to read it (at least 2.5 s, about four words a second). A question still waits for the Seer. **A** toggles
+auto play and manual (Space) on the main screen. Text in the bubbles always stays at the big caption size: a long line makes
+its bubble taller and the picture shorter. In the three drink questions both chalices stand in the picture, labelled PEAR
+NECTAR and GRAPE CORDIAL; the one Hamlet gets lights up. Eight Clown quips that interrupted scenes mid-way were cut
+(C01 panels 2, 3, 7, 8; Q01's two; Q02's and Q03's last line); his scene-setting narration stays. Anshul's TWIST/E03 joke
+ending stays script-only and is not in the game.
 
 #### Stage 1 — The Journey to the Court
 
@@ -475,7 +485,8 @@ This fixes the geography: the window does not inexplicably open directly into th
 **Objective:** traverse the basement and reach the staircase. The timer is not the challenge.
 
 **Speed (Sun 27 Sept):** in both wall courses forward/back flight has 45% of the other axes' acceleration and top speed
-(`COURSE_Z_SCALE`), because the walls came at the council too fast to steer through.
+(`COURSE_Z_SCALE`), because the walls came at the council too fast to steer through. A wall Hamlet has flown through is
+no longer drawn (it stood between the chase camera and him, hiding the course ahead).
 
 Proposed course has three readable sections: a wide sideways bend between stacked objects;
 an up/down passage with a safe resting pocket; a final narrow section with spikes on alternating
@@ -559,8 +570,9 @@ survival timer; Arnav replaced it with a dodge count.
 #### Father encounter — Prospero's Last Word
 
 **Objective fixed by Arnav:** dodge **five grapes Prospero throws, without being hit**. One hit → E02;
-five successful dodges → E01's second-chance version. This encounter appears only after losing
-to the Giant. No repeat quiz, new penalty stack or replay of Prospero's rescue on entry.
+five successful dodges → E01's second-chance version. **Changed Sun 27 Sept (Neil):** it follows a Giant win too:
+C03 ends with Prospero's challenge ("But a giant is not a duke..."), and E01 then opens with Miranda's "Enough, Father".
+Originally this encounter appeared only after losing to the Giant. No repeat quiz, new penalty stack or replay of Prospero's rescue on entry.
 
 Prospero stays at one side of a small arena. Each thrown grape is a simple moving hazard, one at
 a time, with a locked path and a recovery gap. Reuse warning → dodge → collision → result logic

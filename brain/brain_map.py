@@ -162,7 +162,8 @@ class BrainMap:
         key = (self.model.kind, self.model.seed)
         if key not in self._tables:
             m = self.model
-            saved_r, saved_scale = m.r.copy(), m.pre_scale
+            saved_r, saved_scale, saved_rng = m.r.copy(), m.pre_scale, m.rng
+            m.rng = np.random.default_rng(2026)  # the same noise every time, so the quiz shows the same numbers every game
             rows = []
             for d in range(MAX_DRINKS + 1):
                 m.pre_scale = self._scale(d)
@@ -173,7 +174,7 @@ class BrainMap:
                     if k >= TABLE_TICKS - TABLE_AVG:
                         acc += self._means()
                 rows.append({kk: float(v) for kk, v in zip(REGION_KEYS, acc / TABLE_AVG)})
-            m.r, m.pre_scale = saved_r, saved_scale
+            m.r, m.pre_scale, m.rng = saved_r, saved_scale, saved_rng
             self._tables[key] = rows
         return self._tables[key]
 

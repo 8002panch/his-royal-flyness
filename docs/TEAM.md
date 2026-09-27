@@ -40,6 +40,11 @@ True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 
 
 ### Phase log
 
+- **Sun 27 Sept, ~08:40 (Neil, with Claude):** Prospero's fight after a Giant win too (C03 → FATHER, two new C03 lines);
+  spoken cast introduction (nine `INTRO_*` Clown lines); eight interrupting Clown quips cut; cutscenes auto-play (A toggles);
+  comic text never shrinks (bubbles grow); both chalices drawn in the drink questions; the intro's Giant is the fight's
+  hand; passed walls stop drawing; the brain map simplified to four parts in words and hidden during non-quiz cutscenes.
+  Voices generated for the 11 new lines (970 characters) and the cut ones pruned.
 - **Sun 27 Sept, ~07:45 (Neil, with Claude):** the team's nine music tracks in `audio/music/` with a scene manifest and a
   `Music` autoload (`host/scripts/music_player.gd`, `host/test/music_smoke.gd`); the brain map redrawn for first-time players;
   the voice tests fixed (`giant_win_twist` added to `gen_voices.BRANCHES` for Anshul's script-only TWIST/E03 ending; three

@@ -14,6 +14,7 @@ extends Node
 ## Story (server/campaign.py; the presenter's controls, never an answer): Enter starts from the lobby or the end card, and
 ##       otherwise moves on, like Space, Right and Page Down (a clicker); Left or Page Up rereads; S skips a comic (it stops at an
 ##       unanswered question); R restarts a stage; Ctrl+1..9 jumps to a chapter for judging (marked DEMO).
+##       A switches auto play (on at start): comics and the cast cards move on by themselves after each line.
 ##       `-- --debug` opens with the F1 overlay showing; `-- --demo` starts in the keyboard demo.
 ##
 ## Screenshot mode renders one screen from the host/test fixtures and quits:
@@ -41,6 +42,13 @@ var _last_frame := -1
 var _phase := ""
 const DIZZY_WOBBLE := preload("res://scripts/court/dizzy_wobble.gd")
 var _wobble: CanvasLayer = null
+## Auto play (A toggles it): each comic line and cast card moves on by itself once it has been spoken and there's been time to
+## read it. A question still waits for the Seer.
+var auto_play := true
+var _auto_key := ""
+var _auto_t := 0.0
+var _auto_sent := false
+var _auto_words := 0
 const JUMPS := ["TUTORIAL", "Q01", "STAGE1", "Q02", "STAGE2", "Q03", "C02", "GIANT", "FATHER"]
 
 
@@ -87,6 +95,7 @@ func _ready() -> void:
 func _on_state(msg: Dictionary) -> void:
 	var cs := CourtState.read(msg)
 	_phase = cs.phase
+	_track_auto(cs)
 	world.apply_state(cs)
 	hud.apply_state(cs, world.giant_in_view)
 	if _wobble != null:
@@ -99,6 +108,42 @@ func _on_state(msg: Dictionary) -> void:
 		music.call("play_for", cs.scene, cs.phase, cs.ending)  # the story's soundtrack (audio/music/manifest.json)
 	if cs.sample:
 		_play_sample_events(cs.frame)
+
+
+## Which line is up, for auto play: a new line restarts its clock.
+func _track_auto(cs: CourtState) -> void:
+	var key := ""
+	var words := ""
+	if cs.phase == "comic" and not cs.beat.is_empty():
+		key = str(cs.beat.get("id", ""))
+		words = str(cs.beat.get("caption", ""))
+	elif cs.phase == "intro" and cs.raw.get("intro") is Dictionary:
+		var card: Dictionary = cs.raw["intro"].get("card", {})
+		key = "intro:%d" % int(cs.raw["intro"].get("index", 0))
+		words = str(card.get("title", "")) + " " + str(card.get("fact", ""))
+	if key != _auto_key:
+		_auto_key = key
+		_auto_t = 0.0
+		_auto_sent = false
+		_auto_words = words.split(" ", false).size()
+
+
+func _process(delta: float) -> void:
+	if not auto_play or _demo != null or _auto_key == "" or _auto_sent:
+		return
+	_auto_t += delta
+	# long enough to read it (about four words a second, at least 2.5 s), and never over the voice still speaking
+	var need := maxf(2.5, 0.25 * _auto_words + 1.0)
+	var speaking: bool = _voice != null and _voice.has_method("busy") and _voice.call("busy")
+	if _auto_t >= need and not speaking:
+		_auto_sent = GameState.send_command({"command": "next"})
+
+
+func _set_auto(on: bool) -> void:
+	auto_play = on
+	hud.comic.auto = on
+	hud.intro.set("auto", on)
+	_auto_t = 0.0
 
 
 ## GameState's feed is set aside while the keyboard demo runs.
@@ -156,6 +201,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			hud.reliquary.toggle_index(1)
 		KEY_3, KEY_KP_3:
 			hud.reliquary.toggle_index(2)
+		KEY_A:
+			if _demo == null:  # the keyboard demo flies with WASD
+				_set_auto(not auto_play)
 		KEY_F1:
 			hud.toggle_debug()
 		KEY_F2:

@@ -78,11 +78,12 @@ func apply_state(cs: CourtState, hazard_in_view: bool) -> void:
 	objective.visible = objective.visible and cs.scene == ""  # the story has its own banner
 	end_scene.apply(cs)
 	story.apply(cs)
-	comic.apply(cs)
-	intro.apply(cs)
-	brain_map.visible = brain_map.visible and cs.phase != "intro"
 	brain_map.apply(cs)
 	comic.narrow = brain_map.quiz_mode()  # the comic makes room for the map during the drink questions
+	comic.apply(cs)
+	intro.apply(cs)
+	# the brain map is for flying; in the story it steps aside, except in the drink questions (where it has its own column)
+	brain_map.visible = brain_map.visible and (cs.phase in ["play", "ready"] or brain_map.quiz_mode())
 	for c in cards:
 		(c as RoleCard).apply(cs)
 	if lobby.visible:

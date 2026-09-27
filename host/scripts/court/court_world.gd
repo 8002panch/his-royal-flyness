@@ -218,6 +218,7 @@ func _process(delta: float) -> void:
 	# --- Hamlet, and the camera chasing him (everything below projects through it)
 	var hp := HallCam.from_server(_fly_shown)
 	HallCam.follow(hp, delta)
+	HallBuilder.passed_z = HallCam.from_server(_fly_shown).z  # walls he's through stop drawing
 	var proj := HallCam.project(hp)
 	# the chase camera sits right behind him: smaller there, so he never hides the wall openings ahead
 	var hh := clampi(roundi(HAMLET_SIZE * (1.0 if HallCam.stage else 0.62) * proj.z / 2.0) * 2, 16, 96)

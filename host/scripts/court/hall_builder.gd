@@ -38,6 +38,9 @@ const COURSE_WALLS := [
 	[0.75, -0.75, 0.75, -0.15, 1.00],
 ]
 static var walls: Array = COURSE_WALLS
+## Hamlet's depth in hall units (court_world.gd sets it every frame): a wall he has flown through is behind him, so it
+## isn't drawn; otherwise it would stand between the chase camera and Hamlet and hide the course ahead.
+static var passed_z := -INF
 
 
 ## First grid line at or before ZN, so patterns are fixed to the hall.
@@ -394,7 +397,7 @@ static func paint_course_walls(c) -> void:
 	for i in range(walls.size() - 1, -1, -1):
 		var spec: Array = walls[i]
 		var z := HallCam.from_server(Vector3(0.0, 0.0, float(spec[0]))).z
-		if z <= ZN + 0.08:
+		if z <= ZN + 0.08 or z < passed_z:
 			continue
 		var gx0 := float(spec[1]) * HallCam.SX
 		var gx1 := float(spec[2]) * HallCam.SX

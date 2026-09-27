@@ -5,7 +5,7 @@ so the script lives in one place. Everything here is scripted story logic: the b
 the attacks only reach it as looming stimuli while they approach. Nothing about an attack reaches the shared screen before it
 lands (the Seer's secret).
 
-Flow: lobby -> INTRO (the cast, one card at a time) -> TUTORIAL -> C01 -> Q01 -> STAGE1 -> Q02 -> STAGE2 -> Q03 -> C02 -> GIANT -> C03 | C04 -> [FATHER] -> E01 | E02
+Flow: lobby -> INTRO (the cast, one card at a time) -> TUTORIAL -> C01 -> Q01 -> STAGE1 -> Q02 -> STAGE2 -> Q03 -> C02 -> GIANT -> C03 | C04 -> FATHER -> E01 | E02
 -> END. Phases: lobby, intro, comic, question (a comic beat waiting for the Seer's answer), ready (a short count-in), play, end.
 """
 
@@ -72,11 +72,11 @@ MIRANDA_BY_CHALICE = (-0.25, -0.15, -0.5)
 QUIZZES = {  # docs/GAME.md, "The three drink questions" (NIAAA facts; general human health, not fly results)
     # focus: the brain-map regions (brain/brain_map.py) the question is about, highlighted on the main screen's map
     "Q01": {"text": "Alcohol can make balance and coordination...", "a": "Worse", "b": "More precise", "correct": "A",
-            "focus": ["balance", "commands", "body"]},
+            "focus": ["balance", "body"]},
     "Q02": {"text": "Can heavy drinking interfere with forming new memories?", "a": "No", "b": "Yes", "correct": "B",
             "focus": ["memory"]},
     "Q03": {"text": "Does coffee remove alcohol's effects on judgment and coordination?", "a": "Yes", "b": "No", "correct": "B",
-            "focus": ["memory", "balance", "commands"]},
+            "focus": ["memory", "balance"]},
 }
 STEADINESS = ("steady", "wobbly", "very wobbly", "extremely wobbly")
 
@@ -97,23 +97,23 @@ OBJECTIVE = {
 # The character introduction before the tutorial: who's who, and the real gene behind each name (docs/GAME.md, "Lore").
 # rig = the cast rig in host/assets/pixelart/animation_v1/rigs; voice = a line to play with the card (if it has one).
 INTRO_CARDS = (
-    {"rig": "hamlet", "name": "Prince Hamlet", "title": "Our hero. The council flies him.",
-     "fact": "hamlet is a real fly gene: it decides what kind of neuron a cell becomes. IIB or not IIB.", "voice": "H_PRINCE"},
-    {"rig": "miranda", "name": "Princess Miranda", "title": "His intended. She speaks for herself.",
+    {"rig": "hamlet", "voice": "INTRO_HAMLET", "name": "Prince Hamlet", "title": "Our hero. The council flies him.",
+     "fact": "hamlet is a real fly gene: it decides what kind of neuron a cell becomes. IIB or not IIB."},
+    {"rig": "miranda", "voice": "INTRO_MIRANDA", "name": "Princess Miranda", "title": "His intended. She speaks for herself.",
      "fact": "miranda carries the Prospero protein into the daughter cell when a neural stem cell divides."},
-    {"rig": "prospero_mad", "name": "Duke Prospero", "title": "Her father, and very hard to impress.",
+    {"rig": "prospero_mad", "voice": "INTRO_PROSPERO", "name": "Duke Prospero", "title": "Her father, and very hard to impress.",
      "fact": "prospero controls the fate of the cells a neural stem cell makes. Both are named for The Tempest."},
-    {"rig": "clown_jester", "name": "Clown, the Court Jester", "title": "Your narrator. Mostly helpful.",
+    {"rig": "clown_jester", "voice": "INTRO_CLOWN", "name": "Clown, the Court Jester", "title": "Your narrator. Mostly helpful.",
      "fact": "clown mutant flies have red-and-white eyes."},
-    {"rig": "lord_tinman", "name": "Lord Tinman", "title": "A polished rival with no heart.",
+    {"rig": "lord_tinman", "voice": "INTRO_TINMAN", "name": "Lord Tinman", "title": "A polished rival with no heart.",
      "fact": "tinman flies grow no heart."},
-    {"rig": "count_rutabaga", "name": "Count Rutabaga", "title": "A rival who forgets whom he is courting.",
+    {"rig": "count_rutabaga", "voice": "INTRO_RUTABAGA", "name": "Count Rutabaga", "title": "A rival who forgets whom he is courting.",
      "fact": "rutabaga flies are bad at learning and memory."},
-    {"rig": "sir_cheapdate", "name": "Sir Cheapdate", "title": "The tipsy rival.",
+    {"rig": "sir_cheapdate", "voice": "INTRO_CHEAPDATE", "name": "Sir Cheapdate", "title": "The tipsy rival.",
      "fact": "cheapdate flies get drunk on less alcohol."},
-    {"rig": "giant", "name": "The Giant", "title": "A human with a swatter. Do not be there when it lands.",
+    {"rig": "giant", "voice": "INTRO_GIANT", "name": "The Giant", "title": "A human with a swatter. Do not be there when it lands.",
      "fact": "From a fly's point of view, humans are giants. His escape neuron is really called the Giant Fiber."},
-    {"rig": "council", "name": "Your Privy Council", "title": "Four phones, one fly.",
+    {"rig": "council", "voice": "INTRO_COUNCIL", "name": "Your Privy Council", "title": "Four phones, one fly.",
      "fact": "Helmsman: left and right. Liftmaster: up and down. Wingmaster: forward and back. Royal Seer: senses Miranda "
              "and the Giant through his real neurons, and tells the others."},
 )
@@ -319,6 +319,8 @@ class Campaign:
         self._enter_beat()
 
     def _on_route(self, scene: str, b: Beat) -> bool:
+        if scene == "E01" and b.branch == "giant_win" and "father_win" in self.route:
+            return False  # after Prospero's own test, Miranda's "Enough, Father" opens the ending instead
         if b.branch in ("correct", "wrong"):
             return scene in self.answers and (self.answers[scene] == QUIZZES[scene]["correct"]) == (b.branch == "correct")
         return b.branch == "" or b.branch in self.route
@@ -408,8 +410,8 @@ class Campaign:
         s = self.scene
         if s == "GIANT":
             self.enter("C03" if "giant_win" in self.route else "C04")
-        elif s == "C03":
-            self.enter("E01")
+        elif s == "C03":  # a win still meets Prospero: he tests Hamlet himself before any blessing
+            self.enter("FATHER")
         elif s == "C04":
             self.enter("FATHER")
         elif s == "FATHER":

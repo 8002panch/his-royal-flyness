@@ -228,7 +228,12 @@ def test_ten_dodges_choose_c03_then_e01_with_no_extra_attack():
     # the Giant is meant to be hard (volleys, short warnings): even this instant, all-knowing pilot may take a hit or two
     assert len([r for r in g.results if r[0] == "hit"]) < cm.GIANT_HITS
     g.read_comic()
-    assert g.c.scene == "E01" and "E01_P1A_MIRANDA" in [b.id for b in g.c.beat_list]
+    assert g.c.scene == "FATHER", "a win still meets Prospero's own test"
+    g.run(2.1)
+    assert g.run(60, pilot=dodge_pilot, until=lambda g: g.c.scene != "FATHER")
+    assert g.c.scene == "E01"
+    ids = [b.id for b in g.c.beat_list]
+    assert "E01_P1B_MIRANDA" in ids and "E01_P1A_MIRANDA" not in ids, "one opening panel, the one after Prospero's test"
     g.read_comic()
     assert g.c.phase == "end"
 
