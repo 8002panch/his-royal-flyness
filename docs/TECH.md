@@ -97,7 +97,12 @@ Phone:
 `clientId` is generated once and kept in `localStorage`. If its saved role isn't occupied when it reconnects to the same room,
 the relay restores that role automatically. A phone that reconnects on its own also sends its last role
 (`{"t":"join", ..., "role":"seer"}`), so it gets the role back even from a restarted relay that remembers nobody (granted if
-free; otherwise it sees the role picker). Rooms are isolated by code; at most four phones per room; each role once.
+free; otherwise it sees the role picker). If the same phone still holds that role on an older connection (a reloaded page, or
+a socket that died when the phone slept), the new connection takes it over and an older page that's still open gets
+`{"t":"seat_moved","role":"seer"}`. Rooms are isolated by code. **Seats, not connections, are limited:** four roles, each once;
+up to 16 phones may be in a room (waiting phones see the picker), so extra tabs or dead connections can never fill the court.
+Phones still choosing get the open roles live whenever a seat changes: `{"t":"roles","roles":["liftmaster","seer"]}` (an empty
+list shows "The court is full").
 
 The relay tells the game server who holds which role, on the host's join and on every change:
 
@@ -142,7 +147,8 @@ or null, `seconds` may be null.
 |---|---|
 | `INVALID_ROOM` | Room isn't four uppercase consonants |
 | `INVALID_NAME` / `INVALID_CLIENT_ID` | Join fields are malformed |
-| `ROLE_TAKEN` | Another active phone has that role |
+| `ROLE_TAKEN` | Another active phone has that role (the picker updates itself; the phone shows a short notice) |
+| `ROOM_FULL` | More than 16 phones in one room (an abuse guard; the four seats are limited separately) |
 | `FORBIDDEN_CONTROL` | A phone tried to control another role or axis |
 | `STALE_SEQUENCE` | `seq` isn't newer than the last accepted one |
 | `HOST_AUTH_FAILED` / `HOST_EXISTS` | Invalid room claim by a host |
@@ -175,6 +181,12 @@ exact bearing (GAME.md, "The main screen").
 
 ## The game server (`server/`)
 
+- **Never waits on the network:** the relay sends every message on its own with a 2 s limit and skips closing connections; the
+  game server sends phone feedback and host-screen frames in the background, skipping a round if one is still going out. Before
+  this, one phone going to sleep froze everyone's feedback and the host screen for about 10 s once its connection timed out
+  (tested: `SlowPeerTests`). Keepalive pings every 5 s drop a dead phone within about 10 s.
+- **The brain runs on its own thread** in the live server (one 20 ms step per slot; under load it falls behind real time rather
+  than stalling the game). Measured with four players and six CPU hogs: 50 brain steps per second and a steady 30 frames per second.
 - **Relay connection:** the server keeps retrying until the relay is up and reconnects within about a second if it drops.
   While disconnected the game keeps running, held inputs are cleared and the host screen's seats empty until the relay's
   roster arrives again (tested: `test_game_server_survives_a_relay_restart`).
@@ -424,7 +436,7 @@ python -m pytest brain/tests server/tests relay/tests -q
 npm test --prefix relay/public
 ```
 
-- **95 Python tests** (about 2 minutes on a quiet laptop): 68 brain, 14 server, 13 relay. `-m "not slow"` skips the slowest brain tests. Brain tests
+- **100 Python tests** (about 2 minutes on a quiet laptop): 68 brain, 14 server, 18 relay. `-m "not slow"` skips the slowest brain tests. Brain tests
   that need `data/` skip with a clear message on a fresh clone.
 - **3 JavaScript tests** for the phone modules (role-owned message shapes, private Seer view detection, room codes); they need Node.
 - What the brain suite covers: the graph matches the data check; signs follow the transmitter rule; the Changelings keep every

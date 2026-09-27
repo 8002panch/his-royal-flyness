@@ -29,12 +29,51 @@ class RelayStateTests(unittest.TestCase):
         with self.assertRaisesRegex(RelayError, "already filled"):
             self.state.handle("b", {"t": "pick", "role": "seer", "seq": 2})
 
-    def test_fifth_phone_is_rejected(self) -> None:
-        for index in range(4):
+    def test_fifth_phone_can_wait_but_not_take_a_seat(self) -> None:
+        for index, role in enumerate(("helmsman", "liftmaster", "wingmaster", "seer")):
             phone(self.state, f"p{index}", f"p{index}")
+            self.state.handle(f"p{index}", {"t": "pick", "role": role, "seq": 2})
         self.state.connect("fifth")
-        with self.assertRaisesRegex(RelayError, "full"):
-            self.state.handle("fifth", {"t": "join", "room": "BZKT", "name": "fifth", "clientId": "fifth", "seq": 1})
+        response, _ = self.state.handle("fifth", {"t": "join", "room": "BZKT", "name": "fifth", "clientId": "fifth", "seq": 1})
+        self.assertEqual((response["t"], response["roles"]), ("joined", []))
+        with self.assertRaisesRegex(RelayError, "already filled"):
+            self.state.handle("fifth", {"t": "pick", "role": "seer", "seq": 2})
+
+    def test_waiting_phones_and_extra_tabs_never_fill_the_court(self) -> None:
+        # the bug the team hit: a second tab (or a phone that never picked) made the relay say "full" with seats free
+        phone(self.state, "tab1", "neil")
+        phone(self.state, "tab2", "neil")
+        for index, role in enumerate(("helmsman", "liftmaster")):
+            phone(self.state, f"p{index}", f"p{index}")
+            self.state.handle(f"p{index}", {"t": "pick", "role": role, "seq": 2})
+        self.state.connect("late")
+        response, _ = self.state.handle("late", {"t": "join", "room": "BZKT", "name": "Ved", "clientId": "ved", "seq": 1})
+        self.assertEqual((response["t"], response["roles"]), ("joined", ["wingmaster", "seer"]))
+        for index in range(11):  # 16 phones are allowed in a room; the 17th is refused
+            phone(self.state, f"x{index}", f"x{index}")
+        self.state.connect("too-many")
+        with self.assertRaisesRegex(RelayError, "Too many"):
+            self.state.handle("too-many", {"t": "join", "room": "BZKT", "name": "x", "clientId": "x", "seq": 1})
+
+    def test_a_phone_that_slept_gets_its_role_back_from_its_dead_connection(self) -> None:
+        phone(self.state, "old", "ap")
+        self.state.handle("old", {"t": "pick", "role": "seer", "seq": 2})
+        self.state.connect("new")  # the old socket hasn't timed out yet, so it still holds the seat
+        response, events = self.state.handle("new", {"t": "join", "room": "BZKT", "name": "AP", "clientId": "ap", "role": "seer", "seq": 1})
+        self.assertEqual((response["t"], response["role"]), ("assigned", "seer"))
+        self.assertEqual(self.state.rooms["BZKT"].role_connections["seer"], "new")
+        self.assertIn({"to": "old", "payload": {"t": "seat_moved", "role": "seer"}}, events, "an open older page is told")
+        self.assertEqual(self.state.disconnect("old"), [], "the dead connection closing later must not unseat the player")
+
+    def test_phones_still_choosing_see_seats_fill_and_free_up(self) -> None:
+        phone(self.state, "a", "a")
+        phone(self.state, "b", "b")
+        _, events = self.state.handle("a", {"t": "pick", "role": "helmsman", "seq": 2})
+        to_b = [e["payload"] for e in events if e["to"] == "b"]
+        self.assertEqual(to_b, [{"t": "roles", "roles": ["liftmaster", "wingmaster", "seer"]}])
+        events = self.state.disconnect("a")
+        self.assertIn({"t": "roles", "roles": ["helmsman", "liftmaster", "wingmaster", "seer"]},
+                      [e["payload"] for e in events if e["to"] == "b"])
 
     def test_reconnect_restores_role(self) -> None:
         phone(self.state, "a", "same")

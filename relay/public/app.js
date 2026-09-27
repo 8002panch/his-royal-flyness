@@ -9,7 +9,9 @@ const app = document.querySelector("#app");
 const reconnectOverlay = document.querySelector("#reconnect-overlay");
 const CLIENT_ID_KEY = "his-royal-flyness-client-id";
 const PROFILE_KEY = "his-royal-flyness-profile";
-const state = { socket: null, seq: 0, room: "", name: "", role: "", availableRoles: [], heldValue: 0, latchMode: false, view: {}, reconnectTimer: null };
+const state = { socket: null, seq: 0, room: "", name: "", role: "", joined: false, availableRoles: [], heldValue: 0, latchMode: false, view: {}, reconnectTimer: null };
+const toast = document.querySelector("#toast");
+let toastTimer = null;
 
 function getClientId() {
   let clientId = localStorage.getItem(CLIENT_ID_KEY);
@@ -32,9 +34,11 @@ function loadProfile() { try { return JSON.parse(localStorage.getItem(PROFILE_KE
 
 function render() {
   if (!state.role) {
-    app.dataset.screen = "";
-    app.innerHTML = state.availableRoles.length ? roleScreen(state.availableRoles) : joinScreen({ room: state.room, name: state.name });
-    if (state.availableRoles.length) bindRolePicker(); else bindJoin();
+    // joined but not seated: the picker (even when every seat is taken); otherwise the join form
+    const screen = state.joined ? "picker" : "join";
+    app.dataset.screen = screen;
+    app.innerHTML = state.joined ? roleScreen(state.availableRoles) : joinScreen({ room: state.room, name: state.name });
+    if (state.joined) bindRolePicker(); else bindJoin();
     return;
   }
   const views = { helmsman: renderHelmsman, liftmaster: renderLiftmaster, wingmaster: renderWingmaster, seer: renderSeer };
@@ -69,7 +73,18 @@ function bindJoin() {
   });
 }
 
-function showJoinError(message) { document.querySelector("#form-error").textContent = message; }
+function showNotice(message) {
+  toast.textContent = message;
+  toast.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { toast.hidden = true; }, 4000);
+}
+
+// Errors never replace or freeze the screen: on the join form they show under it, anywhere else as a short notice.
+function showJoinError(message) {
+  const slot = document.querySelector("#form-error");
+  if (slot) slot.textContent = message; else showNotice(message);
+}
 function bindRolePicker() { document.querySelectorAll("[data-role]").forEach((button) => button.addEventListener("click", () => send({ t: "pick", role: button.dataset.role }))); }
 
 function bindControls() {
@@ -131,11 +146,17 @@ function scheduleReconnect() { reconnectOverlay.hidden = false; clearTimeout(sta
 
 function handleMessage(data) {
   let message; try { message = JSON.parse(data); } catch { return; }
-  if (message.t === "joined") { state.availableRoles = message.roles || []; state.role = ""; render(); return; }
-  if (message.t === "assigned") { state.role = message.role; state.availableRoles = []; state.view = {}; saveProfile(); render(); return; }
+  if (message.t === "joined") { state.joined = true; state.availableRoles = message.roles || []; state.role = ""; render(); return; }
+  if (message.t === "seat_moved") { releaseControl(); state.role = ""; state.joined = true; render(); showNotice("Your seat moved to your newer page."); return; }
+  if (message.t === "roles") { state.availableRoles = message.roles || []; if (!state.role && state.joined) render(); return; }
+  if (message.t === "assigned") { state.joined = true; state.role = message.role; state.availableRoles = []; state.view = {}; saveProfile(); render(); return; }
   if (message.t === "control_view" && message.role === state.role) { state.view = message; render(); return; }
   if (isPrivateSeerView(message) && state.role === "seer") { state.view = message; render(); return; }
-  if (message.t === "error") { state.role ? alert(message.message) : showJoinError(message.message); }
+  if (message.t === "error") {
+    if (message.code === "ROLE_TAKEN") return showNotice("Someone just took that role. Pick another.");
+    if (!state.joined) render();  // back to the join form, never a blank page
+    showJoinError(message.message);
+  }
 }
 
 // While a control is held, resend it every 400 ms: the game server drops any input it hasn't heard about for 1.2 s,
@@ -154,5 +175,5 @@ const saved = loadProfile();
 const linkedRoom = normalizeRoom(new URLSearchParams(location.search).get("room") || "");
 state.room = linkedRoom || saved.room || "";
 state.name = saved.name || "";
+render();  // always draw the join form first, so the page is never blank while it connects
 if (state.room && state.name && (!linkedRoom || linkedRoom === saved.room)) connect();
-else render();

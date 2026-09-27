@@ -77,7 +77,17 @@ True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 
   role); the game server crashed or stayed disconnected if the relay dropped (now it reconnects within about a second, clearing
   held inputs and seats meanwhile); the game only knew player names in local mode (the relay now sends a roster);
   `players` is now `[{name, role}]` (Anshul's format). Rehearsed: relay killed and restarted mid-game, all four phones got their
-  roles back and the server reconnected in under a second; a file-hosted page with `config.js` joined a separate relay. Verified in the browser: a 3 s hold stays held on the server for 2.96 s; the Seer's phone shows brain
+  roles back and the server reconnected in under a second; a file-hosted page with `config.js` joined a separate relay.
+- **Join and lag fixes after the team's playtest (Neil, Sat 22:00):** (1) "the court is full" with a seat free: the relay capped
+  connections, not seats, so a second tab, a phone on the picker or a dead connection from a sleeping phone filled the room; now
+  only the four seats are limited and waiting phones see seats open up live; (2) a phone that slept couldn't get its own role back
+  while its dead connection held it; now it takes it over; (3) blank phone page: a returning phone drew nothing until the relay
+  answered, and an error then crashed trying to write into a missing form; the page now always draws first and errors are short
+  notices; the picker also crashed on "role taken"; (4) lag: one sleeping phone froze everyone's feedback and the host screen for
+  ~10 s when its connection timed out (the relay waited on each send), and the brain step shared the game loop; now no send ever
+  waits and the brain has its own thread. Measured before/after with four players under load: slowest inputs 30 ms to 10 ms,
+  host-screen freezes 5 to 1; with a sleeping phone: longest feedback gap 9.9 s to 0.1 s, host screen steady at 30 frames/s.
+  Also: a stray test tab of Neil's in the in-app browser had been connected to the team's game as "Neil" (closed). Verified in the browser: a 3 s hold stays held on the server for 2.96 s; the Seer's phone shows brain
   cues (bearing, distance, a Giant warning counting down from 1.4 s).
 
 ## Open requests: who is waiting on whom

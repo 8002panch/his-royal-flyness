@@ -30,6 +30,7 @@ import re
 import socket
 import sys
 import threading
+import time
 import warnings
 import webbrowser
 from pathlib import Path
@@ -40,7 +41,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning, message=r".*webso
 
 from websockets.server import serve  # noqa: E402
 
-from relay.relay import RelayServer, RelayState  # noqa: E402
+from relay.relay import SERVE_OPTIONS, RelayServer, RelayState  # noqa: E402
 from server.godot_link import GodotLink  # noqa: E402
 from server.main import SEER_SOURCES, GameServer, GameSession, make_seer  # noqa: E402
 from server.relay_client import RelayClient  # noqa: E402
@@ -158,11 +159,18 @@ async def watch_players(session: GameSession) -> None:
         seen = now
 
 
+_last_status = {"t": time.monotonic(), "steps": 0}
+
+
 def status_line(session: GameSession, room: str) -> str:
     fly, taken = session.state.fly, {p["role"]: p["name"] for p in session.players}
     seats = ", ".join(f"{ROLE_TITLES[r]}={taken.get(r, '-')}" for r in ROLE_TITLES)
     held = ", ".join(f"{r}={session.state.inputs[r].value}" for r in ROLE_TITLES)
-    return (f"[status] room {room} | Seer {session.seer.source} | {seats}\n"
+    now = time.monotonic()
+    rate = (session.brain_steps - _last_status["steps"]) / max(now - _last_status["t"], 1e-6)
+    _last_status.update(t=now, steps=session.brain_steps)
+    brain = f"brain {rate:.0f} steps/s (50 = real time)" if not session.sense_in_step else "brain in step"
+    return (f"[status] room {room} | Seer {session.seer.source} | {brain} | {seats}\n"
             f"         inputs {held} | fly x={fly.x:+.2f} y={fly.y:+.2f} z={fly.z:+.2f}")
 
 
@@ -217,7 +225,7 @@ async def main(args: argparse.Namespace) -> None:
         await stack.enter_async_context(godot.serve(port=args.godot_port))
         background = [asyncio.create_task(watch_players(session))]
         if not remote:
-            await stack.enter_async_context(serve(relay.handler, "0.0.0.0", args.relay_port))
+            await stack.enter_async_context(serve(relay.handler, "0.0.0.0", args.relay_port, **SERVE_OPTIONS))
             background.append(asyncio.create_task(relay.watchdog()))
         game = asyncio.create_task(GameServer(session, RelayClient(relay_url, room, secret), godot).run())
         print_banner(room, phone_url, host_url, args.godot_port, session.seer.source, relay_url if remote else None)

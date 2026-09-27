@@ -26,7 +26,7 @@ class RelayClient:
 
     async def connect(self) -> None:
         self.sequence = 0  # a new connection starts a new sequence at the relay
-        websocket = await connect(self.url)
+        websocket = await connect(self.url, ping_interval=5, ping_timeout=5, close_timeout=2)  # notice a dead relay in ~10 s
         await websocket.send(self._message({"t": "host_join", "room": self.room, "secret": self.secret}))
         reply = json.loads(await websocket.recv())
         if reply.get("t") != "host_joined":

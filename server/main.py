@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import os
+import threading
 import time
 from typing import Any
 
@@ -58,6 +59,11 @@ class GameSession:
         self.simulator = MovementSimulator()
         self.seer = seer or PlaceholderSeerAdapter()
         self.join_url = join_url
+        # Tests and replays sense inside step() (exact and deterministic). The live server sets this False and runs the brain on
+        # its own thread (GameServer), so a slow brain step never delays movement, the relay or the host screen.
+        self.sense_in_step = True
+        self.seer_lock = threading.Lock()
+        self.brain_steps = 0  # senses done by the brain thread (for the host's status line)
         self.players: list[dict[str, str]] = []  # [{"name", "role"}] for the host screens, from the relay's roster messages
         self.stimuli: dict[str, Any] | None = None
         self.cues: dict[str, Any] | None = None
@@ -91,13 +97,18 @@ class GameSession:
         intents = {axis: self.state.inputs[role].value for role, axis in MOVEMENT_ROLES.items()}
         self.simulator.step(self.state.fly, intents, dt)
         self.state.elapsed_s += dt
-        self._sense()
+        fly = self.state.fly
+        self.stimuli = projected_stimuli(fly.x, fly.y, fly.z, self.state.elapsed_s)
+        if self.sense_in_step:
+            self._sense()
 
     def _sense(self) -> dict[str, Any]:
         """Sense once per tick; the Seer's phone view and Godot's brainActivity both reuse these cues."""
-        fly = self.state.fly
-        self.stimuli = projected_stimuli(fly.x, fly.y, fly.z, self.state.elapsed_s)
-        self.cues = self.seer.sense(self.stimuli)
+        if self.stimuli is None:
+            fly = self.state.fly
+            self.stimuli = projected_stimuli(fly.x, fly.y, fly.z, self.state.elapsed_s)
+        with self.seer_lock:
+            self.cues = self.seer.sense(self.stimuli)
         return self.cues
 
     def set_brain(self, source: str, seed: int = 0) -> str:
@@ -106,8 +117,9 @@ class GameSession:
             raise ValueError(f"source must be one of {SEER_SOURCES}")
         swap = getattr(self.seer, "swap", None)
         if swap is not None:
-            swap(source, seed)
-            self.cues = None
+            with self.seer_lock:
+                swap(source, seed)
+                self.cues = None
         return self.seer.source
 
     def phone_views(self) -> list[dict[str, Any]]:
@@ -118,7 +130,9 @@ class GameSession:
             {"t": "control_view", "role": "wingmaster", "speed": round(fly.vz, 3), "braking": self.state.inputs["wingmaster"].value < 0},
         ]
         if self.state.inputs["seer"].value:
-            views.append(self.seer.to_phone_view(self.cues if self.cues is not None else self._sense()))
+            cues = self.cues if self.cues is not None else (self._sense() if self.sense_in_step else None)
+            if cues is not None:
+                views.append(self.seer.to_phone_view(cues))
         return views
 
     def godot_state(self) -> dict[str, Any]:
@@ -168,10 +182,38 @@ class GameServer:
             await asyncio.sleep(delay)
             delay = min(delay * 2, 1.0)  # retry at least once a second, so phones are back quickly
 
+    async def _send_views(self, views: list[dict[str, Any]]) -> None:
+        for view in views:
+            await self.relay.send_phone_view(view)
+
+    def seer_forever(self, stop: threading.Event) -> None:
+        """The brain on its own thread: one 20 ms step per slot. If the laptop is slow it falls behind real time instead of
+        bursting to catch up, so the game stays smooth and the Seer's cues just update less often."""
+        session, next_slot = self.session, time.monotonic()
+        while not stop.is_set():
+            if session.stimuli is not None:
+                try:
+                    with session.seer_lock:
+                        session.cues = session.seer.sense(session.stimuli, dt=TICK_S)
+                    session.brain_steps += 1
+                except Exception as exc:  # the adapter already falls back on brain errors; never let this thread die
+                    print(f"[server] Seer thread error: {exc!r}", flush=True)
+            next_slot += TICK_S
+            delay = next_slot - time.monotonic()
+            if delay > 0:
+                stop.wait(delay)
+            else:
+                next_slot = time.monotonic()
+
     async def run(self) -> None:
         receiver = asyncio.create_task(self.relay_forever())
+        stop_seer = threading.Event()
+        if hasattr(self.session.seer, "swap"):  # the brain-powered Seer; the placeholder is instant and stays in step()
+            self.session.sense_in_step = False
+            threading.Thread(target=self.seer_forever, args=(stop_seer,), name="seer-brain", daemon=True).start()
         last = time.monotonic()
         next_tick = next_godot = next_phone = last
+        views_task: asyncio.Task | None = None
         try:
             while True:
                 now = time.monotonic()
@@ -182,12 +224,15 @@ class GameServer:
                     await self.godot.publish(self.session.godot_state())
                     next_godot = _next_time(next_godot, GODOT_S, now)
                 if now >= next_phone:
-                    for view in self.session.phone_views():
-                        await self.relay.send_phone_view(view)
+                    # sent in the background, so a slow network (or relay) never holds up the game loop; skip a round if
+                    # the previous one is still going out
+                    if views_task is None or views_task.done():
+                        views_task = asyncio.create_task(self._send_views(self.session.phone_views()))
                     next_phone = _next_time(next_phone, PHONE_S, now)
                 next_tick = _next_time(next_tick, TICK_S, time.monotonic())
                 await asyncio.sleep(max(0.0, next_tick - time.monotonic()))
         finally:
+            stop_seer.set()
             receiver.cancel()
             await self.relay.close()
 
