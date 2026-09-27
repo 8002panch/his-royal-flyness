@@ -75,7 +75,20 @@ smoke tests in `host/test/`.
 
 - Code and docs were written with help from AI coding assistants (Claude, Codex). Everyone on the team can explain the code they committed.
 - In the game (if they ship): Gemini for trial design and the Jester's lines; ElevenLabs for voices, sound effects and music.
-- **Asset provenance:** the final assets in `host/assets/final/` were created by the team by hand; no AI image-generation tool was used to create the final art. Earlier `host/assets/pixelart/v2`, `v3`, and `v4` visual studies were non-shipping placeholders used to test the early concept. They are retained as development history only; the team planned to replace them with its own final assets, and the final demo uses the team-created art.
+
+## Final hand-made visual assets
+
+The final character and Giant-hazard artwork used by the playable demo is the
+team's own hand-made pixel art. The approved source sheets live in
+[`host/assets/final/`](host/assets/final/), and the Godot-ready frame exports
+live in [`host/assets/final/runtime/`](host/assets/final/runtime/). No AI
+image-generation tool was used to create these final assets.
+
+The earlier studies in `host/assets/pixelart/v2`, `v3`, and `v4` were
+non-shipping placeholders used to test the early concept. They remain in the
+repository as development history only; they are not the final demo artwork.
+See [`host/assets/final/README.md`](host/assets/final/README.md) for the
+approved roster and runtime-export details.
 
 ## Credits
 
