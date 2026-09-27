@@ -1,10 +1,12 @@
 class_name HamletActor
 extends Node2D
 
-## Prince Hamlet in flight: Anshul's animated cast rig (assets/pixelart/animation_v1/rigs/hamlet.scn) in its fly pose,
-## scaled to his size on screen, facing the way he drifts and banking with his motion. The node's origin is his thorax.
-## The older drawn rear view (the Sprite2D parts) stays only as a fallback if the rig can't load; the Reliquary halo is
-## still drawn over the rig.
+## Prince Hamlet in flight, drawn from the team's approved final hand-drawn frames
+## (assets/final/characters/hamlet_asset_sheet_final.png, exported by tools/export_final_art.py)
+## when they're present in this checkout. Falls back to Anshul's animated cast rig
+## (assets/pixelart/animation_v1/rigs/hamlet.scn), and to the older drawn rear view
+## (the Sprite2D parts) if neither is available. The node's origin is his thorax;
+## the Reliquary halo is drawn over whichever body is showing.
 
 const WING_CYCLE := [0, 1, 2, 3, 4, 5, 6, 7]
 
@@ -13,6 +15,7 @@ var wings := Sprite2D.new()
 var filigree := Sprite2D.new()
 var body := Sprite2D.new()
 var mantle := Sprite2D.new()
+var final_body := Sprite2D.new()
 
 var body_px := 0
 var cosmetics := {"mantle": false, "halo": false, "filigree": false}
@@ -29,6 +32,8 @@ var rig: Node2D = null
 var _facing := 1.0
 var _rig_mode := ""
 var _rig_speed := -1.0
+var _use_final_art := false
+var _final_pose := ""
 var _grape := GrapeBunch.new()
 var carrying := false:  # the tutorial's grape, held under him while he carries it
 	set(v):
@@ -61,10 +66,15 @@ func _ready() -> void:
 		var spr: Sprite2D = s
 		spr.centered = false
 		add_child(spr)
-	rig = StoryArt.rig("hamlet", "")
-	if rig != null:
-		add_child(rig)
-		move_child(rig, 0)
+	final_body.centered = true
+	add_child(final_body)
+	move_child(final_body, 0)
+	_use_final_art = FinalArt.hamlet_available()
+	if not _use_final_art:
+		rig = StoryArt.rig("hamlet", "")
+		if rig != null:
+			add_child(rig)
+			move_child(rig, 0)
 	_grape.visible = false
 	add_child(_grape)
 	set_body_px(56)
@@ -83,6 +93,7 @@ func set_body_px(hh: int) -> void:
 	mantle.texture = SpriteForge.hamlet_mantle(hh)
 	halo.texture = SpriteForge.hamlet_halo(hh)
 	_update_wings()
+	final_body.scale = Vector2.ONE * (hh / 48.0)
 	if rig != null:
 		# the rig's origin is at its feet, 72 px below the top of its antennae; his thorax sits about 30 px up
 		var k := hh * 1.3 / 72.0
@@ -110,6 +121,8 @@ func tick(delta: float, rate: float, fast: bool) -> void:
 	mantle.position.x = roundf(sin(_t * 4.0 - 0.8) * (1.0 if fast else 0.5))
 	if rig != null:
 		_tick_rig()
+	if _use_final_art:
+		_tick_final_art(f)
 	if _cue_left > 0.0:
 		_cue_left = maxf(0.0, _cue_left - delta)
 		var u := 1.0 - _cue_left / _cue_duration
@@ -120,6 +133,32 @@ func tick(delta: float, rate: float, fast: bool) -> void:
 	queue_redraw()
 
 
+## Picks which approved final frame to show: the hit/victory cue takes over
+## while it plays, otherwise a bank pose while turning hard or a wing-cycle
+## frame while flying straight. Mirrors horizontally for leftward facing,
+## since the sheet only draws Hamlet facing right.
+func _tick_final_art(wing_frame: int) -> void:
+	if absf(_motion.x) > 0.12:
+		_facing = signf(_motion.x)
+	var pose := ""
+	if _cue == "hit" and _cue_left > 0.0:
+		pose = "hit"
+	elif _cue == "celebrate" and _cue_left > 0.0:
+		pose = "victory"
+	elif _motion.x > 0.45:
+		pose = "bank_right"
+	elif _motion.x < -0.45:
+		pose = "bank_left"
+	else:
+		pose = ["hover", "wings_raised", "hover", "wings_lowered"][wing_frame % 4] if buzzing else "hover"
+	if pose != _final_pose:
+		_final_pose = pose
+		var tex := FinalArt.hamlet_frame(pose)
+		if tex != null:
+			final_body.texture = tex
+	final_body.flip_h = _facing < 0.0
+
+
 func set_cosmetic(relic: String, on: bool) -> void:
 	cosmetics[relic] = on
 	_apply_cosmetics()
@@ -127,7 +166,8 @@ func set_cosmetic(relic: String, on: bool) -> void:
 
 func _apply_cosmetics() -> void:
 	halo.visible = cosmetics["halo"]
-	var drawn := rig == null  # the rear-view parts only when the rig is missing
+	final_body.visible = _use_final_art
+	var drawn := not _use_final_art and rig == null  # the rear-view parts only when neither final art nor the rig is available
 	body.visible = drawn
 	wings.visible = drawn
 	mantle.visible = drawn and cosmetics["mantle"]
@@ -141,7 +181,7 @@ func _update_wings() -> void:
 
 ## Wing-buzz ticks at the wingtips while he is moving fast (drawn behind the sprites).
 func _draw() -> void:
-	if rig != null or not buzzing or _frame == 1:
+	if _use_final_art or rig != null or not buzzing or _frame == 1:
 		return
 	var span := roundi(body_px * 0.62)
 	var up := roundi(body_px * 0.32)

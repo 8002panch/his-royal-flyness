@@ -81,6 +81,37 @@ The current Godot demo also has code-drawn environment art under
 Those source scripts remain the runtime source until the hand-drawn files are
 imported and wired into scenes.
 
+## Runtime export (`final/runtime/`)
+
+`host/tools/export_final_art.py` crops each approved sheet above into individual
+transparent frames at the native sizes `FINAL_INTEGRATION_PROMPT.md` specifies
+(Hamlet flight frames 48x48, the Giant hand 96x96, everyone else 64x80), and
+writes them to `final/runtime/<character>/<pose>.png` plus a `manifest.json`.
+Run it again after any sheet is replaced:
+
+```
+python host/tools/export_final_art.py
+```
+
+**Wired into the running game:** Hamlet only, via `scripts/court/final_art.gd`
+and `scripts/court/hamlet.gd` (`_tick_final_art`). When `final/runtime/hamlet/`
+is present, his hover/wing/bank/hit/victory frames replace the animated cast
+rig; if the folder is missing, the game falls back to the rig as before. This
+has been written and reasoned through but **not yet opened in the Godot
+editor to confirm on screen** — there is no Godot install in the environment
+this change was made in. Before the demo, open `project.godot`, fly Hamlet
+around, and check the wing cycle, banking, hit pose and victory pose look
+right; the older code-drawn rear view is still there as a second fallback if
+anything is missing a texture.
+
+**Exported but not yet wired:** Miranda, Prospero, the four council roles,
+Lord Tinman, Sir Cheapdate, Count Rutabaga, the Clown, and the Giant's Hand.
+Their sheets use a different caption/background layout than Hamlet's, so the
+same automatic crop only isolated a rough bounding box per pose for them
+(`pose_<row>_<col>.png`, not named poses) and should be spot-checked and
+re-cropped by hand before wiring them into `giant_hand.gd`, `miranda.gd`,
+`rival.gd`, etc. Don't wire these in without checking each frame first.
+
 ## Provenance
 
 The assets in this folder are the approved final production art for the

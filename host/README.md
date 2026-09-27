@@ -150,4 +150,9 @@ Silkscreen (labels, 8 px), Pixelify Sans (captions, 16 px). They load straight f
   probe also restarts the sample at frame 0 each time it fails. The court just shows the idle hall meanwhile.
   Not changed here, because GameState was out of scope for the reskin.
 - No room code or QR is defined in any real message yet. The lobby shows `room` if sent, otherwise `----`.
-- Final sprite art is not integrated; all art is placeholder pixel art drawn in code.
+- Hamlet now flies using the team's approved final hand-drawn frames (`assets/final/characters/hamlet_asset_sheet_final.png`,
+  cropped by `tools/export_final_art.py` into `assets/final/runtime/hamlet/`) when that folder is present, wired in
+  `scripts/court/final_art.gd` and `scripts/court/hamlet.gd`; see `assets/final/README.md` for what this covers and what
+  it doesn't. This has not yet been opened in the Godot editor to confirm on screen — do that before the demo. Every
+  other character still uses placeholder pixel art drawn in code; their final sheets are exported to
+  `assets/final/runtime/` but not yet cropped cleanly enough or wired in.
