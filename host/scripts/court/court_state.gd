@@ -129,17 +129,12 @@ static func _f(v: Variant) -> float:
 ## Magnitude only (0..1), so no bar can hint at a side. vision = her_L + her_R,
 ## flight = steer, reaction = looming + escape, song = song: the grouping in
 ## team/README.md#proposed-formats.
+## The brain's side-free HUD signals (brain/seer.py `activity`): `vision` (the Princess detectors, LC10a/d), `looming`
+## (LC4, LPLC2) and `escape` (the Giant Fiber, DNp01). Older fixtures' her_L/her_R still fill `vision`, magnitude only.
 func activity_level(group: String) -> float:
-	var keys: Array = []
-	match group:
-		"vision":
-			keys = ["her_L", "her_R"]
-		"flight":
-			keys = ["steer"]
-		"reaction":
-			keys = ["looming", "escape"]
-		"song":
-			keys = ["song"]
+	var keys: Array = [group]
+	if group == "vision" and not activity.has("vision"):
+		keys = ["her_L", "her_R"]
 	var total := 0.0
 	var n := 0
 	for k in keys:

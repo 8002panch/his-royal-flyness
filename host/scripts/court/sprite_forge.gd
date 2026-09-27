@@ -822,9 +822,9 @@ static func activity_icon(group: String) -> ImageTexture:
 	match group:
 		"vision":
 			rows = ["..KKKKK..", ".KPPKPPK.", "KPPKGKPPK", ".KPPKPPK.", "..KKKKK.."]
-		"flight":
+		"flight", "escape":
 			rows = ["......KK.", "....KKWK.", "..KKWWWK.", ".KWWWWK..", "KWWKKK...", "KKK......"]
-		"reaction":
+		"reaction", "looming":
 			rows = ["...KKK", "..KGGK", ".KGGK.", "KGGGGK", ".KGGK.", "KGK...", "KK...."]
 		"song":
 			rows = ["..KKKK", "..KGGK", "..KK.K", "..K..K", "KKK.KK", "KGK.KK", "KKK..."]

@@ -106,6 +106,8 @@ func _update_giant(dt: float) -> void:
 			_voice("H_SPLAT", "Herald", "The Giant has claimed another suitor.")
 			event_ready.emit({"t": "event", "kind": "splat"})
 			_pause = 2.0
+		else:
+			event_ready.emit({"t": "event", "kind": "dodge", "fight": "giant"})  # resolved, so a shout may follow
 	_giant_live = falling
 
 

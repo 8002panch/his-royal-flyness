@@ -46,7 +46,8 @@ the Royal Seer panel, captions on a scroll, and lobby / Chronicle overlays.
 Cosmetic and local only: nothing goes to the relay or the server. The choice is kept in `user://reliquary.cfg`.
 
 Keys: `1`/`2`/`3` relics, `F1` debug overlay (raw state + brain-activity waveforms, which are debug-only),
-`F2` the old dashboard, `F3` keyboard demo, `F4` chase / fixed camera, `F11` fullscreen.
+`F2` the old dashboard, `F3` keyboard demo, `F4` chase / fixed camera, `F6` the Royal Decree (opens, next page, closes),
+`F11` fullscreen.
 
 ## Screenshots (1280x720, 26 Sept evening)
 
@@ -104,7 +105,9 @@ and counts reaching within about 0.22 units of Miranda as a win. The screen is s
   in `team/README.md#proposed-formats`) as magnitudes, so no bar can give away a side.
 - The Chronicle shows `server/chronicler.py`'s result as it comes: percent = `round(share * 100)`, seconds = `tick * 0.02`.
 
-Audio: the Court scene loads `scripts/voice_player.gd` when that file exists (the same hook the dashboard uses).
+Audio: the Court scene loads `scripts/voice_player.gd`, which plays `audio/`'s voice lines and sounds on the server's events
+and announces roles joining and the Changeling swap (docs/TECH.md, "Voices"). Tests: `godot --headless --path host --script
+res://test/voice_smoke.gd` and `res://test/decree_smoke.gd` (the on-screen Decree must match README.md).
 
 ## Run it
 

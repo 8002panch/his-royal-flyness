@@ -489,9 +489,17 @@ python audio/gen_voices.py --polish-only  # no key needed: applies polish change
   short sample of each fight's shouts for the chosen outcome; a fight's ▶ Scene plays the whole pool. Lines without a current
   take show for reading time, so it works as a script read before any voice exists. Filter by speaker to audition one voice;
   the Fly buzz box loops the flight ambience to judge its level; every sound is listed at the bottom.
-- **In the game** (to wire up): the server sends `{"t":"event","kind":"voice","id":"C01_P4_PROSPERO","speaker":"Prospero",
-  "caption":"..."}` (the shape Anshul's `caption_scroll.gd` already reads) and the host plays `audio/voice/<id>.mp3`, with the
-  line's `sfx` cue from the manifest just before it. Only play lines on the route the server chose.
+- **In the game** (`host/scripts/voice_player.gd`, on branch `neil/game-voices` until Anshul merges it): the Godot court
+  reads both manifests from the repo's `audio/` folder (or `host/audio/` if copied in for an exported build) and plays:
+  - `{"t":"event","kind":"voice","id":"C01_P4_PROSPERO","speaker":"Prospero","caption":"..."}`: the line, after its `sfx` cue
+    (the shape `caption_scroll.gd` already reads, so the caption shows too). A new line cuts off the one playing.
+  - `{"t":"event","kind":"sfx","id":"GIANT_SWAT"}`: one sound.
+  - `{"t":"event","kind":"dodge"|"hit","fight":"giant"|"father","n":3}`, sent **only when an attack resolves**: that fight's
+    sound, then sometimes one shout from its pool (always at a milestone). Without `n` it counts. The keyboard demo sends these.
+  - From the state feed, host-side: a role filling up (`H_ROLE_*`), a phone dropping (`H_FAINTED_*`), the True Prince /
+    Changeling swap (`H_CHANGELING`, `H_TRUE_PRINCE`), and the quiet flight buzz while the fly moves. Never from sample frames.
+  - Nothing on a warning: `{"kind":"giant"}` and the old `H_WARN_GIANT` stay silent.
+  The server doesn't send story or fight events yet (TEAM.md, open requests). Only send lines on the route the server chose.
 - **The Seer's secret:** no voice line or sound may reveal a hidden hazard's side or timing (GAME.md). Giant, father-fight and crowd
   sounds and the fight shouts are mono and centred, and they play only once an attack resolves (hit or miss), never when the
   warning starts. `FLY_BUZZ_LOOP` sits 18 dB down

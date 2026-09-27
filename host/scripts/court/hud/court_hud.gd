@@ -16,6 +16,7 @@ var cards: Array = []
 var lobby := LobbyOverlay.new()
 var chronicle := ChronicleOverlay.new()
 var debug := DebugOverlay.new()
+var decree := DecreeOverlay.new()
 
 var _play_nodes: Array = []
 
@@ -39,6 +40,8 @@ func _ready() -> void:
 	debug.visible = false
 	add_child(debug)
 	move_child(ribbon, -1)
+	decree.visible = false
+	add_child(decree)  # over everything, the ribbon included
 	_play_nodes = [objective, reliquary, seer, caption]
 	_play_nodes.append_array(cards)
 	set_phase("play")
@@ -65,6 +68,7 @@ func apply_state(cs: CourtState, hazard_in_view: bool) -> void:
 	if chronicle.visible:
 		chronicle.apply(cs)
 	debug.apply(cs)
+	decree.apply(cs)
 
 
 func on_event(ev: Dictionary) -> void:

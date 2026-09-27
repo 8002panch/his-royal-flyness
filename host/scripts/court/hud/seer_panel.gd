@@ -6,10 +6,11 @@ extends Control
 ## so this shared screen shows only:
 ##   - scanning / resting (the compass sweeps while scanning; it never points at anything)
 ##   - a Giant lamp that lights only when the hand is already visible in the hall
-##   - four brain-activity rows (vision, flight, reaction, song), magnitude only,
+##   - three brain-activity rows, the real network's side-free signals: vision
+##     (Princess detectors), looming and escape (the Giant Fiber), magnitude only,
 ##     so no bar can give away a side. Empty until a server sends `activity`.
 
-const GROUPS := [["vision", "VISION"], ["flight", "FLIGHT"], ["reaction", "REACT"], ["song", "SONG"]]
+const GROUPS := [["vision", "VISION"], ["looming", "LOOM"], ["escape", "ESCAPE"]]
 const PANEL := Vector2i(104, 122)
 
 var scanning := false
@@ -74,5 +75,5 @@ func _draw() -> void:
 		var lvl: float = levels.get(key, -1.0)
 		HudDraw.tex(self, SpriteForge.activity_icon(key), Vector2i(5, y))
 		HudDraw.text(self, label, 16, y, g[1], Pal.INK if lvl >= 0.0 else Pal.PARCHMENT_SHADE, PixelFonts.LABEL_SIZE)
-		HudDraw.bar(self, Rect2i(56, y + 1, 42, 6), maxf(lvl, 0.0), Pal.ROYAL if key != "reaction" else Pal.CRIMSON)
+		HudDraw.bar(self, Rect2i(56, y + 1, 42, 6), maxf(lvl, 0.0), Pal.ROYAL if key == "vision" else Pal.CRIMSON)
 		y += 10

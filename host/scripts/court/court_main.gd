@@ -10,12 +10,13 @@ extends Node
 ##       F1 debug waveforms, F2 the old dashboard (scenes/Main.tscn), F11 fullscreen.
 ##       F3 keyboard demo (WASD, no server or phones; see demo_driver.gd),
 ##       F4 chase camera (default) / fixed view from the doors.
+##       F6 the Royal Decree (the honesty panel): opens, turns the page, closes.
 ##       `-- --debug` opens with the F1 overlay showing; `-- --demo` starts in the keyboard demo.
 ##
 ## Screenshot mode renders one screen from the host/test fixtures and quits:
 ##   godot --path host -- --screen=trial --frame=180 --shot=C:/tmp/trial.png
 ##   --screen = lobby | trial | chronicle; --frame picks the fixture frame (trial);
-##   --relics=123 wears relics 1-3; --event=splat|jump|win fires one FX event.
+##   --relics=123 wears relics 1-3; --event=splat|jump|win fires one FX event; --decree=1|2 opens the Decree at that page.
 ##   The PNG is saved at 1280x720. Shot windows never take keyboard focus.
 ##   `-- --live_shot=C:/tmp/live.png --after=6` captures the normal GameState
 ##   pipeline (live server or fallback) instead. `-- --dashboard` opens the old dashboard.
@@ -75,6 +76,8 @@ func _on_state(msg: Dictionary) -> void:
 	world.apply_state(cs)
 	hud.apply_state(cs, world.giant_in_view)
 	world.show_tags = cs.phase != "lobby" and cs.phase != "chronicle"
+	if _voice != null and _voice.has_method("on_state"):
+		_voice.call("on_state", msg)  # flight buzz and the host-side lines (roles, the Changeling swap)
 	if cs.sample:
 		_play_sample_events(cs.frame)
 
@@ -139,6 +142,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			_toggle_demo()
 		KEY_F4:
 			HallCam.chase = not HallCam.chase
+		KEY_F6:
+			if hud.decree.advance() and _voice != null and _voice.has_method("say"):
+				_voice.call("say", "H_DECREE")
 		KEY_F11:
 			var win := get_window()
 			win.mode = Window.MODE_WINDOWED if win.mode == Window.MODE_FULLSCREEN else Window.MODE_FULLSCREEN
@@ -183,6 +189,9 @@ func _run_shot(args: Dictionary) -> void:
 				_on_event({"t": "event", "kind": str(args["event"])})
 				for i in 6:
 					await get_tree().process_frame
+	for i in int(args.get("decree", "0")):  # --decree=1 or 2: the Decree open at that page
+		hud.decree.advance()
+		await get_tree().process_frame
 	_save_shot(path, screen)
 
 
