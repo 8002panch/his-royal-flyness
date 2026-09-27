@@ -45,6 +45,19 @@ class GodotLink:
             self._busy.add(client)
             asyncio.create_task(self._send(client, encoded))
 
+    async def publish_event(self, event: dict[str, Any]) -> None:
+        """An event (a voice line, a dodge): unlike state frames it isn't skipped for a busy screen, only timed out."""
+        encoded = json.dumps(event, separators=(",", ":"))
+        for client in tuple(self.clients):
+            if client.open:
+                asyncio.create_task(self._send_event(client, encoded))
+
+    async def _send_event(self, client: WebSocketServerProtocol, encoded: str) -> None:
+        try:
+            await asyncio.wait_for(client.send(encoded), 2.0)
+        except Exception:
+            pass
+
     async def _send(self, client: WebSocketServerProtocol, encoded: str) -> None:
         try:
             await asyncio.wait_for(client.send(encoded), 1.0)

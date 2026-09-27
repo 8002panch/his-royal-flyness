@@ -8,6 +8,9 @@
 The host screen opens in this laptop's browser (http://localhost:8001) with the room code, a QR code and the join link; players
 scan it with phones on the same Wi-Fi. Godot can read the same state feed at ws://127.0.0.1:8765.
 Host keys (type a letter, then Enter): c = Changeling, t = True Prince, p = placeholder cues, s = status, q = quit.
+Story keys: g = start the story, Enter = next bubble, b = back, k = skip the comic, r = restart the stage,
+j GIANT = jump to a chapter (TUTORIAL C01 Q01 STAGE1 Q02 STAGE2 Q03 C02 GIANT C03 C04 FATHER E01 E02; marks DEMO).
+The Godot screen has the same controls (Enter, Space, Left, S, R, 1-9).
 On a Mac, allow incoming connections for Python the first time, or the phones can't reach the laptop.
 """
 
@@ -232,7 +235,7 @@ async def main(args: argparse.Namespace) -> None:
     print("Starting His Royal Flyness" + (": loading the MaleCNS brain (about 5 s)..." if args.seer != "placeholder" else "..."), flush=True)
     relay_state = RelayState(room_secret=secret, require_host=True)  # a code only works while this game hosts it
     relay = RelayServer(relay_state)
-    session = GameSession(room, seer=make_seer(args.seer), join_url=phone_url)  # phone_url has {room}: it follows new codes
+    session = GameSession(room, seer=make_seer(args.seer), join_url=phone_url, campaign=True)  # phone_url has {room}
     if not remote:
         serve_phone_page(args.http_port)
     serve_host_screen(args.host_port, lambda: session.join_url)
@@ -253,7 +256,13 @@ async def main(args: argparse.Namespace) -> None:
             threading.Thread(target=webbrowser.open, args=(host_url,), daemon=True).start()
 
         def on_key(key: str) -> None:
-            if key in ("c", "t", "p"):
+            story = {"g": "start", "": "next", ".": "next", "b": "back", "k": "skip", "r": "restart"}
+            if key in story or key.startswith("j "):
+                command = {"command": "jump", "scene": key[2:].strip()} if key.startswith("j ") else {"command": story[key]}
+                server.story_command(command)
+                c = session.campaign
+                print(f"[story] {c.scene} ({c.phase}){'  DEMO' if c.demo else ''}", flush=True)
+            elif key in ("c", "t", "p"):
                 source = {"c": "changeling", "t": "true", "p": "placeholder"}[key]
                 now = session.set_brain(source)
                 print(f"[host]  Seer now: {now}" + ("" if now == source else " (the brain isn't loaded; placeholder only)"), flush=True)

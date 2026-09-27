@@ -15,6 +15,7 @@ import threading
 import time
 from typing import Any
 
+from .campaign import Campaign
 from .godot_link import GodotLink
 from .movement import MovementSimulator, WallGate
 from .relay_client import HostJoinError, RelayClient
@@ -63,8 +64,9 @@ def make_seer(source: str = "true") -> Any:
 class GameSession:
     """Pure authoritative game state; importable for headless replay and tests."""
 
-    def __init__(self, room_code: str, seer: Any = None, join_url: str | None = None) -> None:
-        """`join_url` is the phone link shown with the room code; put `{room}` where the code goes so it follows a new code."""
+    def __init__(self, room_code: str, seer: Any = None, join_url: str | None = None, campaign: bool = False) -> None:
+        """`join_url` is the phone link shown with the room code; put `{room}` where the code goes so it follows a new code.
+        `campaign`: run the story (server/campaign.py) instead of the free-flight test world (tests, replays, practice)."""
         self.state = RoomState(room_code=room_code)
         self.simulator = MovementSimulator(walls=COURSE_WALLS)
         self.seer = seer or PlaceholderSeerAdapter()
@@ -78,6 +80,10 @@ class GameSession:
         self.players: list[dict[str, str]] = []  # [{"name", "role"}] for the host screens, from the relay's roster messages
         self.stimuli: dict[str, Any] | None = None
         self.cues: dict[str, Any] | None = None
+        self.campaign = Campaign(self) if campaign else None
+        self._phase_sent: dict[str, Any] | None = None
+        self._phase_sent_at = -10.0
+        self._qr: tuple[str, list[str]] | None = None
 
     def apply_input(self, message: dict[str, Any], now: float) -> None:
         kind, role = message.get("t"), message.get("role")
@@ -100,6 +106,12 @@ class GameSession:
             self.state.inputs[role].value = int(message["scan"])
             self.state.inputs[role].updated_at = now
             return
+        if kind == "answer":  # a quiz answer: only the Seer's counts, and only once (the campaign checks both)
+            if role != "seer" or message.get("choice") not in {"A", "B"}:
+                raise ValueError("Only the Royal Seer can answer.")
+            if self.campaign is not None:
+                self.campaign.answer(str(message["choice"]))
+            return
         raise ValueError("Unsupported relay input.")
 
     def step(self, dt: float, now: float) -> None:
@@ -107,10 +119,15 @@ class GameSession:
             if now - input_state.updated_at > STALE_INPUT_SECONDS:
                 input_state.value = 0
         intents = {axis: self.state.inputs[role].value for role, axis in MOVEMENT_ROLES.items()}
-        self.simulator.step(self.state.fly, intents, dt)
+        if self.campaign is None or self.campaign.flying:  # comics, quizzes and the count-in freeze the fly
+            self.simulator.step(self.state.fly, intents, dt)
         self.state.elapsed_s += dt
         fly = self.state.fly
-        self.stimuli = projected_stimuli(fly.x, fly.y, fly.z, self.state.elapsed_s)
+        if self.campaign is not None:
+            self.campaign.step(dt)
+            self.stimuli = self.campaign.stimuli()
+        else:
+            self.stimuli = projected_stimuli(fly.x, fly.y, fly.z, self.state.elapsed_s)
         if self.sense_in_step:
             self._sense()
 
@@ -150,7 +167,29 @@ class GameSession:
             cues = self.cues if self.cues is not None else (self._sense() if self.sense_in_step else None)
             if cues is not None:
                 views.append(self.seer.to_phone_view(cues))
+        if self.campaign is not None:  # every phone's screen mode: on a change, and once a second for phones that rejoin
+            phase = self.campaign.phone_phase()
+            if phase != self._phase_sent or self.state.elapsed_s - self._phase_sent_at >= 1.0:
+                self._phase_sent, self._phase_sent_at = phase, self.state.elapsed_s
+                views.append(phase)
         return views
+
+    def join_qr(self) -> list[str] | None:
+        """The join link as QR rows ("1" = dark), for the Godot lobby; None without a link or the qrcode package."""
+        url = self.join_url
+        if not url:
+            return None
+        if self._qr is None or self._qr[0] != url:
+            try:
+                import qrcode
+
+                qr = qrcode.QRCode(border=0, error_correction=qrcode.constants.ERROR_CORRECT_M)
+                qr.add_data(url)
+                qr.make(fit=True)
+                self._qr = (url, ["".join("1" if cell else "0" for cell in row) for row in qr.get_matrix()])
+            except Exception:
+                self._qr = (url, [])
+        return self._qr[1] or None
 
     def godot_state(self) -> dict[str, Any]:
         fly = self.state.fly
@@ -166,7 +205,15 @@ class GameSession:
             "render": {"princess": stimuli["princess"]},
             "roles": {role: self.state.inputs[role].value != 0 for role in self.state.inputs},
             "players": [dict(p) for p in self.players],
-        }
+        } | self._campaign_fields()
+
+    def _campaign_fields(self) -> dict[str, Any]:
+        if self.campaign is None:
+            return {}
+        fields = self.campaign.state_fields()
+        if fields["phase"] == "lobby":
+            fields["joinQr"] = self.join_qr()
+        return fields
 
 
 class GameServer:
@@ -203,6 +250,8 @@ class GameServer:
     async def handle_host_command(self, message: dict[str, Any]) -> None:
         """Lobby commands from a local host screen (see GodotLink) or the launcher's keys."""
         command = message.get("command")
+        if self.story_command(message):
+            return
         if command == "new_room":
             code = await self.new_room()
             print(f"[host]  New game: room code {code}", flush=True)
@@ -216,6 +265,26 @@ class GameServer:
 
     async def accept_input(self, message: dict[str, Any]) -> None:
         self.session.apply_input(message, time.monotonic())
+
+    def story_command(self, message: dict[str, Any]) -> bool:
+        """The presenter's story controls (Godot keys, the launcher's letters): start, next, back, skip, restart, jump."""
+        campaign = self.session.campaign
+        command = message.get("command")
+        if campaign is None or command not in {"start", "next", "back", "skip", "restart", "jump"}:
+            return False
+        if command == "start":
+            campaign.start()
+        elif command == "next":
+            campaign.next()
+        elif command == "back":
+            campaign.back()
+        elif command == "skip":
+            campaign.skip()
+        elif command == "restart":
+            campaign.restart_stage()
+        elif command == "jump":
+            campaign.jump(str(message.get("scene", "")).upper())
+        return True
 
     async def relay_forever(self) -> None:
         """Stay connected to the relay: retry until it's up, and reconnect if it drops (vital for a relay on the internet)."""
@@ -292,6 +361,9 @@ class GameServer:
                 self.session.step(now - last, now)
                 last = now
                 # Fixed-rate schedules (next += period) so a ~6 ms brain step doesn't stretch every tick and frame.
+                campaign = self.session.campaign
+                while campaign is not None and campaign.events:  # voice, dodge and hit events for the screens
+                    await self.godot.publish_event(campaign.events.pop(0))
                 if now >= next_godot:
                     await self.godot.publish(self.session.godot_state())
                     next_godot = _next_time(next_godot, GODOT_S, now)
@@ -316,7 +388,7 @@ def _next_time(scheduled: float, period: float, now: float) -> float:
 
 
 async def run(room: str, relay_url: str, secret: str, godot_port: int, seer: str = "true", join_url: str | None = None) -> None:
-    session = GameSession(room, seer=make_seer(seer), join_url=join_url)
+    session = GameSession(room, seer=make_seer(seer), join_url=join_url, campaign=True)
     print(f"[server] room {room}, Seer source: {session.seer.source}")
     godot = GodotLink()
     async with godot.serve(port=godot_port):
