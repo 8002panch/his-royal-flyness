@@ -1,0 +1,41 @@
+[gd_scene load_steps=8 format=3 uid="uid://c1qh6nyv3g0h8"]
+
+[ext_resource type="Script" path="res://scenes/backgrounds/great_hall_test.gd" id="1_root"]
+[ext_resource type="Script" path="res://scripts/court/backgrounds/great_hall/great_hall_layer.gd" id="2_layer"]
+[ext_resource type="Script" path="res://scripts/court/shadows.gd" id="3_shadows"]
+[ext_resource type="Script" path="res://scripts/court/hamlet.gd" id="4_hamlet"]
+[ext_resource type="Script" path="res://scripts/court/rival.gd" id="5_rival"]
+[ext_resource type="Script" path="res://scripts/court/giant_hand.gd" id="6_giant"]
+
+[node name="GreatHallTest" type="Node2D"]
+script = ExtResource("1_root")
+
+[node name="FarBackground" type="Node2D" parent="."]
+script = ExtResource("2_layer")
+
+[node name="FloorCarpet" type="Node2D" parent="."]
+script = ExtResource("2_layer")
+layer = "floor"
+
+[node name="ColumnsBanners" type="Node2D" parent="."]
+script = ExtResource("2_layer")
+layer = "columns"
+
+[node name="Feast" type="Node2D" parent="."]
+script = ExtResource("2_layer")
+layer = "feast"
+
+[node name="Shadows" type="Node2D" parent="."]
+script = ExtResource("3_shadows")
+
+[node name="Actors" type="Node2D" parent="."]
+
+[node name="Hamlet" type="Node2D" parent="Actors"]
+script = ExtResource("4_hamlet")
+
+[node name="SirCheapdate" type="Node2D" parent="Actors"]
+script = ExtResource("5_rival")
+hall_pos = Vector3(-1.56, -0.88, -0.4)
+
+[node name="Giant" type="Node2D" parent="Actors"]
+script = ExtResource("6_giant")

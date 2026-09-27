@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/backgrounds/garden_preview.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/court/backgrounds/garden/garden_layer.gd" id="2_layer"]
+
+[node name="GardenPreview" type="Node2D"]
+script = ExtResource("1_main")
+
+[node name="FarSky" type="Node2D" parent="."]
+script = ExtResource("2_layer")
+
+[node name="FloorLawn" type="Node2D" parent="."]
+script = ExtResource("2_layer")
+layer = "floor"
+
+[node name="Trellis" type="Node2D" parent="."]
+script = ExtResource("2_layer")
+layer = "columns"
+
+[node name="Props" type="Node2D" parent="."]
+script = ExtResource("2_layer")
+layer = "feast"

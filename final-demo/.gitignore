@@ -1,0 +1,34 @@
+# secrets (the repo is public)
+.env
+*.pem
+*token*
+
+# python
+.venv/
+__pycache__/
+*.pyc
+
+# data: large public MaleCNS files and built graphs (see docs/TECH.md, "Setup")
+data/*
+*.npz
+*.feather
+*.parquet
+
+# godot
+host/.godot/
+host/export/
+*.import.tmp
+
+# os / editors
+.DS_Store
+.vscode/
+.idea/
+
+# personal scratch (keep experiments local unless you want them shared)
+team/*/scratch/
+*.log
+
+# gen_voices.py: half-written files if interrupted, and each machine's raw takes (kept so polish changes are free)
+audio/*/.*.part
+audio/*/.*.polish.mp3
+audio/*/.raw/

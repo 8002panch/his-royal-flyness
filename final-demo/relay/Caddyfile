@@ -1,0 +1,16 @@
+# The phone page and the relay on one small server (e.g. a DigitalOcean droplet), with automatic HTTPS for your domain.
+# 1. At GoDaddy, point the domain's A record at the server's IP address.
+# 2. On the server: RELAY_HOST=127.0.0.1 ROOM_SECRET=<secret> python3 relay/relay.py
+# 3. On the server: DOMAIN=royalflyness.club SITE_ROOT=$PWD/relay/public caddy run --config relay/Caddyfile
+# Phones open https://<domain>/?room=XXXX; the page connects to wss://<domain>/ws. The game laptop connects out with
+#   ROOM_SECRET=<secret> python run_local.py --relay-url wss://<domain>/ws
+{$DOMAIN} {
+	encode gzip
+	handle /ws {
+		reverse_proxy 127.0.0.1:8080
+	}
+	handle {
+		root * {$SITE_ROOT:/opt/his-royal-flyness/relay/public}
+		file_server
+	}
+}

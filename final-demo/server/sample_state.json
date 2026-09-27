@@ -1,0 +1,12 @@
+{
+  "t": "state",
+  "phase": "play",
+  "time": 12.4,
+  "room": "BZKT",
+  "joinUrl": "http://192.168.1.23:8000/?room=BZKT",
+  "brain": "true",
+  "brainActivity": {"vision": 8.8, "looming": 46.1, "escape": 28.2},
+  "fly": {"x": 0.2, "y": 0.0, "z": 0.1, "vx": 0.4, "vy": 0.0, "vz": 0.1},
+  "render": {"princess": {"bearing_deg": 16.4, "elevation_deg": 11.9, "distance_cm": 199.6}, "giant": null},
+  "roles": {"helmsman": true, "liftmaster": false, "wingmaster": false, "seer": true}
+}

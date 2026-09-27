@@ -1,0 +1,18 @@
+{
+  "description": "Presentation-only example; replace timings with the forthcoming script.",
+  "cues": [
+    {"at": 0, "actor": "hamlet", "motion": "takeoff", "speed": 0.5},
+    {"at": 0, "actor": "clown_jester", "gesture": "talk", "duration": 3},
+    {"at": 1, "actor": "royal_seer", "gesture": "scan", "duration": 1.5},
+    {"at": 2, "actor": "sir_cheapdate", "gesture": "toast", "duration": 1.5},
+    {"at": 3, "actor": "count_rutabaga", "gesture": "confused", "duration": 1.5},
+    {"at": 4, "actor": "giant", "gesture": "slam", "duration": 1.4},
+    {"at": 5.5, "actor": "miranda", "gesture": "wave", "duration": 2},
+    {"at": 6, "actor": "hamlet", "motion": "land"},
+    {"at": 6.5, "actor": "hamlet", "gesture": "bow", "duration": 1.6},
+    {"at": 8, "actor": "prospero_nice", "gesture": "approve", "duration": 2},
+    {"at": 8, "actor": "prospero_mad", "gesture": "angry", "duration": 2},
+    {"at": 8, "actor": "lord_tinman", "gesture": "angry", "duration": 2},
+    {"at": 9, "actor": "hamlet", "gesture": "celebrate", "duration": 2}
+  ]
+}

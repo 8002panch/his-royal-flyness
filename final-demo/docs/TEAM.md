@@ -1,0 +1,338 @@
+# Team: who does what, status, schedule and rules
+
+Updated Sat 26 Sept 19:25 by Neil. The game: [GAME.md](GAME.md). The system and how to run it: [TECH.md](TECH.md).
+These three files are the whole plan; earlier docs (the four-senses design, the build plan, the per-person task lists) were merged
+here and are in git history. **Please keep it to three docs:** add to the right section instead of creating new markdown files.
+
+## The team
+
+| Person | GitHub | Role | Owns (only edit your own files) |
+|---|---|---|---|
+| **Neil** | `8002panch` | Brain + science: the Seer's sensory decoder, True Prince vs Changeling, the Royal Decree and lore facts. Science Q&A at judging (not the presenter) | `brain/`, `server/chronicler.py`, `agents/run_trials.py`, `agents/bots.py` |
+| **Arnav** | `arnavp-1` | Game server: three-axis body, world and hazards, trial loop, Godot state. Integration lead at every gate | `server/` (except `chronicler.py`), `agents/schema.py`, `levels/` (hand-made), `run_local.py` |
+| **Ved** | `shahved25` | Relay and phone controllers, rooms and reconnect, the Seer's phone screen, cloud and domain, agents. Devpost submitter | `relay/`, `agents/matchmaker.py`, `agents/master_of_trials.py`, `agents/jester.py`, `levels/` (generated) |
+| **Anshul** | `darkspaz-v1` | Godot host: the first-person 2D hall, art, hand-shadow effects, HUD, audio and captions. Demo video; timekeeper at check-ins | `host/`, `audio/` |
+
+Docs are shared: edit your own section here, and the parts of GAME.md and TECH.md about your component. `team/<name>/` is each
+person's work folder (scratch, figures, results). Presenter: Arnav, Ved or Anshul (decide by 09:00 Sun).
+
+## Implementation status
+
+**For Codex and other agents running Ved's phase prompts:** when a prompt says "update IMPLEMENTATION_STATUS.md", update this
+table and add an entry to the phase log below instead. The protocol that prompts call `relay/PROTOCOL.md` is now TECH.md, "Protocol".
+
+| Phase | What | Owner | Status |
+|---|---|---|---|
+| 0 | Foundation: architecture boundary, blank `.env.example` | Ved | **Done** (PR #1) |
+| 1 | Relay: rooms, roles, reconnect, `seq` validation, 1.2 s stale input, Seer-only routing | Ved | **Done** (PR #2), 10 tests |
+| 2 | Four phone controller screens, tap-to-latch, reconnect overlay | Ved | **Done** (PR #3, fix PR #5), 3 JS tests. Not yet tried on physical phones |
+| 3 | Authoritative x/y/z movement graybox; placeholder Seer; 50 / 30 / 10 Hz loops | Arnav (built with Ved's playbook) | **Done** (PR #4), 6 tests |
+| 4 | Godot first-person 2D graybox driven by live state; one-command local launch | Anshul (launcher: Arnav) | **Launcher done** (`python run_local.py`, Sat 19:25) and it opens a **browser host screen** (lobby with room code, QR and seats; live roster and brain bars), a stand-in until the Godot screen is merged. Godot project + HUD on `anshul/host-seer-hud` (not merged); pixel-art direction chosen |
+| 5 | Arnav comic campaign: grapes, questions, two courses, Giant/father dodge branches and host scene controls | Arnav (built by Neil with Claude) | **Done** (Sun 02:00, on `main`): `server/campaign.py` (15 tests), Godot cutscenes/quiz/scenes with Anshul's art, Seer-only answers on phones. Needs playtesting and tuning |
+| 6 | Brain-backed Seer in the server, `brainActivity` to Godot, Decree wording | Neil | **Done** (Sat 19:25): the server runs the real brain by default (placeholder if `data/` is missing), sends `brain` and `brainActivity` to Godot, host toggle for the Changeling. Decree already updated |
+| 7 | DigitalOcean + Caddy + domain, polish, demo runbook | Ved, everyone | **Code ready** (Sat 21:30): `relay/Caddyfile`, `config.js` for a separately hosted page, online mode in `run_local.py`, automatic relay reconnect; rehearsed locally. Deploying needs the team's approval (TECH.md, "Hosting the join link") |
+| Audio | ElevenLabs voices, sound effects, music (GAME.md) | Anshul | Not started |
+| Agents | Matchmaker, Master of Trials, Jester | Ved (+ Neil `run_trials`) | Not started; first thing to cut |
+
+**Brain (Neil), done:** whole-CNS rate model (166,606 neurons, about 6 ms per tick); three fair Changelings; all 10 button
+channels pass; the Royal Seer (neural, hybrid and placeholder modes, safe fallback, real-time stepping, side-free HUD activity);
+True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 68 brain tests. Full suite: 92 Python tests pass.
+
+### Phase log
+
+- **Sun 27 Sept, ~09:40 (Neil, with Claude): submission polish.** A bot (four phones on the real relay, flying from the
+  host feed, dodging from the Seer phone's brain cues) played the whole story on spare ports with a headless main screen
+  auto-playing the cutscenes: cast, tutorial, every comic, three questions (one wrong), both courses, the Giant (10 dodges,
+  2 hits), Prospero (5 dodges) and the wedding in about 10 minutes, with no script errors; Home and a new story after it
+  worked. Fixes: the garden's per-second `PROF` console print is now opt-in (`-- --prof`); a Changeling swap computes the
+  new wiring's quiz numbers at once (it was a 4 s pause in the first question after a swap); `godot --path host --
+  --server=ws://127.0.0.1:8865` points the main screen at another game server (testing beside a running game).
+- **Sun 27 Sept, ~09:15 (Neil, with Claude):** three new, researched drink questions (NIAAA, NHTSA; GAME.md), each linked
+  to a part of his brain and of yours; the full-size brain view (B, `hud/brain_full_overlay.gd`); Home on the end card (H,
+  the server's `lobby` command). Voices for the nine rewritten quiz lines generated (1,519 characters).
+- **Sun 27 Sept, ~08:40 (Neil, with Claude):** Prospero's fight after a Giant win too (C03 → FATHER, two new C03 lines);
+  spoken cast introduction (nine `INTRO_*` Clown lines); eight interrupting Clown quips cut; cutscenes auto-play (A toggles);
+  comic text never shrinks (bubbles grow); both chalices drawn in the drink questions; the intro's Giant is the fight's
+  hand; passed walls stop drawing; the brain map simplified to four parts in words and hidden during non-quiz cutscenes.
+  Voices generated for the 11 new lines (970 characters) and the cut ones pruned.
+- **Sun 27 Sept, ~07:45 (Neil, with Claude):** the team's nine music tracks in `audio/music/` with a scene manifest and a
+  `Music` autoload (`host/scripts/music_player.gd`, `host/test/music_smoke.gd`); the brain map redrawn for first-time players;
+  the voice tests fixed (`giant_win_twist` added to `gen_voices.BRANCHES` for Anshul's script-only TWIST/E03 ending; three
+  fight shouts trimmed: one said "right", two ran over 12 words). Note for Anshul: the rewritten dialogue in `lines.csv` hasn't
+  been regenerated, so `audio/voice/` still speaks the older takes under the new captions until `gen_voices.py` runs.
+- **Sun 27 Sept, ~07:30 (Neil, with Claude):** Hamlet's live brain map replaces the Seer panel top right (`brain/brain_map.py`,
+  `host/scripts/court/hud/brain_map_panel.gd`; `brainMap` in TECH.md), with the disclosed alcohol assumption and a
+  before/after comparison during the three drink questions (the comic moves left to make room). A *Dramatis Personae* cast
+  introduction before the tutorial (`INTRO` in `server/campaign.py`, `hud/intro_overlay.gd`). Wall courses: forward/back at
+  45% speed. Giant fight harder (GAME.md, "Giant encounter"). Decree updated. Heads-up Arnav and Anshul: this touched
+  `server/main.py`, `server/campaign.py`, `server/movement.py`, `run_local.py` and `host/scripts/court/hud/`.
+- **Phase 0 (Ved):** architecture boundary and secret template; no runtime code.
+- **Phase 1 (Ved):** `relay/relay.py` with isolated four-letter rooms, one host per room, at most four phones, unique roles,
+  reconnect restore, monotonic `seq`, 1.2 s stale-input clearing; state and two-client network tests.
+- **Phase 2 (Ved):** no-build vanilla JS phone app (join, role pick, restore, reconnect overlay, heartbeats), one screen per role,
+  touch safety (release, cancel, lost capture, page hide, socket close all neutralize input), tap-to-latch. Limitation: relay and
+  static page run as two local processes until Caddy; not yet exercised on four physical phones.
+- **Phase 3 (built with Ved's playbook, Arnav's files):** deterministic bounded x/y/z body, 50 Hz tick, 30 Hz Godot feed on port
+  8765, 10 Hz phone feedback, placeholder Seer with a graybox world, four-real-client integration test, deterministic replay.
+  Limitation: graybox world only (one Princess, a periodic test Giant); trials, collisions and scoring are Phase 5.
+- **Brain (Neil), Sat 15:45 to 19:10:** graph, model, Changelings, controls matrix, the Seer, evaluation, Chronicler, tests.
+  Sat 19:05: the Seer's HUD activity keys changed to `vision`, `looming`, `escape` (no left/right: a side bar on the shared screen
+  gave away the Princess's side) and extra `sense()` calls within one tick now return cached cues.
+- **Join flow connected to the game (Neil, Sat 19:25, at Ved's request):** tested live with scripted phones and the real phone page.
+  Fixed: (1) every held button and the Seer's scan died after 1.2 s, because phones sent one message per press and heartbeats
+  stop at the relay; the phone now resends a held control every 0.4 s; (2) the phone page rebuilt its buttons 10 times a second,
+  which can drop or stick a hold on a phone; now only the readouts update; (3) a phone disconnecting mid-hold never cleared the
+  server's input (the relay addressed it to no room); (4) a phone dropping while the server sent it a view crashed the server's
+  relay connection, and every drop printed a traceback; (5) Godot got about 15 frames a second with the brain running; fixed-rate
+  schedules give a steady 30. Added: `run_local.py` (relay + phone page + server, room code, join link and QR, host keys, join and
+  leave log), `?room=` join links, the real brain in the server by default, `room`, `joinUrl`, `brain` and `brainActivity` in the
+  Godot state. 6 new tests. Sat 19:35: `run_local.py` also opens the browser host screen (room code, QR, seats), explains a busy
+  port, and the state has `players`; 2 more tests.
+- **Neuron audit (Neil, Sat 19:55):** checked the Seer inside the game's own hall, not just random test scenes. Fixed: (1) the
+  distance cue said NEAR from 69 to 464 cm and never FAR (a 150 cm scale in a 5 m hall, and both eyes summed, so "ahead" read as
+  "closer"); now the stronger eye decides, the server sets a 100 cm scale, and the bands track distance; (2) the Changelings' weak
+  noise crossed the old detection bar (1.5 z on the summed eyes), producing chance-level guesses; the bar is now 3 z on the
+  stronger eye (about 10x resting noise) and the Changelings report nothing; (3) the phone showed Giant warnings from level 0.05
+  while the evaluation counted from 0.3; both use 0.3 now; (4) the test world never put the Princess behind the fly and let the
+  hand pass through it (to 15 cm); fixed; (5) HUD labels now say what's measured. New numbers: True Prince 54/60 found, 53 sides,
+  60/60 Giants, 1.20 s lead; Changelings 0/60 on everything. In the hall: 116/120 sides, Changelings 0. 92 tests pass.
+- **Online hosting prep and bug fixes (Neil, Sat 21:30):** GoDaddy's free website hosting can serve the phone page but can't
+  run the relay (a live WebSocket program), so: `relay/public/config.js` points a separately hosted page at a relay;
+  `relay/Caddyfile` serves page + relay with HTTPS on a server; `run_local.py --relay-url wss://<domain>/ws` runs only the game
+  and host screen on the laptop. Bugs fixed: after a relay restart phones had to re-pick roles (now the phone asks for its last
+  role); the game server crashed or stayed disconnected if the relay dropped (now it reconnects within about a second, clearing
+  held inputs and seats meanwhile); the game only knew player names in local mode (the relay now sends a roster);
+  `players` is now `[{name, role}]` (Anshul's format). Rehearsed: relay killed and restarted mid-game, all four phones got their
+  roles back and the server reconnected in under a second; a file-hosted page with `config.js` joined a separate relay.
+- **Join and lag fixes after the team's playtest (Neil, Sat 22:00):** (1) "the court is full" with a seat free: the relay capped
+  connections, not seats, so a second tab, a phone on the picker or a dead connection from a sleeping phone filled the room; now
+  only the four seats are limited and waiting phones see seats open up live; (2) a phone that slept couldn't get its own role back
+  while its dead connection held it; now it takes it over; (3) blank phone page: a returning phone drew nothing until the relay
+  answered, and an error then crashed trying to write into a missing form; the page now always draws first and errors are short
+  notices; the picker also crashed on "role taken"; (4) lag: one sleeping phone froze everyone's feedback and the host screen for
+  ~10 s when its connection timed out (the relay waited on each send), and the brain step shared the game loop; now no send ever
+  waits and the brain has its own thread. Measured before/after with four players under load: slowest inputs 30 ms to 10 ms,
+  host-screen freezes 5 to 1; with a sleeping phone: longest feedback gap 9.9 s to 0.1 s, host screen steady at 30 frames/s.
+  Also: a stray test tab of Neil's in the in-app browser had been connected to the team's game as "Neil" (closed).
+- **Jackbox/Kahoot-style joining (Neil, Sat 22:30):** a fresh random code every launch (`secrets`, four consonants) and every
+  new game (`n` in the terminal or **New code** on the host screen: the old room closes and its phones are told to scan the new
+  code; the QR follows the code); codes work only while the game hosts them (`ROOM_NOT_FOUND` otherwise, 30 s grace for a
+  reconnecting server); **Lock** (`l`) keeps new phones out; click a seat on the host screen to remove a player; names are unique
+  per room; a "Random royal name" button on the phone. Relay bug fixed on the way: a sender whose connection was closing could
+  cancel everyone else's updates. New relay messages: `close_room`, `lock`, `kick` (host), `room_closed`, `kicked` (phones). Verified in the browser: a 3 s hold stays held on the server for 2.96 s; the Seer's phone shows brain
+  cues (bearing, distance, a Giant warning counting down from 1.4 s).
+
+## Open requests: who is waiting on whom
+
+Updated Sat 19:25. Reply by editing this section (or tell the person). If there's no answer by the time shown, build against the
+proposal.
+
+### Waiting on Neil
+
+Nothing is blocked on Neil right now. On request: the data files for anyone running the real brain (AirDrop, about 90 MB).
+
+### Neil is waiting on
+
+| From | What | Needed by | Proposal if no answer |
+|---|---|---|---|
+| **Arnav** | Are `run_trials` and bots still wanted now that players move the fly directly? If yes: a headless trial step to import | 21:00 | Paused; Neil works on the demo-laptop speed test and Phase 6 support instead |
+| **Everyone** | Keep the Chronicler? With direct movement it can only credit the Seer | 20:00 check-in | Drop it from the demo; keep the code |
+| **Everyone** | Which Windows laptop runs the demo (Arnav confirmed Windows); arrange neural data and full-stack timing on that machine | Before rehearsal | Confirm the actual device; do not assume Neil's M2 |
+
+### Between others (seen in branches and notes)
+
+| From → to | What | Status |
+|---|---|---|
+| Anshul → Arnav | Add `brainActivity` to the Godot state; wire the real Seer | **Done by Neil** (Sat 19:25): `brainActivity` (keys `vision`, `looming`, `escape`), `brain`, `room` and `joinUrl` are in the state, sensed once per tick |
+| Anshul → Arnav | `"controls"` (each axis's live value) for the HUD's axis bars | Waiting on Arnav to pick a format; `roles` (input non-zero) and `fly` velocities are there meanwhile |
+| Neil → Arnav, Ved | Heads-up: Neil edited your files to connect the join flow to the game (see the phase log): `server/main.py` (sensing, state fields, fixed-rate loop, `--seer`), `relay/relay.py` (disconnect clear, dropped-phone handling), `relay/public/app.js` (0.4 s resend, readout-only updates, `?room=` links), plus tests. Pull before you change these files | Please pull |
+| Neil → Anshul | Neil added `host/web/index.html` (a browser host screen: lobby with the room code, QR and seats, then a live roster and brain bars) so the game can be run and shown before your Godot screen merges. `host/web/.gdignore` keeps Godot from importing it. Keep it as the lobby, restyle it, or replace it; it reads the same state feed, now with `players` (role to name) | FYI |
+| Neil → Arnav | Movement feels very fast in the graybox: holding a direction crosses from the center to the wall in about 1 s (max speed 1.0 in a [-1, 1] box). Worth tuning with Phase 5's world scale | Your call |
+| Neil → Ved | Hosting: GoDaddy's free website hosting can hold the phone page, not the relay. Pick an option in TECH.md, "Hosting the join link" (recommended: point the GoDaddy domain at a DigitalOcean Droplet running `relay/Caddyfile`). New in your files: `relay/public/config.js`, `relay/Caddyfile`, role memory on rejoin (`join` may carry `role`), a `roster` message to the host, `RELAY_HOST` | Your call, then deploy with approval |
+| Neil → Anshul | Your Godot court (branch) vs the server on `main`: (1) `players` is now the list `[{name, role}]` you read, so your lobby seats will fill; (2) your nervous-system rows read old keys (`her_L`, `her_R`, `steer`, `song`), which were removed because a left/right bar gives away the Princess's side. The server sends `vision`, `looming`, `escape`: in `court_state.gd` use `["vision"]` for vision and `["looming", "escape"]` for reaction, and drop flight and song (the brain doesn't drive movement in this design); (3) show `joinUrl` (and a QR if you can) in the lobby: it's the link phones need | Before merging |
+| Anshul → everyone | The `brainActivity` example in the planning repo's redesign (`vision`/`looming`/`motor`) doesn't match the code | Resolved: TECH.md has the real keys |
+| Neil → Anshul | When you merge `main` into `anshul/host-seer-hud`, git reports modify/delete conflicts on `host/README.md`, `team/anshul/README.md` and `team/arnav/README.md`. Their content (your status and notes) is now in this file and GAME.md, so resolve with `git rm` on those three. The pixel-art concept is summarized in GAME.md, "Art direction"; please extend that section rather than adding new .md files (the Claude prompt file can live in `team/anshul/`) | Please do at your next merge |
+| Neil → Ved | Codex phase prompts: record status in this file (see "Implementation status"); the protocol is in TECH.md | Please pass to your Codex runs |
+| Neil → Anshul | Neil set up the voices in your `audio/` folder (branch `claude/modest-sagan-kudya4`): `lines.csv` (every voiced line in story order, 145 now, including shout pools for the two fights), `voices.json` (the cast), `sfx.csv` (a first sound bank: the Giant's grunts, growls and crashes, a courtiers' gasp and cheer, something Prospero throws missing or hitting, and three quiet fly sounds), `gen_voices.py` (ElevenLabs v3 and sound effects, only regenerates what changed, speeds up the Clown) and `table_read.html` (hear the script with captions and sound cues). TECH.md, "Voices". Please (1) say if you want it merged as is or changed, and (2) add `scripts/voice_player.gd` (your `court_main.gd` already loads it): on a `voice` event play the line's `sfx` cue from `audio/voice/manifest.json`, then `audio/voice/<id>.mp3` (copy into `host/`, or generate there with `--out`). Keep Giant sounds mono and play them only once a swat resolves, never at the warning. In the fights, after each attack resolves, play the shout's `sfx` and maybe one shout from the pool for that event (`GIANT` / `FATHER` scenes, grouped by `panel`); never start or cut a shout because a warning began. Swap or add sounds as you like; music is still yours. Status: pass 4 (Sun 00:50) recast Miranda again (Lyan), evened out every speaker's loudness, turned the loud Giant sounds down and dropped the spitting; `python audio/gen_voices.py --dry-run` lists what still needs generating | Your call |
+| Neil → Arnav | Your script's lines are in `audio/lines.csv`. After team feedback the voice pass changed some of them: (1) each suitor now asks and explains their own quiz question (it was the Clown); (2) each quiz opens with a short suitor line in character (`Q01_P1B_TINMAN`, `Q02_P1B_RUTABAGA`, `Q03_P1B_CHEAPDATE`); (3) C04 panel 2 is Prospero's own line ("There. I finished your task myself. My patience did not survive it.") instead of the Clown narrating him; (4) livelier Clown lines, a softer Miranda, and four Shakespearean insults used once each by a rival (cream-faced loon, clay-brained, fly-bitten, gorbellied); (5) Miranda has eight more bubbles (`TUT_SEER_MIRANDA`, `TUT_FINISH_MIRANDA`, `C01_P6_MIRANDA`, `C02_P2_MIRANDA`, `C02_P4_MIRANDA`, `C03_P4_MIRANDA`, `C04_P2_MIRANDA`, `E01_P4_MIRANDA`) and cheers Hamlet on in the new fight shouts (`GIANT` and `FATHER` scenes, played after each attack resolves); (6) Neil asked to drop the spitting, since it could be taken out of context: the lines now have Prospero throwing things ("You do not get to throw things at the person I choose", "a duke, not a catapult", C04_P4 "His Grace decided to settle this personally"). Please change the acid spitballs in GAME.md's father encounter and the C04 comic to thrown objects (grapes would keep the running joke). Copy what you like into GAME.md's panel script, or say which to revert. When the campaign runs, send `{"t":"event","kind":"voice","id":...,"speaker":...,"caption":...}` by line id, only for the branch taken | Please review |
+| Neil → Anshul | Branch `neil/game-voices` = your `anshul/host-seer-hud` + `main` merged in + four changes in `host/`: (1) `scripts/voice_player.gd` plays the voices and sounds (TECH.md, "Voices"); `court_main.gd` forwards each state to it; (2) the Seer panel's FLY BRAIN rows now read the brain's real keys, VISION, LOOM and ESCAPE (`vision`, `looming`, `escape`): VISION and the other rows were empty in live play because they read the removed `her_L`/`her_R`/`steer`/`song`; (3) the Royal Decree on `F6` (`hud/decree_overlay.gd`, README's text, with what's running now), which GAME.md says must be one key away; (4) the keyboard demo sends a `dodge` event when the hand misses. Your two smoke tests still pass, plus `test/voice_smoke.gd` and `test/decree_smoke.gd`; checked live against the real brain. Merge it when you're ready (open the project once, or `--import`, for the new `DecreeOverlay` class) | Please merge |
+| Neil → Arnav | When the campaign runs, the server should send `{"t":"event","kind":"dodge"\|"hit","fight":"giant"\|"father","n":k}` when an attack resolves (never at warning onset) and `{"t":"event","kind":"voice","id":...}` for each comic bubble on the route taken; the Godot voice player plays both (TECH.md, "Voices") | When you build the Giant and father fights |
+| Neil → everyone | **Pull `main`** (Sun 06:00): the playable game, tested end to end with four phones. Fresh room code every game, the v2 garden/Great Hall/Banquet sets with their casts, a coached grape tutorial, a clearer Seer phone, quieter join/leave narration, Credits on the start screen. Run: `git pull origin main`, `python run_local.py`, then `godot --headless --path host --import` once and `godot --path host` (Mac: `/Applications/Godot.app/Contents/MacOS/Godot`), Enter the Court, scan the QR. Keys: TECH.md, "The campaign" | Please pull |
+| Neil → everyone | **Pull `main`** (Sun 02:00): every branch is merged (Anshul's court and backdrops, Ved's wall course, Arnav's story, the voices) and the whole story runs: QR join, lobby, tutorial, comics with voices, Seer-answered quizzes, courses, Giant and father fights, both endings. Build on `main` from here. Kept from the merges: Anshul's Giant hand (the corridor branch deleted it; the fights need it) and one audio pipeline (the 145-line bank; the older Herald bank was removed). (superseded by the row above) Keys: TECH.md, "The campaign" | Please pull |
+| Neil → Arnav | `arnav/phase-3-authoritative-movement` is an older copy of the Phase 3 server that's already on `main` (17 commits behind; merging it conflicts in 9 server files). Leave it unmerged or delete it | FYI |
+
+## Next tasks (by person)
+
+From the redesign's ownership table and Ved's phase playbook. Owners, edit freely.
+
+**Neil**
+- [x] Brain, Changelings, Seer adapter, evaluation, tests, Decree, fact checks, HUD privacy fix.
+- [ ] If not done yet: tell an organizer what was prepared before the event (plans and a data check, no code).
+- [x] Connect Ved's join flow to the game mechanics (Phase 6 wiring, launcher, hold and disconnect fixes).
+- [ ] AirDrop the data files to whoever runs the demo laptop; check that the Decree matches what ships.
+- [ ] Full-stack speed test on the demo laptop (relay + server + brain + Godot together) once Phase 4 runs.
+- [ ] `run_trials` + bots only if Arnav says yes.
+- [ ] On hold until the team says: Devpost science section; Q&A drill with the presenter (GAME.md).
+
+**Arnav**
+- [x] Phase 4 launcher and Phase 6 wiring (done by Neil: `run_local.py`, the real Seer, `brain` and `brainActivity`, host toggle).
+- [ ] Phase 5: the comic campaign described in GAME.md (tutorial, questions, courses, dodge encounters, endings), plus `controls` in the state message; tune movement. See the revised story checklist below.
+- [x] Relay reconnect loop (completed by Neil in the shared code, Sat 21:30). Recheck it during full campaign integration.
+- [ ] README "Run it" check from a clean checkout on the demo laptop; test the phone-hotspot backup and planned 2/3/4-player phone configurations. No keyboard player mode.
+
+**Ved**
+- [ ] Four physical phones on venue Wi-Fi with `python run_local.py` (TECH.md, manual check).
+- [ ] Phase 7 prep: Caddyfile, deployment steps and a health check (deploy only with the team's approval and credentials);
+      claim DigitalOcean credits and the domain coupon.
+- [ ] Devpost: create the draft and add all four members before Sunday (create deadline 11:00); you submit.
+- [ ] Recruit four strangers for the 23:30 test.
+- [ ] Agents only if everything above is done.
+
+**Anshul**
+- [ ] Phase 4: the hall in layers, x/y/z as screen shift, height and scale, Miranda, the hand shadow, candle timer, role
+      indicators, the HUD; then merge `anshul/host-seer-hud`.
+- [ ] Pixel-art reskin (GAME.md, "Art direction"): nearest-neighbor, no baked-in actors, versioned assets.
+- [ ] Audio: claim the ElevenLabs code; library voices; the lines in GAME.md; sound effects and music; captions.
+- [ ] Demo video (at least 30 s, aim 90) by 08:00 Sun and five screenshots for Devpost; timekeeper at check-ins.
+
+## Schedule (Sat 26 to Sun 27 Sept, EDT)
+
+| When | What | Led by |
+|---|---|---|
+| **20:00** | **First integration:** four phones connected, each role changes only its own channel; confirm the brain gate | Arnav |
+| **23:30** | **Stranger test:** new players understand their role within 20 seconds and finish Trial I without help | Ved recruits |
+| **03:30** | **Fallback checkpoint:** whatever works ships; no heroics after this | Arnav |
+| 07:00 | Everyone awake; finishing jobs start | Anshul |
+| 08:00 | Demo video recorded | Anshul |
+| **09:00** | **Feature freeze** (bug fixes only), then rehearse the 3- and 5-minute demos until 10:30 | Everyone |
+| **10:30** | **Devpost complete** | Ved |
+| **11:00 / 11:45** | **Devpost create deadline / final deadline. No commits after 11:45** | Ved |
+
+Sleep shifts: Neil + Ved 05:15-07:00; Arnav + Anshul 03:30-05:15. If a task runs 2x over its time box, say so at the next check-in.
+
+**Gates (from the redesign)**
+
+| Gate | Pass | Status |
+|---|---|---|
+| First integration | All four phones connected; each role changes only its own channel | Phase 1-3 tests pass; needs the live four-phone run |
+| Playable | A blind team reaches Miranda using only the Seer's calls | Needs Phases 4-5 |
+| Brain | True Prince sensing measurably more accurate or timely than the Changeling; otherwise the disclosed hybrid | **Passed** (Princess side 59/60 vs 1-10/60; Giant warned 60/60 vs 0/60). No hybrid needed |
+| Stranger test | Role understood within 20 s; Trial I finished without help | 23:30 |
+| Feature freeze | Movement, sensing, one Giant hazard, win/lose, reconnect and phone-hotspot backup stable; keyboard gameplay removed by Arnav | 09:00 |
+
+**Cut order if behind:** generated trials (agents), live Jester voice, advanced Chronicle, decorative HUD animation, extra rivals,
+Trials II and III. Never cut: the four-role controller loop, the Seer's information asymmetry, the Giant warning, reconnect, the
+phone-hotspot backup. Keyboard gameplay is no longer in scope. The new campaign's cut order
+must be reviewed with Arnav before dropping a required story branch.
+
+## Decisions
+
+| When | Decision | Why |
+|---|---|---|
+| Sat | Party co-op on phones, Jackbox-style join; royalty reskin with real fly-gene names | Best live demo; theme fit; the lore teaches real biology |
+| Sat | Whole CNS (166,606 neurons, connections with 5+ synapses) as a rate model | No small subcircuit exists (140,223 neurons within 3 hops); fast enough for 50 Hz; answers "did you hand-pick neurons?" |
+| Sat | The Changeling = shuffle senders within sign groups, keeping receivers and counts | Every neuron keeps its exact input, so the control is fair, not a broken brain |
+| Sat | Python owns the game state; Godot only renders | Headless tests and replays |
+| Sat | Fresh public repo for the submission; the planning repo is never submitted | Every commit must be inside the hacking window |
+| Sat | No LLM or voice call inside the live game loop; the Princess, rivals and Giant are scripted | Reliability and scope |
+| Sat 17:00 | **First-person 2D redesign (Ved):** three players move the fly directly, the brain powers only the Seer | Simpler to build and to understand; a fair comparison (identical controls in both modes) |
+| Sat 17:00 | 2D only (no 3D engine) | 3D is too much for the time left |
+| Sat 18:00 | Host art: pixel-art royal court (Anshul) with the manuscript palette | Owner's call; reads well on a projector |
+| Sat 19:05 | HUD brain activity is side-free (`vision`, `looming`, `escape`) | The shared screen must not reveal the Seer's secret |
+
+**Still open:** keep the Chronicler; demo laptop; presenter; the LLM if agents get built (Gemini makes us eligible for the MLH
+Gemini prize); the domain name (`royalflyness.club` suggested); whether all four are first-time hackers.
+
+## hackUMBC 2026 rules: how we comply
+
+A violation means disqualification, removal from the event and a ban from hackUMBC events.
+
+| Rule | How we comply |
+|---|---|
+| **Every commit between 12:00 PM Sat 26 Sept and 11:45 AM Sun 27 Sept** | Laptop clocks on automatic. No commits after 11:45 Sun. **Never force-push, rebase `main`, amend pushed commits or change commit dates** |
+| **No building on existing projects** (not eligible for prizes) | All code written during the event. Not copied in: Neil's `fly-cns-sim` code, the old Fly-by-Wire code (including its camera-check tool), the pre-event Codex handoff plugin, the planning repo's probe scripts. Libraries (NumPy, SciPy, Godot, websockets, Caddy) and public APIs are fine |
+| Plans made before the event | Plans and a data check, no code. The README says so; tell an organizer |
+| No cross-submission; one project per team | Submit only *His Royal Flyness*, only here |
+| Team of at most 4, all checked in; students 18+ (or enrolled UMBC students under 18) | Neil, Arnav, Ved, Anshul; confirm check-in and eligibility |
+| Devpost created by 11:00 Sun, finalized by 11:45 | Draft early; complete by 10:30; Ved submits |
+| Public GitHub link to all code | `github.com/8002panch/his-royal-flyness` is public; everything the game runs is committed except secrets and the large public data files (TECH.md says how to get them) |
+| Demo video at least 30 s; in-person demo of 3 to 5 min | Video by 08:00; stay at the table during judging |
+| Tracks must clearly fit | Only tracks whose tech we genuinely use (see Submission) |
+| MLH Code of Conduct | Respect everyone; follow organizers; lore never jokes about real people or groups |
+| MaleCNS is CC-BY 4.0 | Credit Berg et al., *Cell* 2026 (HHMI Janelia FlyEM, Google Research, University of Cambridge, MRC LMB) in the README, the Decree screen and Devpost |
+| Third-party assets | Google Fonts (SIL Open Font License), credited; art made during the event; ElevenLabs library voices only |
+| Secrets | Keys only in `.env` (git-ignored); the repo is public. If a key is ever committed, revoke it at once; don't rewrite history |
+| AI tools | Allowed; disclosed in the README and on Devpost (Claude and Codex for code and docs; Gemini and ElevenLabs in the game if used). Everyone can explain the code they commit |
+| Honesty | The Decree says what's real and what's assumed; no number on screen, in a voice line or on Devpost unless the code computed it |
+| Privacy | Players give only a display name; nothing is stored after the session |
+
+**Git habits:** branches named `<name>/<feature>`; pull often, merge small; `main` must always run the demo.
+
+**Sunday 10:30 checklist (Ved):** repo public; README has the plans note, the Decree, credits, AI-tools line and how to run; last
+commit before 11:45 and no force-pushes; Devpost has all four members, the repo link, the video, the description and only tracks
+that fit; First Time Hack only if all four are first-timers; no keys in the repo; team at the table for judging.
+
+## Event facts
+
+- **Where:** RAC (Retriever Activities Center), UMBC, in person. **When:** Sat 26 Sept 12:00 PM to Sun 27 Sept 11:45 AM.
+- **Theme:** royalty. **Judging:** creativity, technical complexity, impact, execution. Judges are secret; Game Jamathon entries
+  present to industry judges.
+- **Submission:** public GitHub link, a video of at least 30 seconds, one project per team, in-person demo of 3 to 5 minutes.
+
+## Submission (Devpost): on hold
+
+Not started on purpose; the team decides when. When it starts:
+
+- **Title:** His Royal Flyness: A Courtship by Committee. Keep the Royal Decree section, and use numbers only from results files
+  (e.g. `team/neil/seer_eval.csv`).
+- **Tracks to consider** (tick only if genuinely built): Game Jamathon (main target: function, looks, polish, creativity, theme);
+  Most Engaging Demo (judges play on their phones); MLH Best Use of ElevenLabs (if the voices ship); MLH Best Domain Name from
+  GoDaddy Registry (if the join URL uses one); MLH Best Use of DigitalOcean (if the relay runs there); MLH Best Use of Gemini API
+  (only if agents ship); Best First Time Hack (only if all four are first-timers). Overall prizes need no box.
+- **Impact angle:** more than 100 fly-connectome projects appeared in three weeks, nearly all a fly playing an existing game. This
+  one puts players inside the fly's senses with a scientific control you can play, on any phone with no install (classroom-ready).
+
+## Arnav's approved story plan and remaining implementation work
+
+Arnav supplied the complete comic-campaign story. The panel script and level rules are in
+GAME.md; the implementation handoff is in TECH.md. This is documentation only.
+No new cutscene, level, quiz, collision rule or ending is implemented by this update.
+Arnav approved sharing the full plan and updating tasks on September 26. This approval covers
+the planning handoff, not a claim that its gameplay is finished. Share via arnav/story-comic-draft.
+
+Confirmed: only the listed cast; Clown narrates; Royal Harvest Chalice and four grapes;
+three rival questions; fermented grape cordial versus pear nectar; sixty-second Stage 2;
+Giant loses after ten dodges, Hamlet loses after three hits; optional father requires five
+throw dodges without a hit; branching endings. The existing sober garden misunderstanding
+and one-grape-per-trip tutorial are retained. Other tuning values remain starting candidates to verify during playtesting.
+
+### Arnav's revised story work (replaces his older Garden-only Phase 5 scope)
+
+- [ ] Campaign transitions, comic/question pause, one-time quiz outcomes and branch persistence.
+- [ ] Four-grape pickup/delivery tutorial; scripted dizziness with bounded, testable tuning.
+- [ ] Basement checkpoints; 60-second inner passage; private obstacle/hazard guidance.
+- [ ] Ten-dodge/three-hit Giant; five-dodge/no-hit father projectile variant; both endings.
+- [ ] Demo scene selection/reset, isolated from campaign history; all paths and retry tests.
+- [ ] Agree `controls`, comic state, answer submission and private guidance fields with Ved/Anshul before changing the shared messages.
+- [ ] Tune movement and three dizziness levels; ensure every course remains passable at the highest level.
+- [ ] Verify Windows clean-copy launch, real brain data, reconnect behavior and actual phone/hotspot play.
+- [ ] Integrate Anshul's display/audio and Ved's phone additions; run all three outcome routes and separate Demo presets.
+- [ ] Validate 2-, 3-, and 4-player job combinations with Ved; no keyboard mode.
+- [x] Complete the story, panel dialogue, level rules and owner handoff; Arnav approved team sharing.
+
+No keyboard player mode. The requested smaller-group phone modes still require combining jobs;
+the latest four-role implementation stays the baseline until that work is agreed and tested.
+Keep automated replay/bots a separate decision: they are testing tools, not a one-player mode.
+
+### Teammate handoffs for the approved plan
+
+| From → to | Requested work / decision | Current status |
+|---|---|---|
+| Arnav → Anshul | Reusable comic overlay with readable panels/bubbles/captions, Next/Back/Skip; listed-cast-only art; behind/slightly-above view request; shared scene art must not reveal live hidden hazards | Planning handoff, not an edit to host/audio code |
+| Arnav → Ved | Seer-only question choice/confirmation; answer reconnect safety; frozen/latching controls across scenes; private wall/spike/throw guidance; review 2/3-player combined roles | Proposed new capabilities; current protocol unchanged |
+| Arnav → Neil | Review quiz facts and exact limits of neural hazard cues. Walls/spikes and projectile assistance cannot be called existing brain output; scripted guidance must be separate. Agree Seer pause/resume behavior | No request to simulate alcohol or alter neuron weights |
+| Arnav → everyone | Use the approved script in GAME.md for story prototypes. Only the final cast; no guards, extra girls, unnamed crowd characters, additional narrator or removed rivals | Approved strict-cast substitutions |
+
+Previously recorded implementation results above remain historical results for existing code.
+They are not tests of this story. Before release, update stale keyboard/Garden-only descriptions
+across the project with their owners; do not report this planning update as a shipped campaign.

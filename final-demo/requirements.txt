@@ -1,0 +1,14 @@
+# Python dependencies for the game server, brain and agents (Python 3.11+)
+numpy
+scipy
+pandas
+pyarrow
+websockets
+pydantic
+qrcode
+google-genai
+elevenlabs
+imageio-ffmpeg
+python-dotenv
+matplotlib
+pytest
