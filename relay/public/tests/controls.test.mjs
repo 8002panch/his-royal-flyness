@@ -35,3 +35,15 @@ test("story phases replace the controls; only the Seer gets answer buttons", () 
   assert.throws(() => answerMessage("C"));
   assert.doesNotMatch(renderStory({ ...q, question: { ...q.question, text: "<b>x</b>" } }, "seer"), /<b>x<\/b>/);
 });
+
+test("the Seer's screen says what to shout: steer away from a hand, towards Miranda", async () => {
+  const { renderSeer } = await import("../screens/seer.js");
+  const danger = renderSeer({ t: "seer_view", bearing: null, giant: { direction: "RIGHT", seconds: 1.8 } });
+  assert.match(danger, /HAND FROM THE RIGHT/);
+  assert.match(danger, /steer LEFT/);
+  const miranda = renderSeer({ t: "seer_view", bearing: "NW", distance: "MID", confidence: 0.4, giant: {} });
+  assert.match(miranda, /ahead to the LEFT/);
+  assert.match(miranda, /Helmsman: steer LEFT/);
+  assert.doesNotMatch(miranda, /HAND FROM/);
+  assert.match(renderSeer({}), /Hold the button to sense/);
+});

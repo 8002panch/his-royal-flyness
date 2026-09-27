@@ -145,6 +145,7 @@ function releaseControl() {
   state.heldValue = 0;
   document.querySelectorAll("[data-value]").forEach((element) => element.classList.remove("is-active"));
   send(buildControlMessage(state.role, 0));
+  if (state.role === "seer") { state.view = {}; render(); }  // no reading while not sensing: never a stale warning
 }
 
 function connect(isNewJoin = false) {
@@ -195,7 +196,12 @@ function handleMessage(data) {
     state.phase = message; if (state.role) render(); return;
   }
   if (message.t === "control_view" && message.role === state.role) { state.view = message; render(); return; }
-  if (isPrivateSeerView(message) && state.role === "seer") { state.view = message; render(); return; }
+  if (isPrivateSeerView(message) && state.role === "seer") {
+    if (!state.heldValue) return;  // a reading that arrives after letting go
+    const danger = message.giant?.direction;
+    if (danger && !state.view?.giant?.direction) navigator.vibrate?.([120, 60, 120]);  // a new danger: buzz the Seer's hand
+    state.view = message; render(); return;
+  }
   if (message.t === "error") {
     if (message.code === "ROLE_TAKEN") return showNotice("Someone just took that role. Pick another.");
     if (["ROOM_NOT_FOUND", "REMOVED"].includes(message.code)) return leaveCourt(message.message);  // an old or closed code

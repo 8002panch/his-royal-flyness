@@ -74,3 +74,20 @@ meter { width: 100%; accent-color: #fbcf64; }
 .answer-button b { font-size: 2.6rem; color: #fbcf64; }
 .answer-button.is-active { border-color: #fbcf64; box-shadow: 0 0 0 4px #ffdc75; }
 .primary[disabled] { opacity: .5; cursor: default; }
+
+/* The Seer: read at a glance, say it out loud */
+.seer-screen .seer-grid { display: grid; gap: .8rem; grid-template-columns: 1fr; }
+.seer-card { border-radius: 1rem; padding: 1rem; border: 3px solid #725b7f; background: #2a2037; display: grid; gap: .35rem; text-align: center; }
+.seer-card strong { font-size: 1.35rem; line-height: 1.25; color: #fff3c4; }
+.seer-label { font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: #cdb9dd; }
+.seer-call { margin: 0; font-size: 1.15rem; color: #fbcf64; }
+.seer-arrow { font-size: 4.5rem; line-height: 1; color: #fbcf64; }
+.calm-card { opacity: .75; }
+.calm-card strong { font-size: 1.1rem; }
+.danger-card { background: #8e1b1b; border-color: #ffcf5a; animation: seer-flash .5s steps(2) infinite; }
+.danger-card .seer-big { font-size: 2rem; color: #fff; }
+.danger-card .seer-call { color: #fff3c4; }
+.signal { height: .6rem; border-radius: .3rem; background: #1a1424; overflow: hidden; }
+.signal span { display: block; height: 100%; background: #fbcf64; }
+@keyframes seer-flash { 50% { background: #c62828; } }
+@media (prefers-reduced-motion: reduce) { .danger-card { animation: none; } }
