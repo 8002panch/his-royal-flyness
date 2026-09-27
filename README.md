@@ -75,6 +75,7 @@ smoke tests in `host/test/`.
 
 - Code and docs were written with help from AI coding assistants (Claude, Codex). Everyone on the team can explain the code they committed.
 - In the game (if they ship): Gemini for trial design and the Jester's lines; ElevenLabs for voices, sound effects and music.
+- **Asset provenance:** the final assets in `host/assets/final/` were created by the team by hand; no AI image-generation tool was used to create the final art. Earlier `host/assets/pixelart/v2`, `v3`, and `v4` visual studies were non-shipping placeholders used to test the early concept. They are retained as development history only; the team planned to replace them with its own final assets, and the final demo uses the team-created art.
 
 ## Credits
 
