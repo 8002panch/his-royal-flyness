@@ -13,8 +13,8 @@
   {"id": "FLY_BUZZ_LOOP", "when": "Quietly under flight; stop it during comics and questions", "loop": true, "file": "FLY_BUZZ_LOOP.mp3", "hash": "03cb5a697e0645a7", "post": "mono,volume_db=-18", "stale": false},
   {"id": "FLY_TAKEOFF", "when": "The Ready, Fly cue; the first tutorial flight", "loop": false, "file": "FLY_TAKEOFF.mp3", "hash": "40dc8b16966937ab", "post": "mono,volume_db=-10", "stale": false},
   {"id": "FLY_ZIP", "when": "After a successful dodge", "loop": false, "file": "FLY_ZIP.mp3", "hash": "5c7ad7ba24a8fc65", "post": "mono,volume_db=-10", "stale": false},
-  {"id": "COURT_GASP", "when": "After a hit resolves, and after the Giant's second hit", "loop": false, "file": null, "hash": null, "post": "", "stale": false},
-  {"id": "COURT_CHEER", "when": "Dodge milestones only (5 and 9 against the Giant, 4 against Prospero), so it stays special", "loop": false, "file": null, "hash": null, "post": "", "stale": false},
-  {"id": "ACID_SIZZLE", "when": "A spitball misses, on resolution; never when Prospero fires it", "loop": false, "file": null, "hash": null, "post": "", "stale": false},
-  {"id": "ACID_HIT", "when": "A spitball hits Hamlet, on resolution", "loop": false, "file": null, "hash": null, "post": "", "stale": false}
+  {"id": "COURT_GASP", "when": "After a hit resolves, and after the Giant's second hit", "loop": false, "file": "COURT_GASP.mp3", "hash": "76453dc04a3649cf", "post": "mono,volume_db=-6", "stale": false},
+  {"id": "COURT_CHEER", "when": "Dodge milestones only (5 and 9 against the Giant, 4 against Prospero), so it stays special", "loop": false, "file": "COURT_CHEER.mp3", "hash": "a7acd578757bcaf9", "post": "mono,volume_db=-6", "stale": false},
+  {"id": "ACID_SIZZLE", "when": "A spitball misses, on resolution; never when Prospero fires it", "loop": false, "file": "ACID_SIZZLE.mp3", "hash": "45aaf69281e1c950", "post": "mono,volume_db=-4", "stale": false},
+  {"id": "ACID_HIT", "when": "A spitball hits Hamlet, on resolution", "loop": false, "file": "ACID_HIT.mp3", "hash": "b7351343bb80ac49", "post": "mono,volume_db=0", "stale": false}
  ]}
