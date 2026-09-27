@@ -5,7 +5,7 @@ extends Node2D
 ## camera (HallBuilder + CanvasPainter), so the hall moves around Hamlet.
 ##   far      vault, walls, great arch, rose window
 ##   floor    tiles, carpet, dais
-##   columns  the two back-wall banners (swaying), then arcade, side banners, columns
+##   columns  back banners, arcade, columns, and the Part 2 wall course
 ##   feast    tables and dishes, then the flickering candle flames
 
 const BANNER_SWAY := [0, 1, 0, -1]
@@ -34,6 +34,7 @@ func _draw() -> void:
 		"columns":
 			_draw_back_banners()
 			HallBuilder.paint_columns(_painter)
+			HallBuilder.paint_course_walls(_painter)
 		"feast":
 			var flames := HallBuilder.paint_feast(_painter)
 			for i in flames.size():

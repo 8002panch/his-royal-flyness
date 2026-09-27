@@ -7,11 +7,14 @@ extends RefCounted
 ## false` gives the original fixed view from the doors (F4 in the court).
 ##
 ## Hall space: x = lateral, y = altitude, z = depth (towards the back wall).
-## The server's fly body lives in a -1..1 cube (server/movement.py bounds).
-## `from_server` stretches x a little so the hall reads wider than it is deep.
+## The server's fly body currently lives in a -1..1 cube. `from_server`
+## maps that short authoritative range across the long visual course below;
+## this is presentation only until the server's course bounds and collisions
+## are expanded too. The spare central stretch is deliberately reserved for
+## future obstacles.
 ##
-## render.princess / render.giant arrive relative to the fly as bearing,
-## elevation and distance in cm. server/seer_adapter.py's placeholder world
+## render.princess arrives relative to the fly as bearing, elevation and
+## distance in cm. server/seer_adapter.py's placeholder world
 ## uses 220 cm per body unit; UNIT_CM mirrors that and is the only coupling.
 
 const W := 640
@@ -20,8 +23,16 @@ const CX := 320.0
 const F := 300.0
 const NEAR := 0.5
 
+## Course geometry in hall units. Keep obstacle placement inside the marked
+## stretch so the entry, Queen's dais, and camera breathing room stay clear.
+const COURSE_START_Z := -3.0
+const COURSE_END_Z := 21.5
+const OBSTACLE_START_Z := -1.5
+const OBSTACLE_END_Z := 20.0
+const COURSE_SCALE := (COURSE_END_Z - COURSE_START_Z) / 2.0
+
 ## Fixed view (the doors) and the chase offset from Hamlet, in hall units.
-const FIXED_CAM := Vector3(0.0, 1.9, -4.5)
+const FIXED_CAM := Vector3(0.0, 1.9, -5.5)
 const FIXED_HORIZON := 34.0
 const CHASE_OFFSET := Vector3(0.0, 1.7, -2.9)
 const CHASE_HORIZON := 60.0
@@ -38,7 +49,7 @@ const UNIT_CM := 220.0
 const FLOOR_Y := -1.3
 const WALL_X := 2.45
 const COLUMN_X := 2.05
-const BACK_Z := 1.8
+const BACK_Z := 23.0
 const TOP_Y := 3.2
 
 
@@ -80,7 +91,7 @@ static func scale_at(z: float) -> float:
 
 
 static func from_server(v: Vector3) -> Vector3:
-	return Vector3(v.x * SX, v.y, v.z)
+	return Vector3(v.x * SX, v.y, lerpf(COURSE_START_Z, COURSE_END_Z, (v.z + 1.0) * 0.5))
 
 
 ## Converts a bearing/elevation/distance stimulus into a hall-space offset from
@@ -93,4 +104,4 @@ static func offset_from_cue(cue: Dictionary) -> Vector3:
 	var tb := tan(clampf(b, -1.45, 1.45))
 	var te := tan(clampf(e, -1.45, 1.45))
 	var depth := d / sqrt(1.0 + tb * tb + te * te)
-	return Vector3(depth * tb * SX, depth * te, depth)
+	return Vector3(depth * tb * SX, depth * te, depth * COURSE_SCALE)

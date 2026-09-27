@@ -167,10 +167,10 @@ func hall(kind: String) -> void:
 			for y in range(108,192,16): c.rect(x+3,y,2,2,GOLD)
 		c.hline(269,370,101,GOLD)
 	for i in range(3,-1,-1):
-		var distance := [22,99,151,185][i]
-		var yy := [81,101,116,128][i]
-		var ww := [28,22,16,12][i]
-		var hh := [246,168,115,79][i]
+		var distance: int = [22,99,151,185][i]
+		var yy: int = [81,101,116,128][i]
+		var ww: int = [28,22,16,12][i]
+		var hh: int = [246,168,115,79][i]
 		for side in [-1,1]:
 			var xx: int = distance if side < 0 else 640-distance-ww
 			arch(xx-9,yy-39,ww+36,hh+24,DEEP,LIGHT)
@@ -201,8 +201,8 @@ func feast(edges: bool) -> void:
 	for side in [-1,1]:
 		var inner := 191 if not edges else 252
 		var outer := 285 if not edges else 310
-		var a := 320+side*inner
-		var b := 320+side*outer
+		var a: int = 320+side*inner
+		var b: int = 320+side*outer
 		poly([[320+side*134,206],[320+side*171,206],[b,347],[a,347]],WOOD,true)
 		poly([[320+side*134,204],[320+side*171,204],[b,325],[a,325]],PAPER if not edges else LIGHT,true)
 		for i in 4:

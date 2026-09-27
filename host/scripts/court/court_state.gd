@@ -43,6 +43,7 @@ var has_controls := false
 var seer_scanning := false
 
 var trial := ""
+var environment := ""       # Ved's course label ("garden", "hall")
 var brain := ""
 var candle := -1.0
 var activity: Dictionary = {}
@@ -88,6 +89,7 @@ static func read(msg: Dictionary) -> CourtState:
 		s.seer_scanning = true
 
 	s.trial = str(msg.get("trial", ""))
+	s.environment = str(msg.get("environment", ""))
 	var cues: Variant = msg.get("cues", null)
 	s.brain = str(msg.get("brain", ""))
 	if s.brain == "" and cues is Dictionary:
