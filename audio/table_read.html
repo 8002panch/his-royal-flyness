@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Table Read · His Royal Flyness</title>
-<!-- Plays audio/lines.csv in story order from voice/manifest.js (written by gen_voices.py). Open this file straight from disk. -->
+<!-- Plays audio/lines.csv in story order from voice/manifest.js, with the sound cues from sfx/manifest.js (both written by
+     gen_voices.py). Open this file straight from disk. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
 <style>
@@ -38,6 +39,8 @@
   .who { font-weight: bold; letter-spacing: .02em; }
   .meta { color: var(--ink-soft); font-size: 13px; margin-left: 6px; }
   .tag { font-size: 12px; border: 1px solid var(--ink-soft); border-radius: 4px; padding: 0 5px; margin-left: 6px; color: var(--ink-soft); }
+  button.tag { background: #EFE3C4; cursor: pointer; }
+  button.tag.nofile { border-style: dashed; }
   .note { color: var(--ink-soft); font-size: 14px; font-style: italic; }
   .missing { color: var(--crimson); font-size: 13px; margin-left: 6px; }
   #stage { position: fixed; left: 0; right: 0; bottom: 0; z-index: 3; background: var(--ink); color: var(--parchment);
@@ -64,12 +67,14 @@
     <label>Speaker <select id="speaker"><option value="">everyone</option></select></label>
     <button class="primary" id="playAll">▶ Play the story</button>
     <button id="stop" disabled>■ Stop</button>
-    <span class="sub">Space pauses. Lines without audio show for reading time.</span>
+    <label title="The quiet flight loop, to judge its level under the voices"><input type="checkbox" id="buzz"> Fly buzz</label>
+    <span class="sub">Space pauses. Lines without audio show for reading time. ♪ tags are sound cues.</span>
   </div>
 </header>
 <main id="script"></main>
 <div id="stage" aria-live="polite"><span class="sub">Captions appear here.</span></div>
 <script src="voice/manifest.js"></script>
+<script src="sfx/manifest.js"></script>
 <script>
 "use strict";
 const TITLES = {
@@ -83,10 +88,16 @@ const NOT_STORY = new Set(["ANYTIME"]);  // played on events, not in the story r
 const COLORS = { clown: "#9B1C1C", hamlet: "#1F3A8A", miranda: "#6E4FA3", prospero: "#5A3A1A",
                  tinman: "#4F5B66", cheapdate: "#7A2E5A", rutabaga: "#5E6B1F" };
 const M = window.VOICE_MANIFEST;
+const SFX = Object.fromEntries(((window.SFX_MANIFEST || {}).sounds || []).map((s) => [s.id, s]));
+const GAP_MS = 200;       // silence between lines
+const CUE_LEAD_MS = 900;  // a line starts this long after its sound cue, or when the cue ends if sooner
+const BUZZ = "FLY_BUZZ_LOOP";
+const usable = (x) => !!(x && x.file && !x.stale);  // a stale take was made from an older version of the line
 const $ = (s, el = document) => el.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-let run = null;  // {queue, i, audio, timer, paused}
+let run = null;  // {queue, i, audio, cues, timer, paused, spoke, speak}
+let buzz = null;
 
 function route() {
   const quiz = {};
@@ -129,12 +140,57 @@ function render() {
             <span class="who" style="color:${COLORS[ln.speaker] || "inherit"}">${esc(ln.name)}</span>
             <span class="meta">${esc(ln.id)}${ln.panel ? " · " + esc(ln.panel) : ""}</span>
             ${ln.branch ? `<span class="tag">${esc(ln.branch.replace("_", " "))}</span>` : ""}
-            ${ln.file ? "" : `<span class="missing">no audio yet</span>`}
+            ${ln.sfx ? cueTag(ln.sfx) : ""}
+            ${ln.file ? (ln.stale ? `<span class="missing">old take, regenerate</span>` : "") : `<span class="missing">no audio yet</span>`}
             <div>${esc(ln.caption)}</div>
           </div>
         </div>`).join("")}
     </section>`;
-  }).join("");
+  }).join("") + (who ? "" : soundBank());
+}
+
+const soundName = (id) => id.toLowerCase().replace(/_/g, " ");
+
+function cueTag(id) {
+  const s = SFX[id], ok = usable(s);
+  return `<button class="tag${ok ? "" : " nofile"}" data-sfx="${esc(id)}" title="${esc(ok ? (s.when || id) : id + ": not generated yet")}"
+    >♪ ${esc(soundName(id))}</button>`;
+}
+
+function soundBank() {
+  const all = Object.values(SFX);
+  if (!all.length) return "";
+  return `<section data-scene="SFX">
+    <div class="scene-head"><h2>Sound effects</h2><span class="sub">Giant sounds are mono and only play once a swat resolves.</span></div>
+    ${all.map((s) => `
+      <div class="line">
+        <button class="play" data-sfx="${esc(s.id)}" title="Play ${esc(s.id)}">▶</button>
+        <div>
+          <span class="who">${esc(soundName(s.id))}</span><span class="meta">${esc(s.id)}</span>
+          ${s.loop ? `<span class="tag">loop</span>` : ""}
+          ${usable(s) ? "" : `<span class="missing">${s.file ? "old take, regenerate" : "no audio yet"}</span>`}
+          <div class="note">${esc(s.when || "")}</div>
+        </div>
+      </div>`).join("")}
+  </section>`;
+}
+
+function playSound(id) {
+  const s = SFX[id];
+  if (!usable(s)) return null;
+  const a = new Audio("sfx/" + s.file);
+  a.play().catch(() => {});
+  return a;
+}
+
+function setBuzz(on) {
+  if (buzz) { buzz.pause(); buzz = null; }
+  if (on && usable(SFX[BUZZ])) {
+    buzz = new Audio("sfx/" + SFX[BUZZ].file);
+    buzz.loop = true;
+    buzz.play().catch(() => {});
+  }
+  $("#buzz").checked = !!buzz;
 }
 
 function show(ln) {
@@ -145,7 +201,7 @@ function show(ln) {
 }
 
 function stop() {
-  if (run) { if (run.audio) run.audio.pause(); clearTimeout(run.timer); }
+  if (run) { if (run.audio) run.audio.pause(); run.cues.forEach((a) => a.pause()); clearTimeout(run.timer); }
   run = null;
   $("#stage").style.opacity = "";
   $("#stop").disabled = true;
@@ -162,16 +218,29 @@ function next() {
     moved = true;
     me.timer = setTimeout(next, ms);
   };
+  const speak = () => {  // once per line, after its sound cue has had a head start
+    if (me.spoke || me.paused || run !== me) return;
+    me.spoke = true;
+    clearTimeout(me.timer);
+    if (usable(ln)) {
+      me.audio = new Audio("voice/" + ln.file);
+      me.audio.onended = () => advance(GAP_MS);
+      me.audio.onerror = () => advance(readMs(ln));
+      me.audio.play().catch(() => advance(readMs(ln)));
+    } else {
+      advance(readMs(ln));
+    }
+  };
   show(ln);
-  if (ln.file) {
-    me.audio = new Audio("voice/" + ln.file);
-    me.audio.onended = () => advance(350);
-    me.audio.onerror = () => advance(readMs(ln));
-    me.audio.play().catch(() => advance(readMs(ln)));
-  } else {
-    me.audio = null;
-    advance(readMs(ln));
-  }
+  me.audio = null;
+  me.spoke = false;
+  me.speak = speak;
+  const cue = ln.sfx && playSound(ln.sfx);
+  if (!cue) { speak(); return; }
+  me.cues = me.cues.filter((a) => !a.ended).concat(cue);
+  cue.addEventListener("ended", speak);
+  cue.addEventListener("error", speak);
+  me.timer = setTimeout(speak, CUE_LEAD_MS);
 }
 
 function togglePause() {
@@ -180,12 +249,15 @@ function togglePause() {
     run.paused = true;
     clearTimeout(run.timer);
     if (run.audio) run.audio.pause();
+    run.cues.forEach((a) => a.pause());
     $("#stage").style.opacity = ".6";
     return;
   }
   run.paused = false;
   $("#stage").style.opacity = "";
-  if (run.audio && !run.audio.ended) run.audio.play();
+  run.cues.forEach((a) => { if (!a.ended && a.currentTime > 0) a.play().catch(() => {}); });
+  if (!run.spoke) run.timer = setTimeout(run.speak, 300);
+  else if (run.audio && !run.audio.ended) run.audio.play();
   else next();
 }
 
@@ -194,7 +266,7 @@ const readMs = (ln) => Math.max(1400, ln.caption.split(/\s+/).length * 330);
 function play(queue) {
   stop();
   if (!queue.length) return;
-  run = { queue, i: 0, audio: null, timer: 0, paused: false };
+  run = { queue, i: 0, audio: null, cues: [], timer: 0, paused: false, spoke: false, speak: null };
   $("#stop").disabled = false;
   next();
 }
@@ -207,9 +279,12 @@ function init() {
     $("#playAll").disabled = true;
     return;
   }
-  const voiced = M.lines.filter((l) => l.file).length;
-  $("#summary").textContent = `${M.lines.length} lines, ${voiced} voiced (${M.model || "no model"}). ` +
+  const voiced = M.lines.filter(usable).length, old = M.lines.filter((l) => l.stale).length, sounds = Object.values(SFX);
+  $("#summary").textContent = `${M.lines.length} lines, ${voiced} voiced (${M.model || "no model"})` +
+    `${old ? `, ${old} old takes to regenerate` : ""}; ${sounds.filter(usable).length} of ${sounds.length} sounds made. ` +
     "Pick the quiz answers and outcomes to hear a route.";
+  $("#buzz").disabled = !usable(SFX[BUZZ]);
+  $("#buzz").onchange = (e) => setBuzz(e.target.checked);
   for (const [key, name] of Object.entries(M.speakers || {})) {
     const n = M.lines.filter((l) => l.speaker === key).length;
     $("#speaker").insertAdjacentHTML("beforeend", `<option value="${esc(key)}">${esc(name)} (${n})</option>`);
@@ -221,7 +296,8 @@ function init() {
   };
   $("#stop").onclick = stop;
   $("#script").addEventListener("click", (e) => {
-    const one = e.target.closest("[data-play]"), sc = e.target.closest("[data-play-scene]");
+    const one = e.target.closest("[data-play]"), sc = e.target.closest("[data-play-scene]"), fx = e.target.closest("[data-sfx]");
+    if (fx) { if (fx.dataset.sfx === BUZZ) setBuzz(!buzz); else playSound(fx.dataset.sfx); return; }
     if (one) play(M.lines.filter((l) => l.id === one.dataset.play));
     if (sc) {
       const r = route(), who = $("#speaker").value, key = sc.dataset.playScene;

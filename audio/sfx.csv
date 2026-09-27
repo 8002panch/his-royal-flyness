@@ -1,0 +1,14 @@
+id,prompt,seconds,loop,volume_db,when,note
+GIANT_GRUNT,"A giant man's short, deep, annoyed grunt, booming and very close, as heard by a tiny fly. Non-verbal, no words.",1.5,no,0,"After a swat misses, on resolution",Never at warning onset: that would hint at timing the Seer alone should know
+GIANT_GROWL,"An enormous man's frustrated growl through gritted teeth, deep and rumbling. Non-verbal, no words.",2.5,no,0,After two misses in a row; the Giant's arrival in C02,Same timing rule as GIANT_GRUNT
+GIANT_HUFF,"A giant human's exasperated huff and long tired sigh, a deep breathy exhale, very close. Non-verbal, no words.",2,no,0,The Giant tiring late in the ten dodges; C04 when the hand withdraws,
+GIANT_HMPH,"A giant man's smug, satisfied 'hmph', one short deep nasal grunt. Non-verbal, no words.",1,no,0,After a swat hits Hamlet,
+GIANT_SWAT,"A huge hand whooshing down fast and slapping a wooden banquet table: a heavy whoosh, then a loud thump. Cartoonish.",1.5,no,0,"The moment a swat resolves, hit or miss, never before","Mono, so it can't reveal a side"
+GIANT_SPLAT,A cartoon splat: a giant palm slapping down with a comic squish and a tiny springy boing.,1,no,0,When a swat hits Hamlet,
+GIANT_SLAM,"A giant fist slamming down on a feast table, goblets and plates rattling.",2,no,0,Comics: C02 panel 3,
+GIANT_GROAN_THUD,"Muffled, from the floor above: a giant's heavy groan, then one big thud on wooden floorboards.",3,no,0,"Comics: Q02 panel 4, the noise upstairs",
+GIANT_CRASH,"A huge crash in a banquet hall: a giant hand smashing down on a feast table, plates, cutlery and goblets clattering everywhere.",3,no,0,"Comics: Q03 panel 5, cuts Hamlet off",
+GIANT_LEAVES,"A giant's heavy footsteps walking away across a wooden floor, grumbling under his breath, then a door closing in the distance.",4,no,0,"Comics: C03 panel 1, the Giant gives up",
+FLY_BUZZ_LOOP,"Soft, gentle housefly wing buzz, steady and low, quiet background ambience, seamless loop.",5,yes,-18,Quietly under flight; stop it during comics and questions,Baked in 18 dB quieter so it sits under the voices
+FLY_TAKEOFF,"A tiny fly taking off: a short, soft, rising wing buzz.",1,no,-10,"The Ready, Fly cue; the first tutorial flight",
+FLY_ZIP,"A tiny fly zipping quickly past: a short, soft buzzing whoosh.",0.8,no,-10,After a successful dodge,

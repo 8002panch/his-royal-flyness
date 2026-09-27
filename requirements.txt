@@ -8,6 +8,7 @@ pydantic
 qrcode
 google-genai
 elevenlabs
+imageio-ffmpeg
 python-dotenv
 matplotlib
 pytest

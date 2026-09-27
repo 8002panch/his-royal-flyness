@@ -1,5 +1,5 @@
 {
-  "_help": "Casting sheet for audio/gen_voices.py. Paste an ElevenLabs library voice ID (or its voice-library link) into voice_id. Voice IDs are not secrets; the API key goes in .env. Library voices only, no clones of real people. stability: null uses the voice's own saved setting (what the ElevenLabs app and connector use); for the v3 model 0.0 is creative, 0.5 natural, 1.0 robust.",
+  "_help": "Casting sheet for audio/gen_voices.py. Paste an ElevenLabs library voice ID (or its voice-library link) into voice_id. Voice IDs are not secrets; the API key goes in .env. Library voices only, no clones of real people. stability: null uses the voice's own saved setting; for the v3 model 0.0 is creative, 0.5 natural, 1.0 robust (closest to the voice's sample). A line can override it in lines.csv. tempo speeds a speaker up without changing pitch and max_pause (seconds) shortens long pauses; both are applied after generation, so changing them costs no credits for takes that are still raw.",
   "model": "eleven_v3",
   "output_format": "mp3_44100_128",
   "speakers": {
@@ -7,7 +7,9 @@
       "name": "Clown",
       "voice_id": "7rQX8r6PVq3gfJ8rZzyE",
       "stability": null,
-      "brief": "Clown, the Court Jester. Narrates every scene and reads the question cards (about half of all lines). Playful and a little pompous, like a costume drama narrated by someone who's had one glass of wine. Never mean to the players."
+      "brief": "Clown, the Court Jester. Narrates every scene (about 40% of all lines). Quick, playful and a little pompous, like a costume drama narrated by someone who's had one glass of wine. Never slow, never mean to the players.",
+      "tempo": 1.15,
+      "max_pause": 0.4
     },
     "hamlet": {
       "name": "Hamlet",
@@ -18,8 +20,8 @@
     "miranda": {
       "name": "Miranda",
       "voice_id": "fgDJOgmENIR82PueQrVs",
-      "stability": null,
-      "brief": "Princess Miranda. Warm but firm; she speaks for herself and gets the last word in both endings."
+      "stability": 1.0,
+      "brief": "Princess Miranda. Soft, warm and sure of herself; robust stability keeps her close to the voice sample. Passionate only when she refuses a marriage chosen for her (E02_P3, which overrides stability to 0.5)."
     },
     "prospero": {
       "name": "Prospero",
@@ -31,19 +33,19 @@
       "name": "Lord Tinman",
       "voice_id": "1aPDmPEYltTp3yDMQLiT",
       "stability": null,
-      "brief": "Lord Tinman, the heartless rival. Impeccably polite, composed, faintly smug."
+      "brief": "Lord Tinman, the heartless rival (tinman flies grow no heart). Impeccably polite, cool and smug; insults delivered like compliments."
     },
     "cheapdate": {
       "name": "Sir Cheapdate",
       "voice_id": "eadgjmk4R4uojdsheG9t",
       "stability": null,
-      "brief": "Sir Cheapdate, the tipsy rival. Jolly and sloppy, cheerfully aware of his own 'extensive, regrettable research'."
+      "brief": "Sir Cheapdate, the tipsy rival (cheapdate flies get drunk on less alcohol). Jolly, hiccuping, cheerfully aware of his own 'extensive, regrettable research'."
     },
     "rutabaga": {
       "name": "Count Rutabaga",
       "voice_id": "GsfuR3Wo2BACoxELWyEF",
       "stability": null,
-      "brief": "Count Rutabaga, the forgetful rival. Nervous, scattered and friendly; loses his train of thought mid-sentence."
+      "brief": "Count Rutabaga, the forgetful rival (rutabaga flies are bad at learning and memory). Nervous, scattered and friendly; forgets whom he's courting and loses insults halfway through."
     }
   }
 }

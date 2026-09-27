@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import json
 import tempfile
 import unittest
@@ -15,10 +16,33 @@ VID = {"clown": "AAAAAAAAAAAAAAAAAAAA", "hamlet": "BBBBBBBBBBBBBBBBBBBB"}
 
 class LineBankTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.lines, self.cast = gv.load_lines(), gv.load_cast()
+        self.lines, self.cast, self.sounds = gv.load_lines(), gv.load_cast(), gv.load_sounds()
 
     def test_bank_has_no_problems(self) -> None:
-        self.assertEqual(gv.problems(self.lines, self.cast), [])
+        self.assertEqual(gv.problems(self.lines, self.cast, self.sounds), [])
+
+    def test_the_suitors_ask_and_explain_their_own_questions(self) -> None:
+        asker = {"Q01": "tinman", "Q02": "rutabaga", "Q03": "cheapdate"}
+        for ln in self.lines:
+            if ln.id.endswith(("_QUESTION", "_EXPLAIN")):
+                self.assertEqual(ln.speaker, asker[ln.scene], ln.id)
+
+    def test_miranda_is_passionate_only_when_she_refuses(self) -> None:
+        miranda = [ln for ln in self.lines if ln.speaker == "miranda"]
+        self.assertEqual([ln.id for ln in miranda if "passionate" in ln.line], ["E02_P3_MIRANDA"])
+        self.assertEqual(self.cast["speakers"]["miranda"]["stability"], 1.0)
+
+    def test_giant_sounds_are_never_directional_or_early(self) -> None:
+        giant = [s for s in self.sounds if s.id.startswith("GIANT_")]
+        self.assertTrue(giant)
+        self.assertTrue(all(gv.sound_post(s).startswith("mono") for s in self.sounds))
+        for s in giant:
+            self.assertNotIn("warning onset", s.when.lower().replace("never at warning onset", ""), s.id)
+
+    def test_bad_rows_are_caught(self) -> None:
+        bad = gv.Line("X_1", "S", "", "", "clown", "Hi.", "", stability="0.7", sfx="NOPE")
+        found = gv.problems([bad], self.cast, self.sounds)
+        self.assertTrue(any("stability" in p for p in found) and any("sfx" in p for p in found), found)
 
     def test_only_the_final_cast_speaks(self) -> None:
         self.assertEqual(set(self.cast["speakers"]), CAST)
@@ -48,6 +72,13 @@ class TextTests(unittest.TestCase):
         ln = gv.Line("X", "S", "", "", "clown", "[sighs] Fine.", "")
         self.assertEqual(gv.spoken_text(ln, "eleven_v3"), "[sighs] Fine.")
         self.assertEqual(gv.spoken_text(ln, "eleven_multilingual_v2"), "Fine.")
+
+    def test_line_stability_overrides_the_speaker_and_changes_the_hash(self) -> None:
+        sp = {"voice_id": "A" * 20, "stability": 1.0}
+        plain = gv.Line("X", "S", "", "", "miranda", "Hi.", "")
+        loud = gv.Line("X", "S", "", "", "miranda", "Hi.", "", stability="0.5")
+        self.assertEqual((gv.stability_for(plain, sp), gv.stability_for(loud, sp)), (1.0, 0.5))
+        self.assertNotEqual(gv.line_hash(plain, sp, "eleven_v3", "mp3"), gv.line_hash(loud, sp, "eleven_v3", "mp3"))
 
     def test_voice_id_from_ids_and_links(self) -> None:
         vid = "JBFqnCBsd6RMkjVDRZzb"
@@ -79,9 +110,19 @@ class FakeTTS:
         yield text.encode()
 
 
+class FakeSFX:
+    def __init__(self) -> None:
+        self.calls: list[str] = []
+
+    def convert(self, *, text: str, **_: object):
+        self.calls.append(text)
+        yield b"ID3sound"
+
+
 class FakeClient:
-    def __init__(self, tts: FakeTTS) -> None:
+    def __init__(self, tts: FakeTTS, sfx: FakeSFX | None = None) -> None:
         self.text_to_speech = tts
+        self.text_to_sound_effects = sfx or FakeSFX()
 
 
 class GenerateTests(unittest.TestCase):
@@ -97,17 +138,21 @@ class GenerateTests(unittest.TestCase):
             sp["voice_id"] = ""
         for name, vid in VID.items():
             self.cast["speakers"][name]["voice_id"] = vid
-        self.tts = FakeTTS()
+        for sp in self.cast["speakers"].values():  # polish is tested on real audio below
+            sp.pop("tempo", None), sp.pop("max_pause", None)
+        self.tts, self.sfx = FakeTTS(), FakeSFX()
+        self.sounds = gv.load_sounds()[:2]
         self._orig = gv._client
-        gv._client = lambda: FakeClient(self.tts)
+        gv._client = lambda: FakeClient(self.tts, self.sfx)
 
     def tearDown(self) -> None:
         gv._client = self._orig
 
     def run_gen(self, **kw: object) -> int:
-        args = argparse.Namespace(only=[], force=False, dry_run=False, model="", workers=2, out=self.tmp)
+        args = argparse.Namespace(only=[], force=False, dry_run=False, model="", workers=2, out=self.tmp,
+                                  sfx_out=self.tmp / "sfx", no_sfx=True)
         vars(args).update(kw)
-        return gv.cmd_generate(self.lines, self.cast, args)
+        return gv.cmd_generate(self.lines, self.sounds, self.cast, args)
 
     def manifest(self) -> dict:
         return {e["id"]: e for e in json.loads((self.tmp / "manifest.json").read_text())["lines"]}
@@ -139,6 +184,15 @@ class GenerateTests(unittest.TestCase):
         self.assertTrue(all(m[ln.id]["file"] for ln in self.lines if ln.speaker == "clown"))
         self.assertFalse(any(m[ln.id]["file"] for ln in self.lines if ln.speaker == "hamlet"))
 
+    def test_sounds_are_generated_once(self) -> None:
+        self.assertEqual(self.run_gen(no_sfx=False), 0)
+        self.assertEqual(len(self.sfx.calls), len(self.sounds))
+        m = json.loads((self.tmp / "sfx" / "manifest.json").read_text())
+        self.assertTrue(all(e["file"] for e in m["sounds"]))
+        self.sfx.calls.clear()
+        self.run_gen(no_sfx=False)
+        self.assertTrue(self.sfx.calls == [] or gv._ffmpeg() is not None)  # without ffmpeg nothing is re-sent either
+
     def test_adopted_files_are_not_generated_again(self) -> None:
         clown = [ln for ln in self.lines if ln.speaker == "clown"]
         self.tmp.mkdir(exist_ok=True)
@@ -149,6 +203,18 @@ class GenerateTests(unittest.TestCase):
         self.assertNotIn(gv.spoken_text(clown[0], "eleven_v3"), [t for _, t in self.tts.calls])
         self.assertEqual((self.tmp / f"{clown[0].id}.mp3").read_bytes(), b"ID3made-in-the-app")
 
+    def test_a_rewritten_line_is_marked_stale_until_regenerated(self) -> None:
+        self.run_gen()
+        i = next(i for i, ln in enumerate(self.lines) if ln.speaker == "clown")
+        self.lines[i] = ln = dataclasses.replace(self.lines[i], line="[briskly] A brand new line.")
+        old = {k: v["hash"] for k, v in self.manifest().items() if v["hash"]}
+        gv.write_manifest(self.lines, self.cast, self.tmp, old)
+        m = self.manifest()
+        self.assertEqual([k for k, v in m.items() if v["stale"]], [ln.id])
+        self.assertEqual(m[ln.id]["file"], f"{ln.id}.mp3")  # the old take is still on disk
+        self.run_gen()
+        self.assertFalse(any(v["stale"] for v in self.manifest().values()))
+
     def test_a_bad_key_stops_the_run_instead_of_failing_every_line(self) -> None:
         self.tts.bad_key = True
         self.assertEqual(self.run_gen(workers=1), 1)
@@ -158,6 +224,49 @@ class GenerateTests(unittest.TestCase):
         self.assertEqual(self.run_gen(dry_run=True), 0)
         self.assertEqual(self.tts.calls, [])
         self.assertFalse((self.tmp / "manifest.json").exists())
+
+
+class PolishTests(unittest.TestCase):
+    def setUp(self) -> None:
+        if gv._ffmpeg() is None:
+            self.skipTest("no ffmpeg (pip install imageio-ffmpeg)")
+        import numpy as np
+        import subprocess
+
+        self.np, self.tmp = np, Path(tempfile.mkdtemp())
+        tone = lambda sec: (0.3 * np.sin(2 * np.pi * 220 * np.arange(int(gv.SR * sec)) / gv.SR)).astype(np.float32)  # noqa: E731
+        x = np.concatenate([tone(1.0), np.zeros(gv.SR * 2, np.float32), tone(1.0)])  # 1 s, a 2 s pause, 1 s
+        self.src = self.tmp / "take.mp3"
+        subprocess.run([gv._ffmpeg(), "-v", "error", "-f", "f32le", "-ar", str(gv.SR), "-ac", "1", "-i", "-",
+                        "-c:a", "libmp3lame", str(self.src)], input=x.tobytes(), check=True)
+
+    def seconds(self, path: Path) -> float:
+        import subprocess
+
+        raw = subprocess.run([gv._ffmpeg(), "-v", "error", "-i", str(path), "-ac", "1", "-ar", str(gv.SR), "-f", "f32le", "-"],
+                             capture_output=True, check=True).stdout
+        return len(raw) / 4 / gv.SR
+
+    def test_long_pauses_shrink_and_tempo_speeds_up(self) -> None:
+        before = self.seconds(self.src)
+        gv.polish(self.src, tempo=1.25, max_pause=0.4)
+        after = self.seconds(self.src)
+        self.assertAlmostEqual(before, 4.0, delta=0.15)
+        self.assertAlmostEqual(after, (2.0 + 0.4) / 1.25, delta=0.2)
+
+    def test_a_polished_take_is_not_polished_again(self) -> None:
+        line = gv.Line("C01_P2_CLOWN", "C01", "", "", "clown", "And not a drop tasted.", "")
+        cast = gv.load_cast()
+        sp = cast["speakers"]["clown"]
+        (self.tmp / "C01_P2_CLOWN.mp3").write_bytes(self.src.read_bytes())
+        h = gv.line_hash(line, sp, "eleven_v3", "mp3_44100_128")
+        args = argparse.Namespace(only=[], force=False, model="", out=self.tmp, sfx_out=self.tmp / "sfx", no_sfx=True)
+        raw = {line.id: {"hash": h, "post": ""}}
+        jobs, _, _ = gv.plan([line], [], cast, args, raw, {})
+        self.assertEqual([(j.call, j.post) for j in jobs], [(False, gv.voice_post(sp))])  # polish only, no credits
+        done = {line.id: {"hash": h, "post": gv.voice_post(sp)}}
+        jobs, cached, _ = gv.plan([line], [], cast, args, done, {})
+        self.assertEqual((jobs, cached), ([], 1))
 
 
 if __name__ == "__main__":
