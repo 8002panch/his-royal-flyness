@@ -285,6 +285,9 @@ func _process(delta: float) -> void:
 		say(_queue.pop_front())
 	if _buzz.playing:
 		_buzz.volume_db = BUZZ_DUCK_DB if busy() else 0.0
+	var music := get_node_or_null("/root/Music")
+	if music != null:
+		music.call("duck", busy())  # the music steps back while someone speaks
 
 
 func _on_event(ev: Dictionary) -> void:

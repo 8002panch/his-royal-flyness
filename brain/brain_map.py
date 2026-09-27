@@ -52,6 +52,9 @@ REGIONS: tuple[tuple[str, str, str], ...] = (
     ("escape", "ESCAPE", "the Giant Fiber, DNp01"),
     ("cord", "NERVE CORD", "ventral nerve cord intrinsic and ascending neurons"),
     ("muscles", "MUSCLES", "motor neurons"),
+    # the main screen's simpler view joins some of these: both eyes, and the whole body side (nerve cord + motor neurons)
+    ("eyes", "EYES", "both optic lobes"),
+    ("body", "WINGS & LEGS", "ventral nerve cord intrinsic, ascending and motor neurons"),
 )
 REGION_KEYS = tuple(r[0] for r in REGIONS)
 
@@ -76,6 +79,8 @@ def region_indices(neurons: pd.DataFrame) -> dict[str, np.ndarray]:
         "escape": t == "DNp01",
         "cord": sc.isin(["vnc_intrinsic", "ascending_neuron"]),
         "muscles": sc.isin(["vnc_motor", "cb_motor"]),
+        "eyes": visual,
+        "body": sc.isin(["vnc_intrinsic", "ascending_neuron", "vnc_motor"]),
     }
     return {k: np.flatnonzero(masks[k].to_numpy()) for k in REGION_KEYS}
 

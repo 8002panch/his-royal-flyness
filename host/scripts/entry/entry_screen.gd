@@ -48,6 +48,9 @@ func _ready() -> void:
 		if str(arg).begins_with("--shot=") or str(arg).begins_with("--live_shot=") or str(arg) in ["--demo", "--dashboard"]:
 			get_tree().change_scene_to_file.call_deferred(COURT)
 			return
+	var music := get_node_or_null("/root/Music")
+	if music != null:
+		music.call("play", "PROMENADE")  # the title's tune; it carries on into the lobby
 	queue_redraw()
 	_credits = "--credits" in args  # screenshots of the Credits card
 	for arg in args:

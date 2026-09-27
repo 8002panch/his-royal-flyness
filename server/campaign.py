@@ -72,7 +72,7 @@ MIRANDA_BY_CHALICE = (-0.25, -0.15, -0.5)
 QUIZZES = {  # docs/GAME.md, "The three drink questions" (NIAAA facts; general human health, not fly results)
     # focus: the brain-map regions (brain/brain_map.py) the question is about, highlighted on the main screen's map
     "Q01": {"text": "Alcohol can make balance and coordination...", "a": "Worse", "b": "More precise", "correct": "A",
-            "focus": ["balance", "commands", "muscles"]},
+            "focus": ["balance", "commands", "body"]},
     "Q02": {"text": "Can heavy drinking interfere with forming new memories?", "a": "No", "b": "Yes", "correct": "B",
             "focus": ["memory"]},
     "Q03": {"text": "Does coffee remove alcohol's effects on judgment and coordination?", "a": "Yes", "b": "No", "correct": "B",

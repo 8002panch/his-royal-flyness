@@ -178,7 +178,8 @@ or null, `seconds` may be null.
 - `brainMap` (Sun 27 Sept, Neil; `null` without the brain's data files): Hamlet's brain map for the top-right panel,
   `{"regions": {key: log2 of mean rate vs sober rest}, "drinks": 0-3, "kind", "neurons", "gabaPct", "excitePct"}`, plus
   `"quiz": {"status": "offer"|"drunk"|"avoided", "focus": [keys], "before", "after", "from", "to", "pct", "maxed"}` during
-  a drink question. Region keys: `eye_L eye_R smell memory balance instinct courtship taste commands escape cord muscles`.
+  a drink question. Region keys: `eye_L eye_R smell memory balance instinct courtship taste commands escape cord muscles
+  eyes body` (the panel draws `eyes`, `memory`, `balance`, `smell`, `commands` and `body`).
   It comes from `brain/brain_map.py`: a second `RateModel` stepped at 25 Hz on its own thread (`GameServer.map_forever`,
   `GameSession.step_map`), driven only by the fly's velocity (each axis direction drives the brain-v2 input group for that
   direction, 0.8 at full speed) and the campaign's wrong answers (`dizzy`) as drinks. Alcohol is `RateModel.pre_scale`, a

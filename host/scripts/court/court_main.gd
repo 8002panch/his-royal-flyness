@@ -94,6 +94,9 @@ func _on_state(msg: Dictionary) -> void:
 	world.show_tags = cs.phase != "lobby" and cs.phase != "chronicle"
 	if _voice != null and _voice.has_method("on_state"):
 		_voice.call("on_state", msg)  # flight buzz and the host-side lines (roles, the Changeling swap)
+	var music := get_node_or_null("/root/Music")
+	if music != null and not cs.sample:
+		music.call("play_for", cs.scene, cs.phase, cs.ending)  # the story's soundtrack (audio/music/manifest.json)
 	if cs.sample:
 		_play_sample_events(cs.frame)
 

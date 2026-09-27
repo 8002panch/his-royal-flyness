@@ -83,14 +83,14 @@ G_DODGE_HAMLET,GIANT,after a dodge,,hamlet,"[breathless, relieved] Missed me! Co
 G_DODGE_CLOWN,GIANT,after a dodge,,clown,"[delighted] Missed! The table takes another beating.",,GIANT_SWAT,
 G_DODGE_PROSPERO,GIANT,after a dodge,,prospero,"[grudging] Hm. Not entirely hopeless, I suppose.",,GIANT_SWAT,
 G_DODGE_TINMAN,GIANT,after a dodge,,tinman,"[flat, unimpressed] Luck. Remarkably consistent luck, for someone so clumsy.",,GIANT_SWAT,
-G_DODGE_CHEAPDATE,GIANT,after a dodge,,cheapdate,"[hiccup, sour] Congratulations. Even a broken clock is right twice a night.",,GIANT_SWAT,
-G_DODGE_RUTABAGA,GIANT,after a dodge,,rutabaga,"[confused, irritated] Which one is Prince Hamlet again? The one still flying? Fine. Good. Whatever that means.",,GIANT_SWAT,
+G_DODGE_CHEAPDATE,GIANT,after a dodge,,cheapdate,"[hiccup, sour] Congratulations. Even a broken clock is correct twice a night.",,GIANT_SWAT,
+G_DODGE_RUTABAGA,GIANT,after a dodge,,rutabaga,"[confused, irritated] Which one is Hamlet again? The one still flying? Fine. Good.",,GIANT_SWAT,
 G_HIT_MIRANDA_1,GIANT,after a hit,,miranda,"[gasping] Hamlet! Are you hurt?",,GIANT_SPLAT,"Plays after the attack resolves, never at warning onset; the game picks one line from the pool"
 G_HIT_MIRANDA_2,GIANT,after a hit,,miranda,"[worried] Hamlet? Say something, anything at all!",,GIANT_SPLAT,
 G_HIT_HAMLET,GIANT,after a hit,,hamlet,"[dazed] Still here. Mostly crown.",,GIANT_SPLAT,
 G_HIT_CLOWN,GIANT,after a hit,,clown,"[wincing] Ooh. That one goes in the chronicle.",,GIANT_SPLAT,
 G_HIT_PROSPERO,GIANT,after a hit,,prospero,"[scoffing] And this is precisely why I told you to stay outside.",,GIANT_SPLAT,
-G_HIT_TINMAN,GIANT,after a hit,,tinman,"[amused, cold] Splendid. Do that again, slower this time, so I may enjoy it properly.",,GIANT_SPLAT,
+G_HIT_TINMAN,GIANT,after a hit,,tinman,"[amused, cold] Splendid. Do that again, slower, so I may enjoy it.",,GIANT_SPLAT,
 G_HIT_CHEAPDATE,GIANT,after a hit,,cheapdate,"[hiccup, wincing] Ooh, I felt that one. Sympathetically. And a little smugly.",,GIANT_SPLAT,
 G_HALF_MIRANDA,GIANT,after dodge 5,,miranda,"[hopeful] Five, Hamlet! It is tiring!",,COURT_CHEER,Plays instead of an after-a-dodge line
 G_HALF_CLOWN,GIANT,after dodge 5,,clown,"[encouraging] Halfway there. You can see it reconsidering its life choices.",,COURT_CHEER,

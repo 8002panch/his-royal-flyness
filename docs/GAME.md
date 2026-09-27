@@ -119,15 +119,19 @@ certification claim is required. Display delivery/dodge/time counts computed by 
 ```
 
 - During hidden-navigation/hazard play, the shared screen reveals no actionable wall/spike layout, hand landing zone or throw path. No shadows or directional sounds can leak those secrets. Authored comic panels are separate from live sensing.
-- **Hamlet's brain map** (top right; built Sun 27 Sept, replacing the Seer panel): a labelled drawing of the fly's CNS
-  (eyes, smell, memory, balance, instinct, courting, taste, commands, escape, nerve cord, muscles). Each region is a group of
+- **Hamlet's brain map** (top right; built Sun 27 Sept, replacing the Seer panel; redrawn at 07:40 for first-time
+  players): a labelled drawing of the fly's CNS with six plain-English regions (eyes, memory, balance, smell, flight
+  orders = the descending neurons, wings & legs = the nerve cord and motor neurons), a line saying in words what his brain
+  is doing ("EYES TRACKING MOTION", "MEMORY FOGGED"), a warm glow on busy regions, dozing "z z" on sluggish ones,
+  signals running from the eyes to the body while he flies, a DOZY-to-BUSY key and a row of goblets for cordials drunk.
+  The server computes twelve finer regions too (instinct, courting, taste, escape...). Each region is a group of
   real neurons picked by MaleCNS annotation; its colour is log2 of its mean rate against sober rest (dark = quieter, gold then
   crimson = busier). It runs a second copy of the whole-CNS model (`brain/brain_map.py`) driven only by Hamlet's movement
   (each direction stimulates the brain-v2 visual group for that direction), so it never carries the Seer's secret. Each
   wrong quiz answer (a grape cordial) adds one step of the disclosed alcohol assumption: GABA neurons' output +20%, excitatory
   neurons' output -8%, per cordial. During the three drink questions the panel grows down the right side, pulses the regions
   the question is about, flips the map between before and after one cordial, and shows the model's computed change per
-  region (for one cordial from sober in forward flight: balance -10%, commands -27%, muscles -30%, memory -32%). These are
+  region (for one cordial from sober in forward flight: balance -10%, flight orders -27%, wings & legs -30%, memory -32%). These are
   model outputs under our assumption, not measured fly or human results. The Seer's brain is never given alcohol.
 - *(Older, replaced by the brain map:)* The **Royal Nervous System HUD** draws one bar per brain-activity value (`vision`, `looming`, `escape`, as z-scores). With the
   Changeling the bars stay low (its looming readout never reaches the warning level), which is the demo's clearest picture of
@@ -155,7 +159,11 @@ certification claim is required. Display delivery/dodge/time counts computed by 
   one-liners. Captions on every line.
 - Sound effects: fanfare, seal stamp, the Giant's whoosh (and a softer fake whoosh), SPLAT, crowd gasp and cheer, wing buzz,
   hearts chime, candle out, wedding bells.
-- Music: a court-dance loop (lobby, Garden), a livelier banquet loop, a tense Giant's Shadow loop, a short wedding theme.
+- Music (built Sun 27 Sept; `audio/music/`, played by `host/scripts/music_player.gd`, the `Music` autoload): each track
+  loops, crossfades on a scene change and ducks under voice lines. Title, lobby and cast: *Majesty's Playful Promenade*;
+  garden tutorial: *The Sovereign's Playful Hedge*; story comics (C01-C04): *Chamber Wobble*; drink questions: *The Tilted
+  Goblet*; Stage 1 basement: *Depths of the Keep*; Stage 2: *Siege at the Keep*; the Giant: *Storm over the Keep*;
+  Prospero: *Scourge of the Volcanic Keep*; the wedding ending: *A Royal Union*; Miranda's own path: the Promenade again.
 - Stretch: the Jester reads a short roast written from the round's real numbers. It never blocks the game; a pre-recorded line
   plays if it isn't ready in about 4 seconds.
 - Browsers only allow sound after the first tap, so the join button doubles as the audio-unlock tap.

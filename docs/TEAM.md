@@ -40,6 +40,11 @@ True Prince vs Changeling evaluation (GAME.md, TECH.md); Chronicler and replay; 
 
 ### Phase log
 
+- **Sun 27 Sept, ~07:45 (Neil, with Claude):** the team's nine music tracks in `audio/music/` with a scene manifest and a
+  `Music` autoload (`host/scripts/music_player.gd`, `host/test/music_smoke.gd`); the brain map redrawn for first-time players;
+  the voice tests fixed (`giant_win_twist` added to `gen_voices.BRANCHES` for Anshul's script-only TWIST/E03 ending; three
+  fight shouts trimmed: one said "right", two ran over 12 words). Note for Anshul: the rewritten dialogue in `lines.csv` hasn't
+  been regenerated, so `audio/voice/` still speaks the older takes under the new captions until `gen_voices.py` runs.
 - **Sun 27 Sept, ~07:30 (Neil, with Claude):** Hamlet's live brain map replaces the Seer panel top right (`brain/brain_map.py`,
   `host/scripts/court/hud/brain_map_panel.gd`; `brainMap` in TECH.md), with the disclosed alcohol assumption and a
   before/after comparison during the three drink questions (the comic moves left to make room). A *Dramatis Personae* cast

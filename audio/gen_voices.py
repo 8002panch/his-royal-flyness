@@ -62,7 +62,8 @@ SFX_MODEL = "eleven_text_to_sound_v2"
 TAG = re.compile(r"\[[^\[\]]*\]")
 ID_OK = re.compile(r"^[A-Z0-9_]+$")  # ids double as file names and Godot resource paths
 VOICE_ID = re.compile(r"(?<![A-Za-z0-9])[A-Za-z0-9]{20}(?![A-Za-z0-9])")  # ElevenLabs voice IDs are 20 characters
-BRANCHES = {"", "correct", "wrong", "giant_win", "giant_loss", "father_win", "father_loss"}
+# giant_win_twist: Anshul's script-only joke ending (TWIST, E03), written Sun 06:47; the campaign doesn't route to it yet
+BRANCHES = {"", "correct", "wrong", "giant_win", "giant_loss", "father_win", "father_loss", "giant_win_twist"}
 V3_STABILITY = {0.0, 0.5, 1.0}
 RETRY_STATUS = {429, 500, 502, 503, 504}
 RETRIES = 4
