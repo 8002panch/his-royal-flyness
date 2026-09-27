@@ -69,14 +69,6 @@
       "prompt": "Use case: stylized-concept. Reference image is style only: match its cute squat proportions, large head, short body, chunky pixel clusters, moderate detail and simple handheld RPG character aesthetic. Create a NEW original full-body fruit-fly character, three-quarter front idle view, centered on transparent canvas with feet and antennae visible, generous padding. Keep broad flat shade regions, dark brown ink outline, roughly 48x64 native-pixel complexity, restrained 3-tone shading. Use parchment #F3E9D2, ink #2B2118, royal blue #1F3A8A, crimson #9B1C1C, gold #C9A227 plus stated accent. No lettering, scene, shadow, panel, glow, ornate microdetail, smooth shading or franchise characters. Character: The Royal Seer, one of Hamlet's four player council members. Small thoughtful fruit-fly mystic with muted purple hood, short royal-blue robe, one simple gold eye emblem on chest, cream wings, red fly eyes, holding a small blue crystal orb in a gold holder. Kind curious expression, compact body and large head. Orb is flat blue with a single pixel highlight, absolutely no glow. No crown, feather hat or goblet. Hood and orb distinguish this role."
     },
     {
-      "name": "Giant",
-      "file": "hazards/giant_hand.png",
-      "notes": "Clenched giant fist representation of the established obstacle; revised 2026-09-26",
-      "width": 1254,
-      "height": 1254,
-      "prompt": "Use case: precise-object-edit. Replace only the open gray hand with a tightly clenched giant fist, posed as if about to slam downward. Preserve the royal-blue sleeve, gold cuff, transparent background, scale, diagonal orientation, and detailed original handheld monster-RPG-inspired pixel-art treatment."
-    },
-    {
       "name": "Lord Tinman",
       "file": "npcs/lord_tinman.png",
       "notes": "Revised: compact armor and broken-heart tabard",

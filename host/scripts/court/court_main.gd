@@ -70,7 +70,7 @@ func _ready() -> void:
 func _on_state(msg: Dictionary) -> void:
 	var cs := CourtState.read(msg)
 	world.apply_state(cs)
-	hud.apply_state(cs, world.giant_in_view)
+	hud.apply_state(cs)
 	world.show_tags = cs.phase != "lobby" and cs.phase != "chronicle"
 	if cs.sample:
 		_play_sample_events(cs.frame)

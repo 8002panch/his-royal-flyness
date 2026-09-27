@@ -8,7 +8,6 @@ extends RefCounted
 ##   phase, time
 ##   fly {x, y, z, vx, vy, vz}            body in the -1..1 cube
 ##   render.princess {bearing_deg, elevation_deg, distance_cm} | null
-##   render.giant {bearing_deg, elevation_deg, distance_cm, approach_cm_s, size_cm} | null
 ##   roles {helmsman, liftmaster, wingmaster, seer}   true while that role's input is non-zero
 ##                                                    (for the Seer: while scanning)
 ## Provisional (no owner has defined these yet; each one reads as absent until sent):
@@ -19,8 +18,8 @@ extends RefCounted
 ##   offline_sample (GameState tags every fallback frame with it) or sample: fixture data,
 ##   stamped OFFLINE SAMPLE on screen; frame (fixture frame index)
 ##
-## Privacy: Seer cues (Princess bearing, Giant direction/ETA) are never read
-## here for display. render.* is world geometry for drawing the hall, and only
+## Privacy: Seer cues are never read here for display. render.* is world
+## geometry for drawing the hall, and only
 ## `seer_scanning` reaches the shared HUD.
 
 var raw: Dictionary = {}
@@ -29,13 +28,13 @@ var time := 0.0
 var frame := -1
 var sample := false
 var demo := false
+var environment := ""
 
 var fly := Vector3.ZERO
 var fly_vel := Vector3.ZERO
 var has_fly := false
 
 var princess: Dictionary = {}   # render.princess, or empty when not in the scene
-var giant: Dictionary = {}      # render.giant, or empty when there is none
 
 var roles_active := {"helmsman": false, "liftmaster": false, "wingmaster": false, "seer": false}
 var controls := Vector3.ZERO
@@ -60,6 +59,7 @@ static func read(msg: Dictionary) -> CourtState:
 	s.frame = int(_f(msg.get("frame", -1)))
 	s.demo = bool(msg.get("demo", false))
 	s.sample = bool(msg.get("offline_sample", false)) or bool(msg.get("sample", false))
+	s.environment = str(msg.get("environment", ""))
 
 	var fly_msg: Variant = msg.get("fly", null)
 	if fly_msg is Dictionary:
@@ -71,8 +71,6 @@ static func read(msg: Dictionary) -> CourtState:
 	if render is Dictionary:
 		if render.get("princess") is Dictionary:
 			s.princess = render["princess"]
-		if render.get("giant") is Dictionary:
-			s.giant = render["giant"]
 
 	var roles: Variant = msg.get("roles", null)
 	if roles is Dictionary:

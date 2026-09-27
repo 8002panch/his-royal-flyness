@@ -13,8 +13,8 @@ extends RefCounted
 ## are expanded too. The spare central stretch is deliberately reserved for
 ## future obstacles.
 ##
-## render.princess / render.giant arrive relative to the fly as bearing,
-## elevation and distance in cm. server/seer_adapter.py's placeholder world
+## render.princess arrives relative to the fly as bearing, elevation and
+## distance in cm. server/seer_adapter.py's placeholder world
 ## uses 220 cm per body unit; UNIT_CM mirrors that and is the only coupling.
 
 const W := 640

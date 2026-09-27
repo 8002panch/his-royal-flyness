@@ -52,12 +52,12 @@ func set_phase(phase: String) -> void:
 	chronicle.visible = phase == "chronicle"
 
 
-func apply_state(cs: CourtState, hazard_in_view: bool) -> void:
+func apply_state(cs: CourtState) -> void:
 	set_phase(cs.phase)
 	ribbon.apply(cs)
-	objective.set_hazard(hazard_in_view)
+	objective.set_environment(cs.environment)
 	objective.set_demo(cs.demo)
-	seer.apply(cs, hazard_in_view)
+	seer.apply(cs)
 	for c in cards:
 		(c as RoleCard).apply(cs)
 	if lobby.visible:

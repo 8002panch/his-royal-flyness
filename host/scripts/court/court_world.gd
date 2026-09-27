@@ -9,8 +9,8 @@ extends Node2D
 ##   Feast          tables and dishes + candle flames
 ## The four hall layers repaint every frame through HallCam, which chases
 ## Hamlet: the hall moves around him (F4 switches to the fixed view).
-##   Shadows        dithered floor shadows and the Giant's target ring
-##   Actors         Hamlet, Miranda, Sir Cheapdate, Sir Indy, the Giant's hand
+##   Shadows        dithered floor shadows
+##   Actors         Hamlet, Miranda, Sir Cheapdate and Sir Indy
 ##   FX             dust, hearts, sparkles, the ink SPLAT
 ##   Labels         name tags
 ## It only draws the latest `state`. It never decides an outcome.
@@ -27,13 +27,11 @@ const IDLE_FLY := Vector3(0.0, -0.1, -1.0)
 @onready var actors: Node2D = $Actors
 @onready var hamlet: HamletActor = $Actors/Hamlet
 @onready var miranda: MirandaActor = $Actors/Miranda
-@onready var giant: GiantHand = $Actors/Giant
 @onready var fx: FxLayer = $FX
 @onready var labels: NameTags = $Labels
 
 var rivals: Array = []
 var state := CourtState.new()
-var giant_in_view := false
 var show_tags := true
 var hamlet_screen := Vector2.ZERO
 
@@ -45,10 +43,6 @@ var _fly_shown := IDLE_FLY
 var _princess := HallCam.from_server(DEFAULT_PRINCESS)
 var _princess_seen := false
 var _princess_visible := true
-var _giant_cue: Dictionary = {}
-var _giant_target := Vector3.ZERO
-var _giant_tracking := false
-var _giant_p := 0.0
 var _shake_left := 0.0
 var _shake_px := 0
 var _was_low := false
@@ -77,7 +71,6 @@ func apply_state(cs: CourtState) -> void:
 		# render.princess is null: she is not in this scene. Outside play
 		# (lobby, chronicle) she stays on her dais as part of the backdrop.
 		_princess_visible = cs.phase != "play" or not cs.has_fly
-	_giant_cue = cs.giant
 
 
 func set_cosmetic(relic: String, on: bool) -> void:
@@ -93,17 +86,12 @@ func shake(duration: float, px: int) -> void:
 func on_event(ev: Dictionary) -> void:
 	var kind := str(ev.get("kind", ""))
 	var id := str(ev.get("id", ""))
-	if kind == "splat" or id == "H_SPLAT":
-		fx.splat(hamlet_screen)
-		shake(0.35, 3)
-	elif kind in ["jump", "escape"] or id == "H_JUMP":
+	if kind in ["jump", "escape"] or id == "H_JUMP":
 		fx.puff(hamlet_screen + Vector2(0, 10), 8)
 		shake(0.15, 1)
 	elif kind in ["win", "charmed", "hearts"] or id in ["H_WIN", "P_CHARMED", "H_WEDDING", "P_WEDDING"]:
 		fx.hearts((hamlet_screen + miranda.position) / 2.0, 6)
 		fx.hearts(miranda.position + Vector2(0, -10), 4)
-	elif kind == "giant" or id == "H_WARN_GIANT":
-		shake(0.2, 1)
 
 
 func _process(delta: float) -> void:
@@ -154,7 +142,6 @@ func _process(delta: float) -> void:
 		r.tick(delta)
 		shadow_items.append({"pos": Vector2i(roundi(r.position.x), roundi(r.position.y)), "rx": 6, "ry": 1})
 
-	_update_giant(shadow_items)
 	shadows.set_items(shadow_items)
 	_sort_actors(hp.z)
 
@@ -186,35 +173,6 @@ func _process(delta: float) -> void:
 		position = Vector2.ZERO
 
 
-func _update_giant(shadow_items: Array) -> void:
-	if _giant_cue.is_empty():
-		_giant_p = 0.0
-		_giant_tracking = false
-		giant.hide_hazard()
-		giant_in_view = false
-		return
-	var off := HallCam.offset_from_cue(_giant_cue)
-	var est := HallCam.from_server(_fly_target) + Vector3(off.x, 0.0, off.z)
-	est.x = clampf(est.x, -HallCam.WALL_X + 0.4, HallCam.WALL_X - 0.4)
-	est.z = clampf(est.z, HallCam.COURSE_START_Z + 0.35, HallCam.BACK_Z - 0.35)
-	# a world object should stay put: latch the first estimate, then drift slowly
-	_giant_target = est if not _giant_tracking else _giant_target.lerp(est, 0.08)
-	_giant_tracking = true
-	var dist := float(_giant_cue.get("distance_cm", 300.0))
-	var p := clampf(1.0 - (dist - 15.0) / 285.0, 0.0, 1.0)
-	var ground := _ground_y(_giant_target.x, _giant_target.z)
-	var target := Vector3(_giant_target.x, ground, _giant_target.z)
-	var sp := HallCam.project(target)
-	if p > 0.92 and _giant_p <= 0.92:
-		shake(0.3, 3)
-		fx.puff(Vector2(sp.x, sp.y), 10)
-	_giant_p = p
-	giant.show_hazard(target, p)
-	var rx := maxi(4, roundi((0.25 + 0.55 * p) * sp.z * 0.55))
-	shadow_items.append({"pos": Vector2i(roundi(sp.x), roundi(sp.y)), "rx": rx, "ry": maxi(2, roundi(rx * 0.3)), "ring": p > 0.3})
-	giant_in_view = p > 0.2 and sp.x > -rx and sp.x < HallCam.W + rx
-
-
 func _ground_y(x: float, z: float) -> float:
 	if absf(x) <= HallBuilder.DAIS_X:
 		if z >= HallBuilder.DAIS_STEP:
@@ -225,7 +183,7 @@ func _ground_y(x: float, z: float) -> float:
 
 
 func _sort_actors(hamlet_z: float) -> void:
-	var order: Array = [[hamlet_z, hamlet], [_princess.z, miranda], [_giant_target.z if giant.showing else -99.0, giant]]
+	var order: Array = [[hamlet_z, hamlet], [_princess.z, miranda]]
 	for r in rivals:
 		order.append([r.depth(), r])
 	order.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0])

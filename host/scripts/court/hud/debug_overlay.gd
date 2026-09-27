@@ -30,7 +30,6 @@ func apply(cs: CourtState) -> void:
 		"PHASE %s  T %.2f  FRAME %d  SAMPLE %s" % [cs.phase, cs.time, cs.frame, cs.sample],
 		"FLY %.2f %.2f %.2f  V %.2f %.2f %.2f" % [cs.fly.x, cs.fly.y, cs.fly.z, cs.fly_vel.x, cs.fly_vel.y, cs.fly_vel.z],
 		"PRINCESS %s" % [JSON.stringify(cs.princess)],
-		"GIANT %s" % [JSON.stringify(cs.giant)],
 		"ROLES %s" % [JSON.stringify(cs.roles_active)],
 	]
 	if visible:

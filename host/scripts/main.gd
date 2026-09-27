@@ -27,7 +27,6 @@ extends Control
 @onready var hall_area: Control = $TrialView/HallBackdrop/HallArea
 @onready var prince: ColorRect = $TrialView/HallBackdrop/HallArea/Prince
 @onready var princess: ColorRect = $TrialView/HallBackdrop/HallArea/Princess
-@onready var giant: ColorRect = $TrialView/HallBackdrop/HallArea/Giant
 
 @onready var helmsman_bar: ProgressBar = $TrialView/LeftPanel/HelmsmanCard/HelmsmanBox/HelmsmanBar
 @onready var liftmaster_bar: ProgressBar = $TrialView/LeftPanel/LiftmasterCard/LiftmasterBox/LiftmasterBar
@@ -35,8 +34,6 @@ extends Control
 
 @onready var compass_label: Label = $TrialView/RightPanel/CompassCard/CompassBox/CompassLabel
 @onready var compass_needle: ColorRect = $TrialView/RightPanel/CompassCard/CompassBox/CompassArrow/Needle
-@onready var hazard_value: Label = $TrialView/RightPanel/HazardCard/HazardBox/HazardValue
-@onready var hazard_bar: ProgressBar = $TrialView/RightPanel/HazardCard/HazardBox/HazardBar
 @onready var activity_rows: VBoxContainer = $TrialView/RightPanel/NervousCard/NervousBox/ActivityRows
 
 @onready var nervous_title: Label = $TrialView/RightPanel/NervousCard/NervousBox/NervousTitle
@@ -70,7 +67,6 @@ func _on_state_updated(state: Dictionary) -> void:
 	_show_trial()
 	_update_actor(prince, state.get("prince", {}))
 	_update_actor(princess, state.get("princess", {}))
-	_update_giant(state.get("giant", {}))
 	_update_controls(state.get("controls", {}))
 	var cues: Dictionary = state.get("cues", {})
 	_update_seer(cues)
@@ -100,15 +96,6 @@ func _update_actor(node: Control, actor: Dictionary) -> void:
 	node.rotation_degrees = actor.get("h", 0.0)
 
 
-func _update_giant(g: Dictionary) -> void:
-	giant.visible = g.get("active", false)
-	if not giant.visible:
-		return
-	giant.position = _to_screen(g.get("x", 0.0), g.get("y", 0.0))
-	var size: float = g.get("size", 0.2)
-	giant.scale = Vector2.ONE * lerpf(0.5, 2.5, clampf(size, 0.0, 1.0))
-
-
 func _to_screen(x_cm: float, y_cm: float) -> Vector2:
 	# Arena scale TBD by Arnav; 600x400 cm is a placeholder matching the
 	# original hall's proportions.
@@ -136,20 +123,6 @@ func _update_seer(cues: Dictionary) -> void:
 		compass_needle.rotation_degrees = bearing
 		compass_needle.pivot_offset = compass_needle.size * 0.5
 		compass_label.text = "Princess: %s, %s (%.0f%%)" % [p.get("side", "?"), p.get("distance", "?"), float(p.get("confidence", 0.0)) * 100.0]
-
-	var giant_cue: Dictionary = cues.get("giant", {})
-	var warning: float = giant_cue.get("warning", 0.0)
-	hazard_bar.value = warning
-	if warning <= 0.01:
-		hazard_value.text = "clear"
-	else:
-		var side: Variant = giant_cue.get("side", null)
-		var eta: Variant = giant_cue.get("eta_s", null)
-		if eta != null:
-			hazard_value.text = "%s, %.1fs" % [str(side).to_upper(), float(eta)]
-		else:
-			hazard_value.text = str(side).to_upper() if side != null else "INCOMING"
-
 
 func _update_brain_activity(activity: Dictionary, offline_sample: bool) -> void:
 	nervous_title.text = "FLY NERVOUS SYSTEM"

@@ -9,7 +9,7 @@ extends Node
 ##     See relay/PROTOCOL.md.
 ##   - The Seer's cues come from the real MaleCNS brain (brain/seer.py) and
 ##     are shared with Anshul's HUD in the exact shape team/README.md#proposed-formats
-##     gives (`cues`): princess side/bearing/confidence/distance, giant
+##     gives (`cues`): Princess side/bearing/confidence/distance
 ##     warning/side/eta_s. The HUD's nervous-system bars come from the state's
 ##     top-level `brainActivity` dict ({key: z-score}), drawn generically, one
 ##     bar per key (see main.gd). `cues.activity` is accepted as a fallback.

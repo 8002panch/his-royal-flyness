@@ -28,6 +28,14 @@ const DAIS_STEP := 21.5
 const DAIS_Y1 := -1.18
 const DAIS_Y2 := -1.06
 const CARPET_HALF := 0.45
+## Part 2 wall gates, in server coordinates: [z, gap x0, x1, gap y0, y1].
+## Keep these values synchronized with server/main.py COURSE_WALLS.
+const COURSE_WALLS := [
+	[-0.50, -1.00, 0.25, -0.80, 0.80],
+	[-0.10, -0.25, 1.00, -0.80, 0.80],
+	[0.35, -0.75, 0.75, -1.00, 0.15],
+	[0.75, -0.75, 0.75, -0.15, 1.00],
+]
 
 
 ## First grid line at or before ZN, so patterns are fixed to the hall.
@@ -376,6 +384,55 @@ static func paint_columns(c) -> void:
 		for k in range(COLUMNS_Z.size() - 1, -1, -1):
 			if COLUMNS_Z[k] - COLUMN_R > ZN + 0.2:
 				_column(c, x, COLUMNS_Z[k], side < 0.0)
+
+
+## Four solid course walls: alternating side openings, then low/high openings.
+## They are drawn far-to-near so their overlap matches the chase camera.
+static func paint_course_walls(c) -> void:
+	for i in range(COURSE_WALLS.size() - 1, -1, -1):
+		var spec: Array = COURSE_WALLS[i]
+		var z := HallCam.from_server(Vector3(0.0, 0.0, float(spec[0]))).z
+		if z <= ZN + 0.08:
+			continue
+		var gx0 := float(spec[1]) * HallCam.SX
+		var gx1 := float(spec[2]) * HallCam.SX
+		var gy0 := float(spec[3])
+		var gy1 := float(spec[4])
+		_course_wall(c, z, gx0, gx1, gy0, gy1, i)
+
+
+static func _course_wall(c, z: float, gx0: float, gx1: float, gy0: float, gy1: float, index: int) -> void:
+	var x0 := -HallCam.COLUMN_X + 0.12
+	var x1 := HallCam.COLUMN_X - 0.12
+	var y0 := HallCam.FLOOR_Y
+	var y1 := HallCam.TOP_Y - 0.22
+	var pieces: Array = [
+		[x0, gx0, y0, y1], [gx1, x1, y0, y1],
+		[gx0, gx1, y0, gy0], [gx0, gx1, gy1, y1],
+	]
+	for piece in pieces:
+		var px0 := float(piece[0])
+		var px1 := float(piece[1])
+		var py0 := float(piece[2])
+		var py1 := float(piece[3])
+		if px1 <= px0 or py1 <= py0:
+			continue
+		var face := _quad_z(c, z, px0, px1, py0, py1, Pal.STONE)
+		c.poly_outline(face, Pal.INK)
+		# Sparse masonry joints keep the opening readable at speed.
+		var yy := py0 + 0.28
+		while yy < py1:
+			c.linev(_p(px0, yy, z), _p(px1, yy, z), Pal.STONE_DARK)
+			yy += 0.28
+	# Gold and ink trim makes the safe opening unmistakable without an arrow.
+	var opening := PackedVector2Array([
+		_p(gx0, gy0, z), _p(gx1, gy0, z), _p(gx1, gy1, z), _p(gx0, gy1, z)])
+	c.poly_outline(opening, Pal.INK)
+	var inset := 0.025
+	var trim := PackedVector2Array([
+		_p(gx0 - inset, gy0 - inset, z), _p(gx1 + inset, gy0 - inset, z),
+		_p(gx1 + inset, gy1 + inset, z), _p(gx0 - inset, gy1 + inset, z)])
+	c.poly_outline(trim, Pal.GOLD if index % 2 == 0 else Pal.GOLD_DARK)
 
 
 static func _side_banner(c, x: float, zc: float, field: Color) -> void:

@@ -58,12 +58,6 @@ size = Vector2(24, 24)
 pivot_offset = Vector2(12, 12)
 color = Color(0.847059, 0.788235, 0.929412, 1)
 
-[node name="Giant" type="ColorRect" parent="TrialView/HallBackdrop/HallArea"]
-visible = false
-size = Vector2(80, 80)
-pivot_offset = Vector2(40, 40)
-color = Color(0.168627, 0.129412, 0.090196, 0.85)
-
 [node name="TopBar" type="HBoxContainer" parent="TrialView"]
 layout_mode = 1
 anchor_right = 1.0
@@ -210,29 +204,6 @@ layout_mode = 2
 [node name="Needle" type="ColorRect" parent="TrialView/RightPanel/CompassCard/CompassBox/CompassArrow"]
 size = Vector2(6, 60)
 color = Color(0.788235, 0.635294, 0.152941, 1)
-
-[node name="HazardCard" type="PanelContainer" parent="TrialView/RightPanel"]
-layout_mode = 2
-
-[node name="HazardBox" type="VBoxContainer" parent="TrialView/RightPanel/HazardCard"]
-layout_mode = 2
-
-[node name="HazardTitle" type="Label" parent="TrialView/RightPanel/HazardCard/HazardBox"]
-layout_mode = 2
-text = "GIANT"
-horizontal_alignment = 1
-
-[node name="HazardValue" type="Label" parent="TrialView/RightPanel/HazardCard/HazardBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "clear"
-horizontal_alignment = 1
-
-[node name="HazardBar" type="ProgressBar" parent="TrialView/RightPanel/HazardCard/HazardBox"]
-layout_mode = 2
-min_value = 0.0
-max_value = 1.0
-show_percentage = false
 
 [node name="NervousCard" type="PanelContainer" parent="TrialView/RightPanel"]
 layout_mode = 2

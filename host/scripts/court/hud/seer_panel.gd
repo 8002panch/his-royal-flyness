@@ -2,10 +2,9 @@ class_name SeerPanel
 extends Control
 
 ## The Royal Seer's panel. Seer cues are private (docs/WEBAPP_ARCHITECTURE.md:
-## only the Seer's phone gets Princess bearing and Giant direction/countdown),
+## only the Seer's phone gets Princess bearing),
 ## so this shared screen shows only:
 ##   - scanning / resting (the compass sweeps while scanning; it never points at anything)
-##   - a Giant lamp that lights only when the hand is already visible in the hall
 ##   - four brain-activity rows (vision, flight, reaction, song), magnitude only,
 ##     so no bar can give away a side. Empty until a server sends `activity`.
 
@@ -13,7 +12,6 @@ const GROUPS := [["vision", "VISION"], ["flight", "FLIGHT"], ["reaction", "REACT
 const PANEL := Vector2i(104, 122)
 
 var scanning := false
-var hazard := false
 var levels := {}
 var has_activity := false
 var _t := 0.0
@@ -24,9 +22,8 @@ func _ready() -> void:
 	size = Vector2(PANEL)
 
 
-func apply(cs: CourtState, hazard_in_view: bool) -> void:
+func apply(cs: CourtState) -> void:
 	scanning = cs.seer_scanning
-	hazard = hazard_in_view
 	has_activity = cs.has_activity()
 	for g in GROUPS:
 		levels[g[0]] = cs.activity_level(g[0])
@@ -35,7 +32,7 @@ func apply(cs: CourtState, hazard_in_view: bool) -> void:
 
 func _process(delta: float) -> void:
 	_t += delta
-	if scanning or hazard:
+	if scanning:
 		queue_redraw()
 
 
@@ -57,18 +54,10 @@ func _draw() -> void:
 
 	draw_rect(Rect2(4, 45, w - 8, 1), Pal.PARCHMENT_SHADE)
 
-	# Giant lamp: what the whole hall can already see, nothing more
-	var lamp_on := hazard and int(_t * 5.0) % 2 == 0
-	draw_rect(Rect2(6, 50, 9, 9), Pal.INK)
-	draw_rect(Rect2(7, 51, 7, 7), Pal.CRIMSON_LIGHT if lamp_on else (Pal.CRIMSON if hazard else Pal.PARCHMENT_SHADE))
-	draw_rect(Rect2(8, 52, 2, 1), Pal.PARCHMENT if hazard else Pal.PARCHMENT_DARK)
-	HudDraw.text(self, bold, 19, 51, "GIANT", Pal.INK, PixelFonts.LABEL_SIZE)
-	HudDraw.text_right(self, bold, w - 6, 51, "IN HALL" if hazard else "CLEAR", Pal.CRIMSON if hazard else Pal.INK_SOFT, PixelFonts.LABEL_SIZE)
+	draw_rect(Rect2(4, 49, w - 8, 1), Pal.PARCHMENT_SHADE)
+	HudDraw.text(self, label, 6, 54, "FLY BRAIN", Pal.INK_SOFT, PixelFonts.LABEL_SIZE)
 
-	draw_rect(Rect2(4, 63, w - 8, 1), Pal.PARCHMENT_SHADE)
-	HudDraw.text(self, label, 6, 67, "FLY BRAIN", Pal.INK_SOFT, PixelFonts.LABEL_SIZE)
-
-	var y := 79
+	var y := 67
 	for g in GROUPS:
 		var key: String = g[0]
 		var lvl: float = levels.get(key, -1.0)

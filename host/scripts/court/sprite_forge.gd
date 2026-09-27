@@ -426,69 +426,6 @@ static func _fly_front(hh: int, style: Dictionary) -> PixelCanvas:
 	return out
 
 
-# ------------------------------------------------------- the Giant's hand --
-# Hanging down out of the sky, palm to the camera. `s` = palm width in px.
-
-static func giant_hand(s: int) -> ImageTexture:
-	return _cached("hand_%d" % s, func() -> PixelCanvas: return _giant_hand(s))
-
-
-static func hand_size(s: int) -> Vector2i:
-	return Vector2i(int(round(s * 1.4)) + 4, int(round(s * 1.95)) + 4)
-
-
-static func _giant_hand(s: int) -> PixelCanvas:
-	var sz := hand_size(s)
-	var c := PixelCanvas.new(sz.x, sz.y)
-	var ox := 2.0 + 0.2 * s
-	var sf := float(s)
-	# sleeve and lace cuff
-	c.rect(int(ox - 0.08 * sf), 0, int(1.16 * sf), int(0.30 * sf), Pal.ROYAL_DARK)
-	for k in 3:
-		c.vline(int(ox + (0.2 + 0.3 * k) * sf), 0, int(0.28 * sf), Pal.ROYAL)
-	c.rect(int(ox - 0.10 * sf), int(0.28 * sf), int(1.2 * sf), int(0.11 * sf), Pal.PARCHMENT)
-	for x in range(int(ox - 0.10 * sf), int(ox + 1.1 * sf), 3):
-		c.px(x, int(0.39 * sf) - 1, Pal.PARCHMENT_DARK)
-	# palm
-	var palm := PixelCanvas.new(sz.x, sz.y)
-	palm.rect(int(ox), int(0.38 * sf), int(sf), int(0.64 * sf), Pal.FLESH)
-	# thumb, angled down and out to the left
-	var t0 := Vector2(ox + 0.12 * sf, 0.62 * sf)
-	var t1 := Vector2(ox - 0.14 * sf, 1.06 * sf)
-	palm.poly(PixelCanvas.ellipse_points((t0.x + t1.x) / 2.0, (t0.y + t1.y) / 2.0, t0.distance_to(t1) / 2.0 + 0.04 * sf, 0.11 * sf, (t1 - t0).angle(), 20), Pal.FLESH)
-	# four fingers
-	var lengths := [0.66, 0.74, 0.68, 0.52]
-	var fw := 0.22 * sf
-	for i in 4:
-		var fx0 := ox + (0.02 + i * 0.25) * sf
-		var flen: float = lengths[i] * sf
-		var top := 0.9 * sf
-		palm.rect(int(fx0), int(top), int(fw), int(flen - fw * 0.5), Pal.FLESH)
-		palm.ellipse(fx0 + fw / 2.0, top + flen - fw * 0.5, fw / 2.0, fw / 2.0, Pal.FLESH)
-	# shading, creases, pads
-	for i in 4:
-		var fx0 := ox + (0.02 + i * 0.25) * sf
-		var flen: float = lengths[i] * sf
-		var top := 0.9 * sf
-		for y in range(int(top), int(top + flen)):
-			for k in maxi(1, int(0.05 * sf)):
-				var x := int(fx0 + fw) - 1 - k
-				if palm.opaque(x, y):
-					palm.px(x, y, Pal.FLESH_DARK)
-		for f in [0.38, 0.68]:
-			var cy := int(top + flen * f)
-			palm.hline(int(fx0) + 1, int(fx0 + fw) - 2, cy, Pal.FLESH_DARK)
-		palm.rect(int(fx0 + fw * 0.3), int(top + flen - fw * 0.55), maxi(1, int(fw * 0.3)), maxi(1, int(fw * 0.25)), Pal.FLESH_LIGHT)
-	palm.linev(Vector2(ox + 0.2 * sf, 0.55 * sf), Vector2(ox + 0.75 * sf, 0.72 * sf), Pal.FLESH_DARK)
-	palm.linev(Vector2(ox + 0.3 * sf, 0.85 * sf), Vector2(ox + 0.85 * sf, 0.62 * sf), Pal.FLESH_DARK)
-	palm.rect(int(ox + 0.93 * sf), int(0.4 * sf), maxi(1, int(0.06 * sf)), int(0.5 * sf), Pal.FLESH_DARK)
-	c.blit(palm, 0, 0)
-	c.outline(Pal.INK)
-	if s >= 56:
-		c.outline(Pal.INK)
-	return c
-
-
 # ---------------------------------------------------------------- banners --
 
 static func banner(bw: int, bh: int, field: Color, emblem: String, sway: int) -> ImageTexture:

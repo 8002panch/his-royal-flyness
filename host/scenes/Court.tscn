@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/court/court_main.gd" id="1_main"]
 [ext_resource type="Script" path="res://scripts/court/court_world.gd" id="2_world"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://scripts/court/hamlet.gd" id="4_hamlet"]
 [ext_resource type="Script" path="res://scripts/court/miranda.gd" id="5_miranda"]
 [ext_resource type="Script" path="res://scripts/court/rival.gd" id="6_rival"]
-[ext_resource type="Script" path="res://scripts/court/giant_hand.gd" id="7_giant"]
 [ext_resource type="Script" path="res://scripts/court/fx_layer.gd" id="8_fx"]
 [ext_resource type="Script" path="res://scripts/court/name_tags.gd" id="9_tags"]
 [ext_resource type="Script" path="res://scripts/court/hud/court_hud.gd" id="10_hud"]
@@ -54,9 +53,6 @@ hall_pos = Vector3(-1.56, -0.88, -0.55)
 script = ExtResource("6_rival")
 style_name = "indy"
 hall_pos = Vector3(1.56, -0.88, 0.3)
-
-[node name="Giant" type="Node2D" parent="World/Actors"]
-script = ExtResource("7_giant")
 
 [node name="FX" type="Node2D" parent="World"]
 script = ExtResource("8_fx")
