@@ -74,7 +74,7 @@ smoke tests in `host/test/`.
 ## AI tools used
 
 - Code and docs were written with help from AI coding assistants (Claude, Codex). Everyone on the team can explain the code they committed.
-- In the game (if they ship): Gemini for trial design and the Jester's lines; ElevenLabs for voices, sound effects and music.
+- In the game (if they ship): Gemini for trial design and the Jester's lines; ElevenLabs for voices and sound effects.
 
 ## Final hand-made visual assets
 
